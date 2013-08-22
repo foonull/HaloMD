@@ -20,4 +20,6 @@ Artwork and audio files are not under this license.
 
 Due to file size restrictions, this repository does not bundle all the data to run HaloMD from source properly. Copy your Maps folder that is inside of your HaloMD.app (in *Contents/Resources/Data/DoNotTouchOrModify*) and paste it into *HaloMD/Data/DoNotTouchOrModify/*
 
+HaloMD may require a recent version of Xcode to build, but should run on intel Macs back to OS X 10.5
+
 Visit the [HaloMD website](http://www.halomd.net) for more info.
