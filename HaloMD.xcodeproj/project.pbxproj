@@ -1,0 +1,584 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7706FC1114DBB28C0023DBA4 /* Data in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7706FC0E14DBB26C0023DBA4 /* Data */; };
+		770BEEB2154DB7900052193F /* shield.icns in Resources */ = {isa = PBXBuildFile; fileRef = 770BEEB1154DB7900052193F /* shield.icns */; };
+		770BFB36150090B0009BE187 /* crc32forge.py in Resources */ = {isa = PBXBuildFile; fileRef = 770BFB35150090B0009BE187 /* crc32forge.py */; };
+		770C153D1741CC37001380A8 /* game_icon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 770C153C1741CC37001380A8 /* game_icon.pdf */; };
+		770C15411742E1FD001380A8 /* in_chat_icon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 770C15401742E1FC001380A8 /* in_chat_icon.pdf */; };
+		77152B20163B5AEA00F136BF /* MDNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 77152B1F163B5AEA00F136BF /* MDNetworking.m */; };
+		771CA916156F59BF005A32EF /* MDHyperLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 771CA915156F59BF005A32EF /* MDHyperLink.m */; };
+		771CA92315702141005A32EF /* DSClickableURLTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 771CA92015702027005A32EF /* DSClickableURLTextField.m */; };
+		77437FAE1738662500257A08 /* TCMPortMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77437FAD1738662500257A08 /* TCMPortMapper.framework */; };
+		77437FAF1738664D00257A08 /* TCMPortMapper.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 77437FAD1738662500257A08 /* TCMPortMapper.framework */; };
+		774EDAE31756535700AF4ED4 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EDAE21756535700AF4ED4 /* JSONKit.m */; };
+		775B528E14D331C800B874E3 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775B528D14D331C800B874E3 /* Cocoa.framework */; };
+		775B529814D331C800B874E3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 775B529614D331C800B874E3 /* InfoPlist.strings */; };
+		775B529A14D331C800B874E3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 775B529914D331C800B874E3 /* main.m */; };
+		775B529E14D331C800B874E3 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 775B529C14D331C800B874E3 /* Credits.rtf */; };
+		775B52A114D331C800B874E3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 775B52A014D331C800B874E3 /* AppDelegate.m */; };
+		775B52A414D331C900B874E3 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 775B52A214D331C900B874E3 /* MainMenu.xib */; };
+		775B52AD14D3326800B874E3 /* com.null.halominidemo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 775B52AC14D3326800B874E3 /* com.null.halominidemo.plist */; };
+		775B52B414D332B800B874E3 /* MDServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 775B52B314D332B800B874E3 /* MDServer.m */; };
+		775B52B714D332C100B874E3 /* networking.rb in Resources */ = {isa = PBXBuildFile; fileRef = 775B52B614D332C100B874E3 /* networking.rb */; };
+		776E3FA814FAA9D1001414AB /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 776E3FA714FAA9D0001414AB /* Sparkle.framework */; };
+		776E3FAB14FAA9FB001414AB /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 776E3FA714FAA9D0001414AB /* Sparkle.framework */; };
+		776E3FAD14FAAC01001414AB /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 776E3FAC14FAAC01001414AB /* dsa_pub.pem */; };
+		777A1AF01738F588005E2883 /* chat_icon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 777A1AEF1738F588005E2883 /* chat_icon.pdf */; };
+		77904A38151C26BF0046EA96 /* keygen.c in Sources */ = {isa = PBXBuildFile; fileRef = 77904A37151C26BF0046EA96 /* keygen.c */; };
+		77971957173B3D6600007D80 /* CRcv.aif in Resources */ = {isa = PBXBuildFile; fileRef = 77971955173B3D6600007D80 /* CRcv.aif */; };
+		77971958173B3D6600007D80 /* CSnd.aif in Resources */ = {isa = PBXBuildFile; fileRef = 77971956173B3D6600007D80 /* CSnd.aif */; };
+		7797195B173B698600007D80 /* MDChatWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7797195A173B698600007D80 /* MDChatWindow.m */; };
+		77B58A921571AF4900C93121 /* MDModsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B58A911571AF4900C93121 /* MDModsController.m */; };
+		77B58A9B1571DC3E00C93121 /* SCEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B58A971571DC3E00C93121 /* SCEvent.m */; };
+		77B58A9C1571DC3E00C93121 /* SCEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B58A9A1571DC3E00C93121 /* SCEvents.m */; };
+		77B58AAA1572BF6200C93121 /* MDModListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B58AA91572BF6200C93121 /* MDModListItem.m */; };
+		77CF348615DA33FB005ECB2F /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77CF348515DA33FB005ECB2F /* CoreServices.framework */; };
+		77D44A5B164A076100510501 /* lock.png in Resources */ = {isa = PBXBuildFile; fileRef = 77D44A5A164A076100510501 /* lock.png */; };
+		77DD81F314EDFDE200EBA4CE /* Ruby.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77DD81F214EDFDE200EBA4CE /* Ruby.framework */; };
+		77E52D1216D87F9C0015246C /* xmpp4r in Resources */ = {isa = PBXBuildFile; fileRef = 77E52D1016D87F9C0015246C /* xmpp4r */; };
+		77E52D1316D87F9C0015246C /* xmpp4r.rb in Resources */ = {isa = PBXBuildFile; fileRef = 77E52D1116D87F9C0015246C /* xmpp4r.rb */; };
+		77E52D1F16D89D970015246C /* MDChatWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E52D1D16D89D970015246C /* MDChatWindowController.m */; };
+		77E52D2016D89D970015246C /* MDChatWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77E52D1E16D89D970015246C /* MDChatWindowController.xib */; };
+		77E52D2216D8A1D60015246C /* theme.css in Resources */ = {isa = PBXBuildFile; fileRef = 77E52D2116D8A1D60015246C /* theme.css */; };
+		77E52D2616D8A2640015246C /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77E52D2516D8A2640015246C /* WebKit.framework */; };
+		77E52D2816D8A31C0015246C /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 77E52D2716D8A31C0015246C /* index.html */; };
+		77E52D2A16D8AC0F0015246C /* chatting.rb in Resources */ = {isa = PBXBuildFile; fileRef = 77E52D2916D8AC0F0015246C /* chatting.rb */; };
+		77E7E2871720FCB100E18FB9 /* MDModPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E7E2861720FCB000E18FB9 /* MDModPatch.m */; };
+		77E7E28A172463C500E18FB9 /* MDChatRosterElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E7E289172463C400E18FB9 /* MDChatRosterElement.m */; };
+		77E7E28F172477E000E18FB9 /* Growl Registration Ticket.growlRegDict in Resources */ = {isa = PBXBuildFile; fileRef = 77E7E28E172477E000E18FB9 /* Growl Registration Ticket.growlRegDict */; };
+		77E7E293172481BF00E18FB9 /* Growl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 77E7E2911724818200E18FB9 /* Growl.framework */; };
+		77E7E2951724B16000E18FB9 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77E7E2941724B16000E18FB9 /* IOKit.framework */; };
+		77E7E2971724B17300E18FB9 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77E7E2961724B17300E18FB9 /* CoreFoundation.framework */; };
+		77F65ECF150B1E3000D26C71 /* MDInspectorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F65ECE150B1E2F00D26C71 /* MDInspectorController.m */; };
+		77F65ED3150B253F00D26C71 /* MDPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F65ED2150B253F00D26C71 /* MDPlayer.m */; };
+		77FE2528165A14F8009703CE /* halomd_overrides.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 77FE2525165A14C4009703CE /* halomd_overrides.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		7706FC1014DBB2830023DBA4 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+				7706FC1114DBB28C0023DBA4 /* Data in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		776E3FAA14FAA9F0001414AB /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				776E3FAB14FAA9FB001414AB /* Sparkle.framework in CopyFiles */,
+				77E7E293172481BF00E18FB9 /* Growl.framework in CopyFiles */,
+				77437FAF1738664D00257A08 /* TCMPortMapper.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		7706FC0E14DBB26C0023DBA4 /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Data; sourceTree = "<group>"; };
+		770BEEB1154DB7900052193F /* shield.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = shield.icns; sourceTree = "<group>"; };
+		770BFB35150090B0009BE187 /* crc32forge.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = crc32forge.py; sourceTree = "<group>"; };
+		770C153C1741CC37001380A8 /* game_icon.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = game_icon.pdf; sourceTree = "<group>"; };
+		770C15401742E1FC001380A8 /* in_chat_icon.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = in_chat_icon.pdf; sourceTree = "<group>"; };
+		77152B1E163B5AEA00F136BF /* MDNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDNetworking.h; sourceTree = "<group>"; };
+		77152B1F163B5AEA00F136BF /* MDNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDNetworking.m; sourceTree = "<group>"; };
+		771CA914156F59BF005A32EF /* MDHyperLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDHyperLink.h; sourceTree = "<group>"; };
+		771CA915156F59BF005A32EF /* MDHyperLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDHyperLink.m; sourceTree = "<group>"; };
+		771CA91F15702027005A32EF /* DSClickableURLTextField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DSClickableURLTextField.h; sourceTree = "<group>"; };
+		771CA92015702027005A32EF /* DSClickableURLTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DSClickableURLTextField.m; sourceTree = "<group>"; };
+		77329B88168D95CB007DCAE2 /* halomd_overrides */ = {isa = PBXFileReference; lastKnownFileType = folder; path = halomd_overrides; sourceTree = "<group>"; };
+		77329B8A168D95F3007DCAE2 /* h_master_server.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = h_master_server.rb; sourceTree = "<group>"; };
+		77437FAD1738662500257A08 /* TCMPortMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TCMPortMapper.framework; sourceTree = "<group>"; };
+		774EDAE11756535700AF4ED4 /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
+		774EDAE21756535700AF4ED4 /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
+		775B528914D331C800B874E3 /* HaloMD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HaloMD.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		775B528D14D331C800B874E3 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		775B529014D331C800B874E3 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		775B529114D331C800B874E3 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		775B529214D331C800B874E3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		775B529514D331C800B874E3 /* HaloMD-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "HaloMD-Info.plist"; sourceTree = "<group>"; };
+		775B529714D331C800B874E3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		775B529914D331C800B874E3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		775B529B14D331C800B874E3 /* HaloMD-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HaloMD-Prefix.pch"; sourceTree = "<group>"; };
+		775B529D14D331C800B874E3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		775B529F14D331C800B874E3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		775B52A014D331C800B874E3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		775B52A314D331C900B874E3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		775B52AC14D3326800B874E3 /* com.null.halominidemo.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = com.null.halominidemo.plist; sourceTree = "<group>"; };
+		775B52B214D332B800B874E3 /* MDServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDServer.h; sourceTree = "<group>"; };
+		775B52B314D332B800B874E3 /* MDServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDServer.m; sourceTree = "<group>"; };
+		775B52B614D332C100B874E3 /* networking.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = networking.rb; sourceTree = "<group>"; };
+		776E3FA714FAA9D0001414AB /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
+		776E3FAC14FAAC01001414AB /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
+		777A1AEF1738F588005E2883 /* chat_icon.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = chat_icon.pdf; sourceTree = "<group>"; };
+		77904A37151C26BF0046EA96 /* keygen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = keygen.c; sourceTree = "<group>"; };
+		77904A3A151C27070046EA96 /* keygen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keygen.h; sourceTree = "<group>"; };
+		77971955173B3D6600007D80 /* CRcv.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = CRcv.aif; sourceTree = "<group>"; };
+		77971956173B3D6600007D80 /* CSnd.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = CSnd.aif; sourceTree = "<group>"; };
+		77971959173B698600007D80 /* MDChatWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDChatWindow.h; sourceTree = "<group>"; };
+		7797195A173B698600007D80 /* MDChatWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDChatWindow.m; sourceTree = "<group>"; };
+		77B58A901571AF4900C93121 /* MDModsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDModsController.h; sourceTree = "<group>"; };
+		77B58A911571AF4900C93121 /* MDModsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDModsController.m; sourceTree = "<group>"; };
+		77B58A951571DC3E00C93121 /* SCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCConstants.h; path = SCEvents/SCConstants.h; sourceTree = "<group>"; };
+		77B58A961571DC3E00C93121 /* SCEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCEvent.h; path = SCEvents/SCEvent.h; sourceTree = "<group>"; };
+		77B58A971571DC3E00C93121 /* SCEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCEvent.m; path = SCEvents/SCEvent.m; sourceTree = "<group>"; };
+		77B58A981571DC3E00C93121 /* SCEventListenerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCEventListenerProtocol.h; path = SCEvents/SCEventListenerProtocol.h; sourceTree = "<group>"; };
+		77B58A991571DC3E00C93121 /* SCEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCEvents.h; path = SCEvents/SCEvents.h; sourceTree = "<group>"; };
+		77B58A9A1571DC3E00C93121 /* SCEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCEvents.m; path = SCEvents/SCEvents.m; sourceTree = "<group>"; };
+		77B58AA61572BEFD00C93121 /* MDModListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDModListItem.h; sourceTree = "<group>"; };
+		77B58AA91572BF6200C93121 /* MDModListItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDModListItem.m; sourceTree = "<group>"; };
+		77CF348515DA33FB005ECB2F /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = ../../../../../System/Library/Frameworks/CoreServices.framework; sourceTree = "<group>"; };
+		77D44A5A164A076100510501 /* lock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lock.png; sourceTree = "<group>"; };
+		77DD81F214EDFDE200EBA4CE /* Ruby.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ruby.framework; path = ../../../../../../System/Library/Frameworks/Ruby.framework; sourceTree = "<group>"; };
+		77E52D1016D87F9C0015246C /* xmpp4r */ = {isa = PBXFileReference; lastKnownFileType = folder; path = xmpp4r; sourceTree = "<group>"; };
+		77E52D1116D87F9C0015246C /* xmpp4r.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = xmpp4r.rb; sourceTree = "<group>"; };
+		77E52D1C16D89D970015246C /* MDChatWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDChatWindowController.h; sourceTree = "<group>"; };
+		77E52D1D16D89D970015246C /* MDChatWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDChatWindowController.m; sourceTree = "<group>"; };
+		77E52D1E16D89D970015246C /* MDChatWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MDChatWindowController.xib; sourceTree = "<group>"; };
+		77E52D2116D8A1D60015246C /* theme.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = theme.css; sourceTree = "<group>"; };
+		77E52D2516D8A2640015246C /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = ../../../../../System/Library/Frameworks/WebKit.framework; sourceTree = "<group>"; };
+		77E52D2716D8A31C0015246C /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
+		77E52D2916D8AC0F0015246C /* chatting.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = chatting.rb; sourceTree = "<group>"; };
+		77E7E2851720FCB000E18FB9 /* MDModPatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDModPatch.h; sourceTree = "<group>"; };
+		77E7E2861720FCB000E18FB9 /* MDModPatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDModPatch.m; sourceTree = "<group>"; };
+		77E7E288172463C400E18FB9 /* MDChatRosterElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDChatRosterElement.h; sourceTree = "<group>"; };
+		77E7E289172463C400E18FB9 /* MDChatRosterElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDChatRosterElement.m; sourceTree = "<group>"; };
+		77E7E28E172477E000E18FB9 /* Growl Registration Ticket.growlRegDict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Growl Registration Ticket.growlRegDict"; sourceTree = "<group>"; };
+		77E7E2911724818200E18FB9 /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Growl.framework; sourceTree = "<group>"; };
+		77E7E2941724B16000E18FB9 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = ../../../../../System/Library/Frameworks/IOKit.framework; sourceTree = "<group>"; };
+		77E7E2961724B17300E18FB9 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = ../../../../../System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<group>"; };
+		77F65ECD150B1E2F00D26C71 /* MDInspectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDInspectorController.h; sourceTree = "<group>"; };
+		77F65ECE150B1E2F00D26C71 /* MDInspectorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDInspectorController.m; sourceTree = "<group>"; };
+		77F65ED1150B253F00D26C71 /* MDPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDPlayer.h; sourceTree = "<group>"; };
+		77F65ED2150B253F00D26C71 /* MDPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDPlayer.m; sourceTree = "<group>"; };
+		77FE2525165A14C4009703CE /* halomd_overrides.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = halomd_overrides.dylib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		775B528614D331C800B874E3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				775B528E14D331C800B874E3 /* Cocoa.framework in Frameworks */,
+				77DD81F314EDFDE200EBA4CE /* Ruby.framework in Frameworks */,
+				776E3FA814FAA9D1001414AB /* Sparkle.framework in Frameworks */,
+				77CF348615DA33FB005ECB2F /* CoreServices.framework in Frameworks */,
+				77E52D2616D8A2640015246C /* WebKit.framework in Frameworks */,
+				77E7E2951724B16000E18FB9 /* IOKit.framework in Frameworks */,
+				77E7E2971724B17300E18FB9 /* CoreFoundation.framework in Frameworks */,
+				77437FAE1738662500257A08 /* TCMPortMapper.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		775B527E14D331C800B874E3 = {
+			isa = PBXGroup;
+			children = (
+				775B529314D331C800B874E3 /* HaloMD */,
+				775B528C14D331C800B874E3 /* Frameworks */,
+				775B528A14D331C800B874E3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		775B528A14D331C800B874E3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				775B528914D331C800B874E3 /* HaloMD.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		775B528C14D331C800B874E3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				77437FAD1738662500257A08 /* TCMPortMapper.framework */,
+				77E7E2961724B17300E18FB9 /* CoreFoundation.framework */,
+				77E7E2941724B16000E18FB9 /* IOKit.framework */,
+				77E7E2911724818200E18FB9 /* Growl.framework */,
+				77E52D2516D8A2640015246C /* WebKit.framework */,
+				77CF348515DA33FB005ECB2F /* CoreServices.framework */,
+				776E3FA714FAA9D0001414AB /* Sparkle.framework */,
+				77DD81F214EDFDE200EBA4CE /* Ruby.framework */,
+				775B528D14D331C800B874E3 /* Cocoa.framework */,
+				775B528F14D331C800B874E3 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		775B528F14D331C800B874E3 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				775B529014D331C800B874E3 /* AppKit.framework */,
+				775B529114D331C800B874E3 /* CoreData.framework */,
+				775B529214D331C800B874E3 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		775B529314D331C800B874E3 /* HaloMD */ = {
+			isa = PBXGroup;
+			children = (
+				77329B88168D95CB007DCAE2 /* halomd_overrides */,
+				77B58A941571DC2E00C93121 /* SCEvents */,
+				774EDAE11756535700AF4ED4 /* JSONKit.h */,
+				774EDAE21756535700AF4ED4 /* JSONKit.m */,
+				775B529F14D331C800B874E3 /* AppDelegate.h */,
+				775B52A014D331C800B874E3 /* AppDelegate.m */,
+				77F65ECD150B1E2F00D26C71 /* MDInspectorController.h */,
+				77F65ECE150B1E2F00D26C71 /* MDInspectorController.m */,
+				77E52D1C16D89D970015246C /* MDChatWindowController.h */,
+				77E52D1D16D89D970015246C /* MDChatWindowController.m */,
+				77971959173B698600007D80 /* MDChatWindow.h */,
+				7797195A173B698600007D80 /* MDChatWindow.m */,
+				77E7E288172463C400E18FB9 /* MDChatRosterElement.h */,
+				77E7E289172463C400E18FB9 /* MDChatRosterElement.m */,
+				77B58A901571AF4900C93121 /* MDModsController.h */,
+				77B58A911571AF4900C93121 /* MDModsController.m */,
+				77B58AA61572BEFD00C93121 /* MDModListItem.h */,
+				77B58AA91572BF6200C93121 /* MDModListItem.m */,
+				77E7E2851720FCB000E18FB9 /* MDModPatch.h */,
+				77E7E2861720FCB000E18FB9 /* MDModPatch.m */,
+				775B52B214D332B800B874E3 /* MDServer.h */,
+				775B52B314D332B800B874E3 /* MDServer.m */,
+				77F65ED1150B253F00D26C71 /* MDPlayer.h */,
+				77F65ED2150B253F00D26C71 /* MDPlayer.m */,
+				771CA91F15702027005A32EF /* DSClickableURLTextField.h */,
+				771CA92015702027005A32EF /* DSClickableURLTextField.m */,
+				771CA914156F59BF005A32EF /* MDHyperLink.h */,
+				771CA915156F59BF005A32EF /* MDHyperLink.m */,
+				77152B1E163B5AEA00F136BF /* MDNetworking.h */,
+				77152B1F163B5AEA00F136BF /* MDNetworking.m */,
+				77904A3A151C27070046EA96 /* keygen.h */,
+				77904A37151C26BF0046EA96 /* keygen.c */,
+				775B52B614D332C100B874E3 /* networking.rb */,
+				77E52D2916D8AC0F0015246C /* chatting.rb */,
+				77329B8A168D95F3007DCAE2 /* h_master_server.rb */,
+				775B52A214D331C900B874E3 /* MainMenu.xib */,
+				77E52D1E16D89D970015246C /* MDChatWindowController.xib */,
+				775B529414D331C800B874E3 /* Supporting Files */,
+			);
+			path = HaloMD;
+			sourceTree = "<group>";
+		};
+		775B529414D331C800B874E3 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				77971955173B3D6600007D80 /* CRcv.aif */,
+				77971956173B3D6600007D80 /* CSnd.aif */,
+				777A1AEF1738F588005E2883 /* chat_icon.pdf */,
+				770C15401742E1FC001380A8 /* in_chat_icon.pdf */,
+				770C153C1741CC37001380A8 /* game_icon.pdf */,
+				77E7E28E172477E000E18FB9 /* Growl Registration Ticket.growlRegDict */,
+				77E52D2716D8A31C0015246C /* index.html */,
+				77E52D2116D8A1D60015246C /* theme.css */,
+				77E52D1016D87F9C0015246C /* xmpp4r */,
+				77E52D1116D87F9C0015246C /* xmpp4r.rb */,
+				77FE2525165A14C4009703CE /* halomd_overrides.dylib */,
+				77D44A5A164A076100510501 /* lock.png */,
+				770BEEB1154DB7900052193F /* shield.icns */,
+				770BFB35150090B0009BE187 /* crc32forge.py */,
+				776E3FAC14FAAC01001414AB /* dsa_pub.pem */,
+				7706FC0E14DBB26C0023DBA4 /* Data */,
+				775B52AC14D3326800B874E3 /* com.null.halominidemo.plist */,
+				775B529514D331C800B874E3 /* HaloMD-Info.plist */,
+				775B529614D331C800B874E3 /* InfoPlist.strings */,
+				775B529914D331C800B874E3 /* main.m */,
+				775B529B14D331C800B874E3 /* HaloMD-Prefix.pch */,
+				775B529C14D331C800B874E3 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		77B58A941571DC2E00C93121 /* SCEvents */ = {
+			isa = PBXGroup;
+			children = (
+				77B58A951571DC3E00C93121 /* SCConstants.h */,
+				77B58A961571DC3E00C93121 /* SCEvent.h */,
+				77B58A971571DC3E00C93121 /* SCEvent.m */,
+				77B58A981571DC3E00C93121 /* SCEventListenerProtocol.h */,
+				77B58A991571DC3E00C93121 /* SCEvents.h */,
+				77B58A9A1571DC3E00C93121 /* SCEvents.m */,
+			);
+			name = SCEvents;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		775B528814D331C800B874E3 /* HaloMD */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 775B52A714D331C900B874E3 /* Build configuration list for PBXNativeTarget "HaloMD" */;
+			buildPhases = (
+				775B528514D331C800B874E3 /* Sources */,
+				775B528614D331C800B874E3 /* Frameworks */,
+				775B528714D331C800B874E3 /* Resources */,
+				7706FC1014DBB2830023DBA4 /* CopyFiles */,
+				776E3FAA14FAA9F0001414AB /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HaloMD;
+			productName = HaloMD;
+			productReference = 775B528914D331C800B874E3 /* HaloMD.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		775B528014D331C800B874E3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Pennsylvania State University";
+			};
+			buildConfigurationList = 775B528314D331C800B874E3 /* Build configuration list for PBXProject "HaloMD" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 775B527E14D331C800B874E3;
+			productRefGroup = 775B528A14D331C800B874E3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				775B528814D331C800B874E3 /* HaloMD */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		775B528714D331C800B874E3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				775B529814D331C800B874E3 /* InfoPlist.strings in Resources */,
+				775B529E14D331C800B874E3 /* Credits.rtf in Resources */,
+				775B52A414D331C900B874E3 /* MainMenu.xib in Resources */,
+				775B52AD14D3326800B874E3 /* com.null.halominidemo.plist in Resources */,
+				775B52B714D332C100B874E3 /* networking.rb in Resources */,
+				776E3FAD14FAAC01001414AB /* dsa_pub.pem in Resources */,
+				770BFB36150090B0009BE187 /* crc32forge.py in Resources */,
+				770BEEB2154DB7900052193F /* shield.icns in Resources */,
+				77D44A5B164A076100510501 /* lock.png in Resources */,
+				77FE2528165A14F8009703CE /* halomd_overrides.dylib in Resources */,
+				77E52D1216D87F9C0015246C /* xmpp4r in Resources */,
+				77E52D1316D87F9C0015246C /* xmpp4r.rb in Resources */,
+				77E52D2016D89D970015246C /* MDChatWindowController.xib in Resources */,
+				77E52D2216D8A1D60015246C /* theme.css in Resources */,
+				77E52D2816D8A31C0015246C /* index.html in Resources */,
+				77E52D2A16D8AC0F0015246C /* chatting.rb in Resources */,
+				77E7E28F172477E000E18FB9 /* Growl Registration Ticket.growlRegDict in Resources */,
+				777A1AF01738F588005E2883 /* chat_icon.pdf in Resources */,
+				77971957173B3D6600007D80 /* CRcv.aif in Resources */,
+				77971958173B3D6600007D80 /* CSnd.aif in Resources */,
+				770C153D1741CC37001380A8 /* game_icon.pdf in Resources */,
+				770C15411742E1FD001380A8 /* in_chat_icon.pdf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		775B528514D331C800B874E3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				775B529A14D331C800B874E3 /* main.m in Sources */,
+				775B52A114D331C800B874E3 /* AppDelegate.m in Sources */,
+				775B52B414D332B800B874E3 /* MDServer.m in Sources */,
+				77F65ECF150B1E3000D26C71 /* MDInspectorController.m in Sources */,
+				77F65ED3150B253F00D26C71 /* MDPlayer.m in Sources */,
+				77904A38151C26BF0046EA96 /* keygen.c in Sources */,
+				771CA916156F59BF005A32EF /* MDHyperLink.m in Sources */,
+				771CA92315702141005A32EF /* DSClickableURLTextField.m in Sources */,
+				77B58A921571AF4900C93121 /* MDModsController.m in Sources */,
+				77B58A9B1571DC3E00C93121 /* SCEvent.m in Sources */,
+				77B58A9C1571DC3E00C93121 /* SCEvents.m in Sources */,
+				77B58AAA1572BF6200C93121 /* MDModListItem.m in Sources */,
+				77152B20163B5AEA00F136BF /* MDNetworking.m in Sources */,
+				77E52D1F16D89D970015246C /* MDChatWindowController.m in Sources */,
+				77E7E2871720FCB100E18FB9 /* MDModPatch.m in Sources */,
+				77E7E28A172463C500E18FB9 /* MDChatRosterElement.m in Sources */,
+				7797195B173B698600007D80 /* MDChatWindow.m in Sources */,
+				774EDAE31756535700AF4ED4 /* JSONKit.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		775B529614D331C800B874E3 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				775B529714D331C800B874E3 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		775B529C14D331C800B874E3 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				775B529D14D331C800B874E3 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		775B52A214D331C900B874E3 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				775B52A314D331C900B874E3 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		775B52A514D331C900B874E3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.7;
+			};
+			name = Debug;
+		};
+		775B52A614D331C900B874E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				SDKROOT = macosx10.7;
+			};
+			name = Release;
+		};
+		775B52A814D331C900B874E3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "HaloMD/HaloMD-Prefix.pch";
+				INFOPLIST_FILE = "HaloMD/HaloMD-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/HaloMD\"",
+					"\"$(SRCROOT)\"",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				OTHER_LDFLAGS = "-lresolv";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.8;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		775B52A914D331C900B874E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "HaloMD/HaloMD-Prefix.pch";
+				INFOPLIST_FILE = "HaloMD/HaloMD-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/HaloMD\"",
+					"\"$(SRCROOT)\"",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				OTHER_LDFLAGS = "-lresolv";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.8;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		775B528314D331C800B874E3 /* Build configuration list for PBXProject "HaloMD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				775B52A514D331C900B874E3 /* Debug */,
+				775B52A614D331C900B874E3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		775B52A714D331C900B874E3 /* Build configuration list for PBXNativeTarget "HaloMD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				775B52A814D331C900B874E3 /* Debug */,
+				775B52A914D331C900B874E3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 775B528014D331C800B874E3 /* Project object */;
+}
