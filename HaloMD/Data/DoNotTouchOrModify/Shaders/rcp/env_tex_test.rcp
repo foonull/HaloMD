@@ -1,0 +1,10 @@
+!!RC1.0
+{
+    //  stage0
+    rgb
+    {
+        spare0 = tex0;
+    }
+}
+out.rgb = spare0.rgb;
+out.a = unsigned_invert(zero);

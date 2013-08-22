@@ -1,0 +1,17 @@
+!!RC1.0
+const0 = compress(program.env[0]);
+{
+    //  stage0
+    rgb
+    {
+        discard = tex2 * expand(const0); 
+        discard = tex1 * tex2;
+        spare0 = sum();
+    }
+    alpha
+    {
+        spare0 = tex0.a;
+    }
+}
+out.rgb = spare0.rgb;
+out.a = spare0.a;

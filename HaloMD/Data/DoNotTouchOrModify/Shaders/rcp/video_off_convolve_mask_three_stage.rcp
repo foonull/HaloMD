@@ -1,0 +1,45 @@
+!!RC1.0
+const0 = ( 0.333333, 0.333333, 0.3333333, 0.5 );
+{
+	//  general combiner 0
+
+	rgb
+	{
+		discard = half_bias(tex1) * const0;
+		discard = half_bias(tex1) * const0;
+		spare0 = sum();
+	}
+	alpha
+	{
+		spare0 = tex0.b;
+	}
+}
+{
+	//  general combiner 1
+	rgb
+	{
+		discard = half_bias(tex3) * const0;
+		discard = spare0;
+		spare0 = sum();
+	}
+}
+{
+	//  general combiner 2
+	rgb
+	{
+		discard = spare0;
+		discard = const0.a;
+		spare0 = sum();
+	}
+}
+{
+	//  general combiner 3
+	rgb
+	{
+		discard = tex0.a * spare0;
+		discard = unsigned_invert(tex0.a) * tex1;
+		spare0 = sum();
+	}
+}
+out.rgb = spare0.rgb;
+out.a = spare0.a;

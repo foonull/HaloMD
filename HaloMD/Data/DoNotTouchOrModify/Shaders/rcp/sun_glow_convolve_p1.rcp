@@ -1,0 +1,36 @@
+!!RC1.0
+{
+	//  general combiner 0
+	rgb
+	{
+		discard = tex2;
+		discard = tex3;
+		spare0 = sum();
+		scale_by_one_half();
+	}
+	alpha
+	{
+		discard = tex0.b;
+		discard = tex1.b;
+		spare0 = sum();
+		scale_by_one_half();
+	}
+}
+{
+	//  general combiner 1
+	const0 = compress(program.env[0]);
+	rgb
+	{
+		discard = spare0 * expand(const0.a);
+		discard = spare0.a * expand(const0.a);
+		spare0 = sum();					
+	}
+	alpha
+	{
+		discard = spare0.a * expand(const0.a);
+		discard = spare0.a * expand(const0.a);
+		spare0 = sum();
+	}
+}
+out.rgb = spare0.rgb;
+out.a = spare0.a;

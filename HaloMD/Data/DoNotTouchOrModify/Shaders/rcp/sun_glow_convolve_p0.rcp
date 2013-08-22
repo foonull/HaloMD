@@ -1,0 +1,25 @@
+!!RC1.0
+const0 = ( 0.0, 0.0, 0.0, 0.75 );
+{
+	// general combiner 0
+	alpha
+	{
+		discard = zero;
+		discard = tex0.a;
+		spare0 = mux();
+	}
+}
+{
+	// general combiner 1
+	rgb
+	{
+		spare0 = spare0.a;
+	}
+	alpha
+	{
+		spare0 = tex1.a * const0.a;
+    	scale_by_four();
+	}
+}
+out.rgb = spare0.rgb;
+out.a = spare0.a;

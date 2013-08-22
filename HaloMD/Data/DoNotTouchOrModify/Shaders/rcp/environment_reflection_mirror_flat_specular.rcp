@@ -1,0 +1,75 @@
+!!RC1.0
+const0 = compress(program.env[1]);
+const1 = compress(program.env[2]);
+{
+    //  stage0
+    rgb
+    {
+        spare0 = expand(tex1) . expand(tex0);
+        spare1 = tex3 * tex3;
+    }
+    alpha
+    {
+        spare1 = tex3 * tex3;
+    }
+}
+{
+    // stage1
+    rgb
+    {
+        spare0 = unsigned(spare0) * unsigned(spare0);
+        spare1 = spare1 * spare1;
+    }
+    alpha
+    {
+        spare1 = spare1 * spare1;
+    }
+}
+{
+    //  stage2
+    rgb
+    {
+        spare1 = spare1 * spare1;
+    }
+    alpha
+    {
+        spare1 = spare1 * spare1;
+        spare0 = unsigned(spare0.b);
+    }
+}
+{
+    //  stage3
+    rgb
+    {
+        discard = unsigned(spare0.a) * expand(const0);
+        discard = unsigned_invert(spare0.a) * expand(const1);
+        spare0 = sum();
+    }
+    alpha
+    {
+        discard = unsigned(spare0.a) * expand(const0.a);
+        discard = unsigned_invert(spare0.a) * expand(const1.a);
+        spare0 = sum();
+    }
+}
+{
+    //  stage4
+    rgb
+    {
+        discard = unsigned(spare0) * tex3;
+        discard = unsigned_invert(spare0) * spare1;
+        spare0 = sum();
+    }
+}
+{
+    rgb
+    {
+        spare0 = spare0 * spare0.a;
+    }
+    alpha
+    {
+        spare0 = unsigned_invert(zero);
+    }
+}
+out.rgb = spare0.rgb;
+out.a = spare0.a;

@@ -1,0 +1,14 @@
+!!RC1.0
+{
+	//  general combiner 0
+	rgb
+	{
+		spare0 = tex0;
+	}
+	alpha
+	{
+		spare0 = tex0;
+	}
+}
+out.rgb = spare0;
+out.a = spare0;

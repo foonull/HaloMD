@@ -1,0 +1,25 @@
+!!RC1.0
+{
+	// combiner 0
+	const0 = compress(program.env[0]);
+	rgb
+	{
+		spare0 = col0.a * col0.rgb;
+	}
+	alpha
+	{
+		spare0 = expand(const0.a);
+	}
+}
+{
+	// combiner 1
+	const0 = (1.0, 1.0, 1.0, 1.0);
+	rgb
+	{
+		discard = tex2.rgb * spare0.rgb;
+		discard = const0.rgb * tex2.rgb;
+		spare0 = sum();
+	}
+}
+out.rgb = spare0.rgb;
+out.a = spare0.a;

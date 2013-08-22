@@ -1,0 +1,38 @@
+!!RC1.0
+{
+    //  stage0
+    rgb
+    {
+        discard = tex0.a * tex1;
+        discard = unsigned_invert(tex0.a) * tex2;
+        spare0 = sum();
+    }
+    alpha
+    {
+        discard = tex0.a * tex1.a;
+        discard = unsigned_invert(tex0.a) * tex2.a;
+        spare0 = sum();
+    }
+}
+{
+    //  stage1
+    rgb
+    {
+        spare0 = spare0 * tex0;
+        scale_by_two();
+    }
+    alpha
+    {
+        spare0 = spare0 * tex3.a;
+    }
+}
+{
+    //  stage2
+    rgb
+    {
+       spare0 = spare0 * tex3;
+       scale_by_two();
+    }
+}
+out.rgb = spare0.rgb;
+out.a = spare0.a;

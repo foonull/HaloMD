@@ -1,0 +1,36 @@
+!!RC1.0
+{
+	// stage0
+	const0 = ( 0.5, 0.5, 0.5, 0.5 );
+	rgb
+	{
+		discard = tex2 * const0;
+		discard = zero * const0;
+		spare0 = sum();
+		scale_by_one_half();
+	}
+	alpha
+	{
+		discard = tex1.b * const0.a;
+		discard = tex0.b * const0.a;
+		spare0 = sum();
+		scale_by_one_half();
+	}
+}
+{
+	//  stage 1
+	rgb
+	{
+		discard = spare0;
+		discard = spare0.a;
+		spare0 = sum();
+	}
+	alpha
+	{
+		discard = spare0.a;
+		discard = spare0.a;
+		spare0 = sum();
+	}
+}
+out.rgb = spare0.rgb;
+out.a = spare0.a;

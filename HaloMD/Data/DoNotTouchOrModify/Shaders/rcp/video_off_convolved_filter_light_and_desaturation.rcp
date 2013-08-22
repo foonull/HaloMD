@@ -1,0 +1,69 @@
+!!RC1.0
+{
+	//  stage0
+	rgb
+	{
+		discard = half_bias(tex0);
+		discard = half_bias(tex1);
+		spare0 = sum();
+		scale_by_one_half();
+	}
+	alpha
+	{
+		discard = half_bias(tex0);
+		discard = half_bias(tex1);
+		spare0 = sum();
+		scale_by_one_half();
+	}
+}
+{
+	//  stage1
+	rgb
+	{
+		discard = half_bias(tex2);
+		discard = half_bias(tex3);
+		spare0 = sum();
+		scale_by_one_half();
+	}
+	alpha
+	{
+		discard = half_bias(tex2);
+		discard = half_bias(tex3);
+		spare0 = sum();
+		scale_by_one_half();
+	}
+}
+{
+	//  stage2
+	rgb
+	{
+		discard = spare0;
+		discard = spare1;
+		spare0 = sum();
+		scale_by_one_half();
+	}
+	alpha
+	{
+		discard = spare0;
+		discard = spare1;
+		spare0 = sum();
+		scale_by_one_half();
+	}
+}
+{
+	//  stage3
+	const0 = ( 0.0, 0.0, 0.0, 0.5 );
+	const1 = compress(program.env[0]);
+	rgb
+	{
+		discard = spare0;
+		discard = const0.a;
+		spare0 = sum();
+	}
+	alpha
+	{
+		spare0 = expand(const1.b) * const0.a;
+	}
+}
+out.rgb = spare0.rgb;
+out.a = spare0.a;

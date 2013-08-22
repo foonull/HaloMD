@@ -1,0 +1,29 @@
+!!RC1.0
+{
+    //  stage0
+    rgb
+    {
+        spare0 = expand(tex0) . expand(tex3);
+    }
+}
+{
+    //  stage1
+    alpha
+    {
+        discard = unsigned(spare0.b) * col0.a;
+        discard = unsigned_invert(col0.a);
+        spare0 = sum();
+    }
+}
+{
+    //  stage 2
+    const0 = compress(program.env[0]);
+    rgb
+    {
+        discard = spare0.a * expand(const0);
+        discard = expand(const0);
+        spare0 = sum();
+    }
+}
+out.rgb = spare0.rgb;
+out.a = tex0.a;

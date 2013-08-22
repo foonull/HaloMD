@@ -1,0 +1,9 @@
+!!RC1.0
+{
+	alpha
+	{
+		spare0 = tex0.b;
+	}
+}
+out.rgb = tex1.rgb;
+out.a = spare0.a;

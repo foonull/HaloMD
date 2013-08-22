@@ -1,0 +1,67 @@
+!!RC1.0
+{
+	//  general combiner 0
+	const0 = program.env[0];
+	rgb
+	{
+		discard = const0.a * tex2;
+		discard = unsigned_invert(const0.a) * unsigned_invert(zero);
+		spare1 = sum();
+	}
+	alpha
+	{
+		discard = const0.a * tex2.a;
+		discard = unsigned_invert(const0.a) * unsigned_invert(zero);
+		spare1 = sum();
+	}
+}
+{
+	//  general combiner 1
+	rgb
+	{	spare0 = tex0 * tex0;
+		tex1 = spare1 * tex1;
+	}
+	alpha
+	{
+		spare0 = tex0 * tex0;
+		tex1 = spare1 * tex1;
+	}
+}
+{
+	//  general combiner 2
+	const0 = program.env[0];
+	rgb
+	{
+		spare0 = spare0 * spare0;
+		spare1 = tex0 * const0;
+	}
+	alpha
+	{
+		spare0 = spare0 * spare0;
+		spare1 = tex0 * const0;
+	}
+}
+{
+	//  general combiner 3
+	const0 = program.env[0];
+	rgb
+	{
+		spare0 = spare0 * const0;
+	}
+	alpha
+	{
+		spare0 = spare0 * const0;
+	}
+}
+{
+	//  general combiner 4
+	rgb
+	{
+		discard = spare1 * unsigned(tex1);
+		discard = spare0 * unsigned_invert(tex1);
+		spare0 = sum();
+		scale_by_two();
+	}
+}
+out.rgb = spare0.rgb;
+out.a = spare0.a;

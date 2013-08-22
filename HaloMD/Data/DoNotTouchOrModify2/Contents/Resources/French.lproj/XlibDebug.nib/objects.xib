@@ -1,0 +1,163 @@
+<?xml version="1.0" standalone="yes"?>
+<object class="NSIBObjectData">
+  <string name="targetFramework">IBCarbonFramework</string>
+  <object name="rootObject" class="NSCustomObject" id="1">
+    <string name="customClass">NSApplication</string>
+  </object>
+  <array count="17" name="allObjects">
+    <object class="IBCarbonWindow" id="166">
+      <string name="windowRect">549 291 769 848 </string>
+      <string name="title">Debug Message</string>
+      <object name="rootControl" class="IBCarbonRootControl" id="167">
+        <string name="bounds">0 0 220 557 </string>
+        <array count="8" name="subviews">
+          <object class="IBCarbonButton" id="180">
+            <string name="bounds">20 427 40 537 </string>
+            <int name="controlID">1</int>
+            <string name="title">Continue</string>
+            <ostype name="command">cont</ostype>
+            <int name="buttonType">1</int>
+          </object>
+          <object class="IBCarbonButton" id="181">
+            <string name="bounds">52 427 72 537 </string>
+            <int name="controlID">3</int>
+            <string name="title">Ignore This</string>
+            <ostype name="command">iThs</ostype>
+          </object>
+          <object class="IBCarbonButton" id="182">
+            <string name="bounds">84 427 104 537 </string>
+            <int name="controlID">4</int>
+            <string name="title">Ignore All</string>
+            <ostype name="command">iAll</ostype>
+          </object>
+          <object class="IBCarbonButton" id="183">
+            <string name="bounds">148 427 168 537 </string>
+            <int name="controlID">5</int>
+            <string name="title">Debug</string>
+            <ostype name="command">dbug</ostype>
+          </object>
+          <object class="IBCarbonButton" id="184">
+            <string name="bounds">180 427 200 537 </string>
+            <int name="controlID">2</int>
+            <string name="title">Quit</string>
+            <ostype name="command">quit</ostype>
+          </object>
+          <object class="IBCarbonIcon" id="185">
+            <string name="bounds">20 20 84 84 </string>
+            <int name="contentResID">1095782476</int>
+            <int name="contentType">132</int>
+            <int name="creator">1195461957</int>
+          </object>
+          <object class="IBCarbonStaticText" id="186">
+            <string name="bounds">20 100 128 410 </string>
+            <ostype name="controlSignature">str </ostype>
+            <int name="controlID">6</int>
+            <string name="title">Message</string>
+          </object>
+          <object class="IBCarbonStaticText" id="187">
+            <string name="bounds">149 100 200 410 </string>
+            <ostype name="controlSignature">str </ostype>
+            <int name="controlID">7</int>
+            <string name="title">File</string>
+          </object>
+        </array>
+      </object>
+      <boolean name="hasCloseBox">FALSE</boolean>
+      <boolean name="hasCollapseBox">FALSE</boolean>
+      <boolean name="hasHorizontalZoom">FALSE</boolean>
+      <boolean name="isResizable">FALSE</boolean>
+      <boolean name="hasVerticalZoom">FALSE</boolean>
+      <int name="themeBrush">1</int>
+      <int name="windowPosition">7</int>
+    </object>
+    <reference idRef="167"/>
+    <reference idRef="180"/>
+    <reference idRef="181"/>
+    <reference idRef="182"/>
+    <reference idRef="183"/>
+    <reference idRef="184"/>
+    <reference idRef="185"/>
+    <reference idRef="186"/>
+    <reference idRef="187"/>
+    <object class="IBCarbonWindow" id="188">
+      <string name="windowRect">225 334 351 891 </string>
+      <string name="title">Command Line</string>
+      <object name="rootControl" class="IBCarbonRootControl" id="191">
+        <string name="bounds">0 0 126 557 </string>
+        <array count="5" name="subviews">
+          <object class="IBCarbonButton" id="197">
+            <string name="bounds">86 447 106 537 </string>
+            <int name="controlID">1</int>
+            <string name="title">OK</string>
+            <ostype name="command">ok  </ostype>
+            <int name="buttonType">1</int>
+          </object>
+          <object class="IBCarbonButton" id="192">
+            <string name="bounds">86 345 106 435 </string>
+            <int name="controlID">2</int>
+            <string name="title">Cancel</string>
+            <ostype name="command">not!</ostype>
+            <int name="buttonType">2</int>
+          </object>
+          <object class="IBCarbonIcon" id="190">
+            <string name="bounds">20 20 84 84 </string>
+            <int name="controlID">4</int>
+            <int name="contentResID">1095782476</int>
+            <int name="contentType">132</int>
+            <int name="creator">1195461957</int>
+          </object>
+          <object class="IBCarbonEditText" id="198">
+            <string name="bounds">47 105 64 534 </string>
+            <ostype name="controlSignature">edit</ostype>
+            <int name="controlID">3</int>
+          </object>
+          <object class="IBCarbonStaticText" id="199">
+            <string name="bounds">20 102 36 316 </string>
+            <string name="title">Enter command line parameters:</string>
+          </object>
+        </array>
+      </object>
+      <boolean name="hasCollapseBox">FALSE</boolean>
+      <boolean name="hasHorizontalZoom">FALSE</boolean>
+      <boolean name="isResizable">FALSE</boolean>
+      <boolean name="hasVerticalZoom">FALSE</boolean>
+      <int name="carbonWindowClass">4</int>
+      <int name="themeBrush">49</int>
+      <int name="windowPosition">7</int>
+    </object>
+    <reference idRef="190"/>
+    <reference idRef="191"/>
+    <reference idRef="192"/>
+    <reference idRef="197"/>
+    <reference idRef="198"/>
+    <reference idRef="199"/>
+  </array>
+  <array count="17" name="allParents">
+    <reference idRef="1"/>
+    <reference idRef="166"/>
+    <reference idRef="167"/>
+    <reference idRef="167"/>
+    <reference idRef="167"/>
+    <reference idRef="167"/>
+    <reference idRef="167"/>
+    <reference idRef="167"/>
+    <reference idRef="167"/>
+    <reference idRef="167"/>
+    <reference idRef="1"/>
+    <reference idRef="191"/>
+    <reference idRef="188"/>
+    <reference idRef="191"/>
+    <reference idRef="191"/>
+    <reference idRef="191"/>
+    <reference idRef="191"/>
+  </array>
+  <dictionary count="3" name="nameTable">
+    <string>AbortRetryIgnore</string>
+    <reference idRef="166"/>
+    <string>CommandLine</string>
+    <reference idRef="188"/>
+    <string>File&apos;s Owner</string>
+    <reference idRef="1"/>
+  </dictionary>
+  <unsigned_int name="nextObjectID">200</unsigned_int>
+</object>

@@ -1,0 +1,82 @@
+
+body {
+    font-family: 'Lucida Grande', Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+}
+
+#content  {
+    border-bottom: 1px solid #999;
+	border-top: 1px solid #999;
+    background-color: #ddd;
+}
+
+.message {
+	word-wrap:break-word;
+	margin-left: 20px;
+	margin-right: 20px;
+	padding-left: 10px;
+}
+
+.on_subject {
+    font-size: 12px;
+    font-weight: bold;
+    color: #777;
+}
+
+.connection_initiating {
+    font-size: 11px;
+	border-left: 8px solid #FF5500;
+}
+
+.connection_failed {
+    font-size: 11px;
+	border-left: 8px solid #FF5500;
+}
+
+.connection_failed_timeout {
+    font-size: 11px;
+	border-left: 8px solid #FF5500;
+}
+
+.muc_joined {
+    font-size: 11px;
+	border-left: 8px solid #FF5500;
+}
+
+.muc_join_failed {
+    font-size: 11px;
+	border-left: 8px solid #FF5500;
+}
+
+.on_join {
+    font-size: 11px;
+	border-left: 8px solid #FF5500;
+}
+
+.on_leave {
+    font-size: 11px;
+	border-left: 8px solid #FF5500;
+}
+
+.on_self_leave {
+	font-size: 11px;
+	border-left: 8px solid #FF5500;
+}
+
+.on_message {
+    font-size: 11px;
+    border-left: 8px solid #777;
+}
+
+.my_message {
+    font-size: 11px;
+    border-left: 8px solid #000000;
+}
+
+.roster {
+    font-size: 11px;
+	border-left: 8px solid #FF5500;
+}
+

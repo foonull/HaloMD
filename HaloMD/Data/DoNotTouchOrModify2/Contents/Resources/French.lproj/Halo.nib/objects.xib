@@ -1,0 +1,1399 @@
+<?xml version="1.0" standalone="yes"?>
+<object class="NSIBObjectData">
+  <string name="targetFramework">IBCarbonFramework</string>
+  <object name="rootObject" class="NSCustomObject" id="1">
+    <string name="customClass">NSApplication</string>
+  </object>
+  <array count="168" name="allObjects">
+    <object class="IBCarbonMenu" id="29">
+      <string name="title">Tropico2</string>
+      <int name="menuID">128</int>
+      <array count="1" name="items">
+        <object class="IBCarbonMenuItem" id="182">
+          <string name="title">Halo</string>
+          <object name="submenu" class="IBCarbonMenu" id="181">
+            <string name="title">Halo</string>
+            <int name="menuID">129</int>
+            <array count="3" name="items">
+              <object class="IBCarbonMenuItem" id="183">
+                <boolean name="disabled">TRUE</boolean>
+                <boolean name="updateSingleItem">TRUE</boolean>
+                <string name="title">À propos de Halo</string>
+                <int name="keyEquivalentModifier">0</int>
+                <ostype name="command">abou</ostype>
+              </object>
+              <object class="IBCarbonMenuItem" id="202">
+                <boolean name="separator">TRUE</boolean>
+                <boolean name="updateSingleItem">TRUE</boolean>
+              </object>
+              <object class="IBCarbonMenuItem" id="201">
+                <boolean name="disabled">TRUE</boolean>
+                <boolean name="updateSingleItem">TRUE</boolean>
+                <string name="title">Basculer en mode plein écran</string>
+                <string name="keyEquivalent"></string>
+                <ostype name="command">togl</ostype>
+              </object>
+            </array>
+            <string name="name">_NSAppleMenu</string>
+          </object>
+        </object>
+      </array>
+      <string name="name">_NSMainMenu</string>
+    </object>
+    <reference idRef="181"/>
+    <reference idRef="182"/>
+    <reference idRef="183"/>
+    <reference idRef="201"/>
+    <reference idRef="202"/>
+    <object class="IBCarbonRootControl" id="203">
+      <string name="bounds">0 0 144 458 </string>
+      <string name="viewFrame">0 0 458 144 </string>
+      <array count="3" name="subviews">
+        <object class="IBCarbonStaticText" id="210">
+          <string name="bounds">20 104 84 438 </string>
+          <string name="viewFrame">104 20 334 64 </string>
+          <ostype name="controlSignature">text</ostype>
+          <int name="controlID">2</int>
+          <string name="title">Insert CD</string>
+        </object>
+        <object class="IBCarbonButton" id="211">
+          <string name="bounds">104 350 124 438 </string>
+          <string name="viewFrame">350 104 88 20 </string>
+          <int name="controlID">1</int>
+          <string name="title">Quitter</string>
+          <ostype name="command">quit</ostype>
+          <int name="buttonType">1</int>
+        </object>
+        <object class="IBCarbonIcon" id="212">
+          <string name="bounds">20 20 84 84 </string>
+          <string name="viewFrame">20 20 64 64 </string>
+          <int name="controlID">3</int>
+          <int name="contentResID">1667523698</int>
+          <int name="contentType">132</int>
+        </object>
+      </array>
+    </object>
+    <object class="IBCarbonWindow" id="204">
+      <string name="windowRect">515 333 659 791 </string>
+      <string name="title">MyGame</string>
+      <reference name="rootControl" idRef="203"/>
+      <boolean name="receiveUpdates">FALSE</boolean>
+      <boolean name="isResizable">FALSE</boolean>
+      <boolean name="compositing">TRUE</boolean>
+      <int name="carbonWindowClass">4</int>
+      <int name="windowPosition">7</int>
+      <boolean name="isConstrained">FALSE</boolean>
+    </object>
+    <reference idRef="210"/>
+    <reference idRef="211"/>
+    <reference idRef="212"/>
+    <object class="IBCarbonWindow" id="217">
+      <string name="windowRect">276 690 684 1270 </string>
+      <string name="title">Contrat de licence pour l&apos;utilisateur final</string>
+      <object name="rootControl" class="IBCarbonRootControl" id="218">
+        <string name="bounds">0 0 408 580 </string>
+        <array count="3" name="subviews">
+          <object class="IBCarbonButton" id="221">
+            <string name="bounds">368 464 388 560 </string>
+            <ostype name="controlSignature">ok  </ostype>
+            <string name="title">Accepter</string>
+            <ostype name="command">ok  </ostype>
+            <int name="buttonType">1</int>
+          </object>
+          <object class="IBCarbonButton" id="219">
+            <string name="bounds">368 356 388 452 </string>
+            <ostype name="controlSignature">not!</ostype>
+            <string name="title">Refuser</string>
+            <ostype name="command">not!</ostype>
+            <int name="buttonType">2</int>
+          </object>
+          <object class="IBCarbonStaticText" id="220">
+            <string name="bounds">20 20 348 560 </string>
+            <ostype name="controlSignature">EULA</ostype>
+            <boolean name="small">TRUE</boolean>
+            <int name="controlSize">1</int>
+            <string name="title">EULA</string>
+            <int name="justification">1</int>
+          </object>
+        </array>
+      </object>
+      <boolean name="receiveUpdates">FALSE</boolean>
+      <boolean name="hasCloseBox">FALSE</boolean>
+      <boolean name="hasCollapseBox">FALSE</boolean>
+      <boolean name="hasHorizontalZoom">FALSE</boolean>
+      <boolean name="isResizable">FALSE</boolean>
+      <boolean name="hasVerticalZoom">FALSE</boolean>
+      <int name="carbonWindowClass">4</int>
+      <int name="windowPosition">7</int>
+      <boolean name="hideOnSuspend">TRUE</boolean>
+    </object>
+    <reference idRef="218"/>
+    <reference idRef="219"/>
+    <reference idRef="220"/>
+    <reference idRef="221"/>
+    <object class="IBCarbonWindow" id="249">
+      <string name="windowRect">147 124 716 592 </string>
+      <string name="title">Réglages graphiques d&apos;Halo</string>
+      <object name="rootControl" class="IBCarbonRootControl" id="250">
+        <string name="bounds">0 0 569 468 </string>
+        <array count="10" name="subviews">
+          <object class="IBCarbonButton" id="299">
+            <string name="bounds">529 363 549 443 </string>
+            <ostype name="controlSignature">ok  </ostype>
+            <string name="title">OK</string>
+            <ostype name="command">ok  </ostype>
+            <int name="buttonType">1</int>
+          </object>
+          <object class="IBCarbonButton" id="300">
+            <string name="bounds">529 271 549 351 </string>
+            <ostype name="controlSignature">not!</ostype>
+            <string name="title">Quitter</string>
+            <ostype name="command">not!</ostype>
+            <int name="buttonType">2</int>
+          </object>
+          <object class="IBCarbonGroupBox" id="251">
+            <string name="bounds">120 20 250 448 </string>
+            <array count="3" name="subviews">
+              <object class="IBCarbonPopupButton" id="252">
+                <string name="bounds">182 96 202 331 </string>
+                <ostype name="controlSignature">Lens</ostype>
+                <string name="title">Lens Flare:</string>
+                <ostype name="command">Lens</ostype>
+                <string name="helpTagText">Ajuste le niveau des effets lens flare. Pour une meilleure performance, nous vous recommandons de régler cette option sur &quot;Bas&quot; ou &quot;Moyen&quot;.</string>
+                <int name="titleJustification">-2</int>
+                <object name="menu" class="IBCarbonMenu" id="253">
+                  <string name="title">Popup:</string>
+                  <array count="4" name="items">
+                    <object class="IBCarbonMenuItem" id="255">
+                      <boolean name="checked">TRUE</boolean>
+                      <boolean name="updateSingleItem">TRUE</boolean>
+                      <string name="title">Bas</string>
+                    </object>
+                    <object class="IBCarbonMenuItem" id="257">
+                      <boolean name="updateSingleItem">TRUE</boolean>
+                      <string name="title">Moyen</string>
+                    </object>
+                    <object class="IBCarbonMenuItem" id="254">
+                      <boolean name="updateSingleItem">TRUE</boolean>
+                      <string name="title">Haut</string>
+                    </object>
+                    <object class="IBCarbonMenuItem" id="256">
+                      <boolean name="updateSingleItem">TRUE</boolean>
+                      <string name="title">Extrême</string>
+                    </object>
+                  </array>
+                </object>
+              </object>
+              <object class="IBCarbonPopupButton" id="258">
+                <string name="bounds">150 64 170 331 </string>
+                <ostype name="controlSignature">FSAA</ostype>
+                <string name="title">Lissage (FSAA) :</string>
+                <ostype name="command">FSAA</ostype>
+                <string name="helpTagText">Adoucit les contours des objets. Laisser cette option sur &quot;Arrêt&quot; pour de meilleures performances (particulièrement sur les anciennes cartes).</string>
+                <int name="titleJustification">-2</int>
+                <object name="menu" class="IBCarbonMenu" id="259">
+                  <string name="title">Popup:</string>
+                  <array count="6" name="items">
+                    <object class="IBCarbonMenuItem" id="261">
+                      <boolean name="checked">TRUE</boolean>
+                      <boolean name="updateSingleItem">TRUE</boolean>
+                      <string name="title">Désactivé</string>
+                    </object>
+                    <object class="IBCarbonMenuItem" id="262">
+                      <boolean name="updateSingleItem">TRUE</boolean>
+                      <string name="title">Echantillonnage 2x</string>
+                    </object>
+                    <object class="IBCarbonMenuItem" id="263">
+                      <boolean name="updateSingleItem">TRUE</boolean>
+                      <string name="title">Echantillonnage 4x</string>
+                    </object>
+                    <object class="IBCarbonMenuItem" id="264">
+                      <boolean name="updateSingleItem">TRUE</boolean>
+                      <string name="title">Echantillonnage 5x</string>
+                    </object>
+                    <object class="IBCarbonMenuItem" id="265">
+                      <boolean name="updateSingleItem">TRUE</boolean>
+                      <string name="title">Echantillonnage 6x</string>
+                    </object>
+                    <object class="IBCarbonMenuItem" id="260">
+                      <boolean name="updateSingleItem">TRUE</boolean>
+                      <string name="title">Echantillonnage 9x</string>
+                    </object>
+                  </array>
+                </object>
+              </object>
+              <object class="IBCarbonPopupButton" id="266">
+                <string name="bounds">214 36 234 331 </string>
+                <ostype name="controlSignature">MLOD</ostype>
+                <string name="title">Détail des modèles :</string>
+                <ostype name="command">MLOD</ostype>
+                <string name="helpTagText">Permet de regler le niveau de détail des modèles dans Halo. Les niveaux Bas et Moyens permettent d&apos;améliorer les performances mais peuvent provoquer des défauts d&apos;affichage.</string>
+                <int name="titleJustification">-2</int>
+                <object name="menu" class="IBCarbonMenu" id="267">
+                  <string name="title">Popup:</string>
+                  <array count="3" name="items">
+                    <object class="IBCarbonMenuItem" id="270">
+                      <boolean name="checked">TRUE</boolean>
+                      <boolean name="updateSingleItem">TRUE</boolean>
+                      <string name="title">Bas</string>
+                    </object>
+                    <object class="IBCarbonMenuItem" id="268">
+                      <boolean name="updateSingleItem">TRUE</boolean>
+                      <string name="title">Moyen</string>
+                    </object>
+                    <object class="IBCarbonMenuItem" id="269">
+                      <boolean name="updateSingleItem">TRUE</boolean>
+                      <string name="title">Haut</string>
+                    </object>
+                  </array>
+                </object>
+              </object>
+            </array>
+            <string name="title">Performances de jeu</string>
+          </object>
+          <object class="IBCarbonGroupBox" id="271">
+            <string name="bounds">256 20 380 187 </string>
+            <array count="3" name="subviews">
+              <object class="IBCarbonCheckBox" id="274">
+                <string name="bounds">286 36 300 174 </string>
+                <ostype name="controlSignature">Wind</ostype>
+                <string name="title">Mode fenêtre</string>
+                <ostype name="command">Wind</ostype>
+                <string name="helpTagText">Jouer à Halo dans une fenêtre.</string>
+              </object>
+              <object class="IBCarbonCheckBox" id="272">
+                <string name="bounds">316 36 330 174 </string>
+                <ostype name="controlSignature">Time</ostype>
+                <string name="title">Mode démo</string>
+                <ostype name="command">Time</ostype>
+                <string name="helpTagText">Permet de lancer le jeu en de démonstration automatique. Les résultats seront placés dans un fichier texte.</string>
+              </object>
+              <object class="IBCarbonCheckBox" id="273">
+                <string name="bounds">346 36 360 174 </string>
+                <ostype name="controlSignature">Cons</ostype>
+                <string name="title">Afficher la console</string>
+                <ostype name="command">Cons</ostype>
+                <string name="helpTagText">Vous permet d&apos;afficher la console de jeu. (non recommandé)</string>
+              </object>
+            </array>
+            <string name="title">Options de jeu</string>
+          </object>
+          <object class="IBCarbonCheckBox" id="288">
+            <string name="bounds">530 20 544 159 </string>
+            <ostype name="controlSignature">Dont</ostype>
+            <ostype name="command">Dont</ostype>
+            <string name="helpTagText">Prevents this window from appearing every time you play Halo. You can re-activate this window by holding down Command (Apple) when you start the game.</string>
+          </object>
+          <object class="IBCarbonStaticText" id="289">
+            <string name="bounds">531 40 544 208 </string>
+            <boolean name="small">TRUE</boolean>
+            <int name="controlSize">1</int>
+            <string name="title">Ne plus afficher ce dialogue</string>
+          </object>
+          <object class="IBCarbonGroupBox" id="281">
+            <string name="bounds">256 207 380 448 </string>
+            <array count="6" name="subviews">
+              <object class="IBCarbonStaticText" id="284">
+                <string name="bounds">284 211 300 303 </string>
+                <string name="title">Port serveur :</string>
+              </object>
+              <object class="IBCarbonStaticText" id="282">
+                <string name="bounds">314 223 330 303 </string>
+                <string name="title">Port client :</string>
+              </object>
+              <object class="IBCarbonStaticText" id="283">
+                <string name="bounds">344 223 360 303 </string>
+                <string name="title">Adresse IP :</string>
+              </object>
+              <object class="IBCarbonEditText" id="285">
+                <string name="bounds">285 314 301 358 </string>
+                <ostype name="controlSignature">Sprt</ostype>
+                <ostype name="command">Sprt</ostype>
+                <string name="helpTagText">Port serveur utilisé lorsque vous hébergez des parties. Laissez ce champ vide pour utiliser le port par défaut (2302).</string>
+                <boolean name="isUnicode">TRUE</boolean>
+              </object>
+              <object class="IBCarbonEditText" id="286">
+                <string name="bounds">315 314 331 358 </string>
+                <ostype name="controlSignature">Cprt</ostype>
+                <ostype name="command">Cprt</ostype>
+                <string name="helpTagText">Port client utilisé lorsque vous rejoignez des parties.</string>
+                <boolean name="isUnicode">TRUE</boolean>
+              </object>
+              <object class="IBCarbonEditText" id="287">
+                <string name="bounds">345 314 361 430 </string>
+                <ostype name="controlSignature">IPad</ostype>
+                <ostype name="command">IPad</ostype>
+                <string name="helpTagText">Port du serveur utilisé lorsque vous avez des adresses IP multiples. la plupart des joueurs doivent laisser ce champ vide.</string>
+                <boolean name="isUnicode">TRUE</boolean>
+              </object>
+            </array>
+            <string name="title">Options multijoueurs avancées</string>
+          </object>
+          <object class="IBCarbonStaticText" id="280">
+            <string name="bounds">465 20 520 448 </string>
+            <boolean name="small">TRUE</boolean>
+            <int name="controlSize">1</int>
+            <string name="title">Votre carte vidéo peut ne pas gérer toutes ces options d&apos;ombres et de lissage. Les ports multi-joueurs et l&apos;IP ne doivent pas être modifiés tant que vous ne rencontrez pas de problème de connexion. Veuillez consulter le fichier &quot;Lisez-moi&quot; pour plus d&apos;informations.</string>
+          </object>
+          <object class="IBCarbonGroupBox" id="290">
+            <string name="bounds">6 20 114 448 </string>
+            <array count="3" name="subviews">
+              <object class="IBCarbonPopupButton" id="293">
+                <string name="bounds">36 47 56 397 </string>
+                <ostype name="controlSignature">Rend</ostype>
+                <string name="title">Ombres hardware :</string>
+                <ostype name="command">Rend</ostype>
+                <string name="helpTagText">Vous permet de choisir le niveau de compatibilité des ombres matérielles. Généralement, plus les ombres sont complexes, plus le niveau de détail est important mais cela réduit les performances de jeu.</string>
+                <int name="titleJustification">-2</int>
+                <object name="menu" class="IBCarbonMenu" id="294">
+                  <string name="title">Popup:</string>
+                  <array count="4" name="items">
+                    <object class="IBCarbonMenuItem" id="295">
+                      <boolean name="checked">TRUE</boolean>
+                      <boolean name="updateSingleItem">TRUE</boolean>
+                      <string name="title">Sans</string>
+                    </object>
+                    <object class="IBCarbonMenuItem" id="297">
+                      <boolean name="updateSingleItem">TRUE</boolean>
+                      <string name="title">Uniquement Vertex Shaders</string>
+                    </object>
+                    <object class="IBCarbonMenuItem" id="298">
+                      <boolean name="updateSingleItem">TRUE</boolean>
+                      <string name="title">Pixel + Vertex Shaders</string>
+                    </object>
+                    <object class="IBCarbonMenuItem" id="296">
+                      <boolean name="updateSingleItem">TRUE</boolean>
+                      <string name="title">Pixel Shaders avancés</string>
+                    </object>
+                  </array>
+                </object>
+              </object>
+              <object class="IBCarbonCheckBox" id="291">
+                <string name="bounds">90 175 104 350 </string>
+                <ostype name="controlSignature">Refl</ostype>
+                <string name="title">Réflexion des modèles</string>
+                <ostype name="command">Refl</ostype>
+                <string name="helpTagText">Seulement disponible pour quelques cartes graphiques NVidia. Nous recommandons fortement de désactiver cette option sur les cartes graphiques moins performantes.</string>
+              </object>
+              <object class="IBCarbonCheckBox" id="292">
+                <string name="bounds">68 175 82 293 </string>
+                <ostype name="controlSignature">DObj</ostype>
+                <string name="title">Objets détaillés</string>
+                <ostype name="command">DObj</ostype>
+                <string name="helpTagText">Seulement disponible comme option des Pixel &amp; NV shader pipelines.</string>
+              </object>
+            </array>
+            <string name="title">Pipeline de rendu</string>
+          </object>
+          <object class="IBCarbonGroupBox" id="275">
+            <string name="bounds">386 20 452 448 </string>
+            <array count="2" name="subviews">
+              <object class="IBCarbonButton" id="279">
+                <string name="bounds">416 332 436 432 </string>
+                <ostype name="controlSignature">Calb</ostype>
+                <string name="title">Calibrer</string>
+                <ostype name="command">Calb</ostype>
+                <string name="helpTagText">Cliquez pour calibrer les axes sur la manette ou le joystick USB sélectionné. Désactivé lorsque aucun périphérique valide n&apos;est détecté.</string>
+              </object>
+              <object class="IBCarbonPopupButton" id="276">
+                <string name="bounds">416 44 436 324 </string>
+                <ostype name="controlSignature">Calp</ostype>
+                <ostype name="command">Calp</ostype>
+                <string name="helpTagText">Sélectionnez une manette ou un Joystick USB à calibrer. Désactivé lorsque aucun périphérique valide n&apos;est détecté.</string>
+                <object name="menu" class="IBCarbonMenu" id="277">
+                  <string name="title">Popup:</string>
+                  <array count="1" name="items">
+                    <object class="IBCarbonMenuItem" id="278">
+                      <boolean name="checked">TRUE</boolean>
+                      <boolean name="updateSingleItem">TRUE</boolean>
+                      <string name="title">Pas de périphérique</string>
+                    </object>
+                  </array>
+                </object>
+              </object>
+            </array>
+            <ostype name="controlSignature">Cali</ostype>
+            <string name="title">Calibration du périphérique USB</string>
+            <ostype name="command">Cali</ostype>
+          </object>
+        </array>
+      </object>
+      <boolean name="isResizable">FALSE</boolean>
+      <int name="carbonWindowClass">4</int>
+      <int name="windowPosition">7</int>
+    </object>
+    <reference idRef="250"/>
+    <reference idRef="251"/>
+    <reference idRef="252"/>
+    <reference idRef="253"/>
+    <reference idRef="254"/>
+    <reference idRef="255"/>
+    <reference idRef="256"/>
+    <reference idRef="257"/>
+    <reference idRef="258"/>
+    <reference idRef="259"/>
+    <reference idRef="260"/>
+    <reference idRef="261"/>
+    <reference idRef="262"/>
+    <reference idRef="263"/>
+    <reference idRef="264"/>
+    <reference idRef="265"/>
+    <reference idRef="266"/>
+    <reference idRef="267"/>
+    <reference idRef="268"/>
+    <reference idRef="269"/>
+    <reference idRef="270"/>
+    <reference idRef="271"/>
+    <reference idRef="272"/>
+    <reference idRef="273"/>
+    <reference idRef="274"/>
+    <reference idRef="275"/>
+    <reference idRef="276"/>
+    <reference idRef="277"/>
+    <reference idRef="278"/>
+    <reference idRef="279"/>
+    <reference idRef="280"/>
+    <reference idRef="281"/>
+    <reference idRef="282"/>
+    <reference idRef="283"/>
+    <reference idRef="284"/>
+    <reference idRef="285"/>
+    <reference idRef="286"/>
+    <reference idRef="287"/>
+    <reference idRef="288"/>
+    <reference idRef="289"/>
+    <reference idRef="290"/>
+    <reference idRef="291"/>
+    <reference idRef="292"/>
+    <reference idRef="293"/>
+    <reference idRef="294"/>
+    <reference idRef="295"/>
+    <reference idRef="296"/>
+    <reference idRef="297"/>
+    <reference idRef="298"/>
+    <reference idRef="299"/>
+    <reference idRef="300"/>
+    <object class="IBCarbonWindow" id="301">
+      <string name="windowRect">136 38 727 778 </string>
+      <string name="title">Calibration</string>
+      <object name="rootControl" class="IBCarbonRootControl" id="302">
+        <string name="bounds">0 0 591 740 </string>
+        <array count="10" name="subviews">
+          <object class="IBCarbonGroupBox" id="320">
+            <string name="bounds">174 20 279 360 </string>
+            <array count="14" name="subviews">
+              <object class="IBCarbonUserPane" id="321">
+                <string name="bounds">222 182 236 216 </string>
+                <ostype name="controlSignature">dzn0</ostype>
+                <ostype name="command">dzn0</ostype>
+                <int name="featureBits">2</int>
+              </object>
+              <object class="IBCarbonStaticText" id="326">
+                <string name="bounds">-218 190 -202 238 </string>
+                <ostype name="controlSignature">hidm</ostype>
+                <int name="controlID">27</int>
+                <string name="title">value</string>
+              </object>
+              <object class="IBCarbonRelevanceBar" id="331">
+                <string name="bounds">224 104 234 296 </string>
+                <ostype name="controlSignature">cal0</ostype>
+                <ostype name="command">cal0</ostype>
+                <int name="initialValue">-128</int>
+                <int name="minimumValue">-128</int>
+                <int name="maximumValue">128</int>
+              </object>
+              <object class="IBCarbonCheckBox" id="334">
+                <string name="bounds">250 36 264 61 </string>
+                <ostype name="controlSignature">rev0</ostype>
+                <ostype name="command">rev0</ostype>
+              </object>
+              <object class="IBCarbonRelevanceBar" id="328">
+                <string name="bounds">206 104 216 296 </string>
+                <ostype name="controlSignature">raw0</ostype>
+                <ostype name="command">raw0</ostype>
+              </object>
+              <object class="IBCarbonStaticText" id="332">
+                <string name="bounds">-43 36 -30 96 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Raw</string>
+              </object>
+              <object class="IBCarbonStaticText" id="327">
+                <string name="bounds">222 36 235 96 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Calibré</string>
+              </object>
+              <object class="IBCarbonStaticText" id="323">
+                <string name="bounds">204 311 217 351 </string>
+                <ostype name="controlSignature">rv_0</ostype>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">valeur</string>
+                <ostype name="command">rv_0</ostype>
+              </object>
+              <object class="IBCarbonStaticText" id="330">
+                <string name="bounds">225 311 238 351 </string>
+                <ostype name="controlSignature">cv_0</ostype>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">valeur</string>
+                <ostype name="command">cv_0</ostype>
+              </object>
+              <object class="IBCarbonSeparator" id="333">
+                <string name="bounds">238 199 246 200 </string>
+              </object>
+              <object class="IBCarbonStaticText" id="322">
+                <string name="bounds">250 58 263 109 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Inverser</string>
+              </object>
+              <object class="IBCarbonLittleArrows" id="329">
+                <string name="bounds">246 193 268 206 </string>
+                <ostype name="controlSignature">ded0</ostype>
+                <ostype name="command">ded0</ostype>
+                <string name="helpTagText">When adjusting the Dead Zone, pick the smallest value which allows the Axis to &quot;snap back&quot; to 0 when released.</string>
+                <int name="initialValue">3</int>
+                <int name="maximumValue">6</int>
+              </object>
+              <object class="IBCarbonStaticText" id="324">
+                <string name="bounds">250 214 263 278 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Zone morte</string>
+              </object>
+              <object class="IBCarbonStaticText" id="325">
+                <string name="bounds">204 36 217 96 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Raw</string>
+              </object>
+            </array>
+            <ostype name="controlSignature">axs0</ostype>
+            <string name="title">Axe 1</string>
+            <ostype name="command">axs0</ostype>
+            <boolean name="primary">FALSE</boolean>
+          </object>
+          <object class="IBCarbonButton" id="319">
+            <string name="bounds">551 640 571 720 </string>
+            <ostype name="controlSignature">ok  </ostype>
+            <string name="title">OK</string>
+            <ostype name="command">ok  </ostype>
+            <int name="buttonType">1</int>
+          </object>
+          <object class="IBCarbonButton" id="370">
+            <string name="bounds">551 545 571 625 </string>
+            <ostype name="controlSignature">not!</ostype>
+            <string name="title">Annuler</string>
+            <ostype name="command">not!</ostype>
+            <int name="buttonType">2</int>
+          </object>
+          <object class="IBCarbonGroupBox" id="355">
+            <string name="bounds">285 20 390 360 </string>
+            <array count="14" name="subviews">
+              <object class="IBCarbonUserPane" id="359">
+                <string name="bounds">333 182 347 216 </string>
+                <ostype name="controlSignature">dzn1</ostype>
+                <ostype name="command">dzn1</ostype>
+                <int name="featureBits">2</int>
+              </object>
+              <object class="IBCarbonStaticText" id="360">
+                <string name="bounds">-107 190 -91 238 </string>
+                <ostype name="controlSignature">hidm</ostype>
+                <int name="controlID">27</int>
+                <string name="title">value</string>
+              </object>
+              <object class="IBCarbonRelevanceBar" id="364">
+                <string name="bounds">335 104 345 296 </string>
+                <ostype name="controlSignature">cal1</ostype>
+                <ostype name="command">cal1</ostype>
+                <int name="initialValue">-128</int>
+                <int name="minimumValue">-128</int>
+                <int name="maximumValue">128</int>
+              </object>
+              <object class="IBCarbonCheckBox" id="358">
+                <string name="bounds">361 36 375 61 </string>
+                <ostype name="controlSignature">rev1</ostype>
+                <ostype name="command">rev1</ostype>
+              </object>
+              <object class="IBCarbonRelevanceBar" id="357">
+                <string name="bounds">317 104 327 296 </string>
+                <ostype name="controlSignature">raw1</ostype>
+                <ostype name="command">raw1</ostype>
+              </object>
+              <object class="IBCarbonStaticText" id="362">
+                <string name="bounds">68 36 81 96 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Raw</string>
+              </object>
+              <object class="IBCarbonStaticText" id="369">
+                <string name="bounds">333 36 346 96 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Calibré</string>
+              </object>
+              <object class="IBCarbonStaticText" id="368">
+                <string name="bounds">315 311 328 351 </string>
+                <ostype name="controlSignature">rv_1</ostype>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">valeur</string>
+                <ostype name="command">rv_1</ostype>
+              </object>
+              <object class="IBCarbonStaticText" id="367">
+                <string name="bounds">336 311 349 351 </string>
+                <ostype name="controlSignature">cv_1</ostype>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">valeur</string>
+                <ostype name="command">cv_1</ostype>
+              </object>
+              <object class="IBCarbonSeparator" id="361">
+                <string name="bounds">349 199 357 200 </string>
+              </object>
+              <object class="IBCarbonStaticText" id="356">
+                <string name="bounds">361 58 374 109 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Inverser</string>
+              </object>
+              <object class="IBCarbonLittleArrows" id="365">
+                <string name="bounds">357 193 379 206 </string>
+                <ostype name="controlSignature">ded1</ostype>
+                <ostype name="command">ded1</ostype>
+                <string name="helpTagText">When adjusting the Dead Zone, pick the smallest value which allows the Axis to &quot;snap back&quot; to 0 when released.</string>
+                <int name="initialValue">3</int>
+                <int name="maximumValue">6</int>
+              </object>
+              <object class="IBCarbonStaticText" id="366">
+                <string name="bounds">361 214 374 278 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Zone morte</string>
+              </object>
+              <object class="IBCarbonStaticText" id="363">
+                <string name="bounds">315 36 328 96 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Raw</string>
+              </object>
+            </array>
+            <ostype name="controlSignature">axs1</ostype>
+            <string name="title">Axe 2</string>
+            <ostype name="command">axs1</ostype>
+            <boolean name="primary">FALSE</boolean>
+          </object>
+          <object class="IBCarbonGroupBox" id="386">
+            <string name="bounds">174 380 279 720 </string>
+            <array count="14" name="subviews">
+              <object class="IBCarbonUserPane" id="391">
+                <string name="bounds">222 542 236 576 </string>
+                <ostype name="controlSignature">dzn2</ostype>
+                <ostype name="command">dzn2</ostype>
+                <int name="featureBits">2</int>
+              </object>
+              <object class="IBCarbonStaticText" id="399">
+                <string name="bounds">-218 550 -202 598 </string>
+                <ostype name="controlSignature">hidm</ostype>
+                <int name="controlID">27</int>
+                <string name="title">value</string>
+              </object>
+              <object class="IBCarbonRelevanceBar" id="395">
+                <string name="bounds">224 464 234 656 </string>
+                <ostype name="controlSignature">cal2</ostype>
+                <ostype name="command">cal2</ostype>
+                <int name="initialValue">-128</int>
+                <int name="minimumValue">-128</int>
+                <int name="maximumValue">128</int>
+              </object>
+              <object class="IBCarbonCheckBox" id="396">
+                <string name="bounds">250 396 264 421 </string>
+                <ostype name="controlSignature">rev2</ostype>
+                <ostype name="command">rev2</ostype>
+              </object>
+              <object class="IBCarbonRelevanceBar" id="390">
+                <string name="bounds">206 464 216 656 </string>
+                <ostype name="controlSignature">raw2</ostype>
+                <ostype name="command">raw2</ostype>
+              </object>
+              <object class="IBCarbonStaticText" id="387">
+                <string name="bounds">-43 396 -30 456 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Raw</string>
+              </object>
+              <object class="IBCarbonStaticText" id="393">
+                <string name="bounds">222 396 235 456 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Calibré</string>
+              </object>
+              <object class="IBCarbonStaticText" id="400">
+                <string name="bounds">204 671 217 711 </string>
+                <ostype name="controlSignature">rv_2</ostype>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">valeur</string>
+                <ostype name="command">rv_2</ostype>
+              </object>
+              <object class="IBCarbonStaticText" id="397">
+                <string name="bounds">225 671 238 711 </string>
+                <ostype name="controlSignature">cv_2</ostype>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">valeur</string>
+                <ostype name="command">cv_2</ostype>
+              </object>
+              <object class="IBCarbonSeparator" id="388">
+                <string name="bounds">238 559 246 560 </string>
+              </object>
+              <object class="IBCarbonStaticText" id="392">
+                <string name="bounds">250 418 263 469 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Inverser</string>
+              </object>
+              <object class="IBCarbonLittleArrows" id="389">
+                <string name="bounds">246 553 268 566 </string>
+                <ostype name="controlSignature">ded2</ostype>
+                <ostype name="command">ded2</ostype>
+                <string name="helpTagText">When adjusting the Dead Zone, pick the smallest value which allows the Axis to &quot;snap back&quot; to 0 when released.</string>
+                <int name="initialValue">3</int>
+                <int name="maximumValue">6</int>
+              </object>
+              <object class="IBCarbonStaticText" id="394">
+                <string name="bounds">250 574 263 638 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Zone morte</string>
+              </object>
+              <object class="IBCarbonStaticText" id="398">
+                <string name="bounds">204 396 217 456 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Raw</string>
+              </object>
+            </array>
+            <ostype name="controlSignature">axs2</ostype>
+            <string name="title">Axe 3</string>
+            <ostype name="command">axs2</ostype>
+            <boolean name="primary">FALSE</boolean>
+          </object>
+          <object class="IBCarbonGroupBox" id="304">
+            <string name="bounds">285 380 390 720 </string>
+            <array count="14" name="subviews">
+              <object class="IBCarbonUserPane" id="311">
+                <string name="bounds">333 542 347 576 </string>
+                <ostype name="controlSignature">dzn3</ostype>
+                <ostype name="command">dzn3</ostype>
+                <int name="featureBits">2</int>
+              </object>
+              <object class="IBCarbonStaticText" id="307">
+                <string name="bounds">-107 550 -91 598 </string>
+                <ostype name="controlSignature">hidm</ostype>
+                <int name="controlID">27</int>
+                <string name="title">value</string>
+              </object>
+              <object class="IBCarbonRelevanceBar" id="308">
+                <string name="bounds">335 464 345 656 </string>
+                <ostype name="controlSignature">cal3</ostype>
+                <ostype name="command">cal3</ostype>
+                <int name="initialValue">-128</int>
+                <int name="minimumValue">-128</int>
+                <int name="maximumValue">128</int>
+              </object>
+              <object class="IBCarbonCheckBox" id="314">
+                <string name="bounds">361 396 375 421 </string>
+                <ostype name="controlSignature">rev3</ostype>
+                <ostype name="command">rev3</ostype>
+              </object>
+              <object class="IBCarbonRelevanceBar" id="312">
+                <string name="bounds">317 464 327 656 </string>
+                <ostype name="controlSignature">raw3</ostype>
+                <ostype name="command">raw3</ostype>
+              </object>
+              <object class="IBCarbonStaticText" id="306">
+                <string name="bounds">68 396 81 456 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Raw</string>
+              </object>
+              <object class="IBCarbonStaticText" id="305">
+                <string name="bounds">333 396 346 456 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Calibré</string>
+              </object>
+              <object class="IBCarbonStaticText" id="309">
+                <string name="bounds">315 671 328 711 </string>
+                <ostype name="controlSignature">rv_3</ostype>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">valeur</string>
+                <ostype name="command">rv_3</ostype>
+              </object>
+              <object class="IBCarbonStaticText" id="316">
+                <string name="bounds">336 671 349 711 </string>
+                <ostype name="controlSignature">cv_3</ostype>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">valeur</string>
+                <ostype name="command">cv_3</ostype>
+              </object>
+              <object class="IBCarbonSeparator" id="318">
+                <string name="bounds">349 559 357 560 </string>
+              </object>
+              <object class="IBCarbonStaticText" id="317">
+                <string name="bounds">361 418 374 469 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Inverser</string>
+              </object>
+              <object class="IBCarbonLittleArrows" id="310">
+                <string name="bounds">357 553 379 566 </string>
+                <ostype name="controlSignature">ded3</ostype>
+                <ostype name="command">ded3</ostype>
+                <string name="helpTagText">When adjusting the Dead Zone, pick the smallest value which allows the Axis to &quot;snap back&quot; to 0 when released.</string>
+                <int name="initialValue">3</int>
+                <int name="maximumValue">6</int>
+              </object>
+              <object class="IBCarbonStaticText" id="313">
+                <string name="bounds">361 574 374 638 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Zone morte</string>
+              </object>
+              <object class="IBCarbonStaticText" id="315">
+                <string name="bounds">315 396 328 456 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Raw</string>
+              </object>
+            </array>
+            <ostype name="controlSignature">axs3</ostype>
+            <string name="title">Axe 4</string>
+            <ostype name="command">axs3</ostype>
+            <boolean name="primary">FALSE</boolean>
+          </object>
+          <object class="IBCarbonGroupBox" id="371">
+            <string name="bounds">430 20 535 360 </string>
+            <array count="14" name="subviews">
+              <object class="IBCarbonUserPane" id="373">
+                <string name="bounds">478 182 492 216 </string>
+                <ostype name="controlSignature">dzn4</ostype>
+                <ostype name="command">dzn4</ostype>
+                <int name="featureBits">2</int>
+              </object>
+              <object class="IBCarbonStaticText" id="385">
+                <string name="bounds">38 190 54 238 </string>
+                <ostype name="controlSignature">hidm</ostype>
+                <int name="controlID">27</int>
+                <string name="title">value</string>
+              </object>
+              <object class="IBCarbonRelevanceBar" id="378">
+                <string name="bounds">480 104 490 296 </string>
+                <ostype name="controlSignature">cal4</ostype>
+                <ostype name="command">cal4</ostype>
+                <int name="initialValue">-128</int>
+                <int name="minimumValue">-128</int>
+                <int name="maximumValue">128</int>
+              </object>
+              <object class="IBCarbonCheckBox" id="380">
+                <string name="bounds">506 36 520 61 </string>
+                <ostype name="controlSignature">rev4</ostype>
+                <ostype name="command">rev4</ostype>
+              </object>
+              <object class="IBCarbonRelevanceBar" id="381">
+                <string name="bounds">462 104 472 296 </string>
+                <ostype name="controlSignature">raw4</ostype>
+                <ostype name="command">raw4</ostype>
+              </object>
+              <object class="IBCarbonStaticText" id="382">
+                <string name="bounds">213 36 226 96 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Raw</string>
+              </object>
+              <object class="IBCarbonStaticText" id="377">
+                <string name="bounds">478 36 491 96 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Calibré</string>
+              </object>
+              <object class="IBCarbonStaticText" id="383">
+                <string name="bounds">460 311 473 351 </string>
+                <ostype name="controlSignature">rv_4</ostype>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">valeur</string>
+                <ostype name="command">rv_4</ostype>
+              </object>
+              <object class="IBCarbonStaticText" id="372">
+                <string name="bounds">481 311 494 351 </string>
+                <ostype name="controlSignature">cv_4</ostype>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">valeur</string>
+                <ostype name="command">cv_4</ostype>
+              </object>
+              <object class="IBCarbonSeparator" id="374">
+                <string name="bounds">494 199 502 200 </string>
+              </object>
+              <object class="IBCarbonStaticText" id="379">
+                <string name="bounds">506 58 519 109 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Inverser</string>
+              </object>
+              <object class="IBCarbonLittleArrows" id="376">
+                <string name="bounds">502 193 524 206 </string>
+                <ostype name="controlSignature">ded4</ostype>
+                <ostype name="command">ded4</ostype>
+                <string name="helpTagText">When adjusting the Dead Zone, pick the smallest value which allows the Axis to &quot;snap back&quot; to 0 when released.</string>
+                <int name="initialValue">3</int>
+                <int name="maximumValue">6</int>
+              </object>
+              <object class="IBCarbonStaticText" id="384">
+                <string name="bounds">506 214 519 278 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Zone morte</string>
+              </object>
+              <object class="IBCarbonStaticText" id="375">
+                <string name="bounds">460 36 473 96 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Raw</string>
+              </object>
+            </array>
+            <ostype name="controlSignature">axs4</ostype>
+            <string name="title">Axe 5</string>
+            <ostype name="command">axs4</ostype>
+            <boolean name="primary">FALSE</boolean>
+          </object>
+          <object class="IBCarbonGroupBox" id="335">
+            <string name="bounds">430 380 535 720 </string>
+            <array count="14" name="subviews">
+              <object class="IBCarbonUserPane" id="342">
+                <string name="bounds">478 542 492 576 </string>
+                <ostype name="controlSignature">dzn5</ostype>
+                <ostype name="command">dzn5</ostype>
+                <int name="featureBits">2</int>
+              </object>
+              <object class="IBCarbonStaticText" id="343">
+                <string name="bounds">38 550 54 598 </string>
+                <ostype name="controlSignature">hidm</ostype>
+                <int name="controlID">27</int>
+                <string name="title">value</string>
+              </object>
+              <object class="IBCarbonRelevanceBar" id="336">
+                <string name="bounds">480 464 490 656 </string>
+                <ostype name="controlSignature">cal5</ostype>
+                <ostype name="command">cal5</ostype>
+                <int name="initialValue">-128</int>
+                <int name="minimumValue">-128</int>
+                <int name="maximumValue">128</int>
+              </object>
+              <object class="IBCarbonCheckBox" id="348">
+                <string name="bounds">506 396 520 421 </string>
+                <ostype name="controlSignature">rev5</ostype>
+                <ostype name="command">rev5</ostype>
+              </object>
+              <object class="IBCarbonRelevanceBar" id="345">
+                <string name="bounds">462 464 472 656 </string>
+                <ostype name="controlSignature">raw5</ostype>
+                <ostype name="command">raw5</ostype>
+              </object>
+              <object class="IBCarbonStaticText" id="340">
+                <string name="bounds">213 396 226 456 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Raw</string>
+              </object>
+              <object class="IBCarbonStaticText" id="341">
+                <string name="bounds">478 396 491 456 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Calibré</string>
+              </object>
+              <object class="IBCarbonStaticText" id="349">
+                <string name="bounds">460 671 473 711 </string>
+                <ostype name="controlSignature">rv_5</ostype>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">valeur</string>
+                <ostype name="command">rv_5</ostype>
+              </object>
+              <object class="IBCarbonStaticText" id="337">
+                <string name="bounds">481 671 494 711 </string>
+                <ostype name="controlSignature">cv_5</ostype>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">valeur</string>
+                <ostype name="command">cv_5</ostype>
+              </object>
+              <object class="IBCarbonSeparator" id="347">
+                <string name="bounds">494 559 502 560 </string>
+              </object>
+              <object class="IBCarbonStaticText" id="338">
+                <string name="bounds">506 418 519 469 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Inverser</string>
+              </object>
+              <object class="IBCarbonLittleArrows" id="346">
+                <string name="bounds">502 553 524 566 </string>
+                <ostype name="controlSignature">ded5</ostype>
+                <ostype name="command">ded5</ostype>
+                <string name="helpTagText">When adjusting the Dead Zone, pick the smallest value which allows the Axis to &quot;snap back&quot; to 0 when released.</string>
+                <int name="initialValue">3</int>
+                <int name="maximumValue">6</int>
+              </object>
+              <object class="IBCarbonStaticText" id="344">
+                <string name="bounds">506 574 519 637 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Zone morte</string>
+              </object>
+              <object class="IBCarbonStaticText" id="339">
+                <string name="bounds">460 396 473 456 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">Raw</string>
+              </object>
+            </array>
+            <ostype name="controlSignature">axs5</ostype>
+            <string name="title">Axe 6</string>
+            <ostype name="command">axs5</ostype>
+            <boolean name="primary">FALSE</boolean>
+          </object>
+          <object class="IBCarbonButton" id="303">
+            <string name="bounds">148 310 168 430 </string>
+            <ostype name="controlSignature">rset</ostype>
+            <string name="title">Commencer</string>
+            <ostype name="command">rset</ostype>
+          </object>
+          <object class="IBCarbonGroupBox" id="350">
+            <string name="bounds">10 181 132 561 </string>
+            <array count="4" name="subviews">
+              <object class="IBCarbonStaticText" id="352">
+                <string name="bounds">40 197 53 545 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">• Centrer tous les axes puis cliquez sur Commencer.</string>
+              </object>
+              <object class="IBCarbonStaticText" id="351">
+                <string name="bounds">61 197 74 545 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">• Déplacer les axes dans leurs positions extrêmes plusieurs fois.</string>
+              </object>
+              <object class="IBCarbonStaticText" id="354">
+                <string name="bounds">82 197 95 545 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">• Remettez tous les axes dans leur position centrale.</string>
+              </object>
+              <object class="IBCarbonStaticText" id="353">
+                <string name="bounds">103 197 116 545 </string>
+                <boolean name="small">TRUE</boolean>
+                <int name="controlSize">1</int>
+                <string name="title">• Cliquez sur OK pour enregistrer les données de calibration.</string>
+              </object>
+            </array>
+            <string name="title">Instructions</string>
+          </object>
+        </array>
+      </object>
+      <boolean name="isResizable">FALSE</boolean>
+      <int name="carbonWindowClass">4</int>
+      <int name="windowPosition">7</int>
+    </object>
+    <reference idRef="302"/>
+    <reference idRef="303"/>
+    <reference idRef="304"/>
+    <reference idRef="305"/>
+    <reference idRef="306"/>
+    <reference idRef="307"/>
+    <reference idRef="308"/>
+    <reference idRef="309"/>
+    <reference idRef="310"/>
+    <reference idRef="311"/>
+    <reference idRef="312"/>
+    <reference idRef="313"/>
+    <reference idRef="314"/>
+    <reference idRef="315"/>
+    <reference idRef="316"/>
+    <reference idRef="317"/>
+    <reference idRef="318"/>
+    <reference idRef="319"/>
+    <reference idRef="320"/>
+    <reference idRef="321"/>
+    <reference idRef="322"/>
+    <reference idRef="323"/>
+    <reference idRef="324"/>
+    <reference idRef="325"/>
+    <reference idRef="326"/>
+    <reference idRef="327"/>
+    <reference idRef="328"/>
+    <reference idRef="329"/>
+    <reference idRef="330"/>
+    <reference idRef="331"/>
+    <reference idRef="332"/>
+    <reference idRef="333"/>
+    <reference idRef="334"/>
+    <reference idRef="335"/>
+    <reference idRef="336"/>
+    <reference idRef="337"/>
+    <reference idRef="338"/>
+    <reference idRef="339"/>
+    <reference idRef="340"/>
+    <reference idRef="341"/>
+    <reference idRef="342"/>
+    <reference idRef="343"/>
+    <reference idRef="344"/>
+    <reference idRef="345"/>
+    <reference idRef="346"/>
+    <reference idRef="347"/>
+    <reference idRef="348"/>
+    <reference idRef="349"/>
+    <reference idRef="350"/>
+    <reference idRef="351"/>
+    <reference idRef="352"/>
+    <reference idRef="353"/>
+    <reference idRef="354"/>
+    <reference idRef="355"/>
+    <reference idRef="356"/>
+    <reference idRef="357"/>
+    <reference idRef="358"/>
+    <reference idRef="359"/>
+    <reference idRef="360"/>
+    <reference idRef="361"/>
+    <reference idRef="362"/>
+    <reference idRef="363"/>
+    <reference idRef="364"/>
+    <reference idRef="365"/>
+    <reference idRef="366"/>
+    <reference idRef="367"/>
+    <reference idRef="368"/>
+    <reference idRef="369"/>
+    <reference idRef="370"/>
+    <reference idRef="371"/>
+    <reference idRef="372"/>
+    <reference idRef="373"/>
+    <reference idRef="374"/>
+    <reference idRef="375"/>
+    <reference idRef="376"/>
+    <reference idRef="377"/>
+    <reference idRef="378"/>
+    <reference idRef="379"/>
+    <reference idRef="380"/>
+    <reference idRef="381"/>
+    <reference idRef="382"/>
+    <reference idRef="383"/>
+    <reference idRef="384"/>
+    <reference idRef="385"/>
+    <reference idRef="386"/>
+    <reference idRef="387"/>
+    <reference idRef="388"/>
+    <reference idRef="389"/>
+    <reference idRef="390"/>
+    <reference idRef="391"/>
+    <reference idRef="392"/>
+    <reference idRef="393"/>
+    <reference idRef="394"/>
+    <reference idRef="395"/>
+    <reference idRef="396"/>
+    <reference idRef="397"/>
+    <reference idRef="398"/>
+    <reference idRef="399"/>
+    <reference idRef="400"/>
+  </array>
+  <array count="168" name="allParents">
+    <reference idRef="1"/>
+    <reference idRef="182"/>
+    <reference idRef="29"/>
+    <reference idRef="181"/>
+    <reference idRef="181"/>
+    <reference idRef="181"/>
+    <reference idRef="204"/>
+    <reference idRef="1"/>
+    <reference idRef="203"/>
+    <reference idRef="203"/>
+    <reference idRef="203"/>
+    <reference idRef="1"/>
+    <reference idRef="217"/>
+    <reference idRef="218"/>
+    <reference idRef="218"/>
+    <reference idRef="218"/>
+    <reference idRef="1"/>
+    <reference idRef="249"/>
+    <reference idRef="250"/>
+    <reference idRef="251"/>
+    <reference idRef="252"/>
+    <reference idRef="253"/>
+    <reference idRef="253"/>
+    <reference idRef="253"/>
+    <reference idRef="253"/>
+    <reference idRef="251"/>
+    <reference idRef="258"/>
+    <reference idRef="259"/>
+    <reference idRef="259"/>
+    <reference idRef="259"/>
+    <reference idRef="259"/>
+    <reference idRef="259"/>
+    <reference idRef="259"/>
+    <reference idRef="251"/>
+    <reference idRef="266"/>
+    <reference idRef="267"/>
+    <reference idRef="267"/>
+    <reference idRef="267"/>
+    <reference idRef="250"/>
+    <reference idRef="271"/>
+    <reference idRef="271"/>
+    <reference idRef="271"/>
+    <reference idRef="250"/>
+    <reference idRef="275"/>
+    <reference idRef="276"/>
+    <reference idRef="277"/>
+    <reference idRef="275"/>
+    <reference idRef="250"/>
+    <reference idRef="250"/>
+    <reference idRef="281"/>
+    <reference idRef="281"/>
+    <reference idRef="281"/>
+    <reference idRef="281"/>
+    <reference idRef="281"/>
+    <reference idRef="281"/>
+    <reference idRef="250"/>
+    <reference idRef="250"/>
+    <reference idRef="250"/>
+    <reference idRef="290"/>
+    <reference idRef="290"/>
+    <reference idRef="290"/>
+    <reference idRef="293"/>
+    <reference idRef="294"/>
+    <reference idRef="294"/>
+    <reference idRef="294"/>
+    <reference idRef="294"/>
+    <reference idRef="250"/>
+    <reference idRef="250"/>
+    <reference idRef="1"/>
+    <reference idRef="301"/>
+    <reference idRef="302"/>
+    <reference idRef="302"/>
+    <reference idRef="304"/>
+    <reference idRef="304"/>
+    <reference idRef="304"/>
+    <reference idRef="304"/>
+    <reference idRef="304"/>
+    <reference idRef="304"/>
+    <reference idRef="304"/>
+    <reference idRef="304"/>
+    <reference idRef="304"/>
+    <reference idRef="304"/>
+    <reference idRef="304"/>
+    <reference idRef="304"/>
+    <reference idRef="304"/>
+    <reference idRef="304"/>
+    <reference idRef="302"/>
+    <reference idRef="302"/>
+    <reference idRef="320"/>
+    <reference idRef="320"/>
+    <reference idRef="320"/>
+    <reference idRef="320"/>
+    <reference idRef="320"/>
+    <reference idRef="320"/>
+    <reference idRef="320"/>
+    <reference idRef="320"/>
+    <reference idRef="320"/>
+    <reference idRef="320"/>
+    <reference idRef="320"/>
+    <reference idRef="320"/>
+    <reference idRef="320"/>
+    <reference idRef="320"/>
+    <reference idRef="302"/>
+    <reference idRef="335"/>
+    <reference idRef="335"/>
+    <reference idRef="335"/>
+    <reference idRef="335"/>
+    <reference idRef="335"/>
+    <reference idRef="335"/>
+    <reference idRef="335"/>
+    <reference idRef="335"/>
+    <reference idRef="335"/>
+    <reference idRef="335"/>
+    <reference idRef="335"/>
+    <reference idRef="335"/>
+    <reference idRef="335"/>
+    <reference idRef="335"/>
+    <reference idRef="302"/>
+    <reference idRef="350"/>
+    <reference idRef="350"/>
+    <reference idRef="350"/>
+    <reference idRef="350"/>
+    <reference idRef="302"/>
+    <reference idRef="355"/>
+    <reference idRef="355"/>
+    <reference idRef="355"/>
+    <reference idRef="355"/>
+    <reference idRef="355"/>
+    <reference idRef="355"/>
+    <reference idRef="355"/>
+    <reference idRef="355"/>
+    <reference idRef="355"/>
+    <reference idRef="355"/>
+    <reference idRef="355"/>
+    <reference idRef="355"/>
+    <reference idRef="355"/>
+    <reference idRef="355"/>
+    <reference idRef="302"/>
+    <reference idRef="302"/>
+    <reference idRef="371"/>
+    <reference idRef="371"/>
+    <reference idRef="371"/>
+    <reference idRef="371"/>
+    <reference idRef="371"/>
+    <reference idRef="371"/>
+    <reference idRef="371"/>
+    <reference idRef="371"/>
+    <reference idRef="371"/>
+    <reference idRef="371"/>
+    <reference idRef="371"/>
+    <reference idRef="371"/>
+    <reference idRef="371"/>
+    <reference idRef="371"/>
+    <reference idRef="302"/>
+    <reference idRef="386"/>
+    <reference idRef="386"/>
+    <reference idRef="386"/>
+    <reference idRef="386"/>
+    <reference idRef="386"/>
+    <reference idRef="386"/>
+    <reference idRef="386"/>
+    <reference idRef="386"/>
+    <reference idRef="386"/>
+    <reference idRef="386"/>
+    <reference idRef="386"/>
+    <reference idRef="386"/>
+    <reference idRef="386"/>
+    <reference idRef="386"/>
+  </array>
+  <dictionary count="6" name="nameTable">
+    <string>AskForCD</string>
+    <reference idRef="204"/>
+    <string>Calibration</string>
+    <reference idRef="301"/>
+    <string>EULA</string>
+    <reference idRef="217"/>
+    <string>Files Owner</string>
+    <reference idRef="1"/>
+    <string>Graphics</string>
+    <reference idRef="249"/>
+    <string>MenuBar</string>
+    <reference idRef="29"/>
+  </dictionary>
+  <unsigned_int name="nextObjectID">401</unsigned_int>
+</object>

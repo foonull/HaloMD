@@ -1,0 +1,57 @@
+!!RC1.0
+//  mul r0, t3, t3
+//  mul r0, r0, r0
+//  mul r0, r0, r0
+//  lrp r0, c0, t3, r0
+//
+{
+	// general combiner 0
+	rgb
+	{
+		spare0 = tex3.rgb * tex3.rgb;
+	}
+	alpha
+	{
+		spare0 = tex3.a * tex3.a;
+	}
+}
+{
+	// general combiner 1
+	rgb
+	{
+		spare0 = spare0.rgb * spare0.rgb;
+	}
+	alpha
+	{
+		spare0 = spare0.a * spare0.a;
+	}
+}
+{
+	// general combiner 2
+	rgb
+	{
+		spare0 = spare0.rgb * spare0.rgb;
+	}
+	alpha
+	{
+		spare0 = spare0.a * spare0.a;
+	}
+}
+{
+	// general combiner 3
+	const0 = program.env[2];
+	rgb
+	{
+		discard = const0.rgb * tex3.rgb;
+		discard = unsigned_invert(const0.rgb) * spare0.rgb;
+		spare0 = sum();
+	}
+	alpha
+	{
+		discard = const0.a * tex3.a;
+		discard = unsigned_invert(const0.a) * spare0.a;
+		spare0 = sum();
+	}
+}
+out.rgb = lerp( fog.a, spare0.rgb, fog.rgb );
+out.a = spare0;

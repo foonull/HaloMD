@@ -1,0 +1,29 @@
+!!RC1.0
+{
+	// combiner 0
+	const0 = ( 1.0, 1.0, 1.0, 1.0 );
+	rgb
+	{
+		discard = tex0.a * col0.rgb;
+		discard = unsigned_invert(tex0.a) * const0;
+		spare0 = sum();
+	}
+}
+{
+	// combiner 1
+	const0 = compress(program.env[0]);
+	const1 = ( 1.0, 1.0, 1.0, 1.0 );
+	rgb
+	{
+		discard = col0.a * spare0.rgb;
+		discard = unsigned_invert(col0.a) * const1;
+		spare0 = sum();
+	}
+	alpha
+	{
+		spare0 = expand(const0.a);
+	}
+}
+final_product = spare0 * tex2;
+out.rgb = final_product;
+out.a = spare0.a;

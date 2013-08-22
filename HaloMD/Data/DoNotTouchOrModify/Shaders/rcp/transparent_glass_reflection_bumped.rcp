@@ -1,0 +1,44 @@
+!!RC1.0
+{
+	//  stage0
+	const0 = ( 0.5, 0.5, 0.5, 0.5 );
+	rgb
+	{
+		spare0 = expand(tex0) . const0;
+	}
+}
+{
+	//  stage1
+	rgb
+	{
+		spare0 = unsigned(spare0) * unsigned(spare0);
+	}
+	alpha
+	{
+		spare0 = unsigned(spare0.b) * unsigned(spare0.b);
+	}
+}
+{
+	//  stage2
+	rgb
+	{
+		spare0 = spare0 * spare0;
+	}
+	alpha
+	{
+		spare0 = spare0.a * spare0.a;
+	}
+}
+{
+	//  stage3
+	rgb
+	{
+		spare0 = spare0 * col0.a;
+	}
+	alpha
+	{
+		spare0 = spare0.a * col0.a;
+	}
+}
+out.rgb = spare0.rgb;
+out.a = spare0.a;

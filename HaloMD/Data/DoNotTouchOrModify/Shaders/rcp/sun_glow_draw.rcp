@@ -1,0 +1,27 @@
+!!RC1.0
+const0 = ( 0.6901960784313725, 0.6901960784313725, 0.5019607843137254, 0.0 );
+{
+	//  general combiner 0
+	alpha
+	{
+		discard = unsigned_invert(zero);
+		discard = -expand(tex0.b);
+		spare0 = sum();
+	}
+}
+{
+	// general combiner 1
+	rgb
+	{
+		discard = unsigned(spare0.a) * const0;
+		discard = unsigned_invert(spare0.a);
+		spare0 = sum();
+	}
+	alpha
+	{
+		spare0 = col0.a;
+	}
+}
+final_product = spare0.rgb * tex0.rgb;
+out.rgb = final_product;
+out.a = spare0.a;

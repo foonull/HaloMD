@@ -1,0 +1,62 @@
+!!RC1.0
+{
+	//  stage0
+	rgb
+	{
+		discard = tex1.a;
+		discard = -half_bias(tex0.a);
+		spare0 = sum();
+	}
+	alpha
+	{
+		discard = tex0.b;
+		discard = -half_bias(tex1.b);
+		spare0 = sum();
+	}
+}
+{
+	//  stage1
+	const0 = ( 0.0, 0.0, 0.0, 0.0 );
+	rgb
+	{
+		spare0 = tex1 * const0;
+	}
+	alpha
+	{
+		discard = spare0.a * spare0.a;
+		discard = spare0.b * spare0.b;
+		spare0 = mux();
+		scale_by_four();
+	}
+}
+{
+	//  stage2
+	rgb
+	{
+		spare1 = spare0.a * spare0.a;
+	}
+	alpha
+	{
+		discard = spare0.b;
+		discard = spare0.a;
+		spare1 = mux();
+	}
+}
+{
+	//  stage3
+	const0 = ( 0.5, 0.5, 0.5, 0.5 );
+	rgb
+	{
+		discard = spare0.a * col0;	
+		discard = spare0.a * const0;
+		spare1 = sum();
+	}
+	alpha
+	{
+		spare1 = expand(spare1.a) * expand(spare1.a);
+		spare0 = spare0.a * spare0.a;
+	}
+}
+final_product = spare0.a * spare1.rgb;
+out.rgb = final_product;
+out.a = col0.a;

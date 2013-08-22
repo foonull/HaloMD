@@ -1,0 +1,62 @@
+!!RC1.0
+{
+  const0 = program.env[0];
+  rgb
+  {
+    discard = tex2.a * const0.rgb;
+    discard = unsigned_invert(tex2.a) * unsigned_invert(zero.rgb);
+    spare1 = sum();
+  }
+  alpha
+  {
+    col1 = tex2.b * col1.a;
+    tex1 = unsigned_invert(col0.a) * unsigned_invert(zero.a);
+  }
+}
+{
+  const0 = program.env[0];
+  rgb
+  {
+    col1 = tex3.rgb * col1.rgb;
+    tex0 = tex0.rgb * expand(tex1.rgb);
+  }
+  alpha
+  {
+    tex0 = tex0.a * const0.a;
+  }
+}
+{
+  rgb
+  {
+    col0 = spare1.rgb * col0.rgb;
+  }
+}
+{
+  rgb
+  {
+    discard = col1.rgb * col1.a;
+    discard = tex0.rgb * col0.rgb;
+    col0 = sum();
+  }
+}
+{
+  const0 = program.env[1];
+  rgb
+  {
+    discard = tex1.a * col0.rgb;
+    discard = const0.rgb * col0.a;
+    col0 = sum();
+  }
+}
+{
+  const0 = program.env[3];
+  const1 = program.env[1];
+  rgb
+  {
+    discard = col0.rgb * const1.a;
+    discard = const0.rgb * unsigned_invert(zero.rgb);
+    col0 = sum();
+  }
+}
+out.rgb = unsigned(col0.rgb);
+out.a = unsigned(tex0.a);

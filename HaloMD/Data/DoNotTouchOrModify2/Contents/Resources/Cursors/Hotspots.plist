@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>122</key>
+	<array>
+		<integer>0</integer>
+		<integer>0</integer>
+	</array>
+	<key>IDC_ARROW</key>
+	<array>
+		<integer>7</integer>
+		<integer>8</integer>
+	</array>
+	<key>IDC_HAND</key>
+	<array>
+		<integer>6</integer>
+		<integer>0</integer>
+	</array>
+	<key>IDC_HELP</key>
+	<array>
+		<integer>7</integer>
+		<integer>8</integer>
+	</array>
+</dict>
+</plist>

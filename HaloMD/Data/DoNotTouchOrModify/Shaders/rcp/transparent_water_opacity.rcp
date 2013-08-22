@@ -1,0 +1,28 @@
+!!RC1.0
+//  lrp r0.a, t1.b, c0, c1
+//  mul r0, r0.a, t0.a
+//
+{
+	// general combiner 0
+	const0 = compress(program.env[0]);
+	const1 = compress(program.env[1]);
+	alpha
+	{
+		discard = tex1.b * expand(const0.a);
+		discard = unsigned_invert(tex1.b) * expand(const1.a);
+		spare0 = sum();
+	}
+}
+{
+	// general combiner 1
+	rgb
+	{
+		spare0 = spare0.a * tex0.a;
+	}
+	alpha
+	{
+		spare0 = spare0.a * tex0.a;
+	}
+}
+out.rgb = spare0;
+out.a = spare0;

@@ -1,0 +1,65 @@
+!!RC1.0
+{
+    //  stage0
+    rgb
+    {
+        spare1 = tex3 * tex3;
+    }
+    alpha
+    {
+        spare1 = tex3.a * tex3.a;
+    }
+}
+{
+    //  stage1
+    rgb
+    {
+        spare1 = spare1 * spare1;
+        scale_by_one_half();
+    }
+    alpha
+    {
+        spare1 = spare1.a * spare1.a;
+        scale_by_one_half();
+    }
+}
+{
+    //  stage2
+    const0 = compress(program.env[0]);
+    rgb
+    {
+        spare1 = spare1 * spare1;
+    }
+    alpha
+    {
+        spare1 = expand(const0.a);
+    }
+}
+{
+    //  stage3
+    const0 = compress(program.env[1]);
+    const1 = compress(program.env[2]);
+    rgb
+    {
+        discard = unsigned(spare1.a) * expand(const0);
+        discard = unsigned_invert(spare1.a) * expand(const1);
+        spare0 = sum();
+    }
+    alpha
+    {
+        discard = unsigned(spare1.a) * expand(const0.a);
+        discard = unsigned_invert(spare1.a) * expand(const1.a);
+        spare0 = sum();
+    }
+}
+{
+    //  stage4
+    rgb
+    {
+        discard = unsigned(spare0.a) * tex3;
+        discard = unsigned_invert(spare0.a) * spare1;
+        spare0 = sum();
+    }
+}
+out.rgb = spare0.rgb;
+out.a = spare0.a;
