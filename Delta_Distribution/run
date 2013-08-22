@@ -1,0 +1,42 @@
+#!/usr/bin/ruby
+
+require 'pathname'
+
+if not File.exist? "BinaryDelta" or not File.directory? "Sparkle.framework"
+	puts "Error: cannot find BinaryDelta or Sparkle.framework"
+	exit(1)
+end
+
+puts "Drag & Drop HaloMD app into here: "
+before_tree = Pathname.new(gets.strip.gsub('\ ', ' ')).to_s
+
+if not File.exist? before_tree
+	puts "Error: Could not locate older app"
+	exit(2)
+end
+
+puts "Drag & Drop patch file into here: "
+patch_file = Pathname.new(gets.strip.gsub('\ ', ' ')).to_s
+
+if not File.exist? patch_file
+	puts "Error: Could not locate patch file"
+	exit(3)
+end
+
+desktop_path = (Pathname.new(ENV['HOME']) + Pathname.new("Desktop")).to_s
+
+if not File.directory? desktop_path
+	puts "Error: Could not locate Desktop directory"
+	exit(4)
+end
+
+output_path = (Pathname.new(ENV['HOME']) + Pathname.new("Desktop") + Pathname.new("HaloMD.app")).to_s
+
+if File.exist? output_path
+	puts "Error: HaloMD.app already exists on desktop"
+	exit(5)
+end
+
+puts "Destination: #{output_path}"
+
+`./BinaryDelta apply "#{before_tree}" "#{output_path}" "#{patch_file}"`
