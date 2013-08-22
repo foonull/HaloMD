@@ -1,3 +1,5 @@
 *.DS_Store
 *.orig
 HaloMD/Data/DoNotTouchOrModify/Maps/
+HaloMD.xcodeproj/project.xcworkspace/xcuserdata/
+HaloMD.xcodeproj/xcuserdata/
