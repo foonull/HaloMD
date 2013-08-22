@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+#Created by nil
+
+#this script is for PPC users who cannot run HaloMD and who want to host MD mods
+
+base_path = File.expand_path(File.dirname(__FILE__))
+executable_path = "#{base_path}/HaloMD.app/Contents/MacOS/Halo"
+
+executable_file = File.new(executable_path, "r+")
+
+if ARGV.length == 0
+	puts "Enter the map file you want to switch:"
+	map_name = $stdin.gets.strip
+else
+	map_name = ARGV[0]
+end
+
+if map_name.length > 13 or map_name.length  == 0 or (not map_name.include?('_') and map_name != 'gephyrophobia')
+	puts "ERROR: Map name is too long or too short, or there's no underscore provided"
+	exit 1
+end
+
+map_name += "\0" * (13 - map_name.length)
+
+map_offsets = [0x3BCEEC, 0x76B3B0]
+for map_offset in map_offsets
+	executable_file.seek(map_offset)
+	executable_file.write(map_name)
+end
