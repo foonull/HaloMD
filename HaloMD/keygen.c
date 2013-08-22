@@ -1,4 +1,4 @@
-// Jonathan wrote this
+// Jonathan wrote this and granted me permission to use
 
 #include "keygen.h"
 
