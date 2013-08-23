@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		7706FC1114DBB28C0023DBA4 /* Data in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7706FC0E14DBB26C0023DBA4 /* Data */; };
 		770BEEB2154DB7900052193F /* shield.icns in Resources */ = {isa = PBXBuildFile; fileRef = 770BEEB1154DB7900052193F /* shield.icns */; };
-		770BFB36150090B0009BE187 /* crc32forge.py in Resources */ = {isa = PBXBuildFile; fileRef = 770BFB35150090B0009BE187 /* crc32forge.py */; };
 		770C153D1741CC37001380A8 /* game_icon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 770C153C1741CC37001380A8 /* game_icon.pdf */; };
 		770C15411742E1FD001380A8 /* in_chat_icon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 770C15401742E1FC001380A8 /* in_chat_icon.pdf */; };
 		77152B20163B5AEA00F136BF /* MDNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 77152B1F163B5AEA00F136BF /* MDNetworking.m */; };
@@ -17,7 +16,12 @@
 		771CA92315702141005A32EF /* DSClickableURLTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 771CA92015702027005A32EF /* DSClickableURLTextField.m */; };
 		77437FAE1738662500257A08 /* TCMPortMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77437FAD1738662500257A08 /* TCMPortMapper.framework */; };
 		77437FAF1738664D00257A08 /* TCMPortMapper.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 77437FAD1738662500257A08 /* TCMPortMapper.framework */; };
-		774EDAE31756535700AF4ED4 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EDAE21756535700AF4ED4 /* JSONKit.m */; };
+		774EF66717C71F03005ABB20 /* xmpp4r in Resources */ = {isa = PBXBuildFile; fileRef = 774EF66617C71F03005ABB20 /* xmpp4r */; };
+		774EF66917C71F09005ABB20 /* xmpp4r.rb in Resources */ = {isa = PBXBuildFile; fileRef = 774EF66817C71F09005ABB20 /* xmpp4r.rb */; };
+		774EF67117C71F41005ABB20 /* SCEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF66D17C71F41005ABB20 /* SCEvent.m */; };
+		774EF67217C71F41005ABB20 /* SCEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF67017C71F41005ABB20 /* SCEvents.m */; };
+		774EF67517C71F6A005ABB20 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF67417C71F6A005ABB20 /* JSONKit.m */; };
+		774EF67717C71FC6005ABB20 /* crc32forge.py in Resources */ = {isa = PBXBuildFile; fileRef = 774EF67617C71FC6005ABB20 /* crc32forge.py */; };
 		775B528E14D331C800B874E3 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775B528D14D331C800B874E3 /* Cocoa.framework */; };
 		775B529814D331C800B874E3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 775B529614D331C800B874E3 /* InfoPlist.strings */; };
 		775B529A14D331C800B874E3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 775B529914D331C800B874E3 /* main.m */; };
@@ -36,14 +40,10 @@
 		77971958173B3D6600007D80 /* CSnd.aif in Resources */ = {isa = PBXBuildFile; fileRef = 77971956173B3D6600007D80 /* CSnd.aif */; };
 		7797195B173B698600007D80 /* MDChatWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7797195A173B698600007D80 /* MDChatWindow.m */; };
 		77B58A921571AF4900C93121 /* MDModsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B58A911571AF4900C93121 /* MDModsController.m */; };
-		77B58A9B1571DC3E00C93121 /* SCEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B58A971571DC3E00C93121 /* SCEvent.m */; };
-		77B58A9C1571DC3E00C93121 /* SCEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B58A9A1571DC3E00C93121 /* SCEvents.m */; };
 		77B58AAA1572BF6200C93121 /* MDModListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B58AA91572BF6200C93121 /* MDModListItem.m */; };
 		77CF348615DA33FB005ECB2F /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77CF348515DA33FB005ECB2F /* CoreServices.framework */; };
 		77D44A5B164A076100510501 /* lock.png in Resources */ = {isa = PBXBuildFile; fileRef = 77D44A5A164A076100510501 /* lock.png */; };
 		77DD81F314EDFDE200EBA4CE /* Ruby.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77DD81F214EDFDE200EBA4CE /* Ruby.framework */; };
-		77E52D1216D87F9C0015246C /* xmpp4r in Resources */ = {isa = PBXBuildFile; fileRef = 77E52D1016D87F9C0015246C /* xmpp4r */; };
-		77E52D1316D87F9C0015246C /* xmpp4r.rb in Resources */ = {isa = PBXBuildFile; fileRef = 77E52D1116D87F9C0015246C /* xmpp4r.rb */; };
 		77E52D1F16D89D970015246C /* MDChatWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E52D1D16D89D970015246C /* MDChatWindowController.m */; };
 		77E52D2016D89D970015246C /* MDChatWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77E52D1E16D89D970015246C /* MDChatWindowController.xib */; };
 		77E52D2216D8A1D60015246C /* theme.css in Resources */ = {isa = PBXBuildFile; fileRef = 77E52D2116D8A1D60015246C /* theme.css */; };
@@ -89,7 +89,6 @@
 /* Begin PBXFileReference section */
 		7706FC0E14DBB26C0023DBA4 /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Data; sourceTree = "<group>"; };
 		770BEEB1154DB7900052193F /* shield.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = shield.icns; sourceTree = "<group>"; };
-		770BFB35150090B0009BE187 /* crc32forge.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = crc32forge.py; sourceTree = "<group>"; };
 		770C153C1741CC37001380A8 /* game_icon.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = game_icon.pdf; sourceTree = "<group>"; };
 		770C15401742E1FC001380A8 /* in_chat_icon.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = in_chat_icon.pdf; sourceTree = "<group>"; };
 		77152B1E163B5AEA00F136BF /* MDNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDNetworking.h; sourceTree = "<group>"; };
@@ -101,8 +100,17 @@
 		77329B88168D95CB007DCAE2 /* halomd_overrides */ = {isa = PBXFileReference; lastKnownFileType = folder; path = halomd_overrides; sourceTree = "<group>"; };
 		77329B8A168D95F3007DCAE2 /* h_master_server.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = h_master_server.rb; sourceTree = "<group>"; };
 		77437FAD1738662500257A08 /* TCMPortMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TCMPortMapper.framework; sourceTree = "<group>"; };
-		774EDAE11756535700AF4ED4 /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
-		774EDAE21756535700AF4ED4 /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
+		774EF66617C71F03005ABB20 /* xmpp4r */ = {isa = PBXFileReference; lastKnownFileType = folder; name = xmpp4r; path = vendor/xmpp4r; sourceTree = "<group>"; };
+		774EF66817C71F09005ABB20 /* xmpp4r.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = xmpp4r.rb; path = vendor/xmpp4r.rb; sourceTree = "<group>"; };
+		774EF66B17C71F41005ABB20 /* SCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCConstants.h; path = vendor/SCEvents/SCConstants.h; sourceTree = "<group>"; };
+		774EF66C17C71F41005ABB20 /* SCEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCEvent.h; path = vendor/SCEvents/SCEvent.h; sourceTree = "<group>"; };
+		774EF66D17C71F41005ABB20 /* SCEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCEvent.m; path = vendor/SCEvents/SCEvent.m; sourceTree = "<group>"; };
+		774EF66E17C71F41005ABB20 /* SCEventListenerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCEventListenerProtocol.h; path = vendor/SCEvents/SCEventListenerProtocol.h; sourceTree = "<group>"; };
+		774EF66F17C71F41005ABB20 /* SCEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCEvents.h; path = vendor/SCEvents/SCEvents.h; sourceTree = "<group>"; };
+		774EF67017C71F41005ABB20 /* SCEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCEvents.m; path = vendor/SCEvents/SCEvents.m; sourceTree = "<group>"; };
+		774EF67317C71F6A005ABB20 /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSONKit.h; path = vendor/JSONKit.h; sourceTree = "<group>"; };
+		774EF67417C71F6A005ABB20 /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSONKit.m; path = vendor/JSONKit.m; sourceTree = "<group>"; };
+		774EF67617C71FC6005ABB20 /* crc32forge.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = crc32forge.py; path = vendor/crc32forge.py; sourceTree = "<group>"; };
 		775B528914D331C800B874E3 /* HaloMD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HaloMD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		775B528D14D331C800B874E3 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		775B529014D331C800B874E3 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -131,19 +139,11 @@
 		7797195A173B698600007D80 /* MDChatWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDChatWindow.m; sourceTree = "<group>"; };
 		77B58A901571AF4900C93121 /* MDModsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDModsController.h; sourceTree = "<group>"; };
 		77B58A911571AF4900C93121 /* MDModsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDModsController.m; sourceTree = "<group>"; };
-		77B58A951571DC3E00C93121 /* SCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCConstants.h; path = SCEvents/SCConstants.h; sourceTree = "<group>"; };
-		77B58A961571DC3E00C93121 /* SCEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCEvent.h; path = SCEvents/SCEvent.h; sourceTree = "<group>"; };
-		77B58A971571DC3E00C93121 /* SCEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCEvent.m; path = SCEvents/SCEvent.m; sourceTree = "<group>"; };
-		77B58A981571DC3E00C93121 /* SCEventListenerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCEventListenerProtocol.h; path = SCEvents/SCEventListenerProtocol.h; sourceTree = "<group>"; };
-		77B58A991571DC3E00C93121 /* SCEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCEvents.h; path = SCEvents/SCEvents.h; sourceTree = "<group>"; };
-		77B58A9A1571DC3E00C93121 /* SCEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCEvents.m; path = SCEvents/SCEvents.m; sourceTree = "<group>"; };
 		77B58AA61572BEFD00C93121 /* MDModListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDModListItem.h; sourceTree = "<group>"; };
 		77B58AA91572BF6200C93121 /* MDModListItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDModListItem.m; sourceTree = "<group>"; };
 		77CF348515DA33FB005ECB2F /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = ../../../../../System/Library/Frameworks/CoreServices.framework; sourceTree = "<group>"; };
 		77D44A5A164A076100510501 /* lock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lock.png; sourceTree = "<group>"; };
 		77DD81F214EDFDE200EBA4CE /* Ruby.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ruby.framework; path = ../../../../../../System/Library/Frameworks/Ruby.framework; sourceTree = "<group>"; };
-		77E52D1016D87F9C0015246C /* xmpp4r */ = {isa = PBXFileReference; lastKnownFileType = folder; path = xmpp4r; sourceTree = "<group>"; };
-		77E52D1116D87F9C0015246C /* xmpp4r.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = xmpp4r.rb; sourceTree = "<group>"; };
 		77E52D1C16D89D970015246C /* MDChatWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDChatWindowController.h; sourceTree = "<group>"; };
 		77E52D1D16D89D970015246C /* MDChatWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDChatWindowController.m; sourceTree = "<group>"; };
 		77E52D1E16D89D970015246C /* MDChatWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MDChatWindowController.xib; sourceTree = "<group>"; };
@@ -185,6 +185,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		774EF66A17C71F35005ABB20 /* SCEvents */ = {
+			isa = PBXGroup;
+			children = (
+				774EF66B17C71F41005ABB20 /* SCConstants.h */,
+				774EF66C17C71F41005ABB20 /* SCEvent.h */,
+				774EF66D17C71F41005ABB20 /* SCEvent.m */,
+				774EF66E17C71F41005ABB20 /* SCEventListenerProtocol.h */,
+				774EF66F17C71F41005ABB20 /* SCEvents.h */,
+				774EF67017C71F41005ABB20 /* SCEvents.m */,
+			);
+			name = SCEvents;
+			sourceTree = "<group>";
+		};
 		775B527E14D331C800B874E3 = {
 			isa = PBXGroup;
 			children = (
@@ -232,10 +245,10 @@
 		775B529314D331C800B874E3 /* HaloMD */ = {
 			isa = PBXGroup;
 			children = (
+				774EF67317C71F6A005ABB20 /* JSONKit.h */,
+				774EF67417C71F6A005ABB20 /* JSONKit.m */,
+				774EF66A17C71F35005ABB20 /* SCEvents */,
 				77329B88168D95CB007DCAE2 /* halomd_overrides */,
-				77B58A941571DC2E00C93121 /* SCEvents */,
-				774EDAE11756535700AF4ED4 /* JSONKit.h */,
-				774EDAE21756535700AF4ED4 /* JSONKit.m */,
 				775B529F14D331C800B874E3 /* AppDelegate.h */,
 				775B52A014D331C800B874E3 /* AppDelegate.m */,
 				77F65ECD150B1E2F00D26C71 /* MDInspectorController.h */,
@@ -285,12 +298,12 @@
 				77E7E28E172477E000E18FB9 /* Growl Registration Ticket.growlRegDict */,
 				77E52D2716D8A31C0015246C /* index.html */,
 				77E52D2116D8A1D60015246C /* theme.css */,
-				77E52D1016D87F9C0015246C /* xmpp4r */,
-				77E52D1116D87F9C0015246C /* xmpp4r.rb */,
 				77FE2525165A14C4009703CE /* halomd_overrides.dylib */,
+				774EF66817C71F09005ABB20 /* xmpp4r.rb */,
+				774EF66617C71F03005ABB20 /* xmpp4r */,
 				77D44A5A164A076100510501 /* lock.png */,
 				770BEEB1154DB7900052193F /* shield.icns */,
-				770BFB35150090B0009BE187 /* crc32forge.py */,
+				774EF67617C71FC6005ABB20 /* crc32forge.py */,
 				776E3FAC14FAAC01001414AB /* dsa_pub.pem */,
 				7706FC0E14DBB26C0023DBA4 /* Data */,
 				775B52AC14D3326800B874E3 /* com.null.halominidemo.plist */,
@@ -301,19 +314,6 @@
 				775B529C14D331C800B874E3 /* Credits.rtf */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		77B58A941571DC2E00C93121 /* SCEvents */ = {
-			isa = PBXGroup;
-			children = (
-				77B58A951571DC3E00C93121 /* SCConstants.h */,
-				77B58A961571DC3E00C93121 /* SCEvent.h */,
-				77B58A971571DC3E00C93121 /* SCEvent.m */,
-				77B58A981571DC3E00C93121 /* SCEventListenerProtocol.h */,
-				77B58A991571DC3E00C93121 /* SCEvents.h */,
-				77B58A9A1571DC3E00C93121 /* SCEvents.m */,
-			);
-			name = SCEvents;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -375,12 +375,9 @@
 				775B52AD14D3326800B874E3 /* com.null.halominidemo.plist in Resources */,
 				775B52B714D332C100B874E3 /* networking.rb in Resources */,
 				776E3FAD14FAAC01001414AB /* dsa_pub.pem in Resources */,
-				770BFB36150090B0009BE187 /* crc32forge.py in Resources */,
 				770BEEB2154DB7900052193F /* shield.icns in Resources */,
 				77D44A5B164A076100510501 /* lock.png in Resources */,
 				77FE2528165A14F8009703CE /* halomd_overrides.dylib in Resources */,
-				77E52D1216D87F9C0015246C /* xmpp4r in Resources */,
-				77E52D1316D87F9C0015246C /* xmpp4r.rb in Resources */,
 				77E52D2016D89D970015246C /* MDChatWindowController.xib in Resources */,
 				77E52D2216D8A1D60015246C /* theme.css in Resources */,
 				77E52D2816D8A31C0015246C /* index.html in Resources */,
@@ -391,6 +388,9 @@
 				77971958173B3D6600007D80 /* CSnd.aif in Resources */,
 				770C153D1741CC37001380A8 /* game_icon.pdf in Resources */,
 				770C15411742E1FD001380A8 /* in_chat_icon.pdf in Resources */,
+				774EF66717C71F03005ABB20 /* xmpp4r in Resources */,
+				774EF66917C71F09005ABB20 /* xmpp4r.rb in Resources */,
+				774EF67717C71FC6005ABB20 /* crc32forge.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -410,15 +410,15 @@
 				771CA916156F59BF005A32EF /* MDHyperLink.m in Sources */,
 				771CA92315702141005A32EF /* DSClickableURLTextField.m in Sources */,
 				77B58A921571AF4900C93121 /* MDModsController.m in Sources */,
-				77B58A9B1571DC3E00C93121 /* SCEvent.m in Sources */,
-				77B58A9C1571DC3E00C93121 /* SCEvents.m in Sources */,
 				77B58AAA1572BF6200C93121 /* MDModListItem.m in Sources */,
 				77152B20163B5AEA00F136BF /* MDNetworking.m in Sources */,
 				77E52D1F16D89D970015246C /* MDChatWindowController.m in Sources */,
 				77E7E2871720FCB100E18FB9 /* MDModPatch.m in Sources */,
 				77E7E28A172463C500E18FB9 /* MDChatRosterElement.m in Sources */,
 				7797195B173B698600007D80 /* MDChatWindow.m in Sources */,
-				774EDAE31756535700AF4ED4 /* JSONKit.m in Sources */,
+				774EF67117C71F41005ABB20 /* SCEvent.m in Sources */,
+				774EF67217C71F41005ABB20 /* SCEvents.m in Sources */,
+				774EF67517C71F6A005ABB20 /* JSONKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
