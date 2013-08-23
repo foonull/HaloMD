@@ -13,15 +13,19 @@
 		770C15411742E1FD001380A8 /* in_chat_icon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 770C15401742E1FC001380A8 /* in_chat_icon.pdf */; };
 		77152B20163B5AEA00F136BF /* MDNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 77152B1F163B5AEA00F136BF /* MDNetworking.m */; };
 		771CA916156F59BF005A32EF /* MDHyperLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 771CA915156F59BF005A32EF /* MDHyperLink.m */; };
-		771CA92315702141005A32EF /* DSClickableURLTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 771CA92015702027005A32EF /* DSClickableURLTextField.m */; };
-		77437FAE1738662500257A08 /* TCMPortMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77437FAD1738662500257A08 /* TCMPortMapper.framework */; };
-		77437FAF1738664D00257A08 /* TCMPortMapper.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 77437FAD1738662500257A08 /* TCMPortMapper.framework */; };
-		774EF66717C71F03005ABB20 /* xmpp4r in Resources */ = {isa = PBXBuildFile; fileRef = 774EF66617C71F03005ABB20 /* xmpp4r */; };
-		774EF66917C71F09005ABB20 /* xmpp4r.rb in Resources */ = {isa = PBXBuildFile; fileRef = 774EF66817C71F09005ABB20 /* xmpp4r.rb */; };
-		774EF67117C71F41005ABB20 /* SCEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF66D17C71F41005ABB20 /* SCEvent.m */; };
-		774EF67217C71F41005ABB20 /* SCEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF67017C71F41005ABB20 /* SCEvents.m */; };
-		774EF67517C71F6A005ABB20 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF67417C71F6A005ABB20 /* JSONKit.m */; };
-		774EF67717C71FC6005ABB20 /* crc32forge.py in Resources */ = {isa = PBXBuildFile; fileRef = 774EF67617C71FC6005ABB20 /* crc32forge.py */; };
+		774EF67917C7210B005ABB20 /* xmpp4r in Resources */ = {isa = PBXBuildFile; fileRef = 774EF67817C7210B005ABB20 /* xmpp4r */; };
+		774EF67B17C72111005ABB20 /* xmpp4r.rb in Resources */ = {isa = PBXBuildFile; fileRef = 774EF67A17C72111005ABB20 /* xmpp4r.rb */; };
+		774EF67D17C72117005ABB20 /* crc32forge.py in Resources */ = {isa = PBXBuildFile; fileRef = 774EF67C17C72117005ABB20 /* crc32forge.py */; };
+		774EF68717C72134005ABB20 /* SCEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF68317C72134005ABB20 /* SCEvent.m */; };
+		774EF68817C72134005ABB20 /* SCEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF68617C72134005ABB20 /* SCEvents.m */; };
+		774EF68B17C72142005ABB20 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF68A17C72142005ABB20 /* JSONKit.m */; };
+		774EF68E17C72178005ABB20 /* DSClickableURLTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF68D17C72178005ABB20 /* DSClickableURLTextField.m */; };
+		774EF69017C721CC005ABB20 /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 774EF68F17C721CC005ABB20 /* Growl.framework */; };
+		774EF69217C721D1005ABB20 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 774EF69117C721D1005ABB20 /* Sparkle.framework */; };
+		774EF69417C721D5005ABB20 /* TCMPortMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 774EF69317C721D5005ABB20 /* TCMPortMapper.framework */; };
+		774EF69517C7222D005ABB20 /* TCMPortMapper.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 774EF69317C721D5005ABB20 /* TCMPortMapper.framework */; };
+		774EF69617C7222D005ABB20 /* Sparkle.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 774EF69117C721D1005ABB20 /* Sparkle.framework */; };
+		774EF69717C7222D005ABB20 /* Growl.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 774EF68F17C721CC005ABB20 /* Growl.framework */; };
 		775B528E14D331C800B874E3 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775B528D14D331C800B874E3 /* Cocoa.framework */; };
 		775B529814D331C800B874E3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 775B529614D331C800B874E3 /* InfoPlist.strings */; };
 		775B529A14D331C800B874E3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 775B529914D331C800B874E3 /* main.m */; };
@@ -31,8 +35,6 @@
 		775B52AD14D3326800B874E3 /* com.null.halominidemo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 775B52AC14D3326800B874E3 /* com.null.halominidemo.plist */; };
 		775B52B414D332B800B874E3 /* MDServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 775B52B314D332B800B874E3 /* MDServer.m */; };
 		775B52B714D332C100B874E3 /* networking.rb in Resources */ = {isa = PBXBuildFile; fileRef = 775B52B614D332C100B874E3 /* networking.rb */; };
-		776E3FA814FAA9D1001414AB /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 776E3FA714FAA9D0001414AB /* Sparkle.framework */; };
-		776E3FAB14FAA9FB001414AB /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 776E3FA714FAA9D0001414AB /* Sparkle.framework */; };
 		776E3FAD14FAAC01001414AB /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 776E3FAC14FAAC01001414AB /* dsa_pub.pem */; };
 		777A1AF01738F588005E2883 /* chat_icon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 777A1AEF1738F588005E2883 /* chat_icon.pdf */; };
 		77904A38151C26BF0046EA96 /* keygen.c in Sources */ = {isa = PBXBuildFile; fileRef = 77904A37151C26BF0046EA96 /* keygen.c */; };
@@ -53,7 +55,6 @@
 		77E7E2871720FCB100E18FB9 /* MDModPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E7E2861720FCB000E18FB9 /* MDModPatch.m */; };
 		77E7E28A172463C500E18FB9 /* MDChatRosterElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E7E289172463C400E18FB9 /* MDChatRosterElement.m */; };
 		77E7E28F172477E000E18FB9 /* Growl Registration Ticket.growlRegDict in Resources */ = {isa = PBXBuildFile; fileRef = 77E7E28E172477E000E18FB9 /* Growl Registration Ticket.growlRegDict */; };
-		77E7E293172481BF00E18FB9 /* Growl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 77E7E2911724818200E18FB9 /* Growl.framework */; };
 		77E7E2951724B16000E18FB9 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77E7E2941724B16000E18FB9 /* IOKit.framework */; };
 		77E7E2971724B17300E18FB9 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77E7E2961724B17300E18FB9 /* CoreFoundation.framework */; };
 		77F65ECF150B1E3000D26C71 /* MDInspectorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F65ECE150B1E2F00D26C71 /* MDInspectorController.m */; };
@@ -72,16 +73,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		776E3FAA14FAA9F0001414AB /* CopyFiles */ = {
+		776E3FAA14FAA9F0001414AB /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				776E3FAB14FAA9FB001414AB /* Sparkle.framework in CopyFiles */,
-				77E7E293172481BF00E18FB9 /* Growl.framework in CopyFiles */,
-				77437FAF1738664D00257A08 /* TCMPortMapper.framework in CopyFiles */,
+				774EF69517C7222D005ABB20 /* TCMPortMapper.framework in Copy Files */,
+				774EF69617C7222D005ABB20 /* Sparkle.framework in Copy Files */,
+				774EF69717C7222D005ABB20 /* Growl.framework in Copy Files */,
 			);
+			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -95,22 +97,24 @@
 		77152B1F163B5AEA00F136BF /* MDNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDNetworking.m; sourceTree = "<group>"; };
 		771CA914156F59BF005A32EF /* MDHyperLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDHyperLink.h; sourceTree = "<group>"; };
 		771CA915156F59BF005A32EF /* MDHyperLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDHyperLink.m; sourceTree = "<group>"; };
-		771CA91F15702027005A32EF /* DSClickableURLTextField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DSClickableURLTextField.h; sourceTree = "<group>"; };
-		771CA92015702027005A32EF /* DSClickableURLTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DSClickableURLTextField.m; sourceTree = "<group>"; };
 		77329B88168D95CB007DCAE2 /* halomd_overrides */ = {isa = PBXFileReference; lastKnownFileType = folder; path = halomd_overrides; sourceTree = "<group>"; };
 		77329B8A168D95F3007DCAE2 /* h_master_server.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = h_master_server.rb; sourceTree = "<group>"; };
-		77437FAD1738662500257A08 /* TCMPortMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TCMPortMapper.framework; sourceTree = "<group>"; };
-		774EF66617C71F03005ABB20 /* xmpp4r */ = {isa = PBXFileReference; lastKnownFileType = folder; name = xmpp4r; path = vendor/xmpp4r; sourceTree = "<group>"; };
-		774EF66817C71F09005ABB20 /* xmpp4r.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = xmpp4r.rb; path = vendor/xmpp4r.rb; sourceTree = "<group>"; };
-		774EF66B17C71F41005ABB20 /* SCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCConstants.h; path = vendor/SCEvents/SCConstants.h; sourceTree = "<group>"; };
-		774EF66C17C71F41005ABB20 /* SCEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCEvent.h; path = vendor/SCEvents/SCEvent.h; sourceTree = "<group>"; };
-		774EF66D17C71F41005ABB20 /* SCEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCEvent.m; path = vendor/SCEvents/SCEvent.m; sourceTree = "<group>"; };
-		774EF66E17C71F41005ABB20 /* SCEventListenerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCEventListenerProtocol.h; path = vendor/SCEvents/SCEventListenerProtocol.h; sourceTree = "<group>"; };
-		774EF66F17C71F41005ABB20 /* SCEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCEvents.h; path = vendor/SCEvents/SCEvents.h; sourceTree = "<group>"; };
-		774EF67017C71F41005ABB20 /* SCEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCEvents.m; path = vendor/SCEvents/SCEvents.m; sourceTree = "<group>"; };
-		774EF67317C71F6A005ABB20 /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSONKit.h; path = vendor/JSONKit.h; sourceTree = "<group>"; };
-		774EF67417C71F6A005ABB20 /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSONKit.m; path = vendor/JSONKit.m; sourceTree = "<group>"; };
-		774EF67617C71FC6005ABB20 /* crc32forge.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = crc32forge.py; path = vendor/crc32forge.py; sourceTree = "<group>"; };
+		774EF67817C7210B005ABB20 /* xmpp4r */ = {isa = PBXFileReference; lastKnownFileType = folder; name = xmpp4r; path = vendor/xmpp4r; sourceTree = SOURCE_ROOT; };
+		774EF67A17C72111005ABB20 /* xmpp4r.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = xmpp4r.rb; path = vendor/xmpp4r.rb; sourceTree = SOURCE_ROOT; };
+		774EF67C17C72117005ABB20 /* crc32forge.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = crc32forge.py; path = vendor/crc32forge.py; sourceTree = SOURCE_ROOT; };
+		774EF68117C72134005ABB20 /* SCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCConstants.h; path = vendor/SCEvents/SCConstants.h; sourceTree = SOURCE_ROOT; };
+		774EF68217C72134005ABB20 /* SCEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCEvent.h; path = vendor/SCEvents/SCEvent.h; sourceTree = SOURCE_ROOT; };
+		774EF68317C72134005ABB20 /* SCEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCEvent.m; path = vendor/SCEvents/SCEvent.m; sourceTree = SOURCE_ROOT; };
+		774EF68417C72134005ABB20 /* SCEventListenerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCEventListenerProtocol.h; path = vendor/SCEvents/SCEventListenerProtocol.h; sourceTree = SOURCE_ROOT; };
+		774EF68517C72134005ABB20 /* SCEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCEvents.h; path = vendor/SCEvents/SCEvents.h; sourceTree = SOURCE_ROOT; };
+		774EF68617C72134005ABB20 /* SCEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCEvents.m; path = vendor/SCEvents/SCEvents.m; sourceTree = SOURCE_ROOT; };
+		774EF68917C72142005ABB20 /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSONKit.h; path = vendor/JSONKit.h; sourceTree = SOURCE_ROOT; };
+		774EF68A17C72142005ABB20 /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSONKit.m; path = vendor/JSONKit.m; sourceTree = SOURCE_ROOT; };
+		774EF68C17C72178005ABB20 /* DSClickableURLTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DSClickableURLTextField.h; path = vendor/DSClickableURLTextField.h; sourceTree = SOURCE_ROOT; };
+		774EF68D17C72178005ABB20 /* DSClickableURLTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DSClickableURLTextField.m; path = vendor/DSClickableURLTextField.m; sourceTree = SOURCE_ROOT; };
+		774EF68F17C721CC005ABB20 /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Growl.framework; path = vendor/Growl.framework; sourceTree = "<group>"; };
+		774EF69117C721D1005ABB20 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = vendor/Sparkle.framework; sourceTree = "<group>"; };
+		774EF69317C721D5005ABB20 /* TCMPortMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TCMPortMapper.framework; path = vendor/TCMPortMapper.framework; sourceTree = "<group>"; };
 		775B528914D331C800B874E3 /* HaloMD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HaloMD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		775B528D14D331C800B874E3 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		775B529014D331C800B874E3 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -128,7 +132,6 @@
 		775B52B214D332B800B874E3 /* MDServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDServer.h; sourceTree = "<group>"; };
 		775B52B314D332B800B874E3 /* MDServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDServer.m; sourceTree = "<group>"; };
 		775B52B614D332C100B874E3 /* networking.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = networking.rb; sourceTree = "<group>"; };
-		776E3FA714FAA9D0001414AB /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		776E3FAC14FAAC01001414AB /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		777A1AEF1738F588005E2883 /* chat_icon.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = chat_icon.pdf; sourceTree = "<group>"; };
 		77904A37151C26BF0046EA96 /* keygen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = keygen.c; sourceTree = "<group>"; };
@@ -156,7 +159,6 @@
 		77E7E288172463C400E18FB9 /* MDChatRosterElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDChatRosterElement.h; sourceTree = "<group>"; };
 		77E7E289172463C400E18FB9 /* MDChatRosterElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDChatRosterElement.m; sourceTree = "<group>"; };
 		77E7E28E172477E000E18FB9 /* Growl Registration Ticket.growlRegDict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Growl Registration Ticket.growlRegDict"; sourceTree = "<group>"; };
-		77E7E2911724818200E18FB9 /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Growl.framework; sourceTree = "<group>"; };
 		77E7E2941724B16000E18FB9 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = ../../../../../System/Library/Frameworks/IOKit.framework; sourceTree = "<group>"; };
 		77E7E2961724B17300E18FB9 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = ../../../../../System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<group>"; };
 		77F65ECD150B1E2F00D26C71 /* MDInspectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDInspectorController.h; sourceTree = "<group>"; };
@@ -173,27 +175,28 @@
 			files = (
 				775B528E14D331C800B874E3 /* Cocoa.framework in Frameworks */,
 				77DD81F314EDFDE200EBA4CE /* Ruby.framework in Frameworks */,
-				776E3FA814FAA9D1001414AB /* Sparkle.framework in Frameworks */,
 				77CF348615DA33FB005ECB2F /* CoreServices.framework in Frameworks */,
 				77E52D2616D8A2640015246C /* WebKit.framework in Frameworks */,
 				77E7E2951724B16000E18FB9 /* IOKit.framework in Frameworks */,
 				77E7E2971724B17300E18FB9 /* CoreFoundation.framework in Frameworks */,
-				77437FAE1738662500257A08 /* TCMPortMapper.framework in Frameworks */,
+				774EF69017C721CC005ABB20 /* Growl.framework in Frameworks */,
+				774EF69217C721D1005ABB20 /* Sparkle.framework in Frameworks */,
+				774EF69417C721D5005ABB20 /* TCMPortMapper.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		774EF66A17C71F35005ABB20 /* SCEvents */ = {
+		774EF67E17C7211F005ABB20 /* SCEvents */ = {
 			isa = PBXGroup;
 			children = (
-				774EF66B17C71F41005ABB20 /* SCConstants.h */,
-				774EF66C17C71F41005ABB20 /* SCEvent.h */,
-				774EF66D17C71F41005ABB20 /* SCEvent.m */,
-				774EF66E17C71F41005ABB20 /* SCEventListenerProtocol.h */,
-				774EF66F17C71F41005ABB20 /* SCEvents.h */,
-				774EF67017C71F41005ABB20 /* SCEvents.m */,
+				774EF68117C72134005ABB20 /* SCConstants.h */,
+				774EF68217C72134005ABB20 /* SCEvent.h */,
+				774EF68317C72134005ABB20 /* SCEvent.m */,
+				774EF68417C72134005ABB20 /* SCEventListenerProtocol.h */,
+				774EF68517C72134005ABB20 /* SCEvents.h */,
+				774EF68617C72134005ABB20 /* SCEvents.m */,
 			);
 			name = SCEvents;
 			sourceTree = "<group>";
@@ -218,13 +221,13 @@
 		775B528C14D331C800B874E3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				77437FAD1738662500257A08 /* TCMPortMapper.framework */,
+				774EF69317C721D5005ABB20 /* TCMPortMapper.framework */,
+				774EF69117C721D1005ABB20 /* Sparkle.framework */,
+				774EF68F17C721CC005ABB20 /* Growl.framework */,
 				77E7E2961724B17300E18FB9 /* CoreFoundation.framework */,
 				77E7E2941724B16000E18FB9 /* IOKit.framework */,
-				77E7E2911724818200E18FB9 /* Growl.framework */,
 				77E52D2516D8A2640015246C /* WebKit.framework */,
 				77CF348515DA33FB005ECB2F /* CoreServices.framework */,
-				776E3FA714FAA9D0001414AB /* Sparkle.framework */,
 				77DD81F214EDFDE200EBA4CE /* Ruby.framework */,
 				775B528D14D331C800B874E3 /* Cocoa.framework */,
 				775B528F14D331C800B874E3 /* Other Frameworks */,
@@ -245,9 +248,11 @@
 		775B529314D331C800B874E3 /* HaloMD */ = {
 			isa = PBXGroup;
 			children = (
-				774EF67317C71F6A005ABB20 /* JSONKit.h */,
-				774EF67417C71F6A005ABB20 /* JSONKit.m */,
-				774EF66A17C71F35005ABB20 /* SCEvents */,
+				774EF68C17C72178005ABB20 /* DSClickableURLTextField.h */,
+				774EF68D17C72178005ABB20 /* DSClickableURLTextField.m */,
+				774EF68917C72142005ABB20 /* JSONKit.h */,
+				774EF68A17C72142005ABB20 /* JSONKit.m */,
+				774EF67E17C7211F005ABB20 /* SCEvents */,
 				77329B88168D95CB007DCAE2 /* halomd_overrides */,
 				775B529F14D331C800B874E3 /* AppDelegate.h */,
 				775B52A014D331C800B874E3 /* AppDelegate.m */,
@@ -269,8 +274,6 @@
 				775B52B314D332B800B874E3 /* MDServer.m */,
 				77F65ED1150B253F00D26C71 /* MDPlayer.h */,
 				77F65ED2150B253F00D26C71 /* MDPlayer.m */,
-				771CA91F15702027005A32EF /* DSClickableURLTextField.h */,
-				771CA92015702027005A32EF /* DSClickableURLTextField.m */,
 				771CA914156F59BF005A32EF /* MDHyperLink.h */,
 				771CA915156F59BF005A32EF /* MDHyperLink.m */,
 				77152B1E163B5AEA00F136BF /* MDNetworking.h */,
@@ -299,12 +302,12 @@
 				77E52D2716D8A31C0015246C /* index.html */,
 				77E52D2116D8A1D60015246C /* theme.css */,
 				77FE2525165A14C4009703CE /* halomd_overrides.dylib */,
-				774EF66817C71F09005ABB20 /* xmpp4r.rb */,
-				774EF66617C71F03005ABB20 /* xmpp4r */,
 				77D44A5A164A076100510501 /* lock.png */,
 				770BEEB1154DB7900052193F /* shield.icns */,
-				774EF67617C71FC6005ABB20 /* crc32forge.py */,
 				776E3FAC14FAAC01001414AB /* dsa_pub.pem */,
+				774EF67C17C72117005ABB20 /* crc32forge.py */,
+				774EF67A17C72111005ABB20 /* xmpp4r.rb */,
+				774EF67817C7210B005ABB20 /* xmpp4r */,
 				7706FC0E14DBB26C0023DBA4 /* Data */,
 				775B52AC14D3326800B874E3 /* com.null.halominidemo.plist */,
 				775B529514D331C800B874E3 /* HaloMD-Info.plist */,
@@ -327,7 +330,7 @@
 				775B528614D331C800B874E3 /* Frameworks */,
 				775B528714D331C800B874E3 /* Resources */,
 				7706FC1014DBB2830023DBA4 /* CopyFiles */,
-				776E3FAA14FAA9F0001414AB /* CopyFiles */,
+				776E3FAA14FAA9F0001414AB /* Copy Files */,
 			);
 			buildRules = (
 			);
@@ -388,9 +391,9 @@
 				77971958173B3D6600007D80 /* CSnd.aif in Resources */,
 				770C153D1741CC37001380A8 /* game_icon.pdf in Resources */,
 				770C15411742E1FD001380A8 /* in_chat_icon.pdf in Resources */,
-				774EF66717C71F03005ABB20 /* xmpp4r in Resources */,
-				774EF66917C71F09005ABB20 /* xmpp4r.rb in Resources */,
-				774EF67717C71FC6005ABB20 /* crc32forge.py in Resources */,
+				774EF67917C7210B005ABB20 /* xmpp4r in Resources */,
+				774EF67B17C72111005ABB20 /* xmpp4r.rb in Resources */,
+				774EF67D17C72117005ABB20 /* crc32forge.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -408,7 +411,6 @@
 				77F65ED3150B253F00D26C71 /* MDPlayer.m in Sources */,
 				77904A38151C26BF0046EA96 /* keygen.c in Sources */,
 				771CA916156F59BF005A32EF /* MDHyperLink.m in Sources */,
-				771CA92315702141005A32EF /* DSClickableURLTextField.m in Sources */,
 				77B58A921571AF4900C93121 /* MDModsController.m in Sources */,
 				77B58AAA1572BF6200C93121 /* MDModListItem.m in Sources */,
 				77152B20163B5AEA00F136BF /* MDNetworking.m in Sources */,
@@ -416,9 +418,10 @@
 				77E7E2871720FCB100E18FB9 /* MDModPatch.m in Sources */,
 				77E7E28A172463C500E18FB9 /* MDChatRosterElement.m in Sources */,
 				7797195B173B698600007D80 /* MDChatWindow.m in Sources */,
-				774EF67117C71F41005ABB20 /* SCEvent.m in Sources */,
-				774EF67217C71F41005ABB20 /* SCEvents.m in Sources */,
-				774EF67517C71F6A005ABB20 /* JSONKit.m in Sources */,
+				774EF68717C72134005ABB20 /* SCEvent.m in Sources */,
+				774EF68817C72134005ABB20 /* SCEvents.m in Sources */,
+				774EF68B17C72142005ABB20 /* JSONKit.m in Sources */,
+				774EF68E17C72178005ABB20 /* DSClickableURLTextField.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -515,6 +518,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/vendor\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HaloMD/HaloMD-Prefix.pch";
@@ -540,6 +544,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/vendor\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HaloMD/HaloMD-Prefix.pch";
