@@ -158,6 +158,12 @@ unless stock_map_patch_choice == 0
 	patch_identifiers << stock_map_patch
 end
 
+puts "Type in another identifier you'd like to create a patch for (leave blank if none)"
+new_identifier = $stdin.gets.chomp
+unless new_identifier.empty?
+	patch_identifiers << new_identifier
+end
+
 new_patch_entries = []
 
 if patch_identifiers.count == 0
