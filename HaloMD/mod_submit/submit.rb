@@ -151,7 +151,7 @@ if stock_map_patch_choice == 0
 	end
 end
 
-patch_identifiers = previous_versions.map {|entry| entry['identifier']}
+patch_identifiers = (previous_versions.map {|entry| entry['identifier']})[0, 3]
 unless stock_map_patch_choice == 0
 	stock_map_patch = stock_maps[stock_map_patch_choice-1]
 	puts "Selected stock map #{stock_map_patch} for patching...\n\n"
