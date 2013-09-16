@@ -27,13 +27,6 @@
 #Port 29910 on UDP and 29920 on TCP will both need to be open on the server running this
 
 require 'socket'
-require 'fileutils'
-
-MY_ADDRESS = "halo.macgamingmods.com"
-MY_PORT = 2305
-
-OLD_MD_STATS_PATH = "md_old_stats.txt"
-NEW_AND_OLD_MD_STATS_PATH = "md_new_and_old_stats.txt"
 
 MASTER_SERVER_PORT = 29910
 NAT_SERVER_PORT = 27900
@@ -77,27 +70,6 @@ class MasterServer
 		end
 	end
 
-	def increment_file_counter(filepath)
-		if File.exist?(filepath)
-			begin
-				file = File.open(filepath, "r")
-				data = file.read
-				file.close()
-
-				counter = data.to_s.to_i + 1
-
-				temp_path = filepath + "_"
-				file = File.open(temp_path, "w")
-				file.write(counter.to_s)
-				file.close
-
-				FileUtils.mv(temp_path, filepath)
-			rescue
-				puts "Failed to increment counter for #{filepath}"
-			end
-		end
-	end
-
 	def initialize
 		@server = UDPSocket.new
 		#it is important to use 0.0.0.0, not localhost or anything else
@@ -105,11 +77,6 @@ class MasterServer
 		
 		@nat_server = UDPSocket.new
 		@nat_server.bind('0.0.0.0', NAT_SERVER_PORT)
-
-		@halo_server = UDPSocket.new
-		@halo_server.bind('0.0.0.0', MY_PORT)
-
-		@my_ip_address = IPSocket::getaddress(MY_ADDRESS)
 		
 		@tcp_server = TCPServer.open(29920)
 		
@@ -142,9 +109,6 @@ class MasterServer
 		else
 			puts "Not using a dedicated server file"
 		end
-
-		initialize_file_counter(OLD_MD_STATS_PATH)
-		initialize_file_counter(NEW_AND_OLD_MD_STATS_PATH)
 		
 		run()
 	end
@@ -160,16 +124,7 @@ class MasterServer
 	
 	def run
 		loop do
-			results = select([@server, @tcp_server, @halo_server, @nat_server], nil, nil, 1)
-
-			if results and results[0].include?(@halo_server)
-				data, receiver = @halo_server.recvfrom(1024)
-				if data.bytes.to_a.pack('c*') == @query_message
-					message_data = open('packet_data').read
-					@halo_server.send(message_data, 0, receiver[3], receiver[1])
-					increment_file_counter(OLD_MD_STATS_PATH)
-				end
-			end
+			results = select([@server, @tcp_server, @nat_server], nil, nil, 1)
 			
 			if results and results[0].include?(@tcp_server)
 				client = @tcp_server.accept
@@ -184,8 +139,6 @@ class MasterServer
 					puts "Failed to get client IP address"
 					lobby_addresses << "127.0.0.1:49149:3425"
 				end
-
-				lobby_addresses << "#{@my_ip_address}:#{MY_PORT}"
 				
 				begin
 					client.print(lobby_addresses.join("\n"))
@@ -194,8 +147,6 @@ class MasterServer
 				end
 
 				client.close()
-
-				increment_file_counter(NEW_AND_OLD_MD_STATS_PATH)
 			end
 
 			if results and results[0].include?(@nat_server)
