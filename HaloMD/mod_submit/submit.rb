@@ -130,6 +130,7 @@ puts "\n"
 stock_map_patch_choice = 0
 if previous_versions.count > 0
 	previous_patches = previous_versions[0]['patches']
+	previous_patches = [] unless previous_patches #very old mods may not have a patches field
 	stock_patches = previous_patches.select {|patch| stock_maps.include? patch['base_identifier']}
 	if stock_patches.count > 0
 		stock_map_patch_choice = stock_maps.index(stock_patches[0]['base_identifier']) + 1
