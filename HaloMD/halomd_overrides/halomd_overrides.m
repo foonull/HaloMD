@@ -168,6 +168,9 @@ void *loadMapFunc(const char *argument)
 
 void halomd_overrides_init()
 {
+	// Reserve memory halo wants before halo initiates, should help fix a bug in 10.9 where GPU drivers may have been loaded here
+	mmap((void *)0x40000000, 0x1b40000, PROT_READ | PROT_WRITE, MAP_FIXED | MAP_ANON | MAP_PRIVATE, -1, 0);
+	
 	mach_override_ptr((void *)0x001be2a0, svMapFunc, (void **)&oldSvMapFunc);
 	mach_override_ptr((void *)0x0018f320, loadMapFunc, (void **)&oldLoadMapFunc);
 }
