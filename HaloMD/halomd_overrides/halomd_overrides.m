@@ -35,6 +35,22 @@
 
 #define SWAP_IDENTIFIER "magiciswaiting"
 
+typedef CF_ENUM(CFIndex, CFSystemVersion) {
+    CFSystemVersionCheetah = 0,         /* 10.0 */
+    CFSystemVersionPuma = 1,            /* 10.1 */
+    CFSystemVersionJaguar = 2,          /* 10.2 */
+    CFSystemVersionPanther = 3,         /* 10.3 */
+    CFSystemVersionTiger = 4,           /* 10.4 */
+    CFSystemVersionLeopard = 5,         /* 10.5 */
+    CFSystemVersionSnowLeopard = 6,	/* 10.6 */
+    CFSystemVersionLion = 7,		/* 10.7 */
+    CFSystemVersionMountainLion = 8,    /* 10.8 */
+    CFSystemVersionMax,                 /* This should bump up when new entries are added */
+	
+};
+
+CF_EXPORT Boolean _CFExecutableLinkedOnOrAfter(CFSystemVersion version);
+
 NSMutableArray *executableMaps = nil;
 char *magicSlotBuffer = NULL;
 char *moddedSlotBuffer = NULL;
@@ -168,8 +184,10 @@ void *loadMapFunc(const char *argument)
 
 void halomd_overrides_init()
 {
-	// Reserve memory halo wants before halo initiates, should help fix a bug in 10.9 where GPU drivers may have been loaded here
-	mmap((void *)0x40000000, 0x1b40000, PROT_READ | PROT_WRITE, MAP_FIXED | MAP_ANON | MAP_PRIVATE, -1, 0);
+	if (_CFExecutableLinkedOnOrAfter(CFSystemVersionMountainLion)) {
+		// Reserve memory halo wants before halo initiates, should help fix a bug in 10.9 where GPU drivers may have been loaded here
+		mmap((void *)0x40000000, 0x1b40000, PROT_READ | PROT_WRITE, MAP_FIXED | MAP_ANON | MAP_PRIVATE, -1, 0);
+	}
 	
 	mach_override_ptr((void *)0x001be2a0, svMapFunc, (void **)&oldSvMapFunc);
 	mach_override_ptr((void *)0x0018f320, loadMapFunc, (void **)&oldLoadMapFunc);
