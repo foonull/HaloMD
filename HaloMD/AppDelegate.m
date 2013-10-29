@@ -425,7 +425,7 @@ VALUE requireWrapper(VALUE path)
 		{
 			// HaloMD is already running, just make it active
 			NSRunningApplication *haloApplication = [NSRunningApplication runningApplicationWithProcessIdentifier:[haloTask processIdentifier]];
-			if (!haloApplication)
+			if (!haloApplication && [runningHaloApplications count] > 0)
 			{
 				haloApplication = [runningHaloApplications objectAtIndex:0];
 			}
