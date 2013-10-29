@@ -530,7 +530,10 @@ static id sharedInstance = nil;
 	}
 	else if (initialModIdentifier && ![appDelegate isHaloOpen]) // A mod isn't swapped in, let's swap one in
 	{
-		[self enableMod:[[self modMenuItems] objectAtIndex:0]];
+		if ([[self modMenuItems] count] > 0)
+		{
+			[self enableMod:[[self modMenuItems] objectAtIndex:0]];
+		}
 	}
 }
 
