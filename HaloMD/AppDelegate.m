@@ -418,7 +418,8 @@ VALUE requireWrapper(VALUE path)
 	[modsController setJoiningServer:nil];
 	
 	Class runningApplicationClass = NSClassFromString(@"NSRunningApplication");
-	if ([haloTask isRunning] || [[runningApplicationClass runningApplicationsWithBundleIdentifier:HALO_MD_IDENTIFIER] count] > 0)
+	NSArray *runningHaloApplications = [runningApplicationClass runningApplicationsWithBundleIdentifier:HALO_MD_IDENTIFIER];
+	if ([haloTask isRunning] || [runningHaloApplications count] > 0)
 	{
 		if (runningApplicationClass)
 		{
@@ -426,7 +427,7 @@ VALUE requireWrapper(VALUE path)
 			NSRunningApplication *haloApplication = [NSRunningApplication runningApplicationWithProcessIdentifier:[haloTask processIdentifier]];
 			if (!haloApplication)
 			{
-				haloApplication = [[NSRunningApplication runningApplicationsWithBundleIdentifier:HALO_MD_IDENTIFIER] objectAtIndex:0];
+				haloApplication = [runningHaloApplications objectAtIndex:0];
 			}
 			
 			[haloApplication activateWithOptions:NSApplicationActivateAllWindows];
