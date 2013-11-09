@@ -187,11 +187,10 @@ VALUE requireWrapper(VALUE path)
 		
 		[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector(getUrl:withReplyEvent:) forEventClass:kInternetEventClass andEventID:kAEGetURL];
 		
-		if (NSAppKitVersionNumber >= NSAppKitVersionNumber10_6)
+		if ([[NSBundle class] respondsToSelector:@selector(bundleWithURL:)]) // easy way to tell if user is on >= 10.6
 		{
 			NSString *growlPath = [[[[NSBundle mainBundle] privateFrameworksPath] stringByAppendingPathComponent:@"Growl"] stringByAppendingPathExtension:@"framework"];
 			[[NSBundle bundleWithPath:growlPath] load];
-			
 			[NSClassFromString(@"GrowlApplicationBridge") setGrowlDelegate:(id<GrowlApplicationBridgeDelegate>)self];
 		}
 	}
