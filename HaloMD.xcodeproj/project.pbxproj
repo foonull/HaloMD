@@ -13,6 +13,9 @@
 		770C15411742E1FD001380A8 /* in_chat_icon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 770C15401742E1FC001380A8 /* in_chat_icon.pdf */; };
 		77152B20163B5AEA00F136BF /* MDNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 77152B1F163B5AEA00F136BF /* MDNetworking.m */; };
 		771CA916156F59BF005A32EF /* MDHyperLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 771CA915156F59BF005A32EF /* MDHyperLink.m */; };
+		773E8AD81820C7B000D1A71A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 773E8AD61820C7A500D1A71A /* Cocoa.framework */; };
+		773E8ADB1820C7C000D1A71A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 773E8AD91820C7B700D1A71A /* Foundation.framework */; };
+		773E8ADE1820C7CE00D1A71A /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 773E8ADC1820C7C500D1A71A /* AppKit.framework */; };
 		774EF67917C7210B005ABB20 /* xmpp4r in Resources */ = {isa = PBXBuildFile; fileRef = 774EF67817C7210B005ABB20 /* xmpp4r */; };
 		774EF67B17C72111005ABB20 /* xmpp4r.rb in Resources */ = {isa = PBXBuildFile; fileRef = 774EF67A17C72111005ABB20 /* xmpp4r.rb */; };
 		774EF67D17C72117005ABB20 /* crc32forge.py in Resources */ = {isa = PBXBuildFile; fileRef = 774EF67C17C72117005ABB20 /* crc32forge.py */; };
@@ -20,13 +23,11 @@
 		774EF68817C72134005ABB20 /* SCEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF68617C72134005ABB20 /* SCEvents.m */; };
 		774EF68B17C72142005ABB20 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF68A17C72142005ABB20 /* JSONKit.m */; };
 		774EF68E17C72178005ABB20 /* DSClickableURLTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF68D17C72178005ABB20 /* DSClickableURLTextField.m */; };
-		774EF69017C721CC005ABB20 /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 774EF68F17C721CC005ABB20 /* Growl.framework */; };
 		774EF69217C721D1005ABB20 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 774EF69117C721D1005ABB20 /* Sparkle.framework */; };
 		774EF69417C721D5005ABB20 /* TCMPortMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 774EF69317C721D5005ABB20 /* TCMPortMapper.framework */; };
 		774EF69517C7222D005ABB20 /* TCMPortMapper.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 774EF69317C721D5005ABB20 /* TCMPortMapper.framework */; };
 		774EF69617C7222D005ABB20 /* Sparkle.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 774EF69117C721D1005ABB20 /* Sparkle.framework */; };
 		774EF69717C7222D005ABB20 /* Growl.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 774EF68F17C721CC005ABB20 /* Growl.framework */; };
-		775B528E14D331C800B874E3 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 775B528D14D331C800B874E3 /* Cocoa.framework */; };
 		775B529814D331C800B874E3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 775B529614D331C800B874E3 /* InfoPlist.strings */; };
 		775B529A14D331C800B874E3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 775B529914D331C800B874E3 /* main.m */; };
 		775B529E14D331C800B874E3 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 775B529C14D331C800B874E3 /* Credits.rtf */; };
@@ -99,6 +100,9 @@
 		771CA915156F59BF005A32EF /* MDHyperLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDHyperLink.m; sourceTree = "<group>"; };
 		77329B88168D95CB007DCAE2 /* halomd_overrides */ = {isa = PBXFileReference; lastKnownFileType = folder; path = halomd_overrides; sourceTree = "<group>"; };
 		77329B8A168D95F3007DCAE2 /* h_master_server.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = h_master_server.rb; sourceTree = "<group>"; };
+		773E8AD61820C7A500D1A71A /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		773E8AD91820C7B700D1A71A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		773E8ADC1820C7C500D1A71A /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/AppKit.framework; sourceTree = DEVELOPER_DIR; };
 		774EF67817C7210B005ABB20 /* xmpp4r */ = {isa = PBXFileReference; lastKnownFileType = folder; name = xmpp4r; path = vendor/xmpp4r; sourceTree = SOURCE_ROOT; };
 		774EF67A17C72111005ABB20 /* xmpp4r.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = xmpp4r.rb; path = vendor/xmpp4r.rb; sourceTree = SOURCE_ROOT; };
 		774EF67C17C72117005ABB20 /* crc32forge.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = crc32forge.py; path = vendor/crc32forge.py; sourceTree = SOURCE_ROOT; };
@@ -116,10 +120,6 @@
 		774EF69117C721D1005ABB20 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = vendor/Sparkle.framework; sourceTree = "<group>"; };
 		774EF69317C721D5005ABB20 /* TCMPortMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TCMPortMapper.framework; path = vendor/TCMPortMapper.framework; sourceTree = "<group>"; };
 		775B528914D331C800B874E3 /* HaloMD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HaloMD.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		775B528D14D331C800B874E3 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		775B529014D331C800B874E3 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		775B529114D331C800B874E3 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		775B529214D331C800B874E3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		775B529514D331C800B874E3 /* HaloMD-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "HaloMD-Info.plist"; sourceTree = "<group>"; };
 		775B529714D331C800B874E3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		775B529914D331C800B874E3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -173,13 +173,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				775B528E14D331C800B874E3 /* Cocoa.framework in Frameworks */,
+				773E8ADE1820C7CE00D1A71A /* AppKit.framework in Frameworks */,
+				773E8ADB1820C7C000D1A71A /* Foundation.framework in Frameworks */,
+				773E8AD81820C7B000D1A71A /* Cocoa.framework in Frameworks */,
 				77DD81F314EDFDE200EBA4CE /* Ruby.framework in Frameworks */,
 				77CF348615DA33FB005ECB2F /* CoreServices.framework in Frameworks */,
 				77E52D2616D8A2640015246C /* WebKit.framework in Frameworks */,
 				77E7E2951724B16000E18FB9 /* IOKit.framework in Frameworks */,
 				77E7E2971724B17300E18FB9 /* CoreFoundation.framework in Frameworks */,
-				774EF69017C721CC005ABB20 /* Growl.framework in Frameworks */,
 				774EF69217C721D1005ABB20 /* Sparkle.framework in Frameworks */,
 				774EF69417C721D5005ABB20 /* TCMPortMapper.framework in Frameworks */,
 			);
@@ -229,7 +230,6 @@
 				77E52D2516D8A2640015246C /* WebKit.framework */,
 				77CF348515DA33FB005ECB2F /* CoreServices.framework */,
 				77DD81F214EDFDE200EBA4CE /* Ruby.framework */,
-				775B528D14D331C800B874E3 /* Cocoa.framework */,
 				775B528F14D331C800B874E3 /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -238,9 +238,9 @@
 		775B528F14D331C800B874E3 /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				775B529014D331C800B874E3 /* AppKit.framework */,
-				775B529114D331C800B874E3 /* CoreData.framework */,
-				775B529214D331C800B874E3 /* Foundation.framework */,
+				773E8ADC1820C7C500D1A71A /* AppKit.framework */,
+				773E8AD91820C7B700D1A71A /* Foundation.framework */,
+				773E8AD61820C7A500D1A71A /* Cocoa.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
