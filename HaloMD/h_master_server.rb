@@ -58,18 +58,6 @@ class Game
 end
 
 class MasterServer
-	def initialize_file_counter(filepath)
-		if not File.exist?(filepath)
-			begin
-				file = File.open(filepath, "w")
-				file.write("0")
-				file.close()
-			rescue
-				puts "Failed to write initial counter for #{filepath}"
-			end
-		end
-	end
-
 	def initialize
 		@server = UDPSocket.new
 		#it is important to use 0.0.0.0, not localhost or anything else
