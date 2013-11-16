@@ -107,7 +107,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		[registeredDefaults setObject:@""
 							   forKey:MODS_LIST_DOWNLOAD_TIME_KEY];
 		
-		[registeredDefaults setObject:[NSArray arrayWithObjects:@"173.199.66.70:2302", @"198.23.244.121:2300", @"66.225.231.168:2306", @"66.225.231.168:2302", @"10.1.1.1:49149:3425", nil] forKey:HALO_LOBBY_GAMES_CACHE_KEY];
+		[registeredDefaults setObject:[NSArray arrayWithObjects:@"23.94.32.156:2301", @"198.23.244.145:2302", @"66.225.231.168:2306", @"162.217.250.28:2300", @"10.1.1.1:49149:3425", nil] forKey:HALO_LOBBY_GAMES_CACHE_KEY];
 		
 		[registeredDefaults setObject:[NSNumber numberWithBool:NO] forKey:HALO_FIX_SCORE_KEY];
 		
