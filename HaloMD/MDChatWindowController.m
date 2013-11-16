@@ -606,7 +606,7 @@ static VALUE sendMessageSafely(VALUE data)
 {
     [super windowDidLoad];
 	
-	[rosterTableView setDoubleAction:@selector(joinGameFromRoster:)];
+	[rosterTableView setDoubleAction:@selector(initiateUserFromRoster:)];
     
 	[webView setDrawsBackground:NO];
     [webView setUIDelegate:self];
@@ -618,16 +618,17 @@ static VALUE sendMessageSafely(VALUE data)
     [[webView mainFrame] loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:htmlPath]]];
 }
 
-- (IBAction)joinGameFromRoster:(id)sender
+- (IBAction)initiateUserFromRoster:(id)sender
 {
 	if ([rosterTableView selectedRow] >= 0 && [rosterTableView selectedRow] < [roster count])
 	{
 		MDChatRosterElement *rosterElement = [roster objectAtIndex:[rosterTableView selectedRow]];
-		if (![[rosterElement name] isEqualToString:myNick] && [[rosterElement status] hasPrefix:MD_STATUS_PREFIX])
+		if (![[rosterElement name] isEqualToString:myNick])
 		{
 			NSArray *statusComponents = [[rosterElement status] componentsSeparatedByString:@":"];
-			if ([statusComponents count] >= 3)
+			if ([[rosterElement status] hasPrefix:MD_STATUS_PREFIX] && [statusComponents count] >= 3)
 			{
+				// join user's game
 				NSString *ipAddress = [statusComponents objectAtIndex:1];
 				int portNumber = [[statusComponents objectAtIndex:2] intValue];
 				for (id server in [[NSApp delegate] servers])
@@ -638,6 +639,12 @@ static VALUE sendMessageSafely(VALUE data)
 						break;
 					}
 				}
+			}
+			else
+			{
+				// initiate private message to user
+				[[[textView textStorage] mutableString] setString:[NSString stringWithFormat:@"/msg %@ ", [rosterElement name]]];
+				[[self window] makeFirstResponder:textView];
 			}
 		}
 	}
