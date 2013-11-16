@@ -74,6 +74,10 @@ class Chatting
 			self.process nick == @nick ? 'my_message' : 'on_message', (time || Time.new).strftime(@time_format) + " <#{nick}> #{text}", nick, text
 		}
 		
+		@muc.on_private_message { |time, nick, text|
+			self.process nick == @nick ? 'my_message' : 'on_private_message', (time || Time.new).strftime(@time_format) + " Private: <#{nick}> #{text}", nick, text
+		}
+		
 		@muc.on_join {|time, nick|
 			self.process 'on_join', (time || Time.new).strftime(@time_format) + " <#{nick}> joined", nick, nil
 		}
@@ -155,8 +159,16 @@ class Chatting
 		if @muc and @client
 			if message.length > 0
 				if message[0, 1] == '/'
-					command = message[1..-1]
-					if ["users", "roster"].include? command
+					command_components = message[1..-1].split(" ")
+					command = command_components[0]
+					if ["msg"].include? command
+						if command_components.length > 2
+							to = command_components[1]
+							final_message = command_components[2..-1].join(" ")
+							self.process 'my_private_message', (Time.new).strftime(@time_format) + " <Private message to #{to}>: #{final_message}", @nick, final_message
+							@muc.say(final_message, to)
+						end
+					elsif ["users", "roster"].include? command
 						self.process 'roster', "Users: " + self.roster.map {|roster_item| roster_item[0]}.join(", "), nil, nil
 					elsif ["subject", "topic"].include? command
 						self.process 'on_subject', "Topic: " + @muc.subject, nil, nil

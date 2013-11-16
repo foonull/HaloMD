@@ -383,7 +383,7 @@ static VALUE presenceChanged(VALUE self, VALUE presence)
 		}
 	}
 	
-	if ([[NSArray arrayWithObjects:@"on_message", @"my_message", @"on_leave", @"on_self_leave", @"on_join", @"connection_failed", @"connection_failed_timeout", @"muc_join_failed", @"connection_initiating", @"muc_joined", @"roster", @"subject", nil] containsObject:typeString])
+	if ([[NSArray arrayWithObjects:@"on_message", @"on_private_message", @"my_message", @"my_private_message", @"on_leave", @"on_self_leave", @"on_join", @"connection_failed", @"connection_failed_timeout", @"muc_join_failed", @"connection_initiating", @"muc_joined", @"roster", @"subject", nil] containsObject:typeString])
 	{
 		DOMElement *newParagraph = [document createElement:@"p"];
 		[newParagraph setAttribute:@"class" value:[typeString stringByAppendingString:@" message"]];
@@ -428,7 +428,7 @@ static VALUE presenceChanged(VALUE self, VALUE presence)
 			updateMyStatus();
 		}
 		
-		if ([typeString isEqualToString:@"on_message"])
+		if ([[NSArray arrayWithObjects:@"on_message", @"on_private_message", nil] containsObject:typeString])
 		{
 			if (textString)
 			{

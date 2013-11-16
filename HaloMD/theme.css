@@ -70,9 +70,21 @@ body {
     border-left: 8px solid #777;
 }
 
+.on_private_message {
+	font-size: 11px;
+	color: purple;
+	border-left: 8px solid #000000;
+}
+
 .my_message {
     font-size: 11px;
     border-left: 8px solid #000000;
+}
+
+.my_private_message {
+	font-size: 11px;
+	color: purple;
+	border-left: 8px solid #000000;
 }
 
 .roster {
