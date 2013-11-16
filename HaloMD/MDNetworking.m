@@ -108,10 +108,23 @@
 		if (socketAddress)
 		{
 			char ipAddress[INET6_ADDRSTRLEN];
-			if (getnameinfo(socketAddress, socketAddress->sa_len, ipAddress, INET6_ADDRSTRLEN, nil, 0, NI_NUMERICHOST) == 0)
+			if (socketAddress->sa_len == sizeof(struct sockaddr_in))
 			{
-				address = [NSString stringWithUTF8String:ipAddress];
-				break;
+				struct sockaddr_in *ipv4Address = (struct sockaddr_in *)socketAddress;
+				if (inet_ntop(AF_INET, &(ipv4Address->sin_addr.s_addr), ipAddress, INET_ADDRSTRLEN) != NULL)
+				{
+					address = [NSString stringWithUTF8String:ipAddress];
+					break;
+				}
+			}
+			else if (socketAddress->sa_len == sizeof(struct sockaddr_in6))
+			{
+				struct sockaddr_in6 *ipv6Address = (struct sockaddr_in6 *)socketAddress;
+				if (inet_ntop( AF_INET6, &(ipv6Address->sin6_addr), ipAddress, INET6_ADDRSTRLEN) != NULL)
+				{
+					address = [NSString stringWithUTF8String:ipAddress];
+					break;
+				}
 			}
 		}
 	}
@@ -152,7 +165,7 @@
 	for (id resolvedAddressData in resolvedAddresses)
 	{
 		const struct sockaddr *socketAddress = [resolvedAddressData bytes];
-		if (socketAddress)
+		if (socketAddress != NULL)
 		{
 			// Set the port we want to connect to, socketAddressesFromHost: will not do this for us
 			const uint16_t port = 29920;
@@ -192,9 +205,7 @@
 				tv.tv_sec = 4;
 				tv.tv_usec = 0;
 				
-				select(sockfd + 1, NULL, &writefds, NULL, &tv);
-				
-				if (!FD_ISSET(sockfd, &writefds))
+				if (select(sockfd + 1, NULL, &writefds, NULL, &tv) <= 0 || !FD_ISSET(sockfd, &writefds))
 				{
 					close(sockfd);
 					NSLog(@"Socket was not set in select() while trying to connect");
@@ -225,7 +236,12 @@
 	FD_ZERO(&readfds);
 	FD_SET(sockfd, &readfds);
 	
-	select(sockfd+1, &readfds, NULL, NULL, &tv);
+	if (select(sockfd+1, &readfds, NULL, NULL, &tv) <= 0)
+	{
+		NSLog(@"Error: Did not receive anything in select from lobby server in timely manner");
+		close(sockfd);
+		return nil;
+	}
 	
 	NSMutableString *stringBuffer = [NSMutableString string];
 	
@@ -284,6 +300,199 @@
 	}
 	
 	return [NSArray arrayWithArray:[newComponents autorelease]];
+}
+
+static BOOL socketInitialized = NO;
+static int querySocket;
++ (void)createQuerySocket
+{
+	struct addrinfo hints;
+	memset(&hints, 0, sizeof hints);
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_DGRAM;
+	hints.ai_flags = AI_PASSIVE;
+	
+	struct addrinfo *serverInfo;
+	if (getaddrinfo(NULL, "0", &hints, &serverInfo) != 0) //who cares about port
+	{
+		NSLog(@"Failed to call getaddrinfo");
+		return;
+	}
+	
+	struct addrinfo *serverInfoPointer = NULL;
+	for (serverInfoPointer = serverInfo; serverInfoPointer != NULL; serverInfoPointer = serverInfoPointer->ai_next)
+	{
+		if ((querySocket = socket(serverInfoPointer->ai_family, serverInfoPointer->ai_socktype, serverInfoPointer->ai_protocol)) == -1)
+		{
+			perror("createQuerySocket: socket");
+			continue;
+		}
+		
+		if (bind(querySocket, serverInfoPointer->ai_addr, serverInfoPointer->ai_addrlen) == -1)
+		{
+			perror("createQuerySocket: bind");
+			close(querySocket);
+			continue;
+		}
+		
+		break;
+	}
+	
+	if (serverInfoPointer == NULL)
+	{
+		NSLog(@"Failed to bind socket..");
+		return;
+	}
+	
+	freeaddrinfo(serverInfo);
+	socketInitialized = YES;
+}
+
++ (void)queryServerAtAddress:(NSString *)address port:(uint16_t)port
+{
+	if (!socketInitialized)
+	{
+		[self createQuerySocket];
+	}
+	
+	if (socketInitialized)
+	{
+		const char *addressCString = [address UTF8String];
+		char buffer[] = {0xFE, 0xFD, 0x00, 0x77, 0x6A, 0xBF, 0xBF, 0xFF, 0xFF, 0xFF, 0xFF};
+		
+		if ([[address componentsSeparatedByString:@"."] count] == 4) // inet_pton only takes dotted quad address when family is AF_INET
+		{
+			struct in_addr ipv4Address;
+			if (inet_pton(AF_INET, addressCString, &ipv4Address) <= 0)
+			{
+				NSLog(@"Failed to parse ipv4 address: %@", address);
+			}
+			
+			struct sockaddr_in socketAddress;
+			memset(&socketAddress, 0, sizeof(struct sockaddr_in));
+			socketAddress.sin_len = sizeof(struct sockaddr_in);
+			socketAddress.sin_family = AF_INET;
+			socketAddress.sin_port = htons(port);
+			socketAddress.sin_addr = ipv4Address;
+			
+			if (sendto(querySocket, buffer, sizeof buffer, 0, (struct sockaddr *)&socketAddress, socketAddress.sin_len) <= 0)
+			{
+				NSLog(@"Failed to send data to %@", address);
+			}
+		}
+		else
+		{
+			struct in6_addr ipv6Address;
+			if (inet_pton(AF_INET6, addressCString, &ipv6Address) <= 0)
+			{
+				NSLog(@"Failed to parse ipv6 address: %@", address);
+			}
+			
+			struct sockaddr_in6 socketAddress;
+			memset(&socketAddress, 0, sizeof(struct sockaddr_in6));
+			socketAddress.sin6_len = sizeof(struct sockaddr_in6);
+			socketAddress.sin6_family = AF_INET6;
+			socketAddress.sin6_port = htons(port);
+			socketAddress.sin6_addr = ipv6Address;
+			
+			if (sendto(querySocket, buffer, sizeof buffer, 0, (struct sockaddr *)&socketAddress, socketAddress.sin6_len) <= 0)
+			{
+				NSLog(@"Failed to send data to %@", address);
+			}
+		}
+	}
+}
+
++ (NSArray *)receiveQueryAndGetIPAddress:(NSString **)retrievedIPAddress portNumber:(uint16_t *)retrievedPortNumber
+{
+	fd_set readfds;
+	FD_ZERO(&readfds);
+	FD_SET(querySocket, &readfds);
+	
+	struct timeval tv;
+	tv.tv_sec = 0;
+	tv.tv_usec = 0;
+	
+	int selectResult = select(querySocket+1, &readfds, NULL, NULL, &tv);
+	if (selectResult < 0)
+	{
+		return nil;
+	}
+	
+	if (selectResult == 0)
+	{
+		return nil;
+	}
+	
+	if (!FD_ISSET(querySocket, &readfds))
+	{
+		return nil;
+	}
+	
+	const int bufferLength = 1024;
+	char buffer[bufferLength];
+	struct sockaddr socketAddress;
+	socklen_t socketAddressLength = sizeof(struct sockaddr_in6);
+	ssize_t sizeReceived = recvfrom(querySocket, buffer, sizeof buffer, 0, &socketAddress, &socketAddressLength);
+	if (sizeReceived <= 0)
+	{
+		return nil;
+	}
+	
+	char ipAddress[INET6_ADDRSTRLEN];
+	if (socketAddress.sa_len == sizeof(struct sockaddr_in))
+	{
+		struct sockaddr_in *ipv4Address = (struct sockaddr_in *)&socketAddress;
+		if (inet_ntop(AF_INET, &(ipv4Address->sin_addr.s_addr), ipAddress, INET_ADDRSTRLEN) == NULL)
+		{
+			return nil;
+		}
+	}
+	else if (socketAddress.sa_len == sizeof(struct sockaddr_in6))
+	{
+		struct sockaddr_in6 *ipv6Address = (struct sockaddr_in6 *)&socketAddress;
+		if (inet_ntop( AF_INET6, &(ipv6Address->sin6_addr), ipAddress, INET6_ADDRSTRLEN) == NULL)
+		{
+			return nil;
+		}
+	}
+	else
+	{
+		return nil;
+	}
+	
+	*retrievedIPAddress = [NSString stringWithUTF8String:ipAddress];
+	
+	uint32_t portValue = 0;
+	
+	if (socketAddress.sa_len == sizeof(struct sockaddr_in))
+	{
+		portValue = ntohs(((struct sockaddr_in *)&socketAddress)->sin_port);
+	}
+	else if (socketAddress.sa_len == sizeof(struct sockaddr_in6))
+	{
+		portValue = ntohs(((struct sockaddr_in6 *)&socketAddress)->sin6_port);
+	}
+	
+	*retrievedPortNumber = portValue;
+	
+	NSMutableArray *fields = [NSMutableArray array];
+	ssize_t sizeConsumed = 0;
+	char *bufferPointer = buffer;
+	char *beginStringPointer = bufferPointer;
+	while (sizeConsumed < sizeReceived)
+	{
+		if (bufferPointer[sizeConsumed] == '\0')
+		{
+			NSData *fieldData = [NSData dataWithBytes:beginStringPointer length:bufferPointer + sizeConsumed - beginStringPointer + 1];
+			[fields addObject:fieldData];
+			
+			beginStringPointer = bufferPointer + sizeConsumed + 1;
+		}
+		sizeConsumed++;
+	}
+	
+	return fields;
 }
 
 @end

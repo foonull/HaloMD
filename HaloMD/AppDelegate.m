@@ -164,23 +164,6 @@ VALUE requireWrapper(VALUE path)
 		ruby_init();
 		ruby_init_loadpath();
 		
-		rb_define_variable("$networking", &networking);
-		networking = Qnil;
-		
-		VALUE networkingClass = rb_define_class("Networking", rb_cObject);
-		
-		int requireState = 0;
-		rb_protect(requireWrapper, rb_str_new2([[[NSBundle mainBundle] pathForResource:@"networking" ofType:@"rb"] UTF8String]), &requireState);
-		if (requireState == 0)
-		{
-			networking = rb_funcall(networkingClass, rb_intern("new"), 0);
-		}
-		else
-		{
-			NSLog(@"Failed to require networking.rb");
-			NSRunAlertPanel(@"Lobby Load Failure", @"An error occured on launch. The lobby may not list games because of this error.", @"OK", nil, nil);
-		}
-		
 		serversArray = [[NSMutableArray alloc] init];
 		waitingServersArray = [[NSMutableArray alloc] init];
 		hiddenServersArray = [[NSMutableArray alloc] init];
@@ -1831,154 +1814,135 @@ VALUE requireWrapper(VALUE path)
 
 - (BOOL)receiveQuery
 {
-	VALUE receive = (networking == Qnil) ? Qnil : rb_funcall(networking, rb_intern("query_receive"), 0);
-	if (receive != Qnil)
+	NSString *ipAddressRetrieved = nil;
+	uint16_t portValueRetrieved = 0;
+	NSArray *receivedEntries = [MDNetworking receiveQueryAndGetIPAddress:&ipAddressRetrieved portNumber:&portValueRetrieved];
+	if (receivedEntries == nil) return NO;
+	
+	MDServer *targetServer = nil;
+	for (MDServer *server in waitingServersArray)
 	{
-		struct RArray *array = (struct RArray *)receive;
-		if (array->len == 3)
+		if ([server portNumber] == portValueRetrieved && [[server ipAddress] isEqualToString:ipAddressRetrieved])
 		{
-			StringValue(array->ptr[1]);
-			const char *addressString = StringValueCStr(array->ptr[1]);
-			NSString *address = [self gameStringFromCString:addressString];
-			int port = (int)NUM2INT(array->ptr[2]);
-			
-			MDServer *targetServer = nil;
-			
-			for (MDServer *server in waitingServersArray)
-			{
-				if ([server portNumber] == port && [[server ipAddress] isEqualToString:address])
-				{
-					targetServer = server;
-					break;
-				}
-			}
-			
-			if (targetServer)
-			{
-				struct RArray *dataArray = (struct RArray *)array->ptr[0];
-				if (dataArray->len >= 29)
-				{
-					StringValue(dataArray->ptr[2]);
-					StringValue(dataArray->ptr[8]);
-					StringValue(dataArray->ptr[10]);
-					StringValue(dataArray->ptr[12]);
-					StringValue(dataArray->ptr[20]);
-					StringValue(dataArray->ptr[26]);
-					StringValue(dataArray->ptr[22]);
-					StringValue(dataArray->ptr[28]);
-					StringValue(dataArray->ptr[24]);
-					StringValue(dataArray->ptr[14]);
-					
-					const char *serverName = StringValueCStr(dataArray->ptr[2]);
-					const char *maxPlayers = StringValueCStr(dataArray->ptr[8]);
-					const char *passwordProtected = StringValueCStr(dataArray->ptr[10]);
-					const char *mapName = StringValueCStr(dataArray->ptr[12]);
-					const char *numberOfPlayers = StringValueCStr(dataArray->ptr[20]);
-					const char *variant = StringValueCStr(dataArray->ptr[26]);
-					const char *gametype = StringValueCStr(dataArray->ptr[22]);
-					const char *fragLimit = StringValueCStr(dataArray->ptr[28]);
-					const char *teamPlay = StringValueCStr(dataArray->ptr[24]);
-					const char *dedicated = StringValueCStr(dataArray->ptr[14]);
-					
-					NSMutableArray *players = [[NSMutableArray alloc] init];
-					
-					int playerDataIndex = 40;
-					int playerIndex;
-					for (playerIndex = 0; playerIndex < atoi(numberOfPlayers); playerIndex++)
-					{
-						if (playerDataIndex+1 >= dataArray->len) break;
-						
-						StringValue(dataArray->ptr[playerDataIndex]);
-						const char *playerName = StringValueCStr(dataArray->ptr[playerDataIndex]);
-						
-						playerDataIndex += 1;
-						
-						StringValue(dataArray->ptr[playerDataIndex]);
-						const char *playerScore = StringValueCStr(dataArray->ptr[playerDataIndex]);
-						
-						MDPlayer *player = [[MDPlayer alloc] init];
-						[player setName:[self gameStringFromCString:playerName]];
-						[player setScore:[self gameStringFromCString:playerScore]];
-						
-						[players addObject:player];
-						
-						[player release];
-						
-						playerDataIndex += 3;
-					}
-					
-					[targetServer setPlayers:players];
-					
-					[players release];
-					
-					[targetServer setName:[self gameStringFromCString:serverName]];
-					[targetServer setMap:[[self gameStringFromCString:mapName] lowercaseString]];
-					[targetServer setMaxNumberOfPlayers:atoi(maxPlayers)];
-					[targetServer setPasswordProtected:atoi(passwordProtected)];
-					[targetServer setCurrentNumberOfPlayers:atoi(numberOfPlayers)];
-					[targetServer setGametype:[self gameStringFromCString:gametype]];
-					[targetServer resetConnectionChances];
-					
-					NSString *variantString = [self gameStringFromCString:variant];
-					if ([[variantString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] isEqualToString:@""])
-					{
-						[targetServer setVariant:[targetServer gametype]];
-					}
-					else
-					{
-						[targetServer setVariant:variantString];
-					}
-					
-					[targetServer setTeamPlay:[[self gameStringFromCString:teamPlay] isEqualToString:@"0"] ? @"No" : @"Yes"];
-					[targetServer setDedicated:[[self gameStringFromCString:dedicated] isEqualToString:@"0"] ? @"No" : @"Yes"];
-					
-					NSString *scoreLimit = ([[targetServer gametype] isEqualToString:@"Oddball"] || [[targetServer gametype] isEqualToString:@"King"]) ? [NSString stringWithFormat:@"%s:00", fragLimit] : [NSString stringWithUTF8String:fragLimit];
-					[targetServer setScoreLimit:scoreLimit];
-					
-					[targetServer setPing:(int)([[NSDate date] timeIntervalSinceDate:[targetServer lastUpdatedDate]] * 1000.0)];
-					
-					[targetServer setValid:YES];
-					
-					if (![serversArray containsObject:targetServer])
-					{
-						[serversArray addObject:targetServer];
-						[self sortServersArray];
-					}
-					
-					NSString *mapsDirectory = [[[self applicationSupportPath] stringByAppendingPathComponent:@"GameData"] stringByAppendingPathComponent:@"Maps"];
-					NSString *mapFile = [[targetServer map] stringByAppendingPathExtension:@"map"];
-					
-					if (![[NSFileManager defaultManager] fileExistsAtPath:[mapsDirectory stringByAppendingPathComponent:mapFile]])
-					{
-						// if it's a full version map or a mod that hasn't be registered on MGM, remove it from the list, but add it as a hidden server
-						if ([[MDServer formalizedMapsDictionary] objectForKey:[targetServer map]] || ![[modsController modListDictionary] objectForKey:[targetServer map]])
-						{
-							[serversArray removeObject:targetServer];
-							[hiddenServersArray addObject:targetServer];
-						}
-					}
-					
-					[waitingServersArray removeObject:targetServer];
-					
-					if ([self myIPAddress] && [[targetServer ipAddress] isEqualToString:[self myIPAddress]])
-					{
-						[self setInGameServer:targetServer	];
-					}
-					
-					if (isInstalled)
-					{
-						[self setStatus:nil];
-					}
-					
-					[inspectorController updateInspectorInformation];
-					
-					[serversTableView reloadData];
-				}
-			}
+			targetServer = server;
+			break;
 		}
 	}
 	
-	return (receive != Qnil);
+	if (targetServer == nil) return YES;
+	
+	if ([receivedEntries count] < 29) return YES;
+	
+	const char *serverName = [[receivedEntries objectAtIndex:2] bytes];
+	const char *maxPlayers = [[receivedEntries objectAtIndex:8] bytes];
+	const char *passwordProtected = [[receivedEntries objectAtIndex:10] bytes];
+	const char *mapName = [[receivedEntries objectAtIndex:12] bytes];
+	const char *numberOfPlayers = [[receivedEntries objectAtIndex:20] bytes];
+	const char *variant = [[receivedEntries objectAtIndex:26] bytes];
+	const char *gametype = [[receivedEntries objectAtIndex:22] bytes];
+	const char *fragLimit = [[receivedEntries objectAtIndex:28] bytes];
+	const char *teamPlay = [[receivedEntries objectAtIndex:24] bytes];
+	const char *dedicated = [[receivedEntries objectAtIndex:14] bytes];
+	
+	NSMutableArray *players = [[NSMutableArray alloc] init];
+	
+	int playerDataIndex = 40;
+	int playerIndex;
+	for (playerIndex = 0; playerIndex < atoi(numberOfPlayers); playerIndex++)
+	{
+		if (playerDataIndex+1 >= [receivedEntries count]) break;
+		
+		const char *playerName = [[receivedEntries objectAtIndex:playerDataIndex] bytes];
+		
+		playerDataIndex += 1;
+		
+		const char *playerScore = [[receivedEntries objectAtIndex:playerDataIndex] bytes];
+		
+		MDPlayer *player = [[MDPlayer alloc] init];
+		[player setName:[self gameStringFromCString:playerName]];
+		[player setScore:[self gameStringFromCString:playerScore]];
+		
+		[players addObject:player];
+		
+		[player release];
+		
+		playerDataIndex += 3;
+	}
+	
+	[targetServer setPlayers:players];
+	
+	[players release];
+	
+	[targetServer setName:[self gameStringFromCString:serverName]];
+	[targetServer setMap:[[self gameStringFromCString:mapName] lowercaseString]];
+	[targetServer setMaxNumberOfPlayers:atoi(maxPlayers)];
+	[targetServer setPasswordProtected:atoi(passwordProtected)];
+	[targetServer setCurrentNumberOfPlayers:atoi(numberOfPlayers)];
+	[targetServer setGametype:[self gameStringFromCString:gametype]];
+	[targetServer resetConnectionChances];
+	
+	NSString *variantString = [self gameStringFromCString:variant];
+	if ([[variantString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] isEqualToString:@""])
+	{
+		[targetServer setVariant:[targetServer gametype]];
+	}
+	else
+	{
+		[targetServer setVariant:variantString];
+	}
+	
+	[targetServer setTeamPlay:[[self gameStringFromCString:teamPlay] isEqualToString:@"0"] ? @"No" : @"Yes"];
+	[targetServer setDedicated:[[self gameStringFromCString:dedicated] isEqualToString:@"0"] ? @"No" : @"Yes"];
+	
+	NSString *scoreLimit = ([[targetServer gametype] isEqualToString:@"Oddball"] || [[targetServer gametype] isEqualToString:@"King"]) ? [NSString stringWithFormat:@"%s:00", fragLimit] : [NSString stringWithUTF8String:fragLimit];
+	[targetServer setScoreLimit:scoreLimit];
+	
+	double pingDoubleValue = [[NSDate date] timeIntervalSinceDate:[targetServer lastUpdatedDate]];
+	int ping = 0;
+	if (!isnan(pingDoubleValue))
+	{
+		ping = (int)(pingDoubleValue * 1000);
+	}
+	[targetServer setPing:ping];
+	
+	[targetServer setValid:YES];
+	
+	if (![serversArray containsObject:targetServer])
+	{
+		[serversArray addObject:targetServer];
+		[self sortServersArray];
+	}
+	
+	NSString *mapsDirectory = [[[self applicationSupportPath] stringByAppendingPathComponent:@"GameData"] stringByAppendingPathComponent:@"Maps"];
+	NSString *mapFile = [[targetServer map] stringByAppendingPathExtension:@"map"];
+	
+	if (![[NSFileManager defaultManager] fileExistsAtPath:[mapsDirectory stringByAppendingPathComponent:mapFile]])
+	{
+		// if it's a full version map or a mod that hasn't be registered on MGM, remove it from the list, but add it as a hidden server
+		if ([[MDServer formalizedMapsDictionary] objectForKey:[targetServer map]] || ![[modsController modListDictionary] objectForKey:[targetServer map]])
+		{
+			[serversArray removeObject:targetServer];
+			[hiddenServersArray addObject:targetServer];
+		}
+	}
+	
+	[waitingServersArray removeObject:targetServer];
+	
+	if ([self myIPAddress] && [[targetServer ipAddress] isEqualToString:[self myIPAddress]])
+	{
+		[self setInGameServer:targetServer	];
+	}
+	
+	if (isInstalled)
+	{
+		[self setStatus:nil];
+	}
+	
+	[inspectorController updateInspectorInformation];
+	
+	[serversTableView reloadData];
+	
+	return YES;
 }
 
 - (void)queryServers:(NSTimer *)timer
@@ -1990,15 +1954,11 @@ VALUE requireWrapper(VALUE path)
 		if (![server valid] && ![server outOfConnectionChances])
 		{
 			serversNeedUpdating = YES;
-			if (![server lastUpdatedDate] || [[NSDate date] timeIntervalSinceDate:[server lastUpdatedDate]] >= 0.5)
+			NSDate *currentDate = [NSDate date];
+			if (![server lastUpdatedDate] || [currentDate timeIntervalSinceDate:[server lastUpdatedDate]] >= 0.5)
 			{
-				const char *addressString = [[server ipAddress] UTF8String];
-				VALUE ipAddress = rb_str_new2(addressString);
-				[server setLastUpdatedDate:[NSDate date]];
-				if (networking != Qnil)
-				{
-					rb_funcall(networking, rb_intern("query_server"), 2, ipAddress, INT2NUM([server portNumber]));
-				}
+				[server setLastUpdatedDate:currentDate];
+				[MDNetworking queryServerAtAddress:[server ipAddress] port:[server portNumber]];
 				
 				[server useConnectionChance];
 				
@@ -2176,7 +2136,7 @@ VALUE requireWrapper(VALUE path)
 		}
 		else if ([[tableColumn identifier] isEqualToString:@"ping"])
 		{
-			return ![server valid] ? [server invalidDescription] : [NSNumber numberWithInt:[server ping]];
+			return ![server valid] ? [server invalidDescription] : ([server ping] == 0 ? @"" : [NSNumber numberWithInt:[server ping]]);
 		}
 	}
 	

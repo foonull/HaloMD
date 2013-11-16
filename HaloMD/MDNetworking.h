@@ -39,4 +39,7 @@
 
 + (void)retrieveServers:(id)delegate;
 
++ (void)queryServerAtAddress:(NSString *)address port:(uint16_t)port;
++ (NSArray *)receiveQueryAndGetIPAddress:(NSString **)retrievedIPAddress portNumber:(uint16_t *)retrievedPortNumber;
+
 @end

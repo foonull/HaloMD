@@ -35,7 +35,6 @@
 		775B52A414D331C900B874E3 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 775B52A214D331C900B874E3 /* MainMenu.xib */; };
 		775B52AD14D3326800B874E3 /* com.null.halominidemo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 775B52AC14D3326800B874E3 /* com.null.halominidemo.plist */; };
 		775B52B414D332B800B874E3 /* MDServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 775B52B314D332B800B874E3 /* MDServer.m */; };
-		775B52B714D332C100B874E3 /* networking.rb in Resources */ = {isa = PBXBuildFile; fileRef = 775B52B614D332C100B874E3 /* networking.rb */; };
 		776E3FAD14FAAC01001414AB /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 776E3FAC14FAAC01001414AB /* dsa_pub.pem */; };
 		777A1AF01738F588005E2883 /* chat_icon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 777A1AEF1738F588005E2883 /* chat_icon.pdf */; };
 		77904A38151C26BF0046EA96 /* keygen.c in Sources */ = {isa = PBXBuildFile; fileRef = 77904A37151C26BF0046EA96 /* keygen.c */; };
@@ -131,7 +130,6 @@
 		775B52AC14D3326800B874E3 /* com.null.halominidemo.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = com.null.halominidemo.plist; sourceTree = "<group>"; };
 		775B52B214D332B800B874E3 /* MDServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDServer.h; sourceTree = "<group>"; };
 		775B52B314D332B800B874E3 /* MDServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDServer.m; sourceTree = "<group>"; };
-		775B52B614D332C100B874E3 /* networking.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = networking.rb; sourceTree = "<group>"; };
 		776E3FAC14FAAC01001414AB /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		777A1AEF1738F588005E2883 /* chat_icon.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = chat_icon.pdf; sourceTree = "<group>"; };
 		77904A37151C26BF0046EA96 /* keygen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = keygen.c; sourceTree = "<group>"; };
@@ -280,7 +278,6 @@
 				77152B1F163B5AEA00F136BF /* MDNetworking.m */,
 				77904A3A151C27070046EA96 /* keygen.h */,
 				77904A37151C26BF0046EA96 /* keygen.c */,
-				775B52B614D332C100B874E3 /* networking.rb */,
 				77E52D2916D8AC0F0015246C /* chatting.rb */,
 				77329B8A168D95F3007DCAE2 /* h_master_server.rb */,
 				775B52A214D331C900B874E3 /* MainMenu.xib */,
@@ -376,7 +373,6 @@
 				775B529E14D331C800B874E3 /* Credits.rtf in Resources */,
 				775B52A414D331C900B874E3 /* MainMenu.xib in Resources */,
 				775B52AD14D3326800B874E3 /* com.null.halominidemo.plist in Resources */,
-				775B52B714D332C100B874E3 /* networking.rb in Resources */,
 				776E3FAD14FAAC01001414AB /* dsa_pub.pem in Resources */,
 				770BEEB2154DB7900052193F /* shield.icns in Resources */,
 				77D44A5B164A076100510501 /* lock.png in Resources */,
