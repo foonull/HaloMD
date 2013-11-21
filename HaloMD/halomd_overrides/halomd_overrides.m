@@ -41,28 +41,31 @@ char *moddedSlotBuffer = NULL;
 
 void parseMaps(void)
 {
-	const int numberOfMaps = 19;
-	int mapIndex;
-	for (mapIndex = 0; mapIndex < numberOfMaps; mapIndex++)
+	@autoreleasepool
 	{
-		// Used hopper to figure this line out
-		char *mapName = (char *)(*((int32_t *)(*((int32_t *)0x3691c0) + (mapIndex + mapIndex * 0x2) * 0x4)));
-		if (strcmp(mapName, ".map") != 0)
+		const int numberOfMaps = 19;
+		int mapIndex;
+		for (mapIndex = 0; mapIndex < numberOfMaps; mapIndex++)
 		{
-			if (!executableMaps)
+			// Used hopper to figure this line out
+			char *mapName = (char *)(*((int32_t *)(*((int32_t *)0x3691c0) + (mapIndex + mapIndex * 0x2) * 0x4)));
+			if (strcmp(mapName, ".map") != 0)
 			{
-				executableMaps = [[NSMutableArray alloc] init];
+				if (!executableMaps)
+				{
+					executableMaps = [[NSMutableArray alloc] init];
+				}
+				[executableMaps addObject:[NSString stringWithUTF8String:mapName]];
 			}
-			[executableMaps addObject:[NSString stringWithUTF8String:mapName]];
-		}
-
-		if (strcmp(mapName, SWAP_IDENTIFIER) == 0)
-		{
-			magicSlotBuffer = mapName;
-		}
-		else if (mapIndex == numberOfMaps-1)
-		{
-			moddedSlotBuffer = mapName;
+			
+			if (strcmp(mapName, SWAP_IDENTIFIER) == 0)
+			{
+				magicSlotBuffer = mapName;
+			}
+			else if (mapIndex == numberOfMaps-1)
+			{
+				moddedSlotBuffer = mapName;
+			}
 		}
 	}
 }
@@ -70,61 +73,66 @@ void parseMaps(void)
 int (*oldSvMapFunc)(const char *mapName, const char *mapVariant) = NULL;
 int svMapFunc(const char *mapName, const char *mapVariant)
 {
-	NSString *chosenMapName = [NSString stringWithUTF8String:mapName];
-
-	if (!magicSlotBuffer)
+	int returnValue = 0;
+	
+	@autoreleasepool
 	{
-		parseMaps();
-	}
-
-	if (magicSlotBuffer)
-	{
-		// start out innocent
-		strcpy(magicSlotBuffer, SWAP_IDENTIFIER);
-
-
-		if (strcmp(mapName, SWAP_IDENTIFIER) == 0 || strcmp(mapName, "ui") == 0 || strcmp(mapName, "bitmaps") == 0 || strcmp(mapName, "sounds") == 0)
+		NSString *chosenMapName = [NSString stringWithUTF8String:mapName];
+		
+		if (!magicSlotBuffer)
 		{
-			chosenMapName = @"bloodgulch";
+			parseMaps();
 		}
-		else if (![executableMaps containsObject:[NSString stringWithUTF8String:mapName]] && (strlen(mapName) <= 13 || strcmp(mapName, "boardingaction") == 0))
+		
+		if (magicSlotBuffer)
 		{
-			NSString *libraryPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-			NSString *appSupportPath = [libraryPath stringByAppendingPathComponent:@"Application Support"];
-			NSString *mapsPath = [[[appSupportPath stringByAppendingPathComponent:@"HaloMD"] stringByAppendingPathComponent:@"GameData"] stringByAppendingPathComponent:@"Maps"];
-
-			if ([[NSFileManager defaultManager] fileExistsAtPath:[mapsPath stringByAppendingPathComponent:[chosenMapName stringByAppendingPathExtension:@"map"]]])
+			// start out innocent
+			strcpy(magicSlotBuffer, SWAP_IDENTIFIER);
+			
+			
+			if (strcmp(mapName, SWAP_IDENTIFIER) == 0 || strcmp(mapName, "ui") == 0 || strcmp(mapName, "bitmaps") == 0 || strcmp(mapName, "sounds") == 0)
 			{
-				strcpy(magicSlotBuffer, mapName);
+				chosenMapName = @"bloodgulch";
 			}
-			else
+			else if (![executableMaps containsObject:[NSString stringWithUTF8String:mapName]] && (strlen(mapName) <= 13 || strcmp(mapName, "boardingaction") == 0))
 			{
-				NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:mapsPath];
-
-				int maxBuildNumber = 0;
-				NSString *file;
-				while (file = [directoryEnumerator nextObject])
+				NSString *libraryPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+				NSString *appSupportPath = [libraryPath stringByAppendingPathComponent:@"Application Support"];
+				NSString *mapsPath = [[[appSupportPath stringByAppendingPathComponent:@"HaloMD"] stringByAppendingPathComponent:@"GameData"] stringByAppendingPathComponent:@"Maps"];
+				
+				if ([[NSFileManager defaultManager] fileExistsAtPath:[mapsPath stringByAppendingPathComponent:[chosenMapName stringByAppendingPathExtension:@"map"]]])
 				{
-					NSString *fullFilePath = [mapsPath stringByAppendingPathComponent:file];
-					if (![[fullFilePath stringByDeletingLastPathComponent] isEqualToString:mapsPath])
+					strcpy(magicSlotBuffer, mapName);
+				}
+				else
+				{
+					NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:mapsPath];
+					
+					int maxBuildNumber = 0;
+					NSString *file;
+					while (file = [directoryEnumerator nextObject])
 					{
-						// Must be a subdirectory of some kind, skip it..
-						continue;
-					}
-					if (![file hasPrefix:@"."] && [[file pathExtension] isEqualToString:@"map"] && [file hasPrefix:[NSString stringWithFormat:@"%s_", mapName]] && [[file stringByDeletingPathExtension] length] <= 13)
-					{
-						NSString *fileWithoutExtension = [file stringByDeletingPathExtension];
-						NSRange searchRange = [fileWithoutExtension rangeOfString:@"_" options:NSLiteralSearch | NSBackwardsSearch];
-						if (searchRange.location != NSNotFound)
+						NSString *fullFilePath = [mapsPath stringByAppendingPathComponent:file];
+						if (![[fullFilePath stringByDeletingLastPathComponent] isEqualToString:mapsPath])
 						{
-							int buildNumber = [[fileWithoutExtension substringFromIndex:searchRange.location + 1] intValue];
-							if (buildNumber > maxBuildNumber)
+							// Must be a subdirectory of some kind, skip it..
+							continue;
+						}
+						if (![file hasPrefix:@"."] && [[file pathExtension] isEqualToString:@"map"] && [file hasPrefix:[NSString stringWithFormat:@"%s_", mapName]] && [[file stringByDeletingPathExtension] length] <= 13)
+						{
+							NSString *fileWithoutExtension = [file stringByDeletingPathExtension];
+							NSRange searchRange = [fileWithoutExtension rangeOfString:@"_" options:NSLiteralSearch | NSBackwardsSearch];
+							if (searchRange.location != NSNotFound)
 							{
-								maxBuildNumber = buildNumber;
-								chosenMapName = fileWithoutExtension;
-								if (![executableMaps containsObject:chosenMapName])
+								int buildNumber = [[fileWithoutExtension substringFromIndex:searchRange.location + 1] intValue];
+								if (buildNumber > maxBuildNumber)
 								{
-									strcpy(magicSlotBuffer, [chosenMapName UTF8String]);
+									maxBuildNumber = buildNumber;
+									chosenMapName = fileWithoutExtension;
+									if (![executableMaps containsObject:chosenMapName])
+									{
+										strcpy(magicSlotBuffer, [chosenMapName UTF8String]);
+									}
 								}
 							}
 						}
@@ -132,9 +140,11 @@ int svMapFunc(const char *mapName, const char *mapVariant)
 				}
 			}
 		}
+		
+		returnValue = oldSvMapFunc([chosenMapName UTF8String], mapVariant);
 	}
-
-	return oldSvMapFunc([chosenMapName UTF8String], mapVariant);
+	
+	return returnValue;
 }
 
 BOOL didInitializeRand = NO;
@@ -145,25 +155,32 @@ void *loadMapFunc(const char *argument)
 	{
 		parseMaps();
 	}
+	
+	void *returnValue = NULL;
 
-	NSString *libraryPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-	NSString *appSupportPath = [libraryPath stringByAppendingPathComponent:@"Application Support"];
-	NSString *mapsPath = [[[appSupportPath stringByAppendingPathComponent:@"HaloMD"] stringByAppendingPathComponent:@"GameData"] stringByAppendingPathComponent:@"Maps"];
-
-	NSMutableArray *maps = [[NSMutableArray alloc] initWithObjects:@"bloodgulch", @"crossing", @"barrier", nil];
-	if (moddedSlotBuffer && [[NSFileManager defaultManager] fileExistsAtPath:[mapsPath stringByAppendingPathComponent:[[NSString stringWithUTF8String:moddedSlotBuffer] stringByAppendingPathExtension:@"map"]]])
+	@autoreleasepool
 	{
-		[maps addObject:[NSString stringWithUTF8String:moddedSlotBuffer]];
+		NSString *libraryPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+		NSString *appSupportPath = [libraryPath stringByAppendingPathComponent:@"Application Support"];
+		NSString *mapsPath = [[[appSupportPath stringByAppendingPathComponent:@"HaloMD"] stringByAppendingPathComponent:@"GameData"] stringByAppendingPathComponent:@"Maps"];
+		
+		NSMutableArray *maps = [[NSMutableArray alloc] initWithObjects:@"bloodgulch", @"crossing", @"barrier", nil];
+		if (moddedSlotBuffer && [[NSFileManager defaultManager] fileExistsAtPath:[mapsPath stringByAppendingPathComponent:[[NSString stringWithUTF8String:moddedSlotBuffer] stringByAppendingPathExtension:@"map"]]])
+		{
+			[maps addObject:[NSString stringWithUTF8String:moddedSlotBuffer]];
+		}
+		
+		if (!didInitializeRand)
+		{
+			srand(time(NULL));
+			didInitializeRand = YES;
+		}
+		
+		const char *newArgument = (strcmp(argument, SWAP_IDENTIFIER) == 0) ? [[maps objectAtIndex:rand() % [maps count]] UTF8String] : argument;
+		returnValue = oldLoadMapFunc(newArgument);
 	}
-
-	if (!didInitializeRand)
-	{
-		srand(time(NULL));
-		didInitializeRand = YES;
-	}
-
-	const char *newArgument = (strcmp(argument, SWAP_IDENTIFIER) == 0) ? [[maps objectAtIndex:rand() % [maps count]] UTF8String] : argument;
-	return oldLoadMapFunc(newArgument);
+	
+	return returnValue;
 }
 
 void halomd_overrides_init()
