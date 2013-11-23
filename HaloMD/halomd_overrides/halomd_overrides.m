@@ -148,15 +148,15 @@ int svMapFunc(const char *mapName, const char *mapVariant)
 }
 
 BOOL didInitializeRand = NO;
-void *(*oldLoadMapFunc)(const char *) = NULL;
-void *loadMapFunc(const char *argument)
+int8_t (*oldLoadMapFunc)(const char *) = NULL;
+int8_t loadMapFunc(const char *argument)
 {
 	if (!magicSlotBuffer)
 	{
 		parseMaps();
 	}
 	
-	void *returnValue = NULL;
+	int8_t returnValue = 0;
 
 	@autoreleasepool
 	{
