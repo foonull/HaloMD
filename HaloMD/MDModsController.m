@@ -215,6 +215,51 @@ static id sharedInstance = nil;
 	return success;
 }
 
+- (BOOL)addPluginAtPath:(NSString *)filename
+{
+	if ([NSBundle bundleWithPath:filename] == nil)
+	{
+		NSLog(@"%@ is not a valid plugin bundle", filename);
+		NSRunAlertPanel(@"Failed Adding Plug-In",
+						@"%@ is not a valid Plug-In",
+						@"OK", nil, nil, [[filename lastPathComponent] stringByDeletingPathExtension]);
+		return NO;
+	}
+	
+	NSString *pluginsDirectory = [[appDelegate applicationSupportPath] stringByAppendingPathComponent:@"PlugIns"];
+	if (![[NSFileManager defaultManager] fileExistsAtPath:pluginsDirectory])
+	{
+		NSError *error = nil;
+		if (![[NSFileManager defaultManager] createDirectoryAtPath:pluginsDirectory withIntermediateDirectories:NO attributes:nil error:&error])
+		{
+			NSLog(@"Failed to create PlugIns directory: %@", error);
+			return NO;
+		}
+	}
+	
+	NSString *newPluginPath = [pluginsDirectory stringByAppendingPathComponent:[filename lastPathComponent]];
+	if ([[NSFileManager defaultManager] fileExistsAtPath:newPluginPath])
+	{
+		[[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
+													 source:pluginsDirectory
+												destination:@""
+													  files:[NSArray arrayWithObject:[filename lastPathComponent]]
+														tag:0];
+	}
+	
+	NSError *error = nil;
+	if (![[NSFileManager defaultManager] moveItemAtPath:filename toPath:newPluginPath error:&error])
+	{
+		NSLog(@"Error moving plugin: %@", error);
+		NSRunAlertPanel(@"Failed Adding Plug-In",
+						@"%@ could not be moved into PlugIns",
+						@"OK", nil, nil, [[filename lastPathComponent] stringByDeletingPathExtension]);
+		return NO;
+	}
+	
+	return YES;
+}
+
 - (void)openPanelDidEnd:(NSOpenPanel *)openPanel returnCode:(int)returnCode contextInfo:(void  *)contextInfo
 {
 	if (returnCode == NSOKButton)

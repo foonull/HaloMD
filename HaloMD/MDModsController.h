@@ -94,6 +94,7 @@
 - (void)initiateAndForceDownloadList:(NSNumber *)shouldForceDownloadList;
 
 - (BOOL)addModAtPath:(NSString *)filename;
+- (BOOL)addPluginAtPath:(NSString *)filename;
 
 - (NSString *)readCurrentModIdentifierFromExecutable;
 - (BOOL)writeCurrentModIdentifier:(NSString *)mapIdentifier;

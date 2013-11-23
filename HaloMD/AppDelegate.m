@@ -254,7 +254,14 @@ static NSDictionary *expectedVersionsDictionary = nil;
 {
 	for (id file in openFiles)
 	{
-		[modsController addModAtPath:file];
+		if ([[file pathExtension] isEqualToString:@"map"])
+		{
+			[modsController addModAtPath:file];
+		}
+		else if ([[file pathExtension] isEqualToString:@"mdplugin"])
+		{
+			[modsController addPluginAtPath:file];
+		}
 	}
 	
 	[self setOpenFiles:nil];
