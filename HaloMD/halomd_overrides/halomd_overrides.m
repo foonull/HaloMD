@@ -187,6 +187,28 @@ void (*consolePrintf)(int color, const char *format, ...) = (void *)0x1588a8;
 
 #define MDGameInSession 0
 
+typedef enum
+{
+	NONE = 0x0,
+	WHITE = 0x343aa0,
+	GREY = 0x343ab0,
+	BLACK = 0x343ac0,
+	RED = 0x343ad0,
+	GREEN = 0x343ae0,
+	BLUE = 0x343af0,
+	CYAN = 0x343b00,
+	YELLOW = 0x343b10,
+	MAGENTA = 0x343b20,
+	PINK = 0x343b30,
+	COBALT = 0x343b40,
+	ORANGE = 0x343b50,
+	PURPLE = 0x343b60,
+	TURQUOISE = 0x343b70,
+	DARK_GREEN = 0x343b80,
+	SALMON = 0x343b90,
+	DARK_PINK = 0x343ba0
+} ConsoleColor;
+
 void *(*oldChat)(int, const uint16_t *, int) = NULL;
 void *textChatOverride(int unknownZero, const uint16_t *message, int unknownSize)
 {
@@ -194,7 +216,7 @@ void *textChatOverride(int unknownZero, const uint16_t *message, int unknownSize
 	{
 		@autoreleasepool
 		{
-			consolePrintf(0, "%s", [[NSString stringWithFormat:@"%S", message] cStringUsingEncoding:NSISOLatin1StringEncoding]);
+			consolePrintf(NONE, "%s", [[NSString stringWithFormat:@"%S", message] cStringUsingEncoding:NSISOLatin1StringEncoding]);
 		}
 	}
 	
