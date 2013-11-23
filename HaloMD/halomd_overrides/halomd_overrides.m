@@ -183,16 +183,7 @@ void *loadMapFunc(const char *argument)
 	return returnValue;
 }
 
-void *(*consoleOut)(int, const char *, ...) = NULL;
-void *consoleOutOverride(int color, const char *message, const char *args)
-{
-	return consoleOut(color,message, args);
-}
-
-void printToConsole(const char *message)
-{
-	consoleOutOverride(0, "%s", message);
-}
+void * (*consolePrintf)(int color, const char *format, ...) = (void *)0x1588a8;
 
 #define MDGameInSession 0
 
@@ -203,7 +194,7 @@ void *textChatOverride(int unknownZero, const uint16_t *message, int unknownSize
 	{
 		@autoreleasepool
 		{
-			printToConsole([[NSString stringWithFormat:@"%S", message] cStringUsingEncoding:NSISOLatin1StringEncoding]);
+			consolePrintf(0, "%s", [[NSString stringWithFormat:@"%S", message] cStringUsingEncoding:NSISOLatin1StringEncoding]);
 		}
 	}
 	
@@ -218,6 +209,5 @@ void halomd_overrides_init()
 	mach_override_ptr((void *)0x001be2a0, svMapFunc, (void **)&oldSvMapFunc);
 	mach_override_ptr((void *)0x0018f320, loadMapFunc, (void **)&oldLoadMapFunc);
 	
-	mach_override_ptr((void *)0x1588a8, consoleOutOverride, (void **)&consoleOut);
 	mach_override_ptr((void *)0x14D9A4, textChatOverride, (void **)&oldChat);
 }
