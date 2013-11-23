@@ -55,8 +55,8 @@ typedef enum
 
 void (*consolePrintf)(int color, const char *format, ...) = (void *)0x1588a8;
 
-void *(*oldChat)(int, const uint16_t *, int);
-static void *textChatOverride(int unknownZero, const uint16_t *message, int unknownSize)
+int8_t (*oldChat)(int, const uint16_t *, int);
+static int8_t textChatOverride(int unknownZero, const uint16_t *message, int unknownSize)
 {
 	if (*(uint8_t *)0x45DF30 != MDGameInSession)
 	{
