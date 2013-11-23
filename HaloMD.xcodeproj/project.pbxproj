@@ -46,7 +46,6 @@
 		77BC6755184040A600F82849 /* halomd_overrides.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BC6752184040A600F82849 /* halomd_overrides.m */; };
 		77BC6757184040A600F82849 /* mach_override.h in Headers */ = {isa = PBXBuildFile; fileRef = 77BC6754184040A600F82849 /* mach_override.h */; };
 		77BC6759184040D400F82849 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BC6758184040D400F82849 /* Foundation.framework */; };
-		77BC675F1840446900F82849 /* MDOverrides.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 77BC674D1840405100F82849 /* MDOverrides.dylib */; };
 		77BC6793184086DC00F82849 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 77BC6791184086DC00F82849 /* InfoPlist.strings */; };
 		77BC679A1840880F00F82849 /* MDChatTextRedirect.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BC67991840880F00F82849 /* MDChatTextRedirect.m */; };
 		77BC679B1840892C00F82849 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BC6758184040D400F82849 /* Foundation.framework */; };
@@ -67,6 +66,7 @@
 		77E52D2816D8A31C0015246C /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 77E52D2716D8A31C0015246C /* index.html */; };
 		77E52D2A16D8AC0F0015246C /* chatting.rb in Resources */ = {isa = PBXBuildFile; fileRef = 77E52D2916D8AC0F0015246C /* chatting.rb */; };
 		77E6C6CB18413AC800705ED5 /* plugin.icns in Resources */ = {isa = PBXBuildFile; fileRef = 77E6C6CA18413AC800705ED5 /* plugin.icns */; };
+		77E6C6CE1841493200705ED5 /* MDOverrides.dylib in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 77BC674D1840405100F82849 /* MDOverrides.dylib */; };
 		77E7E2871720FCB100E18FB9 /* MDModPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E7E2861720FCB000E18FB9 /* MDModPatch.m */; };
 		77E7E28A172463C500E18FB9 /* MDChatRosterElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E7E289172463C400E18FB9 /* MDChatRosterElement.m */; };
 		77E7E28F172477E000E18FB9 /* Growl Registration Ticket.growlRegDict in Resources */ = {isa = PBXBuildFile; fileRef = 77E7E28E172477E000E18FB9 /* Growl Registration Ticket.growlRegDict */; };
@@ -118,6 +118,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				77E6C6CE1841493200705ED5 /* MDOverrides.dylib in Copy Frameworks */,
 				774EF69517C7222D005ABB20 /* TCMPortMapper.framework in Copy Frameworks */,
 				774EF69617C7222D005ABB20 /* Sparkle.framework in Copy Frameworks */,
 				774EF69717C7222D005ABB20 /* Growl.framework in Copy Frameworks */,
@@ -580,7 +581,6 @@
 			files = (
 				77BC67BB1840924C00F82849 /* MapLoadingMagic.mdplugin in Resources */,
 				77BC67A0184089A800F82849 /* ChatTextRedirect.mdplugin in Resources */,
-				77BC675F1840446900F82849 /* MDOverrides.dylib in Resources */,
 				775B529814D331C800B874E3 /* InfoPlist.strings in Resources */,
 				775B529E14D331C800B874E3 /* Credits.rtf in Resources */,
 				77E6C6CB18413AC800705ED5 /* plugin.icns in Resources */,
