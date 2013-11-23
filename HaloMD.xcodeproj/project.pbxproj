@@ -49,13 +49,11 @@
 		77BC6793184086DC00F82849 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 77BC6791184086DC00F82849 /* InfoPlist.strings */; };
 		77BC679A1840880F00F82849 /* MDChatTextRedirect.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BC67991840880F00F82849 /* MDChatTextRedirect.m */; };
 		77BC679B1840892C00F82849 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BC6758184040D400F82849 /* Foundation.framework */; };
-		77BC67A0184089A800F82849 /* ChatTextRedirect.mdplugin in Resources */ = {isa = PBXBuildFile; fileRef = 77BC678A184086DC00F82849 /* ChatTextRedirect.mdplugin */; };
 		77BC67A118408EFC00F82849 /* mach_override.c in Sources */ = {isa = PBXBuildFile; fileRef = 77BC6753184040A600F82849 /* mach_override.c */; };
 		77BC67AE1840913900F82849 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 77BC67AC1840913900F82849 /* InfoPlist.strings */; };
 		77BC67B31840917900F82849 /* mach_override.c in Sources */ = {isa = PBXBuildFile; fileRef = 77BC6753184040A600F82849 /* mach_override.c */; };
 		77BC67B41840918200F82849 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BC6758184040D400F82849 /* Foundation.framework */; };
 		77BC67B7184091C600F82849 /* MDMapLoadingMagic.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BC67B6184091C600F82849 /* MDMapLoadingMagic.m */; };
-		77BC67BB1840924C00F82849 /* MapLoadingMagic.mdplugin in Resources */ = {isa = PBXBuildFile; fileRef = 77BC67A71840913900F82849 /* MapLoadingMagic.mdplugin */; };
 		77CF348615DA33FB005ECB2F /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77CF348515DA33FB005ECB2F /* CoreServices.framework */; };
 		77D44A5B164A076100510501 /* lock.png in Resources */ = {isa = PBXBuildFile; fileRef = 77D44A5A164A076100510501 /* lock.png */; };
 		77DD81F314EDFDE200EBA4CE /* Ruby.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77DD81F214EDFDE200EBA4CE /* Ruby.framework */; };
@@ -67,6 +65,8 @@
 		77E52D2A16D8AC0F0015246C /* chatting.rb in Resources */ = {isa = PBXBuildFile; fileRef = 77E52D2916D8AC0F0015246C /* chatting.rb */; };
 		77E6C6CB18413AC800705ED5 /* plugin.icns in Resources */ = {isa = PBXBuildFile; fileRef = 77E6C6CA18413AC800705ED5 /* plugin.icns */; };
 		77E6C6CE1841493200705ED5 /* MDOverrides.dylib in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 77BC674D1840405100F82849 /* MDOverrides.dylib */; };
+		77E6C6D018414A4700705ED5 /* ChatTextRedirect.mdplugin in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 77BC678A184086DC00F82849 /* ChatTextRedirect.mdplugin */; };
+		77E6C6D118414A4700705ED5 /* MapLoadingMagic.mdplugin in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 77BC67A71840913900F82849 /* MapLoadingMagic.mdplugin */; };
 		77E7E2871720FCB100E18FB9 /* MDModPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E7E2861720FCB000E18FB9 /* MDModPatch.m */; };
 		77E7E28A172463C500E18FB9 /* MDChatRosterElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E7E289172463C400E18FB9 /* MDChatRosterElement.m */; };
 		77E7E28F172477E000E18FB9 /* Growl Registration Ticket.growlRegDict in Resources */ = {isa = PBXBuildFile; fileRef = 77E7E28E172477E000E18FB9 /* Growl Registration Ticket.growlRegDict */; };
@@ -124,6 +124,18 @@
 				774EF69717C7222D005ABB20 /* Growl.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77E6C6CF18414A3600705ED5 /* Copy Plugins */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				77E6C6D018414A4700705ED5 /* ChatTextRedirect.mdplugin in Copy Plugins */,
+				77E6C6D118414A4700705ED5 /* MapLoadingMagic.mdplugin in Copy Plugins */,
+			);
+			name = "Copy Plugins";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -481,6 +493,7 @@
 				775B528714D331C800B874E3 /* Resources */,
 				7706FC1014DBB2830023DBA4 /* Copy Halo Data */,
 				776E3FAA14FAA9F0001414AB /* Copy Frameworks */,
+				77E6C6CF18414A3600705ED5 /* Copy Plugins */,
 			);
 			buildRules = (
 			);
@@ -579,8 +592,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				77BC67BB1840924C00F82849 /* MapLoadingMagic.mdplugin in Resources */,
-				77BC67A0184089A800F82849 /* ChatTextRedirect.mdplugin in Resources */,
 				775B529814D331C800B874E3 /* InfoPlist.strings in Resources */,
 				775B529E14D331C800B874E3 /* Credits.rtf in Resources */,
 				77E6C6CB18413AC800705ED5 /* plugin.icns in Resources */,

@@ -378,7 +378,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	@try
 	{
 #ifndef __ppc__
-		NSArray *pluginPaths = [NSArray arrayWithObjects:[[NSBundle mainBundle] pathForResource:@"ChatTextRedirect" ofType:@"mdplugin"], [[NSBundle mainBundle] pathForResource:@"MapLoadingMagic" ofType:@"mdplugin"], nil];
+		NSArray *pluginPaths = [NSArray arrayWithObjects:[[[NSBundle mainBundle] builtInPlugInsPath] stringByAppendingPathComponent:@"ChatTextRedirect.mdplugin"], [[[NSBundle mainBundle] builtInPlugInsPath] stringByAppendingPathComponent:@"MapLoadingMagic.mdplugin"], nil];
 		
 		[haloTask setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:[[[NSBundle mainBundle] privateFrameworksPath] stringByAppendingPathComponent:@"MDOverrides.dylib"], @"DYLD_INSERT_LIBRARIES", [pluginPaths componentsJoinedByString:@":"], @"MD_GLOBAL_PLUGIN_PATHS", nil]];
 #endif
