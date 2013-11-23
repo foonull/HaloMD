@@ -59,7 +59,7 @@
 				<string>mdplugin</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string></string>
+			<string>plugin</string>
 			<key>CFBundleTypeName</key>
 			<string>HaloMD Plugin</string>
 			<key>CFBundleTypeRole</key>
@@ -68,6 +68,8 @@
 			<array>
 				<string>mdplugin</string>
 			</array>
+			<key>LSTypeIsPackage</key>
+			<true/>
 		</dict>
 	</array>
 	<key>SUPublicDSAKeyFile</key>

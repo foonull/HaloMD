@@ -66,6 +66,7 @@
 		77E52D2616D8A2640015246C /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77E52D2516D8A2640015246C /* WebKit.framework */; };
 		77E52D2816D8A31C0015246C /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 77E52D2716D8A31C0015246C /* index.html */; };
 		77E52D2A16D8AC0F0015246C /* chatting.rb in Resources */ = {isa = PBXBuildFile; fileRef = 77E52D2916D8AC0F0015246C /* chatting.rb */; };
+		77E6C6CB18413AC800705ED5 /* plugin.icns in Resources */ = {isa = PBXBuildFile; fileRef = 77E6C6CA18413AC800705ED5 /* plugin.icns */; };
 		77E7E2871720FCB100E18FB9 /* MDModPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E7E2861720FCB000E18FB9 /* MDModPatch.m */; };
 		77E7E28A172463C500E18FB9 /* MDChatRosterElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E7E289172463C400E18FB9 /* MDChatRosterElement.m */; };
 		77E7E28F172477E000E18FB9 /* Growl Registration Ticket.growlRegDict in Resources */ = {isa = PBXBuildFile; fileRef = 77E7E28E172477E000E18FB9 /* Growl Registration Ticket.growlRegDict */; };
@@ -209,6 +210,7 @@
 		77E52D2516D8A2640015246C /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = ../../../../../System/Library/Frameworks/WebKit.framework; sourceTree = "<group>"; };
 		77E52D2716D8A31C0015246C /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		77E52D2916D8AC0F0015246C /* chatting.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = chatting.rb; sourceTree = "<group>"; };
+		77E6C6CA18413AC800705ED5 /* plugin.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = plugin.icns; sourceTree = "<group>"; };
 		77E7E2851720FCB000E18FB9 /* MDModPatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDModPatch.h; sourceTree = "<group>"; };
 		77E7E2861720FCB000E18FB9 /* MDModPatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDModPatch.m; sourceTree = "<group>"; };
 		77E7E288172463C400E18FB9 /* MDChatRosterElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDChatRosterElement.h; sourceTree = "<group>"; };
@@ -382,6 +384,7 @@
 				777A1AEF1738F588005E2883 /* chat_icon.pdf */,
 				770C15401742E1FC001380A8 /* in_chat_icon.pdf */,
 				770C153C1741CC37001380A8 /* game_icon.pdf */,
+				77E6C6CA18413AC800705ED5 /* plugin.icns */,
 				77E7E28E172477E000E18FB9 /* Growl Registration Ticket.growlRegDict */,
 				77E52D2716D8A31C0015246C /* index.html */,
 				77E52D2116D8A1D60015246C /* theme.css */,
@@ -580,6 +583,7 @@
 				77BC675F1840446900F82849 /* MDOverrides.dylib in Resources */,
 				775B529814D331C800B874E3 /* InfoPlist.strings in Resources */,
 				775B529E14D331C800B874E3 /* Credits.rtf in Resources */,
+				77E6C6CB18413AC800705ED5 /* plugin.icns in Resources */,
 				775B52A414D331C900B874E3 /* MainMenu.xib in Resources */,
 				775B52AD14D3326800B874E3 /* com.null.halominidemo.plist in Resources */,
 				776E3FAD14FAAC01001414AB /* dsa_pub.pem in Resources */,
@@ -1055,6 +1059,7 @@
 				77BC674F1840405200F82849 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		77BC6795184086DC00F82849 /* Build configuration list for PBXNativeTarget "ChatTextRedirect" */ = {
 			isa = XCConfigurationList;
@@ -1063,6 +1068,7 @@
 				77BC6797184086DC00F82849 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		77BC67B01840913900F82849 /* Build configuration list for PBXNativeTarget "MapLoadingMagic" */ = {
 			isa = XCConfigurationList;
@@ -1071,6 +1077,7 @@
 				77BC67B21840913900F82849 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
