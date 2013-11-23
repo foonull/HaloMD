@@ -183,6 +183,33 @@ void *loadMapFunc(const char *argument)
 	return returnValue;
 }
 
+void *(*consoleOut)(int, const char *, ...) = NULL;
+void *consoleOutOverride(int color, const char *message, const char *args)
+{
+	return consoleOut(color,message, args);
+}
+
+void printToConsole(const char *message)
+{
+	consoleOutOverride(0, "%s", message);
+}
+
+#define MDGameInSession 0
+
+void *(*oldChat)(int, const uint16_t *, int) = NULL;
+void *textChatOverride(int unknownZero, const uint16_t *message, int unknownSize)
+{
+	if (*(uint8_t *)0x45DF30 != MDGameInSession)
+	{
+		@autoreleasepool
+		{
+			printToConsole([[NSString stringWithFormat:@"%S", message] cStringUsingEncoding:NSISOLatin1StringEncoding]);
+		}
+	}
+	
+	return oldChat(unknownZero, message, unknownSize);
+}
+
 void halomd_overrides_init()
 {
 	// Reserve memory halo wants before halo initiates, should help fix a bug in 10.9 where GPU drivers may have been loaded here
@@ -190,4 +217,7 @@ void halomd_overrides_init()
 	
 	mach_override_ptr((void *)0x001be2a0, svMapFunc, (void **)&oldSvMapFunc);
 	mach_override_ptr((void *)0x0018f320, loadMapFunc, (void **)&oldLoadMapFunc);
+	
+	mach_override_ptr((void *)0x1588a8, consoleOutOverride, (void **)&consoleOut);
+	mach_override_ptr((void *)0x14D9A4, textChatOverride, (void **)&oldChat);
 }
