@@ -36,8 +36,24 @@ static __attribute__((constructor)) void init()
 		
 		@autoreleasepool
 		{
-			NSString *pluginPaths = [[[NSProcessInfo processInfo] environment] objectForKey:@"MD_GLOBAL_PLUGIN_PATHS"];
-			for (NSString *pluginPath in [pluginPaths componentsSeparatedByString:@":"])
+			NSString *globalPluginPaths = [[[NSProcessInfo processInfo] environment] objectForKey:@"MD_GLOBAL_PLUGIN_PATHS"];
+			NSMutableArray *pluginPaths = [NSMutableArray arrayWithArray:[globalPluginPaths componentsSeparatedByString:@":"]];
+			
+			NSString *libraryPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+			NSString *appSupportPath = [libraryPath stringByAppendingPathComponent:@"Application Support"];
+			NSString *thirdPartyPluginsPath = [[appSupportPath stringByAppendingPathComponent:@"HaloMD"] stringByAppendingPathComponent:@"PlugIns"];
+			
+			NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:thirdPartyPluginsPath];
+			for (NSString *pluginName in directoryEnumerator)
+			{
+				if ([[pluginName pathExtension] isEqualToString:@"mdplugin"])
+				{
+					[pluginPaths addObject:[thirdPartyPluginsPath stringByAppendingPathComponent:pluginName]];
+				}
+				[directoryEnumerator skipDescendents];
+			}
+			
+			for (NSString *pluginPath in pluginPaths)
 			{
 				NSBundle *pluginBundle = [NSBundle bundleWithPath:pluginPath];
 				[[[pluginBundle principalClass] alloc] init];
