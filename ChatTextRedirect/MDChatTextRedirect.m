@@ -24,26 +24,61 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Foundation/Foundation.h>
+// Plug-in created mostly by 002
 
-static __attribute__((constructor)) void init()
+#import "MDChatTextRedirect.h"
+#import "mach_override.h"
+
+#define MDGameInSession 0
+
+typedef enum
 {
-	static BOOL initialized = NO;
-	if (!initialized)
+	NONE = 0x0,
+	WHITE = 0x343aa0,
+	GREY = 0x343ab0,
+	BLACK = 0x343ac0,
+	RED = 0x343ad0,
+	GREEN = 0x343ae0,
+	BLUE = 0x343af0,
+	CYAN = 0x343b00,
+	YELLOW = 0x343b10,
+	MAGENTA = 0x343b20,
+	PINK = 0x343b30,
+	COBALT = 0x343b40,
+	ORANGE = 0x343b50,
+	PURPLE = 0x343b60,
+	TURQUOISE = 0x343b70,
+	DARK_GREEN = 0x343b80,
+	SALMON = 0x343b90,
+	DARK_PINK = 0x343ba0
+} ConsoleColor;
+
+void (*consolePrintf)(int color, const char *format, ...) = (void *)0x1588a8;
+
+void *(*oldChat)(int, const uint16_t *, int);
+static void *textChatOverride(int unknownZero, const uint16_t *message, int unknownSize)
+{
+	if (*(uint8_t *)0x45DF30 != MDGameInSession)
 	{
-		// Reserve memory halo wants before halo initiates, should help fix a bug in 10.9 where GPU drivers may have been loaded here
-		mmap((void *)0x40000000, 0x1b40000, PROT_READ | PROT_WRITE, MAP_FIXED | MAP_ANON | MAP_PRIVATE, -1, 0);
-		
 		@autoreleasepool
 		{
-			NSString *pluginPaths = [[[NSProcessInfo processInfo] environment] objectForKey:@"MD_GLOBAL_PLUGIN_PATHS"];
-			for (NSString *pluginPath in [pluginPaths componentsSeparatedByString:@":"])
-			{
-				NSBundle *pluginBundle = [NSBundle bundleWithPath:pluginPath];
-				[[[pluginBundle principalClass] alloc] init];
-			}
+			consolePrintf(NONE, "%s", [[NSString stringWithFormat:@"%S", message] cStringUsingEncoding:NSISOLatin1StringEncoding]);
 		}
-		
-		initialized = YES;
 	}
+	
+	return oldChat(unknownZero, message, unknownSize);
 }
+
+@implementation MDChatTextRedirect
+
+- (id)init
+{
+	self = [super init];
+	if (self != nil)
+	{
+		mach_override_ptr((void *)0x14D9A4, textChatOverride, (void **)&oldChat);
+	}
+	return self;
+}
+
+@end

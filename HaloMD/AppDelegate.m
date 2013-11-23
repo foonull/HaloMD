@@ -383,7 +383,9 @@ VALUE requireWrapper(VALUE path)
 	@try
 	{
 #ifndef __ppc__
-		[haloTask setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:[[NSBundle mainBundle] pathForResource:@"MDOverrides" ofType:@"dylib"], @"DYLD_INSERT_LIBRARIES", nil]];
+		NSArray *pluginPaths = [NSArray arrayWithObjects:[[NSBundle mainBundle] pathForResource:@"ChatTextRedirect" ofType:@"mdplugin"], [[NSBundle mainBundle] pathForResource:@"MapLoadingMagic" ofType:@"mdplugin"], nil];
+		
+		[haloTask setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:[[NSBundle mainBundle] pathForResource:@"MDOverrides" ofType:@"dylib"], @"DYLD_INSERT_LIBRARIES", [pluginPaths componentsJoinedByString:@":"], @"MD_GLOBAL_PLUGIN_PATHS", nil]];
 #endif
 		[haloTask setLaunchPath:launchPath];
 		[haloTask setArguments:[NSArray array]];

@@ -24,26 +24,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Foundation/Foundation.h>
+//
+//  MDMapLoadingMagic.h
+//  HaloMD
+//
+//  Created by null on 11/23/13.
+//  Copyright (c) 2013. All rights reserved.
+//
 
-static __attribute__((constructor)) void init()
-{
-	static BOOL initialized = NO;
-	if (!initialized)
-	{
-		// Reserve memory halo wants before halo initiates, should help fix a bug in 10.9 where GPU drivers may have been loaded here
-		mmap((void *)0x40000000, 0x1b40000, PROT_READ | PROT_WRITE, MAP_FIXED | MAP_ANON | MAP_PRIVATE, -1, 0);
-		
-		@autoreleasepool
-		{
-			NSString *pluginPaths = [[[NSProcessInfo processInfo] environment] objectForKey:@"MD_GLOBAL_PLUGIN_PATHS"];
-			for (NSString *pluginPath in [pluginPaths componentsSeparatedByString:@":"])
-			{
-				NSBundle *pluginBundle = [NSBundle bundleWithPath:pluginPath];
-				[[[pluginBundle principalClass] alloc] init];
-			}
-		}
-		
-		initialized = YES;
-	}
-}
+@interface MDMapLoadingMagic : NSObject
+
+@end
