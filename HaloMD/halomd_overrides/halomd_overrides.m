@@ -183,7 +183,7 @@ void *loadMapFunc(const char *argument)
 	return returnValue;
 }
 
-void * (*consolePrintf)(int color, const char *format, ...) = (void *)0x1588a8;
+void (*consolePrintf)(int color, const char *format, ...) = (void *)0x1588a8;
 
 #define MDGameInSession 0
 
