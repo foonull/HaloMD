@@ -49,11 +49,23 @@ static VALUE processMessage(VALUE self, VALUE type, VALUE message, VALUE nick, V
 
 #define MD_STATUS_PREFIX @"!MD"
 
+static VALUE requireWrapper(VALUE path)
+{
+	StringValue(path);
+	rb_require(StringValueCStr(path));
+	return Qnil;
+}
+
 - (id)init
 {
 	self = [super initWithWindowNibName:NSStringFromClass([self class])];
 	if (self)
 	{
+		setenv("RUBYLIB", [[[NSBundle mainBundle] resourcePath] UTF8String], 1);
+		
+		ruby_init();
+		ruby_init_loadpath();
+		
 		gChatController = self;
 		chatting = Qnil;
 		

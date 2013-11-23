@@ -118,13 +118,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	}
 }
 
-VALUE requireWrapper(VALUE path)
-{
-	StringValue(path);
-	rb_require(StringValueCStr(path));
-	return Qnil;
-}
-
 // http://developer.apple.com/library/mac/#technotes/tn1103/_index.html
 - (void)copySerialNumber:(CFStringRef *)serialNumber
 {
@@ -158,12 +151,7 @@ VALUE requireWrapper(VALUE path)
 {
 	self = [super init];
 	if (self)
-	{
-		setenv("RUBYLIB", [[[NSBundle mainBundle] resourcePath] UTF8String], 1);
-		
-		ruby_init();
-		ruby_init_loadpath();
-		
+	{	
 		serversArray = [[NSMutableArray alloc] init];
 		waitingServersArray = [[NSMutableArray alloc] init];
 		hiddenServersArray = [[NSMutableArray alloc] init];

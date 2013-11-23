@@ -32,7 +32,6 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <Ruby/ruby.h>
 
 @class MDInspectorController;
 @class MDModsController;
@@ -67,7 +66,6 @@
 	NSMutableArray *hiddenServersArray;
 	NSString *myIPAddress;
 	NSTask *haloTask;
-	VALUE networking;
 	BOOL isInstalled;
 	BOOL usingServerCache;
 	
@@ -86,8 +84,6 @@
 @property (readonly) BOOL isInstalled;
 @property (assign) BOOL usingServerCache;
 @property (nonatomic, retain) MDServer *inGameServer;
-
-VALUE requireWrapper(VALUE path);
 
 - (NSString *)applicationSupportPath;
 - (NSString *)resourceGameDataPath;
