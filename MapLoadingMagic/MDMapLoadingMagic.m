@@ -91,7 +91,6 @@ static int svMapFunc(const char *mapName, const char *mapVariant)
 			// start out innocent
 			strcpy(magicSlotBuffer, SWAP_IDENTIFIER);
 			
-			
 			if (strcmp(mapName, SWAP_IDENTIFIER) == 0 || strcmp(mapName, "ui") == 0 || strcmp(mapName, "bitmaps") == 0 || strcmp(mapName, "sounds") == 0)
 			{
 				chosenMapName = @"bloodgulch";
