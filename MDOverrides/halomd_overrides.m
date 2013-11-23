@@ -149,7 +149,7 @@ static int svMapFunc(const char *mapName, const char *mapVariant)
 
 BOOL didInitializeRand = NO;
 int8_t (*oldLoadMapFunc)(const char *) = NULL;
-static int8_t loadMapFunc(const char *argument)
+static int8_t loadMapFunc(const char *mapName)
 {
 	if (!magicSlotBuffer)
 	{
@@ -176,8 +176,8 @@ static int8_t loadMapFunc(const char *argument)
 			didInitializeRand = YES;
 		}
 		
-		const char *newArgument = (strcmp(argument, SWAP_IDENTIFIER) == 0) ? [[maps objectAtIndex:rand() % [maps count]] UTF8String] : argument;
-		returnValue = oldLoadMapFunc(newArgument);
+		const char *newMapName = (strcmp(mapName, SWAP_IDENTIFIER) == 0) ? [[maps objectAtIndex:rand() % [maps count]] UTF8String] : mapName;
+		returnValue = oldLoadMapFunc(newMapName);
 	}
 	
 	return returnValue;
