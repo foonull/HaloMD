@@ -383,7 +383,7 @@ VALUE requireWrapper(VALUE path)
 	@try
 	{
 #ifndef __ppc__
-		[haloTask setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:[[NSBundle mainBundle] pathForResource:@"halomd_overrides" ofType:@"dylib"], @"DYLD_INSERT_LIBRARIES", nil]];
+		[haloTask setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:[[NSBundle mainBundle] pathForResource:@"MDOverrides" ofType:@"dylib"], @"DYLD_INSERT_LIBRARIES", nil]];
 #endif
 		[haloTask setLaunchPath:launchPath];
 		[haloTask setArguments:[NSArray array]];

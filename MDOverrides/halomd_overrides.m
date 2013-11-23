@@ -39,7 +39,7 @@ NSMutableArray *executableMaps = nil;
 char *magicSlotBuffer = NULL;
 char *moddedSlotBuffer = NULL;
 
-void parseMaps(void)
+static void parseMaps(void)
 {
 	@autoreleasepool
 	{
@@ -71,7 +71,7 @@ void parseMaps(void)
 }
 
 int (*oldSvMapFunc)(const char *mapName, const char *mapVariant) = NULL;
-int svMapFunc(const char *mapName, const char *mapVariant)
+static int svMapFunc(const char *mapName, const char *mapVariant)
 {
 	int returnValue = 0;
 	
@@ -149,7 +149,7 @@ int svMapFunc(const char *mapName, const char *mapVariant)
 
 BOOL didInitializeRand = NO;
 int8_t (*oldLoadMapFunc)(const char *) = NULL;
-int8_t loadMapFunc(const char *argument)
+static int8_t loadMapFunc(const char *argument)
 {
 	if (!magicSlotBuffer)
 	{
@@ -210,7 +210,7 @@ typedef enum
 } ConsoleColor;
 
 void *(*oldChat)(int, const uint16_t *, int) = NULL;
-void *textChatOverride(int unknownZero, const uint16_t *message, int unknownSize)
+static void *textChatOverride(int unknownZero, const uint16_t *message, int unknownSize)
 {
 	if (*(uint8_t *)0x45DF30 != MDGameInSession)
 	{
@@ -223,13 +223,19 @@ void *textChatOverride(int unknownZero, const uint16_t *message, int unknownSize
 	return oldChat(unknownZero, message, unknownSize);
 }
 
-void halomd_overrides_init()
+static __attribute__((constructor)) void init()
 {
-	// Reserve memory halo wants before halo initiates, should help fix a bug in 10.9 where GPU drivers may have been loaded here
-	mmap((void *)0x40000000, 0x1b40000, PROT_READ | PROT_WRITE, MAP_FIXED | MAP_ANON | MAP_PRIVATE, -1, 0);
-	
-	mach_override_ptr((void *)0x001be2a0, svMapFunc, (void **)&oldSvMapFunc);
-	mach_override_ptr((void *)0x0018f320, loadMapFunc, (void **)&oldLoadMapFunc);
-	
-	mach_override_ptr((void *)0x14D9A4, textChatOverride, (void **)&oldChat);
+	static BOOL initialized = NO;
+	if (!initialized)
+	{
+		// Reserve memory halo wants before halo initiates, should help fix a bug in 10.9 where GPU drivers may have been loaded here
+		mmap((void *)0x40000000, 0x1b40000, PROT_READ | PROT_WRITE, MAP_FIXED | MAP_ANON | MAP_PRIVATE, -1, 0);
+		
+		mach_override_ptr((void *)0x001be2a0, svMapFunc, (void **)&oldSvMapFunc);
+		mach_override_ptr((void *)0x0018f320, loadMapFunc, (void **)&oldLoadMapFunc);
+		
+		mach_override_ptr((void *)0x14D9A4, textChatOverride, (void **)&oldChat);
+		
+		initialized = YES;
+	}
 }

@@ -154,7 +154,7 @@ fixupInstructions(
 #pragma mark	(Interface)
 
 #if defined(__i386__) || defined(__x86_64__)
-mach_error_t makeIslandExecutable(void *address) {
+static mach_error_t makeIslandExecutable(void *address) {
 	mach_error_t err = err_none;
     vm_size_t pageSize;
     host_page_size( mach_host_self(), &pageSize );
