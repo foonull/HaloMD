@@ -65,7 +65,6 @@ static void overrideList(char *a)
     *(uint32_t *)(*((int32_t *)0x3691c0) + (4 + 4 * 0x2) * 0x4) = *(uint32_t *)(*((int32_t *)0x3691c0) + (MODDED + MODDED * 0x2) * 0x4);
     *(uint32_t *)(*((int32_t *)0x3691c0) + (4 + 4 * 0x2) * 0x4 + 0x8) = *(uint32_t *)(*((int32_t *)0x3691c0) + (MODDED + MODDED * 0x2) * 0x4 + 0x8);
     *(uint32_t *)(*((int32_t *)0x3691c0) + (4 + 4 * 0x2) * 0x4 + 0x4) = MODDED;
-    return;
 }
 
 - (id)init
