@@ -38,11 +38,11 @@
 @implementation ZZModList
 
 typedef enum {
-    MAGICISWAITING = 3,
-    BARRIER = 8,
-    BLOODGULCH = 9,
-    CROSSING = 16,
-    MODDED = 18
+	MAGICISWAITING = 3,
+	BARRIER = 8,
+	BLOODGULCH = 9,
+	CROSSING = 16,
+	MODDED = 18
 } MapList;
 
 static void changeMapEntry(MapList desiredMap, int tableIndex)
@@ -52,14 +52,14 @@ static void changeMapEntry(MapList desiredMap, int tableIndex)
 	// map index
 	*(uint32_t *)(*((int32_t *)0x3691c0) + (tableIndex + tableIndex * 0x2) * 0x4 + 0x4) = desiredMap;
 	// map enabled
-    *(uint32_t *)(*((int32_t *)0x3691c0) + (tableIndex + tableIndex * 0x2) * 0x4 + 0x8) = *(uint32_t *)(*((int32_t *)0x3691c0) + (desiredMap + desiredMap * 0x2) * 0x4 + 0x8);
+	*(uint32_t *)(*((int32_t *)0x3691c0) + (tableIndex + tableIndex * 0x2) * 0x4 + 0x8) = *(uint32_t *)(*((int32_t *)0x3691c0) + (desiredMap + desiredMap * 0x2) * 0x4 + 0x8);
 }
 
 static void (*oldOverrideList)(char *a) = NULL;
 static void overrideList(char *a)
 {
-    oldOverrideList(a); //init stuff
-    *(uint32_t *)0x3D2D84 = 0x5; //number of maps
+	oldOverrideList(a); //init stuff
+	*(uint32_t *)0x3D2D84 = 0x5; //number of maps
 	
 	changeMapEntry(BLOODGULCH, 0);
 	changeMapEntry(CROSSING, 1);
@@ -72,9 +72,9 @@ static void overrideList(char *a)
 	self = [super init];
 	if (self != nil)
 	{
-        mach_override_ptr((void *)0x15596c, overrideList, (void **)&oldOverrideList);
-    }
-    return self;
+		mach_override_ptr((void *)0x15596c, overrideList, (void **)&oldOverrideList);
+	}
+	return self;
 }
 
 @end
