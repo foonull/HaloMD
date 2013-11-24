@@ -26,6 +26,19 @@
 
 #import <Foundation/Foundation.h>
 
+static void addPluginsInDirectory(NSMutableArray *pluginPaths, NSString *directory)
+{
+	NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:directory];
+	for (NSString *pluginName in directoryEnumerator)
+	{
+		if ([[pluginName pathExtension] isEqualToString:@"mdplugin"])
+		{
+			[pluginPaths addObject:[directory stringByAppendingPathComponent:pluginName]];
+		}
+		[directoryEnumerator skipDescendents];
+	}
+}
+
 static __attribute__((constructor)) void init()
 {
 	static BOOL initialized = NO;
@@ -36,22 +49,17 @@ static __attribute__((constructor)) void init()
 		
 		@autoreleasepool
 		{
-			NSString *globalPluginPaths = [[[NSProcessInfo processInfo] environment] objectForKey:@"MD_GLOBAL_PLUGIN_PATHS"];
-			NSMutableArray *pluginPaths = [NSMutableArray arrayWithArray:[globalPluginPaths componentsSeparatedByString:@":"]];
+			NSMutableArray *pluginPaths = [NSMutableArray array];
+			
+			NSString *builtinPluginDirectory = [[[NSProcessInfo processInfo] environment] objectForKey:@"MD_BUILTIN_PLUGIN_DIRECTORY"];
+			
+			addPluginsInDirectory(pluginPaths, builtinPluginDirectory);
 			
 			NSString *libraryPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 			NSString *appSupportPath = [libraryPath stringByAppendingPathComponent:@"Application Support"];
 			NSString *thirdPartyPluginsPath = [[appSupportPath stringByAppendingPathComponent:@"HaloMD"] stringByAppendingPathComponent:@"PlugIns"];
 			
-			NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:thirdPartyPluginsPath];
-			for (NSString *pluginName in directoryEnumerator)
-			{
-				if ([[pluginName pathExtension] isEqualToString:@"mdplugin"])
-				{
-					[pluginPaths addObject:[thirdPartyPluginsPath stringByAppendingPathComponent:pluginName]];
-				}
-				[directoryEnumerator skipDescendents];
-			}
+			addPluginsInDirectory(pluginPaths, thirdPartyPluginsPath);
 			
 			for (NSString *pluginPath in pluginPaths)
 			{

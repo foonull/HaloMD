@@ -54,6 +54,9 @@
 		77BC67B31840917900F82849 /* mach_override.c in Sources */ = {isa = PBXBuildFile; fileRef = 77BC6753184040A600F82849 /* mach_override.c */; };
 		77BC67B41840918200F82849 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BC6758184040D400F82849 /* Foundation.framework */; };
 		77BC67B7184091C600F82849 /* MDMapLoadingMagic.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BC67B6184091C600F82849 /* MDMapLoadingMagic.m */; };
+		77C595FB1842B8E900C81DC0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BC6758184040D400F82849 /* Foundation.framework */; };
+		77C595FE1842B94900C81DC0 /* MapList.mdplugin in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 77E6C7091842B7BE00705ED5 /* MapList.mdplugin */; };
+		77C595FF1842B97800C81DC0 /* mach_override.c in Sources */ = {isa = PBXBuildFile; fileRef = 77BC6753184040A600F82849 /* mach_override.c */; };
 		77CF348615DA33FB005ECB2F /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77CF348515DA33FB005ECB2F /* CoreServices.framework */; };
 		77D44A5B164A076100510501 /* lock.png in Resources */ = {isa = PBXBuildFile; fileRef = 77D44A5A164A076100510501 /* lock.png */; };
 		77DD81F314EDFDE200EBA4CE /* Ruby.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77DD81F214EDFDE200EBA4CE /* Ruby.framework */; };
@@ -67,6 +70,8 @@
 		77E6C6CE1841493200705ED5 /* MDOverrides.dylib in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 77BC674D1840405100F82849 /* MDOverrides.dylib */; };
 		77E6C6D018414A4700705ED5 /* ChatTextRedirect.mdplugin in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 77BC678A184086DC00F82849 /* ChatTextRedirect.mdplugin */; };
 		77E6C6D118414A4700705ED5 /* MapLoadingMagic.mdplugin in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 77BC67A71840913900F82849 /* MapLoadingMagic.mdplugin */; };
+		77E6C7101842B7BE00705ED5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 77E6C70E1842B7BE00705ED5 /* InfoPlist.strings */; };
+		77E6C7171842B86200705ED5 /* ZZModList.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E6C7161842B86200705ED5 /* ZZModList.m */; };
 		77E7E2871720FCB100E18FB9 /* MDModPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E7E2861720FCB000E18FB9 /* MDModPatch.m */; };
 		77E7E28A172463C500E18FB9 /* MDChatRosterElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E7E289172463C400E18FB9 /* MDChatRosterElement.m */; };
 		77E7E28F172477E000E18FB9 /* Growl Registration Ticket.growlRegDict in Resources */ = {isa = PBXBuildFile; fileRef = 77E7E28E172477E000E18FB9 /* Growl Registration Ticket.growlRegDict */; };
@@ -97,6 +102,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 77BC67A61840913900F82849;
 			remoteInfo = MapLoadingMagic;
+		};
+		77C595FC1842B91A00C81DC0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 775B528014D331C800B874E3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 77E6C7081842B7BE00705ED5;
+			remoteInfo = MapList;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -132,6 +144,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				77C595FE1842B94900C81DC0 /* MapList.mdplugin in Copy Plugins */,
 				77E6C6D018414A4700705ED5 /* ChatTextRedirect.mdplugin in Copy Plugins */,
 				77E6C6D118414A4700705ED5 /* MapLoadingMagic.mdplugin in Copy Plugins */,
 			);
@@ -224,6 +237,12 @@
 		77E52D2716D8A31C0015246C /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		77E52D2916D8AC0F0015246C /* chatting.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = chatting.rb; sourceTree = "<group>"; };
 		77E6C6CA18413AC800705ED5 /* plugin.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = plugin.icns; sourceTree = "<group>"; };
+		77E6C7091842B7BE00705ED5 /* MapList.mdplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapList.mdplugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		77E6C70D1842B7BE00705ED5 /* MapList-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MapList-Info.plist"; sourceTree = "<group>"; };
+		77E6C70F1842B7BE00705ED5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		77E6C7111842B7BE00705ED5 /* MapList-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MapList-Prefix.pch"; sourceTree = "<group>"; };
+		77E6C7151842B86200705ED5 /* ZZModList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZModList.h; sourceTree = "<group>"; };
+		77E6C7161842B86200705ED5 /* ZZModList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZModList.m; sourceTree = "<group>"; };
 		77E7E2851720FCB000E18FB9 /* MDModPatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDModPatch.h; sourceTree = "<group>"; };
 		77E7E2861720FCB000E18FB9 /* MDModPatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDModPatch.m; sourceTree = "<group>"; };
 		77E7E288172463C400E18FB9 /* MDChatRosterElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDChatRosterElement.h; sourceTree = "<group>"; };
@@ -279,6 +298,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		77E6C7061842B7BE00705ED5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77C595FB1842B8E900C81DC0 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -312,6 +339,7 @@
 				77BC674D1840405100F82849 /* MDOverrides.dylib */,
 				77BC678A184086DC00F82849 /* ChatTextRedirect.mdplugin */,
 				77BC67A71840913900F82849 /* MapLoadingMagic.mdplugin */,
+				77E6C7091842B7BE00705ED5 /* MapList.mdplugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -462,12 +490,41 @@
 			isa = PBXGroup;
 			children = (
 				77BC6752184040A600F82849 /* halomd_overrides.m */,
-				77BC6754184040A600F82849 /* mach_override.h */,
-				77BC6753184040A600F82849 /* mach_override.c */,
+				77E6C7031842B73100705ED5 /* mach_override */,
+				77E6C70B1842B7BE00705ED5 /* MapList */,
 				77BC67A91840913900F82849 /* MapLoadingMagic */,
 				77BC678E184086DC00F82849 /* ChatTextRedirect */,
 			);
 			name = "Code Injection";
+			sourceTree = "<group>";
+		};
+		77E6C7031842B73100705ED5 /* mach_override */ = {
+			isa = PBXGroup;
+			children = (
+				77BC6754184040A600F82849 /* mach_override.h */,
+				77BC6753184040A600F82849 /* mach_override.c */,
+			);
+			name = mach_override;
+			sourceTree = "<group>";
+		};
+		77E6C70B1842B7BE00705ED5 /* MapList */ = {
+			isa = PBXGroup;
+			children = (
+				77E6C7151842B86200705ED5 /* ZZModList.h */,
+				77E6C7161842B86200705ED5 /* ZZModList.m */,
+				77E6C70C1842B7BE00705ED5 /* Supporting Files */,
+			);
+			path = MapList;
+			sourceTree = "<group>";
+		};
+		77E6C70C1842B7BE00705ED5 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				77E6C70D1842B7BE00705ED5 /* MapList-Info.plist */,
+				77E6C70E1842B7BE00705ED5 /* InfoPlist.strings */,
+				77E6C7111842B7BE00705ED5 /* MapList-Prefix.pch */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -501,6 +558,7 @@
 				77BC675D184043B300F82849 /* PBXTargetDependency */,
 				77BC679F1840899D00F82849 /* PBXTargetDependency */,
 				77BC67B91840921900F82849 /* PBXTargetDependency */,
+				77C595FD1842B91A00C81DC0 /* PBXTargetDependency */,
 			);
 			name = HaloMD;
 			productName = HaloMD;
@@ -558,6 +616,23 @@
 			productReference = 77BC67A71840913900F82849 /* MapLoadingMagic.mdplugin */;
 			productType = "com.apple.product-type.bundle";
 		};
+		77E6C7081842B7BE00705ED5 /* MapList */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 77E6C7121842B7BE00705ED5 /* Build configuration list for PBXNativeTarget "MapList" */;
+			buildPhases = (
+				77E6C7051842B7BE00705ED5 /* Sources */,
+				77E6C7061842B7BE00705ED5 /* Frameworks */,
+				77E6C7071842B7BE00705ED5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MapList;
+			productName = MapList;
+			productReference = 77E6C7091842B7BE00705ED5 /* MapList.mdplugin */;
+			productType = "com.apple.product-type.bundle";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -583,6 +658,7 @@
 				77BC674C1840405100F82849 /* MDOverrides */,
 				77BC6789184086DC00F82849 /* ChatTextRedirect */,
 				77BC67A61840913900F82849 /* MapLoadingMagic */,
+				77E6C7081842B7BE00705ED5 /* MapList */,
 			);
 		};
 /* End PBXProject section */
@@ -629,6 +705,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				77BC67AE1840913900F82849 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77E6C7071842B7BE00705ED5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77E6C7101842B7BE00705ED5 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -686,6 +770,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		77E6C7051842B7BE00705ED5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77C595FF1842B97800C81DC0 /* mach_override.c in Sources */,
+				77E6C7171842B86200705ED5 /* ZZModList.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -703,6 +796,11 @@
 			isa = PBXTargetDependency;
 			target = 77BC67A61840913900F82849 /* MapLoadingMagic */;
 			targetProxy = 77BC67B81840921900F82849 /* PBXContainerItemProxy */;
+		};
+		77C595FD1842B91A00C81DC0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 77E6C7081842B7BE00705ED5 /* MapList */;
+			targetProxy = 77C595FC1842B91A00C81DC0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -743,6 +841,14 @@
 			isa = PBXVariantGroup;
 			children = (
 				77BC67AD1840913900F82849 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		77E6C70E1842B7BE00705ED5 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				77E6C70F1842B7BE00705ED5 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -1042,6 +1148,71 @@
 			};
 			name = Release;
 		};
+		77E6C7131842B7BE00705ED5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MapList/MapList-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "MapList/MapList-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = mdplugin;
+			};
+			name = Debug;
+		};
+		77E6C7141842B7BE00705ED5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MapList/MapList-Prefix.pch";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "MapList/MapList-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = mdplugin;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1086,6 +1257,15 @@
 			buildConfigurations = (
 				77BC67B11840913900F82849 /* Debug */,
 				77BC67B21840913900F82849 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		77E6C7121842B7BE00705ED5 /* Build configuration list for PBXNativeTarget "MapList" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				77E6C7131842B7BE00705ED5 /* Debug */,
+				77E6C7141842B7BE00705ED5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
