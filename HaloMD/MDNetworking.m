@@ -331,14 +331,16 @@ static int querySocket;
 		break;
 	}
 	
+	freeaddrinfo(serverInfo);
+	
 	if (serverInfoPointer == NULL)
 	{
 		NSLog(@"Failed to bind socket..");
-		return;
 	}
-	
-	freeaddrinfo(serverInfo);
-	socketInitialized = YES;
+	else
+	{
+		socketInitialized = YES;
+	}
 }
 
 + (void)queryServerAtAddress:(NSString *)address port:(uint16_t)port
