@@ -334,7 +334,7 @@ static int querySocket;
 	
 	if (serverInfoPointer == NULL)
 	{
-		NSLog(@"Failed to bind socket..");
+		NSLog(@"Failed to create socket..");
 		return NO;
 	}
 	
