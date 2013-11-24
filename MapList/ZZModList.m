@@ -45,26 +45,26 @@ typedef enum {
     MODDED = 18
 } MapList;
 
+static void changeMapEntry(MapList desiredMap, int tableIndex)
+{
+	// map name
+	*(uint32_t *)(*((int32_t *)0x3691c0) + (tableIndex + tableIndex * 0x2) * 0x4) = *(uint32_t *)(*((int32_t *)0x3691c0) + (desiredMap + desiredMap * 0x2) * 0x4);
+	// map index
+	*(uint32_t *)(*((int32_t *)0x3691c0) + (tableIndex + tableIndex * 0x2) * 0x4 + 0x4) = desiredMap;
+	// map enabled
+    *(uint32_t *)(*((int32_t *)0x3691c0) + (tableIndex + tableIndex * 0x2) * 0x4 + 0x8) = *(uint32_t *)(*((int32_t *)0x3691c0) + (desiredMap + desiredMap * 0x2) * 0x4 + 0x8);
+}
+
 static void (*oldOverrideList)(char *a) = NULL;
 static void overrideList(char *a)
 {
     oldOverrideList(a); //init stuff
     *(uint32_t *)0x3D2D84 = 0x5; //number of maps
-    *(uint32_t *)(*((int32_t *)0x3691c0) + (0 + 0 * 0x2) * 0x4) = *(uint32_t *)(*((int32_t *)0x3691c0) + (BLOODGULCH + BLOODGULCH * 0x2) * 0x4);
-    *(uint32_t *)(*((int32_t *)0x3691c0) + (0 + 0 * 0x2) * 0x4 + 0x8) = *(uint32_t *)(*((int32_t *)0x3691c0) + (BLOODGULCH + BLOODGULCH * 0x2) * 0x4 + 0x8);
-    *(uint32_t *)(*((int32_t *)0x3691c0) + (0 + 0 * 0x2) * 0x4 + 0x4) = BLOODGULCH;
-    
-    *(uint32_t *)(*((int32_t *)0x3691c0) + (1 + 1 * 0x2) * 0x4) = *(uint32_t *)(*((int32_t *)0x3691c0) + (CROSSING + CROSSING * 0x2) * 0x4);
-    *(uint32_t *)(*((int32_t *)0x3691c0) + (1 + 1 * 0x2) * 0x4 + 0x8) = *(uint32_t *)(*((int32_t *)0x3691c0) + (CROSSING + CROSSING * 0x2) * 0x4 + 0x8);
-    *(uint32_t *)(*((int32_t *)0x3691c0) + (1 + 1 * 0x2) * 0x4 + 0x4) = CROSSING;
-    
-    *(uint32_t *)(*((int32_t *)0x3691c0) + (2 + 2 * 0x2) * 0x4) = *(uint32_t *)(*((int32_t *)0x3691c0) + (BARRIER + BARRIER * 0x2) * 0x4);
-    *(uint32_t *)(*((int32_t *)0x3691c0) + (2 + 2 * 0x2) * 0x4 + 0x8) = *(uint32_t *)(*((int32_t *)0x3691c0) + (BARRIER + BARRIER * 0x2) * 0x4 + 0x8);
-    *(uint32_t *)(*((int32_t *)0x3691c0) + (2 + 2 * 0x2) * 0x4 + 0x4) = BARRIER;
-    
-    *(uint32_t *)(*((int32_t *)0x3691c0) + (4 + 4 * 0x2) * 0x4) = *(uint32_t *)(*((int32_t *)0x3691c0) + (MODDED + MODDED * 0x2) * 0x4);
-    *(uint32_t *)(*((int32_t *)0x3691c0) + (4 + 4 * 0x2) * 0x4 + 0x8) = *(uint32_t *)(*((int32_t *)0x3691c0) + (MODDED + MODDED * 0x2) * 0x4 + 0x8);
-    *(uint32_t *)(*((int32_t *)0x3691c0) + (4 + 4 * 0x2) * 0x4 + 0x4) = MODDED;
+	
+	changeMapEntry(BLOODGULCH, 0);
+	changeMapEntry(CROSSING, 1);
+	changeMapEntry(BARRIER, 2);
+	changeMapEntry(MODDED, 4);
 }
 
 - (id)init
