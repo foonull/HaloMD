@@ -318,6 +318,7 @@ static int querySocket;
 		return NO;
 	}
 	
+	querySocket = -1;
 	struct addrinfo *serverInfoPointer = NULL;
 	for (serverInfoPointer = serverInfo; serverInfoPointer != NULL; serverInfoPointer = serverInfoPointer->ai_next)
 	{
@@ -332,7 +333,7 @@ static int querySocket;
 	
 	freeaddrinfo(serverInfo);
 	
-	if (serverInfoPointer == NULL)
+	if (querySocket == -1)
 	{
 		NSLog(@"Failed to create socket..");
 		return NO;
