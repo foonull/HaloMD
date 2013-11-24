@@ -43,7 +43,7 @@
 		7797195B173B698600007D80 /* MDChatWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7797195A173B698600007D80 /* MDChatWindow.m */; };
 		77B58A921571AF4900C93121 /* MDModsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B58A911571AF4900C93121 /* MDModsController.m */; };
 		77B58AAA1572BF6200C93121 /* MDModListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B58AA91572BF6200C93121 /* MDModListItem.m */; };
-		77BC6755184040A600F82849 /* halomd_overrides.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BC6752184040A600F82849 /* halomd_overrides.m */; };
+		77BC6755184040A600F82849 /* plugin_handler.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BC6752184040A600F82849 /* plugin_handler.m */; };
 		77BC6757184040A600F82849 /* mach_override.h in Headers */ = {isa = PBXBuildFile; fileRef = 77BC6754184040A600F82849 /* mach_override.h */; };
 		77BC6759184040D400F82849 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BC6758184040D400F82849 /* Foundation.framework */; };
 		77BC6793184086DC00F82849 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 77BC6791184086DC00F82849 /* InfoPlist.strings */; };
@@ -207,7 +207,7 @@
 		77B58AA61572BEFD00C93121 /* MDModListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDModListItem.h; sourceTree = "<group>"; };
 		77B58AA91572BF6200C93121 /* MDModListItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDModListItem.m; sourceTree = "<group>"; };
 		77BC674D1840405100F82849 /* MDOverrides.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = MDOverrides.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		77BC6752184040A600F82849 /* halomd_overrides.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = halomd_overrides.m; path = MDOverrides/halomd_overrides.m; sourceTree = "<group>"; };
+		77BC6752184040A600F82849 /* plugin_handler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = plugin_handler.m; path = MDOverrides/plugin_handler.m; sourceTree = "<group>"; };
 		77BC6753184040A600F82849 /* mach_override.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mach_override.c; path = MDOverrides/mach_override.c; sourceTree = "<group>"; };
 		77BC6754184040A600F82849 /* mach_override.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mach_override.h; path = MDOverrides/mach_override.h; sourceTree = "<group>"; };
 		77BC6758184040D400F82849 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -489,7 +489,7 @@
 		77BC67BC1840949C00F82849 /* Code Injection */ = {
 			isa = PBXGroup;
 			children = (
-				77BC6752184040A600F82849 /* halomd_overrides.m */,
+				77BC6752184040A600F82849 /* plugin_handler.m */,
 				77E6C7031842B73100705ED5 /* mach_override */,
 				77E6C70B1842B7BE00705ED5 /* MapList */,
 				77BC67A91840913900F82849 /* MapLoadingMagic */,
@@ -748,7 +748,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				77BC6755184040A600F82849 /* halomd_overrides.m in Sources */,
+				77BC6755184040A600F82849 /* plugin_handler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
