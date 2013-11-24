@@ -302,9 +302,8 @@
 	return [NSArray arrayWithArray:[newComponents autorelease]];
 }
 
-static BOOL socketInitialized = NO;
 static int querySocket;
-+ (void)createQuerySocket
++ (BOOL)createQuerySocket
 {
 	struct addrinfo hints;
 	memset(&hints, 0, sizeof hints);
@@ -316,7 +315,7 @@ static int querySocket;
 	if (getaddrinfo(NULL, "0", &hints, &serverInfo) != 0) //who cares about port
 	{
 		NSLog(@"Failed to call getaddrinfo");
-		return;
+		return NO;
 	}
 	
 	struct addrinfo *serverInfoPointer = NULL;
@@ -336,64 +335,58 @@ static int querySocket;
 	if (serverInfoPointer == NULL)
 	{
 		NSLog(@"Failed to bind socket..");
+		return NO;
+	}
+	
+	return YES;
+}
+
+static BOOL socketInitialized;
++ (void)queryServerAtAddress:(NSString *)address port:(uint16_t)port
+{
+	if (!socketInitialized && !(socketInitialized = [self createQuerySocket])) return;
+	
+	const char *addressCString = [address UTF8String];
+	char buffer[] = {0xFE, 0xFD, 0x00, 0x77, 0x6A, 0xBF, 0xBF, 0xFF, 0xFF, 0xFF, 0xFF};
+	
+	if ([[address componentsSeparatedByString:@"."] count] == 4) // inet_pton only takes dotted quad address when family is AF_INET
+	{
+		struct in_addr ipv4Address;
+		if (inet_pton(AF_INET, addressCString, &ipv4Address) <= 0)
+		{
+			NSLog(@"Failed to parse ipv4 address: %@", address);
+		}
+		
+		struct sockaddr_in socketAddress;
+		memset(&socketAddress, 0, sizeof(struct sockaddr_in));
+		socketAddress.sin_len = sizeof(struct sockaddr_in);
+		socketAddress.sin_family = AF_INET;
+		socketAddress.sin_port = htons(port);
+		socketAddress.sin_addr = ipv4Address;
+		
+		if (sendto(querySocket, buffer, sizeof buffer, 0, (struct sockaddr *)&socketAddress, socketAddress.sin_len) <= 0)
+		{
+			NSLog(@"Failed to send data to %@", address);
+		}
 	}
 	else
 	{
-		socketInitialized = YES;
-	}
-}
-
-+ (void)queryServerAtAddress:(NSString *)address port:(uint16_t)port
-{
-	if (!socketInitialized)
-	{
-		[self createQuerySocket];
-	}
-	
-	if (socketInitialized)
-	{
-		const char *addressCString = [address UTF8String];
-		char buffer[] = {0xFE, 0xFD, 0x00, 0x77, 0x6A, 0xBF, 0xBF, 0xFF, 0xFF, 0xFF, 0xFF};
-		
-		if ([[address componentsSeparatedByString:@"."] count] == 4) // inet_pton only takes dotted quad address when family is AF_INET
+		struct in6_addr ipv6Address;
+		if (inet_pton(AF_INET6, addressCString, &ipv6Address) <= 0)
 		{
-			struct in_addr ipv4Address;
-			if (inet_pton(AF_INET, addressCString, &ipv4Address) <= 0)
-			{
-				NSLog(@"Failed to parse ipv4 address: %@", address);
-			}
-			
-			struct sockaddr_in socketAddress;
-			memset(&socketAddress, 0, sizeof(struct sockaddr_in));
-			socketAddress.sin_len = sizeof(struct sockaddr_in);
-			socketAddress.sin_family = AF_INET;
-			socketAddress.sin_port = htons(port);
-			socketAddress.sin_addr = ipv4Address;
-			
-			if (sendto(querySocket, buffer, sizeof buffer, 0, (struct sockaddr *)&socketAddress, socketAddress.sin_len) <= 0)
-			{
-				NSLog(@"Failed to send data to %@", address);
-			}
+			NSLog(@"Failed to parse ipv6 address: %@", address);
 		}
-		else
+		
+		struct sockaddr_in6 socketAddress;
+		memset(&socketAddress, 0, sizeof(struct sockaddr_in6));
+		socketAddress.sin6_len = sizeof(struct sockaddr_in6);
+		socketAddress.sin6_family = AF_INET6;
+		socketAddress.sin6_port = htons(port);
+		socketAddress.sin6_addr = ipv6Address;
+		
+		if (sendto(querySocket, buffer, sizeof buffer, 0, (struct sockaddr *)&socketAddress, socketAddress.sin6_len) <= 0)
 		{
-			struct in6_addr ipv6Address;
-			if (inet_pton(AF_INET6, addressCString, &ipv6Address) <= 0)
-			{
-				NSLog(@"Failed to parse ipv6 address: %@", address);
-			}
-			
-			struct sockaddr_in6 socketAddress;
-			memset(&socketAddress, 0, sizeof(struct sockaddr_in6));
-			socketAddress.sin6_len = sizeof(struct sockaddr_in6);
-			socketAddress.sin6_family = AF_INET6;
-			socketAddress.sin6_port = htons(port);
-			socketAddress.sin6_addr = ipv6Address;
-			
-			if (sendto(querySocket, buffer, sizeof buffer, 0, (struct sockaddr *)&socketAddress, socketAddress.sin6_len) <= 0)
-			{
-				NSLog(@"Failed to send data to %@", address);
-			}
+			NSLog(@"Failed to send data to %@", address);
 		}
 	}
 }
