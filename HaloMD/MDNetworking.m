@@ -328,13 +328,6 @@ static int querySocket;
 			continue;
 		}
 		
-		if (bind(querySocket, serverInfoPointer->ai_addr, serverInfoPointer->ai_addrlen) == -1)
-		{
-			perror("createQuerySocket: bind");
-			close(querySocket);
-			continue;
-		}
-		
 		break;
 	}
 	
