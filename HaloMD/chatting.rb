@@ -191,7 +191,7 @@ class Chatting
 				end
 				@last_time = Time.now
 				
-				if @thread_timer >= 10.0
+				if @thread_timer >= 20.0
 					Thread.kill(@thread)
 					@thread = nil
 					@client = nil
