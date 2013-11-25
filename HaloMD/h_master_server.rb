@@ -165,7 +165,9 @@ class MasterServer
 						if game
 							game.update
 						else
-							@server.send(@query_message, 0, receiver[3], receiver[1])
+							begin
+								@server.send(@query_message, 0, receiver[3], receiver[1])
+							end
 						end
 					elsif data_bytes[0] == 59 and data_bytes[1] == 5 and data_bytes[2] == 4
 						#A player has left a game
@@ -198,7 +200,9 @@ class MasterServer
 					should_delete_game = true
 				elsif time_difference >= 45
 					#Try to get a response from the game
-					@server.send(@query_message, 0, game.address, game.port)
+					begin
+						@server.send(@query_message, 0, game.address, game.port)
+					end
 				end
 				should_delete_game
 			end
@@ -208,7 +212,9 @@ class MasterServer
 					time_difference = current_time - game.last_updated
 					if game.first_chance? or time_difference >= 60
 						#Try to get a response from the game
-						@server.send(@query_message, 0, game.address, game.port)
+						begin
+							@server.send(@query_message, 0, game.address, game.port)
+						end
 						game.update()
 					end
 				end
