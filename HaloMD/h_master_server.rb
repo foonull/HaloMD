@@ -28,8 +28,12 @@
 
 require 'socket'
 
-MASTER_SERVER_PORT = 29910
-NAT_SERVER_PORT = 27900
+#Gamespy related ports
+MASTER_SERVER_PORT = 29910 #UDP
+NAT_SERVER_PORT = 27900 #UDP
+
+#MD related ports
+LOBBY_SERVER_PORT = 29920 #TCP
 
 GAME_VERSION = "01.00.09.0620"
 
@@ -66,7 +70,7 @@ class MasterServer
 		@nat_server = UDPSocket.new
 		@nat_server.bind('0.0.0.0', NAT_SERVER_PORT)
 		
-		@tcp_server = TCPServer.open(29920)
+		@tcp_server = TCPServer.open(LOBBY_SERVER_PORT)
 		
 		@games = []
 		@query_message = [0xFE, 0xFD, 0x00, 0x77, 0x6A, 0xBF, 0xBF, 0xFF, 0xFF, 0xFF, 0xFF].pack('c*')
