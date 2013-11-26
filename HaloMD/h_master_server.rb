@@ -171,6 +171,7 @@ class MasterServer
 						else
 							begin
 								@server.send(@query_message, 0, receiver[3], receiver[1])
+							rescue
 							end
 						end
 					elsif data_bytes[0] == 59 and data_bytes[1] == 5 and data_bytes[2] == 4
@@ -206,6 +207,7 @@ class MasterServer
 					#Try to get a response from the game
 					begin
 						@server.send(@query_message, 0, game.address, game.port)
+					rescue
 					end
 				end
 				should_delete_game
@@ -218,6 +220,7 @@ class MasterServer
 						#Try to get a response from the game
 						begin
 							@server.send(@query_message, 0, game.address, game.port)
+						rescue
 						end
 						game.update()
 					end
