@@ -213,8 +213,6 @@
 		77BC6758184040D400F82849 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		77BC675A184040DF00F82849 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework; sourceTree = DEVELOPER_DIR; };
 		77BC678A184086DC00F82849 /* ChatTextRedirect.mdplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatTextRedirect.mdplugin; sourceTree = BUILT_PRODUCTS_DIR; };
-		77BC678B184086DC00F82849 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
-		77BC678D184086DC00F82849 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		77BC6790184086DC00F82849 /* ChatTextRedirect-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ChatTextRedirect-Info.plist"; sourceTree = "<group>"; };
 		77BC6792184086DC00F82849 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		77BC67981840880F00F82849 /* MDChatTextRedirect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDChatTextRedirect.h; sourceTree = "<group>"; };
@@ -357,7 +355,6 @@
 				77E52D2516D8A2640015246C /* WebKit.framework */,
 				77CF348515DA33FB005ECB2F /* CoreServices.framework */,
 				77DD81F214EDFDE200EBA4CE /* Ruby.framework */,
-				77BC678B184086DC00F82849 /* Cocoa.framework */,
 				775B528F14D331C800B874E3 /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -369,7 +366,6 @@
 				773E8ADC1820C7C500D1A71A /* AppKit.framework */,
 				773E8AD91820C7B700D1A71A /* Foundation.framework */,
 				773E8AD61820C7A500D1A71A /* Cocoa.framework */,
-				77BC678D184086DC00F82849 /* CoreData.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
