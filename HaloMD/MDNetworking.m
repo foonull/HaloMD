@@ -357,17 +357,20 @@ static BOOL socketInitialized;
 		{
 			NSLog(@"Failed to parse ipv4 address: %@", address);
 		}
-		
-		struct sockaddr_in socketAddress;
-		memset(&socketAddress, 0, sizeof(struct sockaddr_in));
-		socketAddress.sin_len = sizeof(struct sockaddr_in);
-		socketAddress.sin_family = AF_INET;
-		socketAddress.sin_port = htons(port);
-		socketAddress.sin_addr = ipv4Address;
-		
-		if (sendto(querySocket, buffer, sizeof buffer, 0, (struct sockaddr *)&socketAddress, socketAddress.sin_len) <= 0)
+		else
 		{
-			NSLog(@"Failed to send data to %@", address);
+			struct sockaddr_in socketAddress;
+			memset(&socketAddress, 0, sizeof(struct sockaddr_in));
+			socketAddress.sin_len = sizeof(struct sockaddr_in);
+			socketAddress.sin_family = AF_INET;
+			socketAddress.sin_port = htons(port);
+			socketAddress.sin_addr = ipv4Address;
+			
+			if (sendto(querySocket, buffer, sizeof buffer, 0, (struct sockaddr *)&socketAddress, socketAddress.sin_len) <= 0)
+			{
+				NSLog(@"Failed to send data to %@", address);
+				perror("sendto failed: ");
+			}
 		}
 	}
 	else
@@ -377,17 +380,20 @@ static BOOL socketInitialized;
 		{
 			NSLog(@"Failed to parse ipv6 address: %@", address);
 		}
-		
-		struct sockaddr_in6 socketAddress;
-		memset(&socketAddress, 0, sizeof(struct sockaddr_in6));
-		socketAddress.sin6_len = sizeof(struct sockaddr_in6);
-		socketAddress.sin6_family = AF_INET6;
-		socketAddress.sin6_port = htons(port);
-		socketAddress.sin6_addr = ipv6Address;
-		
-		if (sendto(querySocket, buffer, sizeof buffer, 0, (struct sockaddr *)&socketAddress, socketAddress.sin6_len) <= 0)
+		else
 		{
-			NSLog(@"Failed to send data to %@", address);
+			struct sockaddr_in6 socketAddress;
+			memset(&socketAddress, 0, sizeof(struct sockaddr_in6));
+			socketAddress.sin6_len = sizeof(struct sockaddr_in6);
+			socketAddress.sin6_family = AF_INET6;
+			socketAddress.sin6_port = htons(port);
+			socketAddress.sin6_addr = ipv6Address;
+			
+			if (sendto(querySocket, buffer, sizeof buffer, 0, (struct sockaddr *)&socketAddress, socketAddress.sin6_len) <= 0)
+			{
+				NSLog(@"Failed to send data to %@", address);
+				perror("sendto failed: ");
+			}
 		}
 	}
 }
