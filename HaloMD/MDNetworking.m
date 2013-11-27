@@ -302,7 +302,8 @@
 	return [NSArray arrayWithArray:[newComponents autorelease]];
 }
 
-static int querySocket;
+static int ipv4QuerySocket = -1;
+static int ipv6QuerySocket = -1;
 + (BOOL)createQuerySocket
 {
 	struct addrinfo hints;
@@ -318,22 +319,34 @@ static int querySocket;
 		return NO;
 	}
 	
-	querySocket = -1;
 	struct addrinfo *serverInfoPointer = NULL;
 	for (serverInfoPointer = serverInfo; serverInfoPointer != NULL; serverInfoPointer = serverInfoPointer->ai_next)
 	{
-		if ((querySocket = socket(serverInfoPointer->ai_family, serverInfoPointer->ai_socktype, serverInfoPointer->ai_protocol)) == -1)
+		if (serverInfoPointer->ai_family != AF_INET && serverInfoPointer->ai_family != AF_INET6)
+		{
+			continue;
+		}
+		
+		int socketReturned = socket(serverInfoPointer->ai_family, serverInfoPointer->ai_socktype, serverInfoPointer->ai_protocol);
+		if (socketReturned == -1)
 		{
 			perror("createQuerySocket: socket");
 			continue;
 		}
 		
-		break;
+		if (serverInfoPointer->ai_family == AF_INET)
+		{
+			ipv4QuerySocket = socketReturned;
+		}
+		else if (serverInfoPointer->ai_family == AF_INET6)
+		{
+			ipv6QuerySocket = socketReturned;
+		}
 	}
 	
 	freeaddrinfo(serverInfo);
 	
-	if (querySocket == -1)
+	if (ipv4QuerySocket == -1 && ipv6QuerySocket == -1)
 	{
 		NSLog(@"Failed to create socket..");
 		return NO;
@@ -342,9 +355,11 @@ static int querySocket;
 	return YES;
 }
 
-static BOOL socketInitialized;
+static BOOL sentIPv4Query;
+static BOOL sentIPv6Query;
 + (void)queryServerAtAddress:(NSString *)address port:(uint16_t)port
 {
+	static BOOL socketInitialized;
 	if (!socketInitialized && !(socketInitialized = [self createQuerySocket])) return;
 	
 	const char *addressCString = [address UTF8String];
@@ -366,10 +381,14 @@ static BOOL socketInitialized;
 			socketAddress.sin_port = htons(port);
 			socketAddress.sin_addr = ipv4Address;
 			
-			if (sendto(querySocket, buffer, sizeof buffer, 0, (struct sockaddr *)&socketAddress, socketAddress.sin_len) <= 0)
+			if (sendto(ipv4QuerySocket, buffer, sizeof buffer, 0, (struct sockaddr *)&socketAddress, socketAddress.sin_len) <= 0)
 			{
 				NSLog(@"Failed to send data to %@", address);
 				perror("sendto failed: ");
+			}
+			else
+			{
+				sentIPv4Query = YES;
 			}
 		}
 	}
@@ -389,16 +408,20 @@ static BOOL socketInitialized;
 			socketAddress.sin6_port = htons(port);
 			socketAddress.sin6_addr = ipv6Address;
 			
-			if (sendto(querySocket, buffer, sizeof buffer, 0, (struct sockaddr *)&socketAddress, socketAddress.sin6_len) <= 0)
+			if (sendto(ipv6QuerySocket, buffer, sizeof buffer, 0, (struct sockaddr *)&socketAddress, socketAddress.sin6_len) <= 0)
 			{
 				NSLog(@"Failed to send data to %@", address);
 				perror("sendto failed: ");
+			}
+			else
+			{
+				sentIPv6Query = YES;
 			}
 		}
 	}
 }
 
-+ (NSArray *)receiveQueryAndGetIPAddress:(NSString **)retrievedIPAddress portNumber:(uint16_t *)retrievedPortNumber
++ (NSArray *)receiveFromQuerySocket:(int)querySocket andGetIPAddress:(NSString **)retrievedIPAddress portNumber:(uint16_t *)retrievedPortNumber
 {
 	fd_set readfds;
 	FD_ZERO(&readfds);
@@ -409,12 +432,7 @@ static BOOL socketInitialized;
 	tv.tv_usec = 0;
 	
 	int selectResult = select(querySocket+1, &readfds, NULL, NULL, &tv);
-	if (selectResult < 0)
-	{
-		return nil;
-	}
-	
-	if (selectResult == 0)
+	if (selectResult <= 0)
 	{
 		return nil;
 	}
@@ -488,6 +506,22 @@ static BOOL socketInitialized;
 	}
 	
 	return fields;
+}
+
++ (NSArray *)receiveQueryAndGetIPAddress:(NSString **)retrievedIPAddress portNumber:(uint16_t *)retrievedPortNumber
+{
+	NSArray *result = nil;
+	if (ipv4QuerySocket != -1 && sentIPv4Query)
+	{
+		result = [self receiveFromQuerySocket:ipv4QuerySocket andGetIPAddress:retrievedIPAddress portNumber:retrievedPortNumber];
+	}
+	
+	if (result == nil && ipv6QuerySocket != -1 && sentIPv6Query)
+	{
+		result = [self receiveFromQuerySocket:ipv6QuerySocket andGetIPAddress:retrievedIPAddress portNumber:retrievedPortNumber];
+	}
+	
+	return result;
 }
 
 @end
