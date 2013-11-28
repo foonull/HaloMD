@@ -1417,10 +1417,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 			
 			if ([[filePath lastPathComponent] isEqualToString:@"saved"])
 			{
-				if ([directoryEnumerator respondsToSelector:@selector(skipDescendants:)])
-				{
-					[directoryEnumerator skipDescendants];
-				}
+				[directoryEnumerator skipDescendents];
 			}
 			else if ([[filePath lastPathComponent] isEqualToString:@"savegame.bin"] || [[filePath lastPathComponent] isEqualToString:@"savegame.sav"] || [[filePath lastPathComponent] isEqualToString:@"checkpoints"])
 			{
