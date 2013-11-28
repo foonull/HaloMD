@@ -8,12 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		7706FC1114DBB28C0023DBA4 /* Data in Copy Halo Data */ = {isa = PBXBuildFile; fileRef = 7706FC0E14DBB26C0023DBA4 /* Data */; };
+		7709F96B1846C256005E58F5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7709F96A1846C256005E58F5 /* Cocoa.framework */; };
 		770BEEB2154DB7900052193F /* shield.icns in Resources */ = {isa = PBXBuildFile; fileRef = 770BEEB1154DB7900052193F /* shield.icns */; };
 		770C153D1741CC37001380A8 /* game_icon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 770C153C1741CC37001380A8 /* game_icon.pdf */; };
 		770C15411742E1FD001380A8 /* in_chat_icon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 770C15401742E1FC001380A8 /* in_chat_icon.pdf */; };
 		77152B20163B5AEA00F136BF /* MDNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 77152B1F163B5AEA00F136BF /* MDNetworking.m */; };
 		771CA916156F59BF005A32EF /* MDHyperLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 771CA915156F59BF005A32EF /* MDHyperLink.m */; };
-		773E8AD81820C7B000D1A71A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 773E8AD61820C7A500D1A71A /* Cocoa.framework */; };
 		773E8ADB1820C7C000D1A71A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 773E8AD91820C7B700D1A71A /* Foundation.framework */; };
 		773E8ADE1820C7CE00D1A71A /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 773E8ADC1820C7C500D1A71A /* AppKit.framework */; };
 		774EF67917C7210B005ABB20 /* xmpp4r in Resources */ = {isa = PBXBuildFile; fileRef = 774EF67817C7210B005ABB20 /* xmpp4r */; };
@@ -155,6 +155,7 @@
 
 /* Begin PBXFileReference section */
 		7706FC0E14DBB26C0023DBA4 /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Data; sourceTree = "<group>"; };
+		7709F96A1846C256005E58F5 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		770BEEB1154DB7900052193F /* shield.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = shield.icns; sourceTree = "<group>"; };
 		770C153C1741CC37001380A8 /* game_icon.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = game_icon.pdf; sourceTree = "<group>"; };
 		770C15401742E1FC001380A8 /* in_chat_icon.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = in_chat_icon.pdf; sourceTree = "<group>"; };
@@ -163,7 +164,6 @@
 		771CA914156F59BF005A32EF /* MDHyperLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDHyperLink.h; sourceTree = "<group>"; };
 		771CA915156F59BF005A32EF /* MDHyperLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDHyperLink.m; sourceTree = "<group>"; };
 		77329B8A168D95F3007DCAE2 /* h_master_server.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = h_master_server.rb; sourceTree = "<group>"; };
-		773E8AD61820C7A500D1A71A /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		773E8AD91820C7B700D1A71A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		773E8ADC1820C7C500D1A71A /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/AppKit.framework; sourceTree = DEVELOPER_DIR; };
 		774EF67817C7210B005ABB20 /* xmpp4r */ = {isa = PBXFileReference; lastKnownFileType = folder; name = xmpp4r; path = vendor/xmpp4r; sourceTree = SOURCE_ROOT; };
@@ -259,9 +259,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7709F96B1846C256005E58F5 /* Cocoa.framework in Frameworks */,
 				773E8ADE1820C7CE00D1A71A /* AppKit.framework in Frameworks */,
 				773E8ADB1820C7C000D1A71A /* Foundation.framework in Frameworks */,
-				773E8AD81820C7B000D1A71A /* Cocoa.framework in Frameworks */,
 				77DD81F314EDFDE200EBA4CE /* Ruby.framework in Frameworks */,
 				77CF348615DA33FB005ECB2F /* CoreServices.framework in Frameworks */,
 				77E52D2616D8A2640015246C /* WebKit.framework in Frameworks */,
@@ -345,6 +345,7 @@
 		775B528C14D331C800B874E3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7709F96A1846C256005E58F5 /* Cocoa.framework */,
 				77BC675A184040DF00F82849 /* CoreServices.framework */,
 				77BC6758184040D400F82849 /* Foundation.framework */,
 				774EF69317C721D5005ABB20 /* TCMPortMapper.framework */,
@@ -365,7 +366,6 @@
 			children = (
 				773E8ADC1820C7C500D1A71A /* AppKit.framework */,
 				773E8AD91820C7B700D1A71A /* Foundation.framework */,
-				773E8AD61820C7A500D1A71A /* Cocoa.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
