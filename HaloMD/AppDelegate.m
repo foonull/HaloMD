@@ -370,7 +370,8 @@ static NSDictionary *expectedVersionsDictionary = nil;
 
 - (void)startHaloTask
 {
-	NSString *launchPath = [[[[[self applicationSupportPath] stringByAppendingPathComponent:@"HaloMD.app"] stringByAppendingPathComponent:@"Contents"] stringByAppendingPathComponent:@"MacOS"] stringByAppendingPathComponent:@"Halo"];
+	NSBundle *haloBundle = [NSBundle bundleWithPath:[[self applicationSupportPath] stringByAppendingPathComponent:@"HaloMD.app"]];
+	NSString *launchPath = [haloBundle executablePath];
 	
 	[haloTask release];
 	haloTask = [[NSTask alloc] init];
