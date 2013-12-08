@@ -1474,7 +1474,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	
 	if ([[NSFileManager defaultManager] fileExistsAtPath:haloMDDocumentsPath])
 	{
-		[self mapHostPorts];
+		//[self mapHostPorts];
 		
 	#ifndef __ppc__
 		if (![[NSUserDefaults standardUserDefaults] boolForKey:HALO_FIX_SCORE_KEY])
@@ -2040,7 +2040,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 {
 	[chatWindowController cleanup];
 	[inspectorController cleanup];
-	[[TCMPortMapper sharedInstance] stopBlocking];
+	//[[TCMPortMapper sharedInstance] stopBlocking];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
