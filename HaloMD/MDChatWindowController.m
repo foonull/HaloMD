@@ -797,6 +797,11 @@ static VALUE pollSafely(VALUE data)
 	return NO;
 }
 
+- (NSUInteger)webView:(WebView *)sender dragDestinationActionMaskForDraggingInfo:(id <NSDraggingInfo>)draggingInfo
+{
+	return WebDragSourceActionNone; // disable drag destination
+}
+
 - (NSArray *)webView:(WebView *)sender contextMenuItemsForElement:(NSDictionary *)element defaultMenuItems:(NSArray *)defaultMenuItems
 {
 	return nil; // disable contextual menu for the webView
