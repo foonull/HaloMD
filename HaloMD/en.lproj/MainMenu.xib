@@ -358,12 +358,12 @@ DQ
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Plug-Ins" id="1uC-R7-XXS">
-                    <menu key="submenu" title="Plug-Ins" id="Kpp-TK-Lzi">
+                <menuItem title="Plug-ins" id="1uC-R7-XXS">
+                    <menu key="submenu" title="Plug-ins" id="Kpp-TK-Lzi">
                         <items>
-                            <menuItem title="Install Plug-In" id="AHa-8t-Jvp">
+                            <menuItem title="Install Plug-in" id="AHa-8t-Jvp">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Install Plug-In" id="gss-i8-vvm"/>
+                                <menu key="submenu" title="Install Plug-in" id="gss-i8-vvm"/>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="MZH-9I-pWo">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
