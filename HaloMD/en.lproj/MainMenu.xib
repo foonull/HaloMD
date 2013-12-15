@@ -655,6 +655,7 @@ Gw
         </window>
         <customObject id="494" customClass="AppDelegate">
             <connections>
+                <outlet property="chatButton" destination="gN4-hX-Iqi" id="V8R-Le-92k"/>
                 <outlet property="haloNameTextField" destination="633" id="642"/>
                 <outlet property="haloNameWindow" destination="631" id="641"/>
                 <outlet property="inspectorController" destination="826" id="832"/>
@@ -1002,5 +1003,13 @@ Gw
                 <outlet property="refreshButton" destination="617" id="896"/>
             </connections>
         </customObject>
+        <button verticalHuggingPriority="750" id="gN4-hX-Iqi" userLabel="Chat Button">
+            <rect key="frame" x="0.0" y="0.0" width="28" height="19"/>
+            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+            <buttonCell key="cell" type="recessed" bezelStyle="recessed" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tMr-gZ-pSu">
+                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                <font key="font" metaFont="systemBold" size="12"/>
+            </buttonCell>
+        </button>
     </objects>
 </document>
