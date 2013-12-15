@@ -25,6 +25,132 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "mach_override.h"
+#import "MDPlugin.h"
+#import "JSONKit.h"
+
+#define MDGlobalPlugin @"MDGlobalPlugin"
+#define MDMapPlugin @"MDMapPlugin"
+
+static NSString *gActiveMap;
+static NSMutableArray *gGlobalLoadedPlugins;
+static NSMutableDictionary *gLoadedPluginsDictionary;
+static NSMutableDictionary *gMapBasedPluginNamesDictionary;
+static NSMutableDictionary *gMapBasedPluginsDictionary;
+
+static NSString *gThirdPartyPluginsDirectory;
+static NSString *gThirdPartyPluginsDisabledDirectory;
+
+static void loadMapBasedPlugin(NSString *mapName, NSString *pluginName, NSString *filePath)
+{
+	NSBundle *pluginBundle = [NSBundle bundleWithPath:filePath];
+	if (pluginBundle != nil)
+	{
+		NSNumber *modPluginValue = [[pluginBundle infoDictionary] objectForKey:MDMapPlugin];
+		if (modPluginValue != nil && [modPluginValue boolValue])
+		{
+			id <MDPlugin> newPluginInstance = [[pluginBundle principalClass] alloc];
+			if ([newPluginInstance respondsToSelector:@selector(initWithMode:)])
+			{
+				newPluginInstance = [newPluginInstance initWithMode:MDPluginMapMode];
+			}
+			else
+			{
+				newPluginInstance = [(id)newPluginInstance init];
+			}
+			if (newPluginInstance != nil)
+			{
+				[gLoadedPluginsDictionary setObject:newPluginInstance forKey:pluginName];
+				
+				if (gMapBasedPluginsDictionary == nil)
+				{
+					gMapBasedPluginsDictionary = [[NSMutableDictionary alloc] init];
+				}
+				
+				NSMutableArray *associatedPlugins = [gMapBasedPluginsDictionary objectForKey:mapName];
+				if (associatedPlugins == nil)
+				{
+					associatedPlugins = [[[NSMutableArray alloc] init] autorelease];
+				}
+				
+				[associatedPlugins addObject:newPluginInstance];
+				[gMapBasedPluginsDictionary setObject:associatedPlugins forKey:mapName];
+				
+				[newPluginInstance release];
+			}
+		}
+	}
+}
+
+static void loadMapBasedPlugins(NSString *mapName)
+{
+	NSArray *pluginNames = [gMapBasedPluginNamesDictionary objectForKey:mapName];
+	for (NSString *pluginName in pluginNames)
+	{
+		if (![pluginName isKindOfClass:[NSString class]] || [gLoadedPluginsDictionary objectForKey:pluginName] != nil)
+		{
+			continue;
+		}
+		
+		NSString *normalPluginPath = [[gThirdPartyPluginsDirectory stringByAppendingPathComponent:pluginName] stringByAppendingPathExtension:@"mdplugin"];
+		NSString *disabledPluginPath = [[gThirdPartyPluginsDisabledDirectory stringByAppendingPathComponent:pluginName] stringByAppendingPathExtension:@"mdplugin"];
+		
+		if ([[NSFileManager defaultManager] fileExistsAtPath:normalPluginPath])
+		{
+			loadMapBasedPlugin(mapName, pluginName, normalPluginPath);
+		}
+		else if ([[NSFileManager defaultManager] fileExistsAtPath:disabledPluginPath])
+		{
+			loadMapBasedPlugin(mapName, pluginName, disabledPluginPath);
+		}
+	}
+}
+
+static void sendPluginMapChange(SEL selector, NSString *mapName)
+{
+	NSMutableArray *mapPlugins = [gMapBasedPluginsDictionary objectForKey:mapName];
+	for (id <MDPlugin> plugin in mapPlugins)
+	{
+		if ([plugin respondsToSelector:selector])
+		{
+			[plugin performSelector:selector withObject:mapName];
+		}
+	}
+	
+	for (id <MDPlugin> plugin in gGlobalLoadedPlugins)
+	{
+		if ([plugin respondsToSelector:selector])
+		{
+			[plugin performSelector:selector withObject:mapName];
+		}
+	}
+}
+
+static void *(*haloMapBegins)(const char *);
+static void *mdMapBegins(const char *mapName)
+{
+	void *result = NULL;
+	@autoreleasepool
+	{
+		if (gActiveMap != nil)
+		{
+			sendPluginMapChange(@selector(mapDidEnd:), gActiveMap);
+		}
+		
+		[gActiveMap release];
+		gActiveMap = [[NSString stringWithUTF8String:mapName] retain];
+		
+		loadMapBasedPlugins(gActiveMap);
+		
+		sendPluginMapChange(@selector(mapWillBegin:), gActiveMap);
+		
+		result = haloMapBegins(mapName);
+		
+		sendPluginMapChange(@selector(mapDidBegin:), gActiveMap);
+	}
+	
+	return result;
+}
 
 static void addPluginsInDirectory(NSMutableArray *pluginPaths, NSString *directory)
 {
@@ -39,6 +165,55 @@ static void addPluginsInDirectory(NSMutableArray *pluginPaths, NSString *directo
 	}
 }
 
+static NSDictionary *modListDictionaryFromJSONPath(NSString *jsonPath)
+{
+	NSDictionary *modsDictionary = nil;
+	if ([[NSFileManager defaultManager] fileExistsAtPath:jsonPath])
+	{
+		NSData *jsonData = [NSData dataWithContentsOfFile:jsonPath];
+		if (jsonData != nil)
+		{
+			Class jsonSerializationClass = NSClassFromString(@"NSJSONSerialization");
+			if (jsonSerializationClass != nil)
+			{
+				NSError *error = nil;
+				modsDictionary = [jsonSerializationClass JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+			}
+			else
+			{
+				modsDictionary = [[JSONDecoder decoder] objectWithData:jsonData];
+			}
+		}
+	}
+	return [modsDictionary objectForKey:@"Mods"];
+}
+
+static void addMapBasedPlugins(NSMutableDictionary *mapBasedPluginNamesDictionary, NSDictionary *modsDictionary, BOOL printError)
+{
+	if (modsDictionary == nil)
+	{
+		if (printError)
+		{
+			NSLog(@"Error: Plugin handler failed to load mod list dictionary!");
+		}
+	}
+	else
+	{
+		for (NSDictionary *modItem in modsDictionary)
+		{
+			NSArray *pluginNames = [modItem objectForKey:@"plugins"];
+			if (pluginNames != nil && [pluginNames isKindOfClass:[NSArray class]])
+			{
+				NSString *mapIdentifier = [modItem objectForKey:@"identifier"];
+				if (mapIdentifier != nil && [mapBasedPluginNamesDictionary objectForKey:mapIdentifier] == nil)
+				{
+					[mapBasedPluginNamesDictionary setObject:pluginNames forKey:mapIdentifier];
+				}
+			}
+		}
+	}
+}
+
 static __attribute__((constructor)) void init()
 {
 	static BOOL initialized = NO;
@@ -50,6 +225,8 @@ static __attribute__((constructor)) void init()
 		@autoreleasepool
 		{
 			NSMutableArray *pluginPaths = [NSMutableArray array];
+			gGlobalLoadedPlugins = [[NSMutableArray alloc] init];
+			gLoadedPluginsDictionary = [[NSMutableDictionary alloc] init];
 			
 			NSString *builtinPluginDirectory = [[[NSProcessInfo processInfo] environment] objectForKey:@"MD_BUILTIN_PLUGIN_DIRECTORY"];
 			
@@ -57,15 +234,57 @@ static __attribute__((constructor)) void init()
 			
 			NSString *libraryPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 			NSString *appSupportPath = [libraryPath stringByAppendingPathComponent:@"Application Support"];
-			NSString *thirdPartyPluginsPath = [[appSupportPath stringByAppendingPathComponent:@"HaloMD"] stringByAppendingPathComponent:@"PlugIns"];
+			NSString *haloMDAppSupportPath = [appSupportPath stringByAppendingPathComponent:@"HaloMD"];
 			
-			addPluginsInDirectory(pluginPaths, thirdPartyPluginsPath);
+			NSString *modsListPath = [haloMDAppSupportPath stringByAppendingPathComponent:@"HaloMD_mods_list.json"];
+			NSString *modsDevListPath = [haloMDAppSupportPath stringByAppendingPathComponent:@"HaloMD_mods_list_dev.json"];
+			
+			gMapBasedPluginNamesDictionary = [[NSMutableDictionary alloc] init];
+			addMapBasedPlugins(gMapBasedPluginNamesDictionary, modListDictionaryFromJSONPath(modsListPath), YES);
+			addMapBasedPlugins(gMapBasedPluginNamesDictionary, modListDictionaryFromJSONPath(modsDevListPath), NO);
+			
+			gThirdPartyPluginsDirectory = [[haloMDAppSupportPath stringByAppendingPathComponent:@"PlugIns"] copy];
+			gThirdPartyPluginsDisabledDirectory = [[haloMDAppSupportPath stringByAppendingPathComponent:@"PlugIns (Disabled)"] copy];
+			
+			addPluginsInDirectory(pluginPaths, gThirdPartyPluginsDirectory);
 			
 			for (NSString *pluginPath in pluginPaths)
 			{
 				NSBundle *pluginBundle = [NSBundle bundleWithPath:pluginPath];
-				[[[pluginBundle principalClass] alloc] init];
+				if (pluginBundle != nil)
+				{
+					NSString *pluginName = [[[pluginBundle bundlePath] lastPathComponent] stringByDeletingPathExtension];
+					if ([gLoadedPluginsDictionary objectForKey:pluginName] != nil)
+					{
+						NSLog(@"Ignoring plugin %@ since plugin with same name was already loaded", [pluginBundle bundlePath]);
+					}
+					else
+					{
+						NSNumber *globalPluginValue = [[pluginBundle infoDictionary] objectForKey:MDGlobalPlugin];
+						if (globalPluginValue != nil && [globalPluginValue boolValue])
+						{
+							id <MDPlugin> newPluginInstance = [[pluginBundle principalClass] alloc];
+							if ([newPluginInstance respondsToSelector:@selector(initWithMode:)])
+							{
+								newPluginInstance = [newPluginInstance initWithMode:MDPluginGlobalMode];
+							}
+							else
+							{
+								newPluginInstance = [(id)newPluginInstance init];
+							}
+							
+							if (newPluginInstance != nil)
+							{
+								[gLoadedPluginsDictionary setObject:newPluginInstance forKey:pluginName];
+								[gGlobalLoadedPlugins addObject:newPluginInstance];
+								[newPluginInstance release];
+							}
+						}
+					}
+				}
 			}
+			
+			mach_override_ptr((void *)0x70edc, mdMapBegins, (void **)&haloMapBegins);
 		}
 		
 		initialized = YES;

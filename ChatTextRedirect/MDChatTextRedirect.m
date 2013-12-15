@@ -71,7 +71,7 @@ static int8_t textChatOverride(int unknownZero, const uint16_t *message, int unk
 
 @implementation MDChatTextRedirect
 
-- (id)init
+- (id)initWithMode:(MDPluginMode)mode
 {
 	self = [super init];
 	if (self != nil)
@@ -79,6 +79,18 @@ static int8_t textChatOverride(int unknownZero, const uint16_t *message, int unk
 		mach_override_ptr((void *)0x14D9A4, textChatOverride, (void **)&oldChat);
 	}
 	return self;
+}
+
+- (void)mapWillBegin:(NSString *)mapName
+{
+}
+
+- (void)mapDidBegin:(NSString *)mapName
+{
+}
+
+- (void)mapDidEnd:(NSString *)mapName
+{
 }
 
 @end

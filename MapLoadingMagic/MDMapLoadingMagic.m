@@ -186,7 +186,7 @@ static int8_t loadMapFunc(const char *mapName)
 
 @implementation MDMapLoadingMagic
 
-- (id)init
+- (id)initWithMode:(MDPluginMode)mode
 {
 	self = [super init];
 	if (self != nil)
@@ -195,6 +195,18 @@ static int8_t loadMapFunc(const char *mapName)
 		mach_override_ptr((void *)0x0018f320, loadMapFunc, (void **)&oldLoadMapFunc);
 	}
 	return self;
+}
+
+- (void)mapWillBegin:(NSString *)mapName
+{
+}
+
+- (void)mapDidBegin:(NSString *)mapName
+{
+}
+
+- (void)mapDidEnd:(NSString *)mapName
+{
 }
 
 @end

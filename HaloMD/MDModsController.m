@@ -642,24 +642,30 @@ static id sharedInstance = nil;
 - (void)addPluginsFromDirectory:(NSString *)directory intoArray:(NSMutableArray *)pluginItems enabled:(BOOL)enabled
 {
 	NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:directory];
-	[directoryEnumerator skipDescendents];
 	
 	for (NSString *file in directoryEnumerator)
 	{
 		if ([[file pathExtension] isEqualToString:@"mdplugin"])
 		{
-			if ([NSBundle bundleWithPath:[directory stringByAppendingPathComponent:file]] != nil)
+			NSBundle *pluginBundle = [NSBundle bundleWithPath:[directory stringByAppendingPathComponent:file]];
+			if (pluginBundle != nil)
 			{
-				MDPluginListItem *pluginItem = [[MDPluginListItem alloc] init];
-				
-				pluginItem.enabled = enabled;
-				pluginItem.filename = file;
-				
-				[pluginItems addObject:pluginItem];
-				
-				[pluginItem release];
+				NSNumber *globalPluginValue = [[pluginBundle infoDictionary] objectForKey:@"MDGlobalPlugin"];
+				if (globalPluginValue != nil && [globalPluginValue boolValue])
+				{
+					MDPluginListItem *pluginItem = [[MDPluginListItem alloc] init];
+					
+					pluginItem.enabled = enabled;
+					pluginItem.filename = file;
+					
+					[pluginItems addObject:pluginItem];
+					
+					[pluginItem release];
+				}
 			}
 		}
+		
+		[directoryEnumerator skipDescendents];
 	}
 }
 
@@ -850,24 +856,27 @@ static id sharedInstance = nil;
 	if ([[NSFileManager defaultManager] fileExistsAtPath:MODS_LIST_PATH])
 	{
 		NSData *jsonData = [NSData dataWithContentsOfFile:MODS_LIST_PATH];
-		id jsonSerializationClass = NSClassFromString(@"NSJSONSerialization");
-		if (jsonSerializationClass)
+		if (jsonData != nil)
 		{
-			NSError *error = nil;
-			modsDictionary = [jsonSerializationClass JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
-			if (!modsDictionary)
+			id jsonSerializationClass = NSClassFromString(@"NSJSONSerialization");
+			if (jsonSerializationClass != nil)
 			{
-				NSLog(@"Error: could not read JSON dictionary");
-				NSLog(@"%@", error);
+				NSError *error = nil;
+				modsDictionary = [jsonSerializationClass JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+				if (!modsDictionary)
+				{
+					NSLog(@"Error: could not read JSON dictionary");
+					NSLog(@"%@", error);
+				}
 			}
-		}
-		else
-		{
-			modsDictionary = [[JSONDecoder decoder] objectWithData:[NSData dataWithContentsOfFile:MODS_LIST_PATH]];
+			else
+			{
+				modsDictionary = [[JSONDecoder decoder] objectWithData:jsonData];
+			}
 		}
 	}
 	
-	if (modsDictionary)
+	if (modsDictionary != nil)
 	{
 		// Remove blank separator and refresh list options..
 		NSMutableArray *onlineItemsToRemove = [NSMutableArray array];

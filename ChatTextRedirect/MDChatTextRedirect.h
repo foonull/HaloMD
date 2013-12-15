@@ -32,6 +32,8 @@
 //  Copyright (c) 2013. All rights reserved.
 //
 
-@interface MDChatTextRedirect : NSObject
+#import "MDPlugin.h"
+
+@interface MDChatTextRedirect : NSObject <MDPlugin>
 
 @end

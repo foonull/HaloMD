@@ -32,6 +32,8 @@
 //  Copyright (c) 2013 Zero2. All rights reserved.
 //
 
-@interface ZZModList : NSObject
+#import "MDPlugin.h"
+
+@interface ZZModList : NSObject <MDPlugin>
 
 @end

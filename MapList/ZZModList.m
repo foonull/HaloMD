@@ -67,7 +67,7 @@ static void overrideList(char *a)
 	changeMapEntry(MODDED, 4);
 }
 
-- (id)init
+- (id)initWithMode:(MDPluginMode)mode
 {
 	self = [super init];
 	if (self != nil)
@@ -75,6 +75,18 @@ static void overrideList(char *a)
 		mach_override_ptr((void *)0x15596c, overrideList, (void **)&oldOverrideList);
 	}
 	return self;
+}
+
+- (void)mapWillBegin:(NSString *)mapName
+{
+}
+
+- (void)mapDidBegin:(NSString *)mapName
+{
+}
+
+- (void)mapDidEnd:(NSString *)mapName
+{
 }
 
 @end

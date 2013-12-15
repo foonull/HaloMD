@@ -32,6 +32,8 @@
 //  Copyright (c) 2013. All rights reserved.
 //
 
-@interface MDMapLoadingMagic : NSObject
+#import "MDPlugin.h"
+
+@interface MDMapLoadingMagic : NSObject <MDPlugin>
 
 @end

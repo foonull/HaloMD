@@ -42,6 +42,9 @@
 		77971958173B3D6600007D80 /* CSnd.aif in Resources */ = {isa = PBXBuildFile; fileRef = 77971956173B3D6600007D80 /* CSnd.aif */; };
 		7797195B173B698600007D80 /* MDChatWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7797195A173B698600007D80 /* MDChatWindow.m */; };
 		77B10987185D57900080BDDF /* MDPluginListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B10986185D57900080BDDF /* MDPluginListItem.m */; };
+		77B10988185D8CF50080BDDF /* mach_override.c in Sources */ = {isa = PBXBuildFile; fileRef = 77BC6753184040A600F82849 /* mach_override.c */; };
+		77B1098A185D8E210080BDDF /* MDPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B10989185D8E210080BDDF /* MDPlugin.h */; };
+		77B1098D185E3AB40080BDDF /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF68A17C72142005ABB20 /* JSONKit.m */; };
 		77B58A921571AF4900C93121 /* MDModsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B58A911571AF4900C93121 /* MDModsController.m */; };
 		77B58AAA1572BF6200C93121 /* MDModListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B58AA91572BF6200C93121 /* MDModListItem.m */; };
 		77BC6755184040A600F82849 /* plugin_handler.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BC6752184040A600F82849 /* plugin_handler.m */; };
@@ -205,6 +208,7 @@
 		7797195A173B698600007D80 /* MDChatWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDChatWindow.m; sourceTree = "<group>"; };
 		77B10985185D57900080BDDF /* MDPluginListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDPluginListItem.h; sourceTree = "<group>"; };
 		77B10986185D57900080BDDF /* MDPluginListItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDPluginListItem.m; sourceTree = "<group>"; };
+		77B10989185D8E210080BDDF /* MDPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MDPlugin.h; path = MDOverrides/MDPlugin.h; sourceTree = "<group>"; };
 		77B58A901571AF4900C93121 /* MDModsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDModsController.h; sourceTree = "<group>"; };
 		77B58A911571AF4900C93121 /* MDModsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDModsController.m; sourceTree = "<group>"; };
 		77B58AA61572BEFD00C93121 /* MDModListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDModListItem.h; sourceTree = "<group>"; };
@@ -486,6 +490,7 @@
 		77BC67BC1840949C00F82849 /* Code Injection */ = {
 			isa = PBXGroup;
 			children = (
+				77B10989185D8E210080BDDF /* MDPlugin.h */,
 				77BC6752184040A600F82849 /* plugin_handler.m */,
 				77E6C7031842B73100705ED5 /* mach_override */,
 				77E6C70B1842B7BE00705ED5 /* MapList */,
@@ -543,6 +548,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77B1098A185D8E210080BDDF /* MDPlugin.h in Headers */,
 				77BC6757184040A600F82849 /* mach_override.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -758,6 +764,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77B1098D185E3AB40080BDDF /* JSONKit.m in Sources */,
+				77B10988185D8CF50080BDDF /* mach_override.c in Sources */,
 				77BC6755184040A600F82849 /* plugin_handler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
