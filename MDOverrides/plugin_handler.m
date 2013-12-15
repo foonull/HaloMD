@@ -46,8 +46,8 @@ static void loadMapBasedPlugin(NSString *mapName, NSString *pluginName, NSString
 	NSBundle *pluginBundle = [NSBundle bundleWithPath:filePath];
 	if (pluginBundle != nil)
 	{
-		NSNumber *modPluginValue = [[pluginBundle infoDictionary] objectForKey:MDMapPlugin];
-		if (modPluginValue != nil && [modPluginValue boolValue])
+		NSNumber *mapPluginValue = [[pluginBundle infoDictionary] objectForKey:MDMapPlugin];
+		if (mapPluginValue != nil && [mapPluginValue boolValue])
 		{
 			id <MDPlugin> newPluginInstance = [[pluginBundle principalClass] alloc];
 			if ([newPluginInstance respondsToSelector:@selector(initWithMode:)])
