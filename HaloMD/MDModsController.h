@@ -47,10 +47,12 @@
 	IBOutlet AppDelegate *appDelegate;
 	IBOutlet NSMenu *modsMenu;
 	IBOutlet NSMenu *onlineModsMenu;
+	IBOutlet NSMenu *pluginsMenu;
 	IBOutlet NSButton *cancelButton;
 	IBOutlet NSButton *refreshButton;
 	NSMutableArray *modMenuItems;
 	NSMutableDictionary *modListDictionary;
+	NSMutableArray *pluginMenuItems;
 	
 	NSURLDownload *modDownload;
 	NSString *urlToOpen;
@@ -77,6 +79,7 @@
 
 @property (nonatomic, retain) NSMutableArray *modMenuItems;
 @property (nonatomic, retain) NSMutableDictionary *modListDictionary;
+@property (nonatomic, retain) NSMutableArray *pluginMenuItems;
 @property (nonatomic, copy) NSString *currentDownloadingMapIdentifier;
 @property (nonatomic, readwrite) BOOL isInitiated;
 @property (nonatomic, retain) NSURLDownload *modDownload;

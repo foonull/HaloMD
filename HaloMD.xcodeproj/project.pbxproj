@@ -41,6 +41,7 @@
 		77971957173B3D6600007D80 /* CRcv.aif in Resources */ = {isa = PBXBuildFile; fileRef = 77971955173B3D6600007D80 /* CRcv.aif */; };
 		77971958173B3D6600007D80 /* CSnd.aif in Resources */ = {isa = PBXBuildFile; fileRef = 77971956173B3D6600007D80 /* CSnd.aif */; };
 		7797195B173B698600007D80 /* MDChatWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7797195A173B698600007D80 /* MDChatWindow.m */; };
+		77B10987185D57900080BDDF /* MDPluginListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B10986185D57900080BDDF /* MDPluginListItem.m */; };
 		77B58A921571AF4900C93121 /* MDModsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B58A911571AF4900C93121 /* MDModsController.m */; };
 		77B58AAA1572BF6200C93121 /* MDModListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B58AA91572BF6200C93121 /* MDModListItem.m */; };
 		77BC6755184040A600F82849 /* plugin_handler.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BC6752184040A600F82849 /* plugin_handler.m */; };
@@ -202,6 +203,8 @@
 		77971956173B3D6600007D80 /* CSnd.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = CSnd.aif; sourceTree = "<group>"; };
 		77971959173B698600007D80 /* MDChatWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDChatWindow.h; sourceTree = "<group>"; };
 		7797195A173B698600007D80 /* MDChatWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDChatWindow.m; sourceTree = "<group>"; };
+		77B10985185D57900080BDDF /* MDPluginListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDPluginListItem.h; sourceTree = "<group>"; };
+		77B10986185D57900080BDDF /* MDPluginListItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDPluginListItem.m; sourceTree = "<group>"; };
 		77B58A901571AF4900C93121 /* MDModsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDModsController.h; sourceTree = "<group>"; };
 		77B58A911571AF4900C93121 /* MDModsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDModsController.m; sourceTree = "<group>"; };
 		77B58AA61572BEFD00C93121 /* MDModListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDModListItem.h; sourceTree = "<group>"; };
@@ -386,6 +389,8 @@
 				77E7E289172463C400E18FB9 /* MDChatRosterElement.m */,
 				77B58A901571AF4900C93121 /* MDModsController.h */,
 				77B58A911571AF4900C93121 /* MDModsController.m */,
+				77B10985185D57900080BDDF /* MDPluginListItem.h */,
+				77B10986185D57900080BDDF /* MDPluginListItem.m */,
 				77B58AA61572BEFD00C93121 /* MDModListItem.h */,
 				77B58AA91572BF6200C93121 /* MDModListItem.m */,
 				77E7E2851720FCB000E18FB9 /* MDModPatch.h */,
@@ -733,6 +738,7 @@
 				77F65ECF150B1E3000D26C71 /* MDInspectorController.m in Sources */,
 				77F65ED3150B253F00D26C71 /* MDPlayer.m in Sources */,
 				77904A38151C26BF0046EA96 /* keygen.c in Sources */,
+				77B10987185D57900080BDDF /* MDPluginListItem.m in Sources */,
 				771CA916156F59BF005A32EF /* MDHyperLink.m in Sources */,
 				77B58A921571AF4900C93121 /* MDModsController.m in Sources */,
 				77B58AAA1572BF6200C93121 /* MDModListItem.m in Sources */,

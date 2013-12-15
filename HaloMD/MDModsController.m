@@ -34,6 +34,7 @@
 #import "MDModsController.h"
 #import "MDModListItem.h"
 #import "MDModPatch.h"
+#import "MDPluginListItem.h"
 #import "MDServer.h"
 #import <CommonCrypto/CommonDigest.h>
 #import <Growl/Growl.h>
@@ -53,12 +54,16 @@
 #define MOD_PATCH_DOWNLOAD_URL [NSURL URLWithString:[NSString stringWithFormat:@"http://halomd.macgamingmods.com/mods/%@", [[self currentDownloadingPatch] path]]]
 #define MOD_PATCH_DOWNLOAD_FILE [NSTemporaryDirectory() stringByAppendingPathComponent:@"HaloMD_download_file.mdpatch"]
 
+#define PLUGINS_DIRECTORY [[appDelegate applicationSupportPath] stringByAppendingPathComponent:@"PlugIns"]
+#define PLUGINS_DISABLED_DIRECTORY [[appDelegate applicationSupportPath] stringByAppendingPathComponent:@"PlugIns (Disabled)"]
+
 #define BS_PATCH_PATH @"/usr/bin/bspatch"
 
 @implementation MDModsController
 
 @synthesize modMenuItems;
 @synthesize modListDictionary;
+@synthesize pluginMenuItems;
 @synthesize currentDownloadingMapIdentifier;
 @synthesize isInitiated;
 @synthesize modDownload;
@@ -96,6 +101,21 @@ static id sharedInstance = nil;
 	if ([[modsMenu itemArray] containsObject:theMenuItem] && ![appDelegate isInstalled])
 	{
 		return NO;
+	}
+	else if ([[pluginsMenu itemArray] containsObject:theMenuItem])
+	{
+		MDPluginListItem *pluginItem = [theMenuItem representedObject];
+		if (pluginItem != nil && [pluginItem isKindOfClass:[MDPluginListItem class]])
+		{
+			if (pluginItem.enabled)
+			{
+				[theMenuItem setState:NSOnState];
+			}
+			else
+			{
+				[theMenuItem setState:NSOffState];
+			}
+		}
 	}
 	else if ([theMenuItem action] == @selector(downloadModList:))
 	{
@@ -226,22 +246,31 @@ static id sharedInstance = nil;
 		return NO;
 	}
 	
-	NSString *pluginsDirectory = [[appDelegate applicationSupportPath] stringByAppendingPathComponent:@"PlugIns"];
-	if (![[NSFileManager defaultManager] fileExistsAtPath:pluginsDirectory])
+	if (![[NSFileManager defaultManager] fileExistsAtPath:PLUGINS_DIRECTORY])
 	{
 		NSError *error = nil;
-		if (![[NSFileManager defaultManager] createDirectoryAtPath:pluginsDirectory withIntermediateDirectories:NO attributes:nil error:&error])
+		if (![[NSFileManager defaultManager] createDirectoryAtPath:PLUGINS_DIRECTORY withIntermediateDirectories:NO attributes:nil error:&error])
 		{
 			NSLog(@"Failed to create PlugIns directory: %@", error);
 			return NO;
 		}
 	}
 	
-	NSString *newPluginPath = [pluginsDirectory stringByAppendingPathComponent:[filename lastPathComponent]];
+	NSString *newPluginPath = [PLUGINS_DIRECTORY stringByAppendingPathComponent:[filename lastPathComponent]];
 	if ([[NSFileManager defaultManager] fileExistsAtPath:newPluginPath])
 	{
 		[[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
-													 source:pluginsDirectory
+													 source:PLUGINS_DIRECTORY
+												destination:@""
+													  files:[NSArray arrayWithObject:[filename lastPathComponent]]
+														tag:0];
+	}
+	
+	NSString *disabledPath = [PLUGINS_DISABLED_DIRECTORY stringByAppendingPathComponent:[filename lastPathComponent]];
+	if ([[NSFileManager defaultManager] fileExistsAtPath:disabledPath])
+	{
+		[[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
+													 source:PLUGINS_DISABLED_DIRECTORY
 												destination:@""
 													  files:[NSArray arrayWithObject:[filename lastPathComponent]]
 														tag:0];
@@ -579,6 +608,126 @@ static id sharedInstance = nil;
 		{
 			[self enableMod:[[self modMenuItems] objectAtIndex:0]];
 		}
+	}
+}
+
+- (void)enablePlugin:(NSMenuItem *)menuItem
+{
+	MDPluginListItem *pluginItem = [menuItem representedObject];
+	NSString *normalPath = [PLUGINS_DIRECTORY stringByAppendingPathComponent:pluginItem.filename];
+	NSString *disabledPath = [PLUGINS_DISABLED_DIRECTORY stringByAppendingPathComponent:pluginItem.filename];
+	
+	if (pluginItem.enabled)
+	{
+		if ([[NSFileManager defaultManager] fileExistsAtPath:PLUGINS_DISABLED_DIRECTORY] && ![[NSFileManager defaultManager] fileExistsAtPath:disabledPath])
+		{
+			if ([[NSFileManager defaultManager] moveItemAtPath:normalPath toPath:disabledPath error:NULL])
+			{
+				pluginItem.enabled = NO;
+			}
+		}
+	}
+	else
+	{
+		if ([[NSFileManager defaultManager] fileExistsAtPath:PLUGINS_DIRECTORY] && ![[NSFileManager defaultManager] fileExistsAtPath:normalPath])
+		{
+			if ([[NSFileManager defaultManager] moveItemAtPath:disabledPath toPath:normalPath error:NULL])
+			{
+				pluginItem.enabled = YES;
+			}
+		}
+	}
+}
+
+- (void)addPluginsFromDirectory:(NSString *)directory intoArray:(NSMutableArray *)pluginItems enabled:(BOOL)enabled
+{
+	NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:directory];
+	[directoryEnumerator skipDescendents];
+	
+	for (NSString *file in directoryEnumerator)
+	{
+		if ([[file pathExtension] isEqualToString:@"mdplugin"])
+		{
+			if ([NSBundle bundleWithPath:[directory stringByAppendingPathComponent:file]] != nil)
+			{
+				MDPluginListItem *pluginItem = [[MDPluginListItem alloc] init];
+				
+				pluginItem.enabled = enabled;
+				pluginItem.filename = file;
+				
+				[pluginItems addObject:pluginItem];
+				
+				[pluginItem release];
+			}
+		}
+	}
+}
+
+- (void)makePluginMenuItems
+{
+	if (![[NSFileManager defaultManager] fileExistsAtPath:PLUGINS_DIRECTORY])
+	{
+		if (![[NSFileManager defaultManager] createDirectoryAtPath:PLUGINS_DIRECTORY withIntermediateDirectories:NO attributes:nil error:NULL])
+		{
+			NSLog(@"Failed to create %@", PLUGINS_DIRECTORY);
+			return;
+		}
+	}
+	
+	if (![[NSFileManager defaultManager] fileExistsAtPath:PLUGINS_DISABLED_DIRECTORY])
+	{
+		if (![[NSFileManager defaultManager] createDirectoryAtPath:PLUGINS_DISABLED_DIRECTORY withIntermediateDirectories:NO attributes:nil error:NULL])
+		{
+			NSLog(@"Failed to create %@", PLUGINS_DISABLED_DIRECTORY);
+			return;
+		}
+	}
+	
+	if ([self pluginMenuItems] == nil)
+	{
+		[self setPluginMenuItems:[NSMutableArray array]];
+	}
+	else
+	{
+		for (id menuItem in [self pluginMenuItems])
+		{
+			[pluginsMenu removeItem:menuItem];
+		}
+		
+		[[self pluginMenuItems] removeAllObjects];
+		
+		if ([[[pluginsMenu itemArray] lastObject] action] == @selector(doNothing:))
+		{
+			[pluginsMenu removeItem:[[pluginsMenu itemArray] lastObject]];
+		}
+	}
+	
+	NSMutableArray *newPluginItems = [NSMutableArray array];
+	[self addPluginsFromDirectory:PLUGINS_DIRECTORY intoArray:newPluginItems enabled:YES];
+	[self addPluginsFromDirectory:PLUGINS_DISABLED_DIRECTORY intoArray:newPluginItems enabled:NO];
+	
+	NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"filename" ascending:YES selector:@selector(caseInsensitiveCompare:)] autorelease];
+	NSArray *sortedItems = [newPluginItems sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+	
+	if (sortedItems.count > 0)
+	{
+		for (MDPluginListItem *pluginItem in newPluginItems)
+		{
+			NSMenuItem *newMenuItem = [[NSMenuItem alloc] initWithTitle:[pluginItem.filename stringByDeletingPathExtension] action:@selector(enablePlugin:) keyEquivalent:@""];
+			newMenuItem.representedObject = pluginItem;
+			newMenuItem.target = self;
+			
+			[pluginsMenu addItem:newMenuItem];
+			[[self pluginMenuItems] addObject:newMenuItem];
+			[newMenuItem release];
+		}
+	}
+	else
+	{
+		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@"No Available Plug-Ins" action:@selector(doNothing:) keyEquivalent:@""];
+		[menuItem setEnabled:NO];
+		[pluginsMenu addItem:menuItem];
+		[menuItem release];
 	}
 }
 
@@ -1343,6 +1492,8 @@ static id sharedInstance = nil;
 	[self makeModMenuItems];
 	[self makeModsList]; // In case the file doesn't download, use local copy
 	
+	[self makePluginMenuItems];
+	
 	id dateLastChecked = [[NSUserDefaults standardUserDefaults] objectForKey:MODS_LIST_DOWNLOAD_TIME_KEY];
 	if ([shouldForceDownloadList boolValue] || ![[NSFileManager defaultManager] fileExistsAtPath:MODS_LIST_PATH] || [dateLastChecked isKindOfClass:[NSString class]] || [[NSDate date] timeIntervalSinceDate:dateLastChecked] > 10.0 * 60)
 	{
@@ -1361,7 +1512,7 @@ static id sharedInstance = nil;
 	SCEvents *events = [[SCEvents alloc] init];
 	[events setDelegate:self];
 	
-	NSArray *watchingPaths = [NSArray arrayWithObject:MAPS_DIRECTORY];
+	NSArray *watchingPaths = [NSArray arrayWithObjects:MAPS_DIRECTORY, PLUGINS_DIRECTORY, PLUGINS_DISABLED_DIRECTORY, nil];
 	[events startWatchingPaths:watchingPaths];
 	
 	[self setIsInitiated:YES];
@@ -1375,8 +1526,15 @@ static id sharedInstance = nil;
 
 - (void)pathWatcher:(SCEvents *)pathWatcher eventOccurred:(SCEvent *)event
 {
-	[self makeModMenuItems];
-	[self updateModMenuTitles];
+	if ([event.eventPath isEqualToString:MAPS_DIRECTORY])
+	{
+		[self makeModMenuItems];
+		[self updateModMenuTitles];
+	}
+	else
+	{
+		[self makePluginMenuItems];
+	}
 }
 
 - (IBAction)cancelInstallation:(id)sender

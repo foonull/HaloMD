@@ -358,6 +358,19 @@ DQ
                         </items>
                     </menu>
                 </menuItem>
+                <menuItem title="Plug-Ins" id="1uC-R7-XXS">
+                    <menu key="submenu" title="Plug-Ins" id="Kpp-TK-Lzi">
+                        <items>
+                            <menuItem title="Install Plug-In" id="AHa-8t-Jvp">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Install Plug-In" id="gss-i8-vvm"/>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="MZH-9I-pWo">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
                 <menuItem title="Chat" id="899">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Chat" id="900">
@@ -642,7 +655,6 @@ Gw
         </window>
         <customObject id="494" customClass="AppDelegate">
             <connections>
-                <outlet property="chatButton" destination="932" id="934"/>
                 <outlet property="haloNameTextField" destination="633" id="642"/>
                 <outlet property="haloNameWindow" destination="631" id="641"/>
                 <outlet property="inspectorController" destination="826" id="832"/>
@@ -946,7 +958,7 @@ Gw
                                                 <rect key="frame" x="1" y="119" width="146" height="15"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
-                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="37" id="805">
+                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" id="805">
                                                 <rect key="frame" x="224" y="17" width="15" height="102"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
@@ -986,19 +998,9 @@ Gw
                 <outlet property="cancelButton" destination="893" id="895"/>
                 <outlet property="modsMenu" destination="871" id="886"/>
                 <outlet property="onlineModsMenu" destination="890" id="892"/>
+                <outlet property="pluginsMenu" destination="Kpp-TK-Lzi" id="0Ht-ol-EWP"/>
                 <outlet property="refreshButton" destination="617" id="896"/>
             </connections>
         </customObject>
-        <button verticalHuggingPriority="750" id="932">
-            <rect key="frame" x="0.0" y="0.0" width="28" height="19"/>
-            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-            <buttonCell key="cell" type="recessed" bezelStyle="recessed" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="933">
-                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                <font key="font" metaFont="systemBold" size="12"/>
-            </buttonCell>
-            <connections>
-                <action selector="showChatWindow:" target="494" id="935"/>
-            </connections>
-        </button>
     </objects>
 </document>
