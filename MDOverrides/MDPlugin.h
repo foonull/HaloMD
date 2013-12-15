@@ -46,7 +46,7 @@ typedef enum
 {
 	// A plug-in at runtime runs through one of these modes (but not both)
 	MDPluginGlobalMode, // Plug-in is not owned by a map and is enabled by the user's will. Can only be run if MDGlobalPlugin key in info.plist is set to true
-	MDPluginMapMode // Plug-in is owned by a map and is not being enabled by the user's will. Can only be run if MDModPlugin key in info.plist is set to true
+	MDPluginMapMode // Plug-in is owned by a map and is not being enabled by the user's will. Can only be run if MDMapPlugin key in info.plist is set to true
 } MDPluginMode;
 
 // For all the methods below an auto release pool is set up.
