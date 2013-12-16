@@ -770,7 +770,6 @@ static id sharedInstance = nil;
 
 - (void)installOnlinePluginWithName:(NSString *)name
 {
-	
 }
 
 - (void)installPlugin:(id)sender
@@ -1027,6 +1026,7 @@ static id sharedInstance = nil;
 			
 			NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:newItem.filename action:@selector(installPlugin:) keyEquivalent:@""];
 			[menuItem setTarget:self];
+			[menuItem setToolTip:description];
 			[menuItem setRepresentedObject:newItem];
 			
 			[onlinePluginsMenu addItem:menuItem];
@@ -1125,6 +1125,11 @@ static id sharedInstance = nil;
 	}
 }
 
+- (NSString *)directoryNameFromRequest:(NSURLRequest *)request
+{
+	return [[[[request URL] absoluteString] stringByDeletingLastPathComponent] lastPathComponent];
+}
+
 - (void)downloadDidFinish:(NSURLDownload *)download
 {
 	if ([[[download request] URL] isEqual:MULTIPLAYER_CODES_URL])
@@ -1149,7 +1154,7 @@ static id sharedInstance = nil;
 		}
 		[self performSelector:@selector(showUpdateNoticeIfNeeded) withObject:nil afterDelay:10.0];
 	}
-	else if ([[[[download request] URL] absoluteString] rangeOfString:@".zip"].location != NSNotFound)
+	else if ([[self directoryNameFromRequest:download.request] isEqualToString:@"mods"])
 	{
 		NSString *unzipDirectory = [NSTemporaryDirectory() stringByAppendingPathComponent:@"HaloMD_Unzip"];
 		if ([[NSFileManager defaultManager] fileExistsAtPath:unzipDirectory])
@@ -1232,7 +1237,7 @@ static id sharedInstance = nil;
 		
 		[self setCurrentDownloadingMapIdentifier:nil];
 	}
-	else if ([[[[download request] URL] absoluteString] rangeOfString:@".mdpatch"].location != NSNotFound)
+	else if ([[self directoryNameFromRequest:download.request] isEqualToString:@"patches"])
 	{
 		NSString *baseMapPath = [self originalMapPathFromIdentifier:[[self currentDownloadingPatch] baseIdentifier]];
 		
@@ -1325,7 +1330,7 @@ static id sharedInstance = nil;
 
 - (void)download:(NSURLDownload *)download didReceiveDataOfLength:(NSUInteger)length
 {
-	if ([[[[download request] URL] absoluteString] rangeOfString:@".zip"].location != NSNotFound || [[[[download request] URL] absoluteString] rangeOfString:@".mdpatch"].location != NSNotFound)
+	if ([[self directoryNameFromRequest:download.request] isEqualToString:@"mods"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"patches"])
 	{
 		// Ensure currentContentLength won't exceed expectedContentLength
 		if (currentContentLength < expectedContentLength)
@@ -1342,7 +1347,7 @@ static id sharedInstance = nil;
 
 - (void)download:(NSURLDownload *)download didReceiveResponse:(NSURLResponse *)response
 {
-	if ([[[[download request] URL] absoluteString] rangeOfString:@".zip"].location != NSNotFound || [[[[download request] URL] absoluteString] rangeOfString:@".mdpatch"].location != NSNotFound)
+	if ([[self directoryNameFromRequest:download.request] isEqualToString:@"mods"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"patches"])
 	{
 		expectedContentLength = [response expectedContentLength];
 		currentContentLength = 0;
