@@ -101,7 +101,7 @@ end
 if previous_versions.count > 0
 	previous_build_number = previous_versions[0]['build'].to_i
 	if new_build_number <= previous_build_number
-		puts "ERROR: New build number #{new_build_number} is less than previous build number #{previous_build_number}"
+		puts "ERROR: New build number #{new_build_number} is <= previous build number #{previous_build_number}"
 		exit 8
 	end
 end
@@ -111,11 +111,6 @@ puts "Name: #{plugin_name}"
 puts "Build: #{new_build_number}"
 puts "Version: #{plugin_version}"
 puts "Description: #{plugin_description}"
-puts "\n"
-
-puts "Zipping plugin..."
-print_and_execute_command("zip -jr \"#{OUTPUT_PATH}/#{plugin_name}.zip\" \"#{plugin_path}\"")
-
 puts "\n"
 
 new_plugin_entry = {'name' => plugin_name, 'description' => plugin_description, 'version' => plugin_version, 'build' => new_build_number}
@@ -135,3 +130,9 @@ print_and_execute_command("gzip < \"#{JSON_PATH}\" > \"#{JSON_PATH}.gz\"")
 
 puts "Converting json to plist..."
 print_and_execute_command("plutil -convert xml1 \"#{JSON_PATH}\" -o \"#{OUTPUT_PATH}/mods.plist\"")
+
+puts "Zipping plugin..."
+plugin_zip_path = File.join(Dir.pwd, OUTPUT_PATH, "#{plugin_name}.zip")
+Dir.chdir(File.dirname(plugin_path)) do
+	print_and_execute_command("zip -r \"#{plugin_zip_path}\" \"#{File.basename(plugin_path)}\"")
+end
