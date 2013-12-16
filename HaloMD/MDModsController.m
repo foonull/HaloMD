@@ -54,6 +54,9 @@
 #define MOD_PATCH_DOWNLOAD_URL [NSURL URLWithString:[NSString stringWithFormat:@"http://halomd.macgamingmods.com/mods/%@", [[self currentDownloadingPatch] path]]]
 #define MOD_PATCH_DOWNLOAD_FILE [NSTemporaryDirectory() stringByAppendingPathComponent:@"HaloMD_download_file.mdpatch"]
 
+#define PLUGIN_DOWNLOAD_URL [NSURL URLWithString:[[NSString stringWithFormat:@"http://halomd.macgamingmods.com/mods/plug-ins/%@.zip", [[self currentDownloadingPlugin] filename]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]
+#define PLUGIN_DOWNLOAD_FILE [NSTemporaryDirectory() stringByAppendingPathComponent:@"HaloMD_download_plugin.zip"]
+
 #define PLUGINS_DIRECTORY [[appDelegate applicationSupportPath] stringByAppendingPathComponent:@"PlugIns"]
 #define PLUGINS_DISABLED_DIRECTORY [[appDelegate applicationSupportPath] stringByAppendingPathComponent:@"PlugIns (Disabled)"]
 
@@ -72,6 +75,7 @@
 @synthesize pendingDownload;
 @synthesize isWritingUI;
 @synthesize currentDownloadingPatch;
+@synthesize currentDownloadingPlugin;
 @synthesize joiningServer;
 
 static id sharedInstance = nil;
@@ -252,6 +256,16 @@ static id sharedInstance = nil;
 		if (![[NSFileManager defaultManager] createDirectoryAtPath:PLUGINS_DIRECTORY withIntermediateDirectories:NO attributes:nil error:&error])
 		{
 			NSLog(@"Failed to create PlugIns directory: %@", error);
+			return NO;
+		}
+	}
+	
+	if (![[NSFileManager defaultManager] fileExistsAtPath:PLUGINS_DISABLED_DIRECTORY])
+	{
+		NSError *error = nil;
+		if (![[NSFileManager defaultManager] createDirectoryAtPath:PLUGINS_DISABLED_DIRECTORY withIntermediateDirectories:NO attributes:nil error:&error])
+		{
+			NSLog(@"Failed to create PlugIns disabled directory: %@", error);
 			return NO;
 		}
 	}
@@ -750,7 +764,7 @@ static id sharedInstance = nil;
 
 - (void)installOnlineModWithIdentifier:(NSString *)identifier
 {
-	if (![self currentDownloadingMapIdentifier])
+	if (![self currentDownloadingMapIdentifier] && ![self currentDownloadingPlugin])
 	{
 		[self downloadMod:identifier];
 	}
@@ -768,13 +782,21 @@ static id sharedInstance = nil;
 	[self installOnlineModWithIdentifier:[[sender representedObject] identifier]];
 }
 
-- (void)installOnlinePluginWithName:(NSString *)name
+- (void)installOnlinePlugin:(MDPluginListItem *)plugin
 {
+	if (![self currentDownloadingPlugin] && ![self currentDownloadingMapIdentifier])
+	{
+		[self downloadPlugin:plugin];
+	}
+	else
+	{
+		
+	}
 }
 
 - (void)installPlugin:(id)sender
 {
-	[self installOnlinePluginWithName:[[sender representedObject] filename]];
+	[self installOnlinePlugin:[sender representedObject]];
 }
 
 - (void)updateModMenuTitles
@@ -1324,13 +1346,73 @@ static id sharedInstance = nil;
 		[self setCurrentDownloadingPatch:nil];
 		[self setCurrentDownloadingMapIdentifier:nil];
 	}
+	else if ([[self directoryNameFromRequest:download.request] isEqualToString:@"plug-ins"])
+	{
+		NSString *unzipDirectory = [NSTemporaryDirectory() stringByAppendingPathComponent:@"HaloMD_Plugin_Unzip"];
+		if ([[NSFileManager defaultManager] fileExistsAtPath:unzipDirectory])
+		{
+			[[NSFileManager defaultManager] removeItemAtPath:unzipDirectory error:nil];
+		}
+		
+		if ([[NSFileManager defaultManager] createDirectoryAtPath:unzipDirectory withIntermediateDirectories:NO attributes:nil error:nil])
+		{
+			NSTask *unzipTask = [[NSTask alloc] init];
+			
+			[unzipTask setLaunchPath:@"/usr/bin/unzip"];
+			[unzipTask setArguments:[NSArray arrayWithObjects:@"-o", @"-q", @"-d", unzipDirectory, PLUGIN_DOWNLOAD_FILE, nil]];
+			
+			BOOL didUnzip = YES;
+			
+			@try
+			{
+				[unzipTask launch];
+				[unzipTask waitUntilExit];
+			}
+			@catch (NSException *exception)
+			{
+				NSLog(@"Failed unzipping: %@, %@", [exception name], [exception reason]);
+				didUnzip = NO;
+			}
+			
+			[unzipTask release];
+			
+			if (didUnzip)
+			{
+				NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:unzipDirectory];
+				NSString *file = nil;
+				while (file = [directoryEnumerator nextObject])
+				{
+					if ([[file pathExtension] isEqualToString:@"mdplugin"] && ![[file lastPathComponent] hasPrefix:@"."])
+					{
+						[self addPluginAtPath:[unzipDirectory stringByAppendingPathComponent:file]];
+					}
+				}
+			}
+			else
+			{
+				NSRunAlertPanel(@"Plug-in Installation Failed",
+								@"%@ failed to install. Perhaps the downloaded file was corrupted.",
+								@"OK", nil, nil, [[self currentDownloadingPlugin] filename]);
+			}
+			
+			[[NSFileManager defaultManager] removeItemAtPath:unzipDirectory error:nil];
+		}
+		
+		[appDelegate setStatus:nil];
+		
+		[self setModDownload:nil];
+		
+		[cancelButton setHidden:YES];
+		[refreshButton setHidden:NO];
+		[self setCurrentDownloadingPlugin:nil];
+	}
 	
 	[download release];
 }
 
 - (void)download:(NSURLDownload *)download didReceiveDataOfLength:(NSUInteger)length
 {
-	if ([[self directoryNameFromRequest:download.request] isEqualToString:@"mods"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"patches"])
+	if ([[self directoryNameFromRequest:download.request] isEqualToString:@"mods"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"patches"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"plug-ins"])
 	{
 		// Ensure currentContentLength won't exceed expectedContentLength
 		if (currentContentLength < expectedContentLength)
@@ -1340,14 +1422,21 @@ static id sharedInstance = nil;
 			{
 				currentContentLength = expectedContentLength;
 			}
-			[appDelegate setStatusWithoutWait:[NSString stringWithFormat:@"Installing %@... (%d%%)", [[modListDictionary objectForKey:[self currentDownloadingMapIdentifier]] name], (int)((100.0 * currentContentLength) / expectedContentLength)]];
+			if ([[self directoryNameFromRequest:download.request] isEqualToString:@"plug-ins"])
+			{
+				[appDelegate setStatusWithoutWait:[NSString stringWithFormat:@"Installing Plug-in %@... (%d%%)", [[self currentDownloadingPlugin] filename], (int)((100.0 * currentContentLength) / expectedContentLength)]];
+			}
+			else
+			{
+				[appDelegate setStatusWithoutWait:[NSString stringWithFormat:@"Installing %@... (%d%%)", [[modListDictionary objectForKey:[self currentDownloadingMapIdentifier]] name], (int)((100.0 * currentContentLength) / expectedContentLength)]];
+			}
 		}
 	}
 }
 
 - (void)download:(NSURLDownload *)download didReceiveResponse:(NSURLResponse *)response
 {
-	if ([[self directoryNameFromRequest:download.request] isEqualToString:@"mods"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"patches"])
+	if ([[self directoryNameFromRequest:download.request] isEqualToString:@"mods"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"patches"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"plug-ins"])
 	{
 		expectedContentLength = [response expectedContentLength];
 		currentContentLength = 0;
@@ -1372,9 +1461,18 @@ static id sharedInstance = nil;
 	
 	[self setJoiningServer:nil];
 	
-	if ([[[[download request] URL] absoluteString] rangeOfString:@".zip"].location != NSNotFound || [[[[download request] URL] absoluteString] rangeOfString:@".mdpatch"].location != NSNotFound)
+	if ([[self directoryNameFromRequest:download.request] isEqualToString:@"mods"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"patches"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"plug-ins"])
 	{
-		NSString *destination = [self currentDownloadingPatch] ? MOD_PATCH_DOWNLOAD_FILE : MOD_DOWNLOAD_FILE;
+		NSString *destination = nil;
+		
+		if ([[self directoryNameFromRequest:download.request] isEqualToString:@"plug-ins"])
+		{
+			destination = PLUGIN_DOWNLOAD_FILE;
+		}
+		else
+		{
+			destination = [self currentDownloadingPatch] ? MOD_PATCH_DOWNLOAD_FILE : MOD_DOWNLOAD_FILE;
+		}
 		
 		if (!resumeTimeoutDate)
 		{
@@ -1389,12 +1487,22 @@ static id sharedInstance = nil;
 		}
 		else
 		{
-			NSRunAlertPanel(@"Mod Download Failed",
-							@"%@ failed to finish downloading.",
-							@"OK", nil, nil, [[modListDictionary objectForKey:[self currentDownloadingMapIdentifier]] name]);
+			if ([[self directoryNameFromRequest:download.request] isEqualToString:@"plug-ins"])
+			{
+				NSRunAlertPanel(@"Plug-in Download Failed",
+								@"%@ failed to finish downloading.",
+								@"OK", nil, nil, [[self currentDownloadingPlugin] filename]);
+			}
+			else
+			{
+				NSRunAlertPanel(@"Mod Download Failed",
+								@"%@ failed to finish downloading.",
+								@"OK", nil, nil, [[modListDictionary objectForKey:[self currentDownloadingMapIdentifier]] name]);
+			}
 			
 			[self setCurrentDownloadingMapIdentifier:nil];
 			[self setCurrentDownloadingPatch:nil];
+			[self setCurrentDownloadingPlugin:nil];
 			
 			[appDelegate setStatus:nil];
 			
@@ -1496,6 +1604,22 @@ static id sharedInstance = nil;
 	NSString *destination = [self currentDownloadingPatch] ? MOD_PATCH_DOWNLOAD_FILE : MOD_DOWNLOAD_FILE;
 	[download setDestination:destination allowOverwrite:YES];
 	[download setDeletesFileUponFailure:NO];
+	[self setModDownload:download];
+}
+
+- (void)downloadPlugin:(MDPluginListItem *)plugin
+{
+	[self setCurrentDownloadingPlugin:plugin];
+	
+	[appDelegate setStatus:[NSString stringWithFormat:@"Installing %@ (Plug-in)...", plugin.filename]];
+	
+	[resumeTimeoutDate release];
+	resumeTimeoutDate = nil;
+	
+	NSURLRequest *request = [NSURLRequest requestWithURL:PLUGIN_DOWNLOAD_URL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
+	NSURLDownload *download = [[NSURLDownload alloc] initWithRequest:request delegate:self];
+	[download setDestination:PLUGIN_DOWNLOAD_FILE allowOverwrite:YES];
+	[download setDeletesFileUponFailure:YES];
 	[self setModDownload:download];
 }
 
@@ -1628,9 +1752,18 @@ static id sharedInstance = nil;
 				[[NSFileManager defaultManager] removeItemAtPath:destination error:NULL];
 			}
 		}
+		else if ([self currentDownloadingPlugin])
+		{
+			NSString *destination = PLUGIN_DOWNLOAD_FILE;
+			if ([[NSFileManager defaultManager] fileExistsAtPath:destination])
+			{
+				[[NSFileManager defaultManager] removeItemAtPath:destination error:NULL];
+			}
+		}
 		
 		[self setCurrentDownloadingMapIdentifier:nil];
 		[self setCurrentDownloadingPatch:nil];
+		[self setCurrentDownloadingPlugin:nil];
 		[appDelegate setStatus:nil];
 		[cancelButton setHidden:YES];
 		[refreshButton setHidden:NO];

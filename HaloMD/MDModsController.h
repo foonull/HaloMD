@@ -41,6 +41,7 @@
 @class AppDelegate;
 @class MDModPatch;
 @class MDServer;
+@class MDPluginListItem;
 
 @interface MDModsController : NSObject <SCEventListenerProtocol, NSURLDownloadDelegate>
 {
@@ -62,6 +63,8 @@
 	NSString *pendingDownload;
 	
 	MDModPatch *currentDownloadingPatch;
+	
+	MDPluginListItem *currentDownloadingPlugin;
 	
 	MDServer *joiningServer;
 	
@@ -89,6 +92,7 @@
 @property (nonatomic, copy) NSString *pendingDownload;
 @property (nonatomic, readwrite) BOOL isWritingUI;
 @property (nonatomic, retain) MDModPatch *currentDownloadingPatch;
+@property (nonatomic, retain) MDPluginListItem *currentDownloadingPlugin;
 @property (nonatomic, retain) MDServer *joiningServer;
 
 + (id)modsController;
