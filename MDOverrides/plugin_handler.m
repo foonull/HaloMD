@@ -41,12 +41,23 @@ static NSMutableDictionary *gMapBasedPluginsDictionary;
 static NSString *gThirdPartyPluginsDirectory;
 static NSString *gThirdPartyPluginsDisabledDirectory;
 
+// Prevent infoDictionary bundle caching if possible
+static NSDictionary *infoDictionaryFromBundle(NSBundle *bundle)
+{
+	NSString *infoPath = [[[bundle bundlePath] stringByAppendingPathComponent:@"Contents"] stringByAppendingPathComponent:@"Info.plist"];
+	if ([[NSFileManager defaultManager] fileExistsAtPath:infoPath])
+	{
+		return [NSDictionary dictionaryWithContentsOfFile:infoPath];
+	}
+	return [bundle infoDictionary];
+}
+
 static void loadMapBasedPlugin(NSString *mapName, NSString *pluginName, NSString *filePath)
 {
 	NSBundle *pluginBundle = [NSBundle bundleWithPath:filePath];
 	if (pluginBundle != nil)
 	{
-		NSNumber *mapPluginValue = [[pluginBundle infoDictionary] objectForKey:MDMapPlugin];
+		NSNumber *mapPluginValue = [infoDictionaryFromBundle(pluginBundle) objectForKey:MDMapPlugin];
 		if (mapPluginValue != nil && [mapPluginValue boolValue])
 		{
 			id <MDPlugin> newPluginInstance = [[pluginBundle principalClass] alloc];
@@ -260,7 +271,7 @@ static __attribute__((constructor)) void init()
 					}
 					else
 					{
-						NSNumber *globalPluginValue = [[pluginBundle infoDictionary] objectForKey:MDGlobalPlugin];
+						NSNumber *globalPluginValue = [infoDictionaryFromBundle(pluginBundle) objectForKey:MDGlobalPlugin];
 						if (globalPluginValue != nil && [globalPluginValue boolValue])
 						{
 							id <MDPlugin> newPluginInstance = [[pluginBundle principalClass] alloc];

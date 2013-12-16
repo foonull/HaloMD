@@ -639,6 +639,17 @@ static id sharedInstance = nil;
 	}
 }
 
+// Prevent infoDictionary bundle caching if possible
+- (NSDictionary *)infoDictionaryFromBundle:(NSBundle *)bundle
+{
+	NSString *infoPath = [[[bundle bundlePath] stringByAppendingPathComponent:@"Contents"] stringByAppendingPathComponent:@"Info.plist"];
+	if ([[NSFileManager defaultManager] fileExistsAtPath:infoPath])
+	{
+		return [NSDictionary dictionaryWithContentsOfFile:infoPath];
+	}
+	return [bundle infoDictionary];
+}
+
 - (void)addPluginsFromDirectory:(NSString *)directory intoArray:(NSMutableArray *)pluginItems enabled:(BOOL)enabled
 {
 	NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:directory];
@@ -650,7 +661,7 @@ static id sharedInstance = nil;
 			NSBundle *pluginBundle = [NSBundle bundleWithPath:[directory stringByAppendingPathComponent:file]];
 			if (pluginBundle != nil)
 			{
-				NSNumber *globalPluginValue = [[pluginBundle infoDictionary] objectForKey:@"MDGlobalPlugin"];
+				NSNumber *globalPluginValue = [[self infoDictionaryFromBundle:pluginBundle] objectForKey:@"MDGlobalPlugin"];
 				if (globalPluginValue != nil && [globalPluginValue boolValue])
 				{
 					MDPluginListItem *pluginItem = [[MDPluginListItem alloc] init];
