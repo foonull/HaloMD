@@ -56,11 +56,8 @@ typedef enum
 
 - (id)initWithMode:(MDPluginMode)mode;
 
-// For the three methods below via MDPluginMapMode, they will only be called if mapName requires the plug-in.
-// For MDPluginGlobalMode, they will be called for any map that is being switched to, including ui and b30
-
-// This method is not recommended to be implemented or possibly guaranteed to be called in the future via MDPluginMapMode; use mapDidBegin: instead
-- (void)mapWillBegin:(NSString *)mapName;
+// For the methods below via MDPluginMapMode, they will only be called if mapName requires the plug-in.
+// For MDPluginGlobalMode, they will be called for any map that is being switched to, including ui and b30 (the strings won't be exactly ui and b30, log them to see what they are)
 
 // These two methods are the ideal place to enable and disable modifications, especially vital for plug-ins running via MDPluginMapMode
 - (void)mapDidBegin:(NSString *)mapName;

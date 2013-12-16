@@ -29,6 +29,12 @@
 #import "MDPlugin.h"
 #import "JSONKit.h"
 
+@interface NSObject (MDPluginPrivate)
+
+- (void)mapWillBegin:(NSString *)mapName;
+
+@end
+
 #define MDGlobalPlugin @"MDGlobalPlugin"
 #define MDMapPlugin @"MDMapPlugin"
 
