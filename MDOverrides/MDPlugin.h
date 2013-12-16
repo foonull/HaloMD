@@ -62,7 +62,7 @@ typedef enum
 // This method is not recommended to be implemented or possibly guaranteed to be called in the future via MDPluginMapMode; use mapDidBegin: instead
 - (void)mapWillBegin:(NSString *)mapName;
 
-// These two methods are the ideal place to disable and enable modifications, especially vital for plug-ins running via MDPluginMapMode
+// These two methods are the ideal place to enable and disable modifications, especially vital for plug-ins running via MDPluginMapMode
 - (void)mapDidBegin:(NSString *)mapName;
 - (void)mapDidEnd:(NSString *)mapName;
 
