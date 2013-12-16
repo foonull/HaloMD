@@ -37,5 +37,8 @@
 
 @synthesize filename;
 @synthesize enabled;
+@synthesize version;
+@synthesize build;
+@synthesize description;
 
 @end

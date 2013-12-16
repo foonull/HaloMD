@@ -999,6 +999,7 @@ Gw
                 <outlet property="cancelButton" destination="893" id="895"/>
                 <outlet property="modsMenu" destination="871" id="886"/>
                 <outlet property="onlineModsMenu" destination="890" id="892"/>
+                <outlet property="onlinePluginsMenu" destination="gss-i8-vvm" id="9hj-IK-km9"/>
                 <outlet property="pluginsMenu" destination="Kpp-TK-Lzi" id="0Ht-ol-EWP"/>
                 <outlet property="refreshButton" destination="617" id="896"/>
             </connections>

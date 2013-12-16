@@ -48,6 +48,7 @@
 	IBOutlet NSMenu *modsMenu;
 	IBOutlet NSMenu *onlineModsMenu;
 	IBOutlet NSMenu *pluginsMenu;
+	IBOutlet NSMenu *onlinePluginsMenu;
 	IBOutlet NSButton *cancelButton;
 	IBOutlet NSButton *refreshButton;
 	NSMutableArray *modMenuItems;

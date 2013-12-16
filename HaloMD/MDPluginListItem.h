@@ -37,9 +37,15 @@
 {
 	NSString *filename;
 	BOOL enabled;
+	NSString *version;
+	NSUInteger build;
+	NSString *description;
 }
 
 @property (nonatomic, copy) NSString *filename;
 @property (nonatomic, assign) BOOL enabled;
+@property (nonatomic, copy) NSString *version;
+@property (nonatomic, assign) NSUInteger build;
+@property (nonatomic, copy) NSString *description;
 
 @end

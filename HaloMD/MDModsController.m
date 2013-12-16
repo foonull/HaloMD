@@ -768,6 +768,16 @@ static id sharedInstance = nil;
 	[self installOnlineModWithIdentifier:[[sender representedObject] identifier]];
 }
 
+- (void)installOnlinePluginWithName:(NSString *)name
+{
+	
+}
+
+- (void)installPlugin:(id)sender
+{
+	[self installOnlinePluginWithName:[[sender representedObject] filename]];
+}
+
 - (void)updateModMenuTitles
 {
 	NSMutableArray *itemsToRemove = [NSMutableArray array];
@@ -861,33 +871,37 @@ static id sharedInstance = nil;
 	}
 }
 
-- (void)makeModsList
+- (NSDictionary *)dictionaryFromJSONPath:(NSString *)jsonPath
 {
-	NSDictionary *modsDictionary = nil;
-	if ([[NSFileManager defaultManager] fileExistsAtPath:MODS_LIST_PATH])
+	NSDictionary *dictionary = nil;
+	if ([[NSFileManager defaultManager] fileExistsAtPath:jsonPath])
 	{
-		NSData *jsonData = [NSData dataWithContentsOfFile:MODS_LIST_PATH];
+		NSData *jsonData = [NSData dataWithContentsOfFile:jsonPath];
 		if (jsonData != nil)
 		{
-			id jsonSerializationClass = NSClassFromString(@"NSJSONSerialization");
+			Class jsonSerializationClass = NSClassFromString(@"NSJSONSerialization");
 			if (jsonSerializationClass != nil)
 			{
 				NSError *error = nil;
-				modsDictionary = [jsonSerializationClass JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
-				if (!modsDictionary)
-				{
-					NSLog(@"Error: could not read JSON dictionary");
-					NSLog(@"%@", error);
-				}
+				dictionary = [jsonSerializationClass JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
 			}
 			else
 			{
-				modsDictionary = [[JSONDecoder decoder] objectWithData:jsonData];
+				dictionary = [[JSONDecoder decoder] objectWithData:jsonData];
 			}
 		}
 	}
-	
-	if (modsDictionary != nil)
+	return dictionary;
+}
+
+- (void)makeModsList
+{
+	NSDictionary *modsDictionary = [[self dictionaryFromJSONPath:MODS_LIST_PATH] objectForKey:@"Mods"];
+	if (modsDictionary == nil)
+	{
+		NSLog(@"Mods: Failed to load %@", MODS_LIST_PATH);
+	}
+	else
 	{
 		// Remove blank separator and refresh list options..
 		NSMutableArray *onlineItemsToRemove = [NSMutableArray array];
@@ -906,7 +920,7 @@ static id sharedInstance = nil;
 		
 		[self setModListDictionary:[NSMutableDictionary dictionary]];
 		
-		for (NSDictionary *modDictionary in [modsDictionary objectForKey:@"Mods"])
+		for (NSDictionary *modDictionary in modsDictionary)
 		{
 			MDModListItem *listItem = [[MDModListItem alloc] init];
 			
@@ -984,6 +998,42 @@ static id sharedInstance = nil;
 		[appDelegate updateHiddenServers];
 		
 		[self writeCurrentUI];
+	}
+}
+
+- (void)makePluginsList
+{
+	NSDictionary *pluginsDictionary = [[self dictionaryFromJSONPath:MODS_LIST_PATH] objectForKey:@"Plug-ins"];
+	if (pluginsDictionary == nil)
+	{
+		NSLog(@"Plug-ins: Failed to load %@", MODS_LIST_PATH);
+	}
+	else
+	{
+		[self removeAllItemsFromMenu:onlinePluginsMenu];
+		
+		for (NSDictionary *pluginDictionary in pluginsDictionary)
+		{
+			NSString *name = [pluginDictionary objectForKey:@"name"];
+			NSString *description = [pluginDictionary objectForKey:@"description"];
+			NSUInteger buildNumber = [[pluginDictionary objectForKey:@"build"] integerValue];
+			NSString *version = [pluginDictionary objectForKey:@"version"];
+			
+			MDPluginListItem *newItem = [[MDPluginListItem alloc] init];
+			newItem.filename = name;
+			newItem.description = description;
+			newItem.build = buildNumber;
+			newItem.version = version;
+			
+			NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:newItem.filename action:@selector(installPlugin:) keyEquivalent:@""];
+			[menuItem setTarget:self];
+			[menuItem setRepresentedObject:newItem];
+			
+			[onlinePluginsMenu addItem:menuItem];
+			
+			[menuItem release];
+			[newItem release];
+		}
 	}
 }
 
@@ -1513,6 +1563,7 @@ static id sharedInstance = nil;
 	[self makeModsList]; // In case the file doesn't download, use local copy
 	
 	[self makePluginMenuItems];
+	[self makePluginsList];
 	
 	id dateLastChecked = [[NSUserDefaults standardUserDefaults] objectForKey:MODS_LIST_DOWNLOAD_TIME_KEY];
 	if ([shouldForceDownloadList boolValue] || ![[NSFileManager defaultManager] fileExistsAtPath:MODS_LIST_PATH] || [dateLastChecked isKindOfClass:[NSString class]] || [[NSDate date] timeIntervalSinceDate:dateLastChecked] > 10.0 * 60)
