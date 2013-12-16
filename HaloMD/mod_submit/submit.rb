@@ -120,11 +120,34 @@ if previous_versions.count > 0
 	end
 end
 
+#temporary
+unless mod_entries.key? 'Plug-ins'
+	mod_entries['Plug-ins'] = []
+end
+
+puts "Enter a list of plug-ins you'd like to have for this mod. Leave blank to end the list, or if the mod has no plug-ins"
+plugin_names = []
+while true
+	plugin_name = $stdin.gets.chomp
+	if plugin_name.strip.empty?
+		break
+	end
+	plugin_names << plugin_name
+end
+
+for plugin_name in plugin_names
+	if mod_entries['Plug-ins'].select {|entry| entry['name'] == plugin_name}.count == 0
+		puts "ERROR: Failed to find plugin #{plugin_name}"
+		exit 7
+	end
+end
+
 puts "Creating new mod...\n\n"
 puts "Name: #{mod_name}"
 puts "Identifier: #{mod_identifier}"
 puts "Version: #{mod_version}"
 puts "Description: #{mod_description}"
+puts "Plug-ins: " + plugin_names.join(', ') if plugin_names.length > 0
 puts "\n"
 
 stock_map_patch_choice = 0
@@ -202,7 +225,7 @@ print_and_execute_command("zip -jr \"#{OUTPUT_PATH}/#{mod_identifier}.zip\" \"#{
 
 puts "\n"
 
-new_mod_entry = {'identifier' => mod_identifier, 'patches' => new_patch_entries, 'description' => mod_description, 'human_version' => mod_version, 'name' => mod_name, 'hash' => Digest::MD5.hexdigest(IO.read(mod_path))}
+new_mod_entry = {'identifier' => mod_identifier, 'patches' => new_patch_entries, 'description' => mod_description, 'human_version' => mod_version, 'name' => mod_name, 'hash' => Digest::MD5.hexdigest(IO.read(mod_path)), 'plug-ins' => plugin_names}
 
 new_mod_entries = [new_mod_entry] + mod_entries['Mods']
 
@@ -211,8 +234,7 @@ FileUtils.rm(JSON_PATH) if File.exists? JSON_PATH
 
 puts "Writing new json file... (#{JSON_PATH})"
 File.open(JSON_PATH, "w") do |json_file|
-	json_file.write(JSON.pretty_generate({"Mods" => new_mod_entries})) #pretty print
-	#json_file.write({"Mods" => new_mod_entries}.to_json)
+	json_file.write(JSON.pretty_generate({"Mods" => new_mod_entries, "Plug-ins" => mod_entries['Plug-ins']})) #pretty print
 end
 
 puts "Writing gzipped json file... (#{JSON_PATH}.gz)"

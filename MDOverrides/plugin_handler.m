@@ -212,7 +212,7 @@ static void addMapBasedPlugins(NSMutableDictionary *mapBasedPluginNamesDictionar
 	{
 		for (NSDictionary *modItem in modsDictionary)
 		{
-			NSArray *pluginNames = [modItem objectForKey:@"plugins"];
+			NSArray *pluginNames = [modItem objectForKey:@"plug-ins"];
 			if (pluginNames != nil && [pluginNames isKindOfClass:[NSArray class]])
 			{
 				NSString *mapIdentifier = [modItem objectForKey:@"identifier"];
