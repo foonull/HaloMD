@@ -762,18 +762,33 @@ static id sharedInstance = nil;
 	}
 }
 
-- (void)installOnlineModWithIdentifier:(NSString *)identifier
+- (BOOL)reportWhatIsInstalling
 {
-	if (![self currentDownloadingMapIdentifier] && ![self currentDownloadingPlugin])
-	{
-		[self downloadMod:identifier];
-	}
-	else
+	BOOL hadToReport = NO;
+	
+	if ([self currentDownloadingMapIdentifier] != nil)
 	{
 		NSRunAlertPanel(@"Installation in Progress",
 						@"You are currently installing %@. Please try again when the installation finishes.",
 						@"OK", nil, nil, [[modListDictionary objectForKey:[self currentDownloadingMapIdentifier]] name]);
-		
+		hadToReport = YES;
+	}
+	else if ([self currentDownloadingPlugin] != nil)
+	{
+		NSRunAlertPanel(@"Installation in Progress",
+						@"You are currently installing %@. Please try again when the installation finishes.",
+						@"OK", nil, nil, [[self currentDownloadingPlugin] filename]);
+		hadToReport = YES;
+	}
+	
+	return hadToReport;
+}
+
+- (void)installOnlineModWithIdentifier:(NSString *)identifier
+{
+	if (![self reportWhatIsInstalling])
+	{
+		[self downloadMod:identifier];
 	}
 }
 
@@ -784,13 +799,9 @@ static id sharedInstance = nil;
 
 - (void)installOnlinePlugin:(MDPluginListItem *)plugin
 {
-	if (![self currentDownloadingPlugin] && ![self currentDownloadingMapIdentifier])
+	if (![self reportWhatIsInstalling])
 	{
 		[self downloadPlugin:plugin];
-	}
-	else
-	{
-		
 	}
 }
 
@@ -963,6 +974,12 @@ static id sharedInstance = nil;
 			}
 			
 			[listItem setPatches:patches];
+			NSArray *plugins = [modDictionary objectForKey:@"plug-ins"];
+			if (plugins == nil)
+			{
+				plugins = [NSArray array];
+			}
+			[listItem setPlugins:plugins];
 			
 			if ([listItem name])
 			{
@@ -1028,10 +1045,13 @@ static id sharedInstance = nil;
 	if (pluginsDictionary == nil)
 	{
 		NSLog(@"Plug-ins: Failed to load %@", MODS_LIST_PATH);
+		[self removeAllItemsFromMenu:onlinePluginsMenu];
 	}
 	else
 	{
 		[self removeAllItemsFromMenu:onlinePluginsMenu];
+		
+		NSMutableArray *pluginItems = [NSMutableArray array];
 		
 		for (NSDictionary *pluginDictionary in pluginsDictionary)
 		{
@@ -1052,17 +1072,25 @@ static id sharedInstance = nil;
 			
 			if (newItem.globalMode)
 			{
-				NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:newItem.filename action:@selector(installPlugin:) keyEquivalent:@""];
-				[menuItem setTarget:self];
-				[menuItem setToolTip:description];
-				[menuItem setRepresentedObject:newItem];
-				
-				[onlinePluginsMenu addItem:menuItem];
-				
-				[menuItem release];
+				[pluginItems addObject:newItem];
 			}
 			
 			[newItem release];
+		}
+		
+		NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"filename" ascending:YES selector:@selector(caseInsensitiveCompare:)] autorelease];
+		NSArray *sortedPlugins = [pluginItems sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+		
+		for (MDPluginListItem *plugin in sortedPlugins)
+		{
+			NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:plugin.filename action:@selector(installPlugin:) keyEquivalent:@""];
+			[menuItem setTarget:self];
+			[menuItem setToolTip:plugin.description];
+			[menuItem setRepresentedObject:plugin];
+			
+			[onlinePluginsMenu addItem:menuItem];
+			
+			[menuItem release];
 		}
 	}
 }
@@ -1174,6 +1202,7 @@ static id sharedInstance = nil;
 												 error:nil];
 		
 		[self makeModsList];
+		[self makePluginsList];
 		[self setDidDownloadModList:YES];
 		isDownloadingModList = NO;
 		if ([self pendingDownload])

@@ -42,5 +42,6 @@
 @synthesize description;
 @synthesize md5Hash;
 @synthesize patches;
+@synthesize plugins;
 
 @end

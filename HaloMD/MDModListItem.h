@@ -41,6 +41,7 @@
 	NSString *description;
 	NSString *md5Hash;
 	NSArray *patches;
+	NSArray *plugins;
 }
 
 @property (nonatomic, copy) NSString *identifier;
@@ -49,5 +50,6 @@
 @property (nonatomic, copy) NSString *description;
 @property (nonatomic, copy) NSString *md5Hash;
 @property (nonatomic, retain) NSArray *patches;
+@property (nonatomic, retain) NSArray *plugins;
 
 @end
