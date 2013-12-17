@@ -15,6 +15,8 @@ def print_and_execute_command(command)
 	end
 end
 
+MODS_URL = "http://halomd.macgamingmods.com/mods/mods.json.gz"
+
 OUTPUT_PATH = "md_submit_output"
 MOD_JSON_NAME = "mods.json"
 JSON_PATH = (Pathname.new(OUTPUT_PATH) + MOD_JSON_NAME).to_s
@@ -46,7 +48,7 @@ print_and_execute_command("plutil -convert json \"#{info_plist_path}\" -o \"#{OU
 info_entries = JSON.parse(IO.read(File.join(OUTPUT_PATH, 'plugin.json')))
 
 puts "Fetching mods/plugin list..."
-print_and_execute_command("curl http://halomd.macgamingmods.com/mods/mods.json -o #{JSON_PATH}")
+print_and_execute_command("curl #{MODS_URL} | zcat > \"#{JSON_PATH}\"")
 puts "Downloaded #{JSON_PATH}"
 
 mod_entries = JSON.parse(IO.read(JSON_PATH))
