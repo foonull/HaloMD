@@ -272,8 +272,9 @@ static id sharedInstance = nil;
 		}
 	}
 	
-	NSString *newPluginPath = [PLUGINS_DIRECTORY stringByAppendingPathComponent:[filename lastPathComponent]];
-	if ([[NSFileManager defaultManager] fileExistsAtPath:newPluginPath])
+	NSString *enabledPath = [PLUGINS_DIRECTORY stringByAppendingPathComponent:[filename lastPathComponent]];
+	BOOL existedAtEnabledPath = [[NSFileManager defaultManager] fileExistsAtPath:enabledPath];
+	if (existedAtEnabledPath)
 	{
 		[[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
 													 source:PLUGINS_DIRECTORY
@@ -283,7 +284,8 @@ static id sharedInstance = nil;
 	}
 	
 	NSString *disabledPath = [PLUGINS_DISABLED_DIRECTORY stringByAppendingPathComponent:[filename lastPathComponent]];
-	if ([[NSFileManager defaultManager] fileExistsAtPath:disabledPath])
+	BOOL existedAtDisabledPath = [[NSFileManager defaultManager] fileExistsAtPath:disabledPath];
+	if (existedAtDisabledPath)
 	{
 		[[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
 													 source:PLUGINS_DISABLED_DIRECTORY
@@ -292,8 +294,18 @@ static id sharedInstance = nil;
 														tag:0];
 	}
 	
+	NSString *destination = nil;
+	if (existedAtDisabledPath || (!existedAtDisabledPath && !existedAtEnabledPath))
+	{
+		destination = disabledPath;
+	}
+	else
+	{
+		destination = enabledPath;
+	}
+	
 	NSError *error = nil;
-	if (![[NSFileManager defaultManager] moveItemAtPath:filename toPath:newPluginPath error:&error])
+	if (![[NSFileManager defaultManager] moveItemAtPath:filename toPath:destination error:&error])
 	{
 		NSLog(@"Error moving plugin: %@", error);
 		NSRunAlertPanel(@"Failed Adding Plug-In",
