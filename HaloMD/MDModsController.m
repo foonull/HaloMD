@@ -1545,14 +1545,12 @@ static id sharedInstance = nil;
 		[self setCurrentDownloadingPatch:nil];
 		
 		NSArray *plugins = [[modListDictionary objectForKey:[self currentDownloadingMapIdentifier]] plugins];
+		
+		[self setCurrentDownloadingMapIdentifier:nil];
+		
 		if (plugins != nil && plugins.count > 0)
 		{
-			[self setCurrentDownloadingMapIdentifier:nil];
 			[self installPluginsWithNames:plugins];
-		}
-		else
-		{
-			[self setCurrentDownloadingMapIdentifier:nil];
 		}
 		
 		if (!addedMod)
