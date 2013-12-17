@@ -138,7 +138,12 @@ puts "\n"
 
 new_plugin_entry = {'name' => plugin_name, 'description' => plugin_description, 'version' => plugin_version, 'build' => new_build_number, 'MDGlobalPlugin' => global_plugin, 'MDMapPlugin' => map_plugin}
 
-new_plugin_entries = [new_plugin_entry] + mod_entries['Plug-ins']
+new_plugin_entries = mod_entries['Plug-ins']
+if previous_versions.count > 0
+	new_plugin_entries.delete_if {|entry| entry['name'] == plugin_name}
+end
+
+new_plugin_entries += [new_plugin_entry]
 
 puts "Removing old json file... (#{JSON_PATH})"
 FileUtils.rm(JSON_PATH) if File.exists? JSON_PATH
