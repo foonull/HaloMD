@@ -865,11 +865,8 @@ static id sharedInstance = nil;
 	
 	if (plugins.count > 0)
 	{
+		[self setPendingPlugins:plugins];
 		[self downloadPlugin:[plugins objectAtIndex:0]];
-		if (plugins.count > 1)
-		{
-			[self setPendingPlugins:plugins];
-		}
 	}
 }
 
@@ -1548,7 +1545,7 @@ static id sharedInstance = nil;
 		
 		[self setCurrentDownloadingMapIdentifier:nil];
 		
-		if (plugins != nil && plugins.count > 0)
+		if (plugins.count > 0)
 		{
 			[self installPluginsWithNames:plugins];
 		}
