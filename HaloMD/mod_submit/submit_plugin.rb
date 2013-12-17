@@ -78,6 +78,18 @@ end
 
 plugin_version = info_entries['CFBundleShortVersionString']
 
+unless info_entries.key? 'MDGlobalPlugin'
+	puts "ERROR: Failed to find MDGlobalPlugin entry"
+end
+
+global_plugin = info_entries['MDGlobalPlugin']
+
+unless info_entries.key? 'MDMapPlugin'
+	puts "ERROR: Failed to find MDMapPlugin entry"
+end
+
+map_plugin = info_entries['MDMapPlugin']
+
 puts "What is this new plugin's description?"
 puts "Leave blank to use #{plugin_name} #{previous_versions[0]['version']}'s description" if previous_versions.count > 0
 
@@ -111,9 +123,11 @@ puts "Name: #{plugin_name}"
 puts "Build: #{new_build_number}"
 puts "Version: #{plugin_version}"
 puts "Description: #{plugin_description}"
+puts "Plug-in Type: Global" if global_plugin
+puts "Plug-in Type: Map" if map_plugin
 puts "\n"
 
-new_plugin_entry = {'name' => plugin_name, 'description' => plugin_description, 'version' => plugin_version, 'build' => new_build_number}
+new_plugin_entry = {'name' => plugin_name, 'description' => plugin_description, 'version' => plugin_version, 'build' => new_build_number, 'MDGlobalPlugin' => global_plugin, 'MDMapPlugin' => map_plugin}
 
 new_plugin_entries = [new_plugin_entry] + mod_entries['Plug-ins']
 
