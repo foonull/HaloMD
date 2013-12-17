@@ -1039,21 +1039,29 @@ static id sharedInstance = nil;
 			NSString *description = [pluginDictionary objectForKey:@"description"];
 			NSUInteger buildNumber = [[pluginDictionary objectForKey:@"build"] integerValue];
 			NSString *version = [pluginDictionary objectForKey:@"version"];
+			BOOL globalMode = [[pluginDictionary objectForKey:@"MDGlobalPlugin"] boolValue];
+			BOOL mapMode = [[pluginDictionary objectForKey:@"MDMapPlugin"] boolValue];
 			
 			MDPluginListItem *newItem = [[MDPluginListItem alloc] init];
 			newItem.filename = name;
 			newItem.description = description;
 			newItem.build = buildNumber;
 			newItem.version = version;
+			newItem.mapMode = mapMode;
+			newItem.globalMode = globalMode;
 			
-			NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:newItem.filename action:@selector(installPlugin:) keyEquivalent:@""];
-			[menuItem setTarget:self];
-			[menuItem setToolTip:description];
-			[menuItem setRepresentedObject:newItem];
+			if (newItem.globalMode)
+			{
+				NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:newItem.filename action:@selector(installPlugin:) keyEquivalent:@""];
+				[menuItem setTarget:self];
+				[menuItem setToolTip:description];
+				[menuItem setRepresentedObject:newItem];
+				
+				[onlinePluginsMenu addItem:menuItem];
+				
+				[menuItem release];
+			}
 			
-			[onlinePluginsMenu addItem:menuItem];
-			
-			[menuItem release];
 			[newItem release];
 		}
 	}

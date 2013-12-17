@@ -40,5 +40,7 @@
 @synthesize version;
 @synthesize build;
 @synthesize description;
+@synthesize globalMode;
+@synthesize mapMode;
 
 @end

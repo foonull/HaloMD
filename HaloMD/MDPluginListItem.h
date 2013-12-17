@@ -40,6 +40,8 @@
 	NSString *version;
 	NSUInteger build;
 	NSString *description;
+	BOOL globalMode;
+	BOOL mapMode;
 }
 
 @property (nonatomic, copy) NSString *filename;
@@ -47,5 +49,7 @@
 @property (nonatomic, copy) NSString *version;
 @property (nonatomic, assign) NSUInteger build;
 @property (nonatomic, copy) NSString *description;
+@property (nonatomic, assign) BOOL globalMode;
+@property (nonatomic, assign) BOOL mapMode;
 
 @end
