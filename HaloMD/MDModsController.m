@@ -1412,7 +1412,7 @@ static id sharedInstance = nil;
 
 - (void)download:(NSURLDownload *)download didReceiveDataOfLength:(NSUInteger)length
 {
-	if ([[self directoryNameFromRequest:download.request] isEqualToString:@"mods"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"patches"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"plug-ins"])
+	if (![download.request.URL isEqual:MULTIPLAYER_CODES_URL] && ([[self directoryNameFromRequest:download.request] isEqualToString:@"mods"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"patches"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"plug-ins"]))
 	{
 		// Ensure currentContentLength won't exceed expectedContentLength
 		if (currentContentLength < expectedContentLength)
@@ -1436,7 +1436,7 @@ static id sharedInstance = nil;
 
 - (void)download:(NSURLDownload *)download didReceiveResponse:(NSURLResponse *)response
 {
-	if ([[self directoryNameFromRequest:download.request] isEqualToString:@"mods"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"patches"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"plug-ins"])
+	if (![download.request.URL isEqual:MULTIPLAYER_CODES_URL] && ([[self directoryNameFromRequest:download.request] isEqualToString:@"mods"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"patches"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"plug-ins"]))
 	{
 		expectedContentLength = [response expectedContentLength];
 		currentContentLength = 0;
@@ -1461,7 +1461,12 @@ static id sharedInstance = nil;
 	
 	[self setJoiningServer:nil];
 	
-	if ([[self directoryNameFromRequest:download.request] isEqualToString:@"mods"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"patches"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"plug-ins"])
+	if ([[[download request] URL] isEqual:MULTIPLAYER_CODES_URL])
+	{
+		isDownloadingModList = NO;
+		[self setPendingDownload:nil];
+	}
+	else if ([[self directoryNameFromRequest:download.request] isEqualToString:@"mods"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"patches"] || [[self directoryNameFromRequest:download.request] isEqualToString:@"plug-ins"])
 	{
 		NSString *destination = nil;
 		
@@ -1515,11 +1520,6 @@ static id sharedInstance = nil;
 				[[NSFileManager defaultManager] removeItemAtPath:destination error:NULL];
 			}
 		}
-	}
-	else if ([[[download request] URL] isEqual:MULTIPLAYER_CODES_URL])
-	{
-		isDownloadingModList = NO;
-		[self setPendingDownload:nil];
 	}
 	
 	[download release];
