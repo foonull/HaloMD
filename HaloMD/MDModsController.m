@@ -1152,14 +1152,8 @@ static id sharedInstance = nil;
 	}
 }
 
-- (void)showUpdateNoticeIfNeeded
+- (BOOL)showModUpdateNoticeIfNeeded
 {
-	if ([appDelegate isQueryingServers] || [self currentDownloadingMapIdentifier])
-	{
-		[self performSelector:@selector(showUpdateNoticeIfNeeded) withObject:nil afterDelay:10.0];
-		return;
-	}
-	
 	NSMutableArray *itemsToUpdate = [NSMutableArray array];
 	
 	for (NSMenuItem *modMenuItem in modMenuItems)
@@ -1205,6 +1199,64 @@ static id sharedInstance = nil;
 		NSAttributedString *statusString =  [NSAttributedString MDHyperlinkFromString:[NSString stringWithFormat:@"Update %@", [randomItem name]] withURL:[NSURL URLWithString:[NSString stringWithFormat:@"halomdinstall://%@", [randomItem identifier]]]];
 		
 		[appDelegate setStatus:statusString];
+	}
+	
+	return [itemsToUpdate count] > 0;
+}
+
+- (void)showPluginUpdateNoticeIfNeeded
+{
+	NSMutableArray *itemsToUpdate = [NSMutableArray array];
+	NSMutableArray *favorableItemsToUpdate = [NSMutableArray array];
+	
+	for (NSMenuItem *menuItem in [self pluginMenuItems])
+	{
+		MDPluginListItem *pluginItem = [menuItem representedObject];
+		MDPluginListItem *onlinePluginItem = [pluginListDictionary objectForKey:[pluginItem filename]];
+		if (pluginItem == nil || onlinePluginItem == nil)
+		{
+			continue;
+		}
+		
+		if (pluginItem.build < onlinePluginItem.build)
+		{
+			[itemsToUpdate addObject:pluginItem];
+			if (pluginItem.globalMode && pluginItem.enabled)
+			{
+				[favorableItemsToUpdate addObject:pluginItem];
+			}
+		}
+	}
+	
+	MDPluginListItem *randomItem = nil;
+	if ([favorableItemsToUpdate count] > 0)
+	{
+		randomItem = [favorableItemsToUpdate objectAtIndex:rand() % [favorableItemsToUpdate count]];
+	}
+	else if ([itemsToUpdate count] > 0)
+	{
+		randomItem = [itemsToUpdate objectAtIndex:rand() % [itemsToUpdate count]];
+	}
+	
+	if (randomItem != nil)
+	{
+		NSAttributedString *statusString =  [NSAttributedString MDHyperlinkFromString:[NSString stringWithFormat:@"Update %@ (Plug-in)", [randomItem filename]] withURL:[NSURL URLWithString:[[NSString stringWithFormat:@"halomdplugininstall://%@", [randomItem filename]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+		
+		[appDelegate setStatus:statusString];
+	}
+}
+
+- (void)showUpdateNoticeIfNeeded
+{
+	if ([appDelegate isQueryingServers] || [self currentDownloadingMapIdentifier] || [self currentDownloadingPlugin])
+	{
+		[self performSelector:@selector(showUpdateNoticeIfNeeded) withObject:nil afterDelay:10.0];
+		return;
+	}
+	
+	if (![self showModUpdateNoticeIfNeeded])
+	{
+		[self showPluginUpdateNoticeIfNeeded];
 	}
 }
 
@@ -1840,10 +1892,15 @@ static id sharedInstance = nil;
 {
 	if ([self isInitiated])
 	{
-		NSString *prefix = @"halomdinstall://";
-		if ([url hasPrefix:prefix])
+		NSString *modPrefix = @"halomdinstall://";
+		NSString *pluginPrefix = @"halomdplugininstall://";
+		if ([url hasPrefix:modPrefix])
 		{
-			[self installOnlineModWithIdentifier:[url substringFromIndex:[prefix length]]];
+			[self installOnlineModWithIdentifier:[url substringFromIndex:[modPrefix length]]];
+		}
+		else if ([url hasPrefix:pluginPrefix])
+		{
+			[self installPluginsWithNames:[NSArray arrayWithObject:[[url substringFromIndex:[pluginPrefix length]] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
 		}
 	}
 	else

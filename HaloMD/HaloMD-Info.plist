@@ -34,6 +34,14 @@
 				<string>halomdinstall</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>HaloMD Install Plug-in</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>halomdplugininstall</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleDocumentTypes</key>
 	<array>
