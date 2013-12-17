@@ -703,13 +703,21 @@ static id sharedInstance = nil;
 			NSBundle *pluginBundle = [NSBundle bundleWithPath:[directory stringByAppendingPathComponent:file]];
 			if (pluginBundle != nil)
 			{
-				NSNumber *globalPluginValue = [[self infoDictionaryFromBundle:pluginBundle] objectForKey:@"MDGlobalPlugin"];
-				if (globalPluginValue != nil && [globalPluginValue boolValue])
+				NSDictionary *infoDictionary = [self infoDictionaryFromBundle:pluginBundle];
+				NSNumber *globalPluginValue = [infoDictionary objectForKey:@"MDGlobalPlugin"];
+				NSNumber *mapPluginValue = [infoDictionary objectForKey:@"MDMapPlugin"];
+				NSUInteger buildNumber = [[infoDictionary objectForKey:@"CFBundleVersion"] integerValue];
+				if (buildNumber > 0 && ([globalPluginValue boolValue] || [mapPluginValue boolValue]))
 				{
 					MDPluginListItem *pluginItem = [[MDPluginListItem alloc] init];
 					
 					pluginItem.enabled = enabled;
+					pluginItem.globalMode = [globalPluginValue boolValue];
+					pluginItem.mapMode = [mapPluginValue boolValue];
+					
 					pluginItem.name = [file stringByDeletingPathExtension];
+					pluginItem.build = buildNumber;
+					pluginItem.version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 					
 					[pluginItems addObject:pluginItem];
 					
@@ -750,7 +758,10 @@ static id sharedInstance = nil;
 	{
 		for (id menuItem in [self pluginMenuItems])
 		{
-			[pluginsMenu removeItem:menuItem];
+			if ([[menuItem representedObject] globalMode])
+			{
+				[pluginsMenu removeItem:menuItem];
+			}
 		}
 		
 		[[self pluginMenuItems] removeAllObjects];
@@ -768,6 +779,7 @@ static id sharedInstance = nil;
 	NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)] autorelease];
 	NSArray *sortedItems = [newPluginItems sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 	
+	BOOL addedPlugins = NO;
 	if (sortedItems.count > 0)
 	{
 		for (MDPluginListItem *pluginItem in newPluginItems)
@@ -776,12 +788,18 @@ static id sharedInstance = nil;
 			newMenuItem.representedObject = pluginItem;
 			newMenuItem.target = self;
 			
-			[pluginsMenu addItem:newMenuItem];
+			if (pluginItem.globalMode)
+			{
+				[pluginsMenu addItem:newMenuItem];
+				addedPlugins = YES;
+			}
+			
 			[[self pluginMenuItems] addObject:newMenuItem];
 			[newMenuItem release];
 		}
 	}
-	else
+	
+	if (!addedPlugins)
 	{
 		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@"No Available Plug-Ins" action:@selector(doNothing:) keyEquivalent:@""];
 		[menuItem setEnabled:NO];
@@ -1155,14 +1173,15 @@ static id sharedInstance = nil;
 	{
 		MDPluginListItem *plugin = [menuItem representedObject];
 		MDPluginListItem *onlinePlugin = [pluginListDictionary objectForKey:plugin.name];
-		if (plugin == nil || onlinePlugin == nil)
+		if (plugin == nil || onlinePlugin == nil || !plugin.globalMode)
 		{
 			continue;
 		}
 		
 		if (onlinePlugin.description != nil)
 		{
-			[menuItem setToolTip:onlinePlugin.description];
+			plugin.description = onlinePlugin.description;
+			[menuItem setToolTip:plugin.description];
 		}
 	}
 }
