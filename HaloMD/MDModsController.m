@@ -47,7 +47,13 @@
 #define MAPS_DIRECTORY [[[appDelegate applicationSupportPath] stringByAppendingPathComponent:@"GameData"] stringByAppendingPathComponent:@"Maps"]
 #define MODS_TEMP_LIST_PATH [NSTemporaryDirectory() stringByAppendingPathComponent:@"HaloMD_mods_list.json"]
 #define MODS_LIST_PATH [[appDelegate applicationSupportPath] stringByAppendingPathComponent:@"HaloMD_mods_list.json"]
-#define MULTIPLAYER_CODES_URL [NSURL URLWithString:@"http://halomd.macgamingmods.com/mods/mods.json.gz"]
+
+#ifdef DEBUG
+	#define MULTIPLAYER_CODES_URL [NSURL URLWithString:@"http://halomd.macgamingmods.com/mods/mods_debug.json.gz"]
+#else
+	#define MULTIPLAYER_CODES_URL [NSURL URLWithString:@"http://halomd.macgamingmods.com/mods/mods.json.gz"]
+#endif
+
 #define MOD_DOWNLOAD_URL [NSURL URLWithString:[NSString stringWithFormat:@"http://halomd.macgamingmods.com/mods/%@.zip", [self currentDownloadingMapIdentifier]]]
 #define MOD_DOWNLOAD_FILE [NSTemporaryDirectory() stringByAppendingPathComponent:@"HaloMD_download_file.zip"]
 
