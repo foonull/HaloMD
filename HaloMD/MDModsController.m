@@ -1431,9 +1431,9 @@ static id sharedInstance = nil;
 		
 		[self setModDownload:nil];
 		
-		NSArray *plugins = [[modListDictionary objectForKey:[self currentDownloadingMapIdentifier]] plugins];
+		NSArray *plugins = [self pluginsNotInstalledFromPluginNames:[[modListDictionary objectForKey:[self currentDownloadingMapIdentifier]] plugins]];
 		[self setCurrentDownloadingMapIdentifier:nil];
-		if (plugins != nil && plugins.count > 0)
+		if (plugins.count > 0)
 		{
 			[self installPluginsWithNames:plugins];
 		}
@@ -1537,7 +1537,7 @@ static id sharedInstance = nil;
 		
 		[self setCurrentDownloadingPatch:nil];
 		
-		NSArray *plugins = [[modListDictionary objectForKey:[self currentDownloadingMapIdentifier]] plugins];
+		NSArray *plugins = [self pluginsNotInstalledFromPluginNames:[[modListDictionary objectForKey:[self currentDownloadingMapIdentifier]] plugins]];
 		
 		[self setCurrentDownloadingMapIdentifier:nil];
 		
@@ -1918,16 +1918,9 @@ static id sharedInstance = nil;
 	}
 }
 
-- (BOOL)requestPluginDownloadIfNeededFromMod:(NSString *)mapIdentifier andJoinServer:(MDServer *)server
+- (NSArray *)pluginsNotInstalledFromPluginNames:(NSArray *)pluginNames onlyNeedsInstalling:(BOOL *)needsInstalling
 {
-	if ([self reportWhatIsInstalling]) return YES;
-	
-	MDModListItem *modItem = [modListDictionary objectForKey:mapIdentifier];
-	
-	NSArray *pluginNames = [modItem plugins];
 	NSMutableArray *pluginNamesToInstall = [NSMutableArray array];
-	
-	BOOL needsInstalling = NO;
 	
 	for (NSString *pluginName in pluginNames)
 	{
@@ -1945,7 +1938,10 @@ static id sharedInstance = nil;
 		if (matchingPlugin == nil)
 		{
 			[pluginNamesToInstall addObject:pluginName];
-			needsInstalling = YES;
+			if (needsInstalling != NULL)
+			{
+				*needsInstalling = YES;
+			}
 			continue;
 		}
 		
@@ -1957,6 +1953,24 @@ static id sharedInstance = nil;
 			[pluginNamesToInstall addObject:pluginName];
 		}
 	}
+	
+	return pluginNamesToInstall;
+}
+
+- (NSArray *)pluginsNotInstalledFromPluginNames:(NSArray *)pluginNames
+{
+	return [self pluginsNotInstalledFromPluginNames:pluginNames onlyNeedsInstalling:NULL];
+}
+
+- (BOOL)requestPluginDownloadIfNeededFromMod:(NSString *)mapIdentifier andJoinServer:(MDServer *)server
+{
+	if ([self reportWhatIsInstalling]) return YES;
+	
+	MDModListItem *modItem = [modListDictionary objectForKey:mapIdentifier];
+	
+	NSArray *pluginNames = [modItem plugins];
+	BOOL needsInstalling = NO;
+	NSArray *pluginNamesToInstall = [self pluginsNotInstalledFromPluginNames:pluginNames onlyNeedsInstalling:&needsInstalling];
 	
 	if (pluginNamesToInstall.count > 0)
 	{
