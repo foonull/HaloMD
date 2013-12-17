@@ -1396,7 +1396,7 @@ static id sharedInstance = nil;
 				{
 					if ([[file pathExtension] isEqualToString:@"map"] && ![[self mapsToIgnore] containsObject:[[file lastPathComponent] stringByDeletingPathExtension]] && ![[file lastPathComponent] hasPrefix:@"."])
 					{
-						if (![[appDelegate window] isKeyWindow] || ![NSApp isActive])
+						if ([self pendingPlugins] == nil && (![[appDelegate window] isKeyWindow] || ![NSApp isActive]))
 						{
 							[NSClassFromString(@"GrowlApplicationBridge")
 							 notifyWithTitle:@"Download Finished"
@@ -1512,7 +1512,7 @@ static id sharedInstance = nil;
 			
 			if (didPatch)
 			{
-				if (![[appDelegate window] isKeyWindow] || ![NSApp isActive])
+				if ([self pendingPlugins] == nil && (![[appDelegate window] isKeyWindow] || ![NSApp isActive]))
 				{
 					[NSClassFromString(@"GrowlApplicationBridge")
 					 notifyWithTitle:@"Download Finished"
