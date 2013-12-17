@@ -241,7 +241,7 @@ static id sharedInstance = nil;
 	return success;
 }
 
-- (BOOL)addPluginAtPath:(NSString *)filename
+- (BOOL)addPluginAtPath:(NSString *)filename preferringEnabledState:(BOOL)preferringEnabledState
 {
 	if ([NSBundle bundleWithPath:filename] == nil)
 	{
@@ -295,13 +295,21 @@ static id sharedInstance = nil;
 	}
 	
 	NSString *destination = nil;
-	if (existedAtDisabledPath || (!existedAtDisabledPath && !existedAtEnabledPath))
+	if (existedAtDisabledPath)
 	{
 		destination = disabledPath;
 	}
-	else
+	else if (existedAtEnabledPath)
 	{
 		destination = enabledPath;
+	}
+	else if (preferringEnabledState)
+	{
+		destination = enabledPath;
+	}
+	else
+	{
+		destination = disabledPath;
 	}
 	
 	NSError *error = nil;
@@ -1505,7 +1513,7 @@ static id sharedInstance = nil;
 				{
 					if ([[file pathExtension] isEqualToString:@"mdplugin"] && ![[file lastPathComponent] hasPrefix:@"."])
 					{
-						addedPlugin = [self addPluginAtPath:[unzipDirectory stringByAppendingPathComponent:file]];
+						addedPlugin = [self addPluginAtPath:[unzipDirectory stringByAppendingPathComponent:file] preferringEnabledState:[self pendingPlugins] == nil];
 						break;
 					}
 				}

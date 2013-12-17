@@ -260,7 +260,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		}
 		else if ([[file pathExtension] isEqualToString:@"mdplugin"])
 		{
-			[modsController addPluginAtPath:file];
+			[modsController addPluginAtPath:file preferringEnabledState:YES];
 		}
 	}
 	
