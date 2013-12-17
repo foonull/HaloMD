@@ -77,10 +77,6 @@ static void overrideList(char *a)
 	return self;
 }
 
-- (void)mapWillBegin:(NSString *)mapName
-{
-}
-
 - (void)mapDidBegin:(NSString *)mapName
 {
 }

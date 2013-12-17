@@ -81,10 +81,6 @@ static int8_t textChatOverride(int unknownZero, const uint16_t *message, int unk
 	return self;
 }
 
-- (void)mapWillBegin:(NSString *)mapName
-{
-}
-
 - (void)mapDidBegin:(NSString *)mapName
 {
 }

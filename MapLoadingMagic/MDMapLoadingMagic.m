@@ -197,10 +197,6 @@ static int8_t loadMapFunc(const char *mapName)
 	return self;
 }
 
-- (void)mapWillBegin:(NSString *)mapName
-{
-}
-
 - (void)mapDidBegin:(NSString *)mapName
 {
 }

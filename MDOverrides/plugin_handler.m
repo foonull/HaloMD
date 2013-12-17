@@ -31,7 +31,7 @@
 
 @interface NSObject (MDPluginPrivate)
 
-- (void)mapWillBegin:(NSString *)mapName;
+- (void)mdMapWillBegin:(NSString *)mapName;
 
 @end
 
@@ -159,7 +159,7 @@ static void *mdMapBegins(const char *mapName)
 		
 		loadMapBasedPlugins(gActiveMap);
 		
-		sendPluginMapChange(@selector(mapWillBegin:), gActiveMap);
+		sendPluginMapChange(@selector(mdMapWillBegin:), gActiveMap);
 		
 		result = haloMapBegins(mapName);
 		
