@@ -1924,7 +1924,7 @@ static id sharedInstance = nil;
 	NSArray *pluginNames = [modItem plugins];
 	NSMutableArray *pluginNamesToInstall = [NSMutableArray array];
 	
-	BOOL needsUpdate = NO;
+	BOOL needsInstalling = NO;
 	
 	for (NSString *pluginName in pluginNames)
 	{
@@ -1942,6 +1942,7 @@ static id sharedInstance = nil;
 		if (matchingPlugin == nil)
 		{
 			[pluginNamesToInstall addObject:pluginName];
+			needsInstalling = YES;
 			continue;
 		}
 		
@@ -1951,7 +1952,6 @@ static id sharedInstance = nil;
 		if (matchingPlugin.build < onlineItem.build)
 		{
 			[pluginNamesToInstall addObject:pluginName];
-			needsUpdate = YES;
 		}
 	}
 	
@@ -1959,7 +1959,7 @@ static id sharedInstance = nil;
 	{
 		if (NSRunAlertPanel(@"Modded Game",
 							@"Do you want to %@ %d plug-in%@ in order to join this game?",
-							@"Install", @"Cancel", nil, !needsUpdate ? @"install" : @"update", pluginNamesToInstall.count, pluginNamesToInstall.count != 1 ? @"s" : @"") == NSOKButton)
+							@"Install", @"Cancel", nil, needsInstalling ? @"install" : @"update", pluginNamesToInstall.count, pluginNamesToInstall.count != 1 ? @"s" : @"") == NSOKButton)
 		{
 			[self installPluginsWithNames:pluginNamesToInstall];
 		}
