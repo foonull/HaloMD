@@ -136,8 +136,8 @@ while true
 end
 
 for plugin_name in plugin_names
-	if mod_entries['Plug-ins'].select {|entry| entry['name'] == plugin_name}.count == 0
-		puts "ERROR: Failed to find plugin #{plugin_name}"
+	if mod_entries['Plug-ins'].select {|entry| entry['name'] == plugin_name and entry['MDMapPlugin']}.count == 0
+		puts "ERROR: Failed to find suitable plug-in #{plugin_name}"
 		exit 7
 	end
 end
