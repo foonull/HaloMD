@@ -1609,7 +1609,8 @@ static id sharedInstance = nil;
 				{
 					if ([[file pathExtension] isEqualToString:@"mdplugin"] && ![[file lastPathComponent] hasPrefix:@"."])
 					{
-						addedPlugin = [self addPluginAtPath:[unzipDirectory stringByAppendingPathComponent:file] preferringEnabledState:[self pendingPlugins] == nil];
+						BOOL preferEnabledState = ([[self currentDownloadingPlugin] globalMode] && [self pendingPlugins] == nil);
+						addedPlugin = [self addPluginAtPath:[unzipDirectory stringByAppendingPathComponent:file] preferringEnabledState:preferEnabledState];
 						break;
 					}
 				}
