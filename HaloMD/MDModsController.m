@@ -1652,13 +1652,18 @@ static id sharedInstance = nil;
 			}
 		}
 		
-		if ([self pendingPlugins] == nil && [self joiningServer] != nil)
+		if ([self pendingPlugins] == nil)
 		{
-			if (addedPlugin && [[appDelegate window] isKeyWindow] && [NSApp isActive])
+			[self makePluginMenuItems];
+			
+			if ([self joiningServer] != nil)
 			{
-				[appDelegate joinServer:[self joiningServer]];
+				if (addedPlugin && [[appDelegate window] isKeyWindow] && [NSApp isActive])
+				{
+					[appDelegate joinServer:[self joiningServer]];
+				}
+				[self setJoiningServer:nil];
 			}
-			[self setJoiningServer:nil];
 		}
 	}
 	
