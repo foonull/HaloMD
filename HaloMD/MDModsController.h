@@ -55,12 +55,15 @@
 	NSMutableArray *modMenuItems;
 	NSMutableDictionary *modListDictionary;
 	NSMutableArray *pluginMenuItems;
+	NSMutableDictionary *pluginListDictionary;
 	
 	NSURLDownload *modDownload;
 	NSString *urlToOpen;
 	
 	NSString *currentDownloadingMapIdentifier;
 	NSString *pendingDownload;
+	
+	NSMutableArray *pendingPlugins;
 	
 	MDModPatch *currentDownloadingPatch;
 	
@@ -84,12 +87,14 @@
 @property (nonatomic, retain) NSMutableArray *modMenuItems;
 @property (nonatomic, retain) NSMutableDictionary *modListDictionary;
 @property (nonatomic, retain) NSMutableArray *pluginMenuItems;
+@property (nonatomic, retain) NSMutableDictionary *pluginListDictionary;
 @property (nonatomic, copy) NSString *currentDownloadingMapIdentifier;
 @property (nonatomic, readwrite) BOOL isInitiated;
 @property (nonatomic, retain) NSURLDownload *modDownload;
 @property (nonatomic, copy) NSString *urlToOpen;
 @property (nonatomic, readwrite) BOOL didDownloadModList;
 @property (nonatomic, copy) NSString *pendingDownload;
+@property (nonatomic, retain) NSMutableArray *pendingPlugins;
 @property (nonatomic, readwrite) BOOL isWritingUI;
 @property (nonatomic, retain) MDModPatch *currentDownloadingPatch;
 @property (nonatomic, retain) MDPluginListItem *currentDownloadingPlugin;

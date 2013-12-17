@@ -67,6 +67,7 @@
 @synthesize modMenuItems;
 @synthesize modListDictionary;
 @synthesize pluginMenuItems;
+@synthesize pluginListDictionary;
 @synthesize currentDownloadingMapIdentifier;
 @synthesize isInitiated;
 @synthesize modDownload;
@@ -77,6 +78,7 @@
 @synthesize currentDownloadingPatch;
 @synthesize currentDownloadingPlugin;
 @synthesize joiningServer;
+@synthesize pendingPlugins;
 
 static id sharedInstance = nil;
 + (id)modsController
@@ -805,6 +807,28 @@ static id sharedInstance = nil;
 	}
 }
 
+- (void)installPluginsWithNames:(NSArray *)pluginNamesToInstall
+{
+	NSMutableArray *plugins = [NSMutableArray array];
+	for (NSString *pluginName in pluginNamesToInstall)
+	{
+		MDPluginListItem *plugin = [pluginListDictionary objectForKey:pluginName];
+		if (plugin != nil)
+		{
+			[plugins addObject:plugin];
+		}
+	}
+	
+	if (plugins.count > 0)
+	{
+		[self downloadPlugin:[plugins objectAtIndex:0]];
+		if (plugins.count > 1)
+		{
+			[self setPendingPlugins:plugins];
+		}
+	}
+}
+
 - (void)installPlugin:(id)sender
 {
 	[self installOnlinePlugin:[sender representedObject]];
@@ -1042,6 +1066,8 @@ static id sharedInstance = nil;
 - (void)makePluginsList
 {
 	NSDictionary *pluginsDictionary = [[self dictionaryFromJSONPath:MODS_LIST_PATH] objectForKey:@"Plug-ins"];
+	[self setPluginListDictionary:[NSMutableDictionary dictionary]];
+	
 	if (pluginsDictionary == nil)
 	{
 		NSLog(@"Plug-ins: Failed to load %@", MODS_LIST_PATH);
@@ -1073,6 +1099,11 @@ static id sharedInstance = nil;
 			if (newItem.globalMode)
 			{
 				[pluginItems addObject:newItem];
+			}
+			
+			if (newItem.globalMode || newItem.mapMode)
+			{
+				[pluginListDictionary setObject:newItem forKey:name];
 			}
 			
 			[newItem release];
@@ -1221,6 +1252,8 @@ static id sharedInstance = nil;
 			[[NSFileManager defaultManager] removeItemAtPath:unzipDirectory error:nil];
 		}
 		
+		BOOL addedMod = NO;
+		
 		if ([[NSFileManager defaultManager] createDirectoryAtPath:unzipDirectory withIntermediateDirectories:NO attributes:nil error:nil])
 		{
 			NSTask *unzipTask = [[NSTask alloc] init];
@@ -1263,9 +1296,16 @@ static id sharedInstance = nil;
 							 clickContext:@"ModDownloaded"];
 						}
 						
-						if ([self addModAtPath:[unzipDirectory stringByAppendingPathComponent:file]] && [[appDelegate window] isKeyWindow] && [NSApp isActive] && [self joiningServer])
+						if ([self addModAtPath:[unzipDirectory stringByAppendingPathComponent:file]])
+						{
+							addedMod = YES;
+						}
+						
+						if (addedMod && [self pendingPlugins] == nil && [[appDelegate window] isKeyWindow] && [NSApp isActive] && [self joiningServer])
 						{
 							[appDelegate joinServer:[self joiningServer]	];
+							[self setJoiningServer:nil];
+							break;
 						}
 					}
 				}
@@ -1286,7 +1326,10 @@ static id sharedInstance = nil;
 							@"OK", nil, nil, [[modListDictionary objectForKey:[self currentDownloadingMapIdentifier]] name]);
 		}
 		
-		[self setJoiningServer:nil];
+		if (!addedMod)
+		{
+			[self setJoiningServer:nil];
+		}
 		
 		[appDelegate setStatus:nil];
 		[cancelButton setHidden:YES];
@@ -1294,11 +1337,22 @@ static id sharedInstance = nil;
 		
 		[self setModDownload:nil];
 		
-		[self setCurrentDownloadingMapIdentifier:nil];
+		NSArray *plugins = [[modListDictionary objectForKey:[self currentDownloadingMapIdentifier]] plugins];
+		if (plugins != nil && plugins.count > 0)
+		{
+			[self setCurrentDownloadingMapIdentifier:nil];
+			[self installPluginsWithNames:plugins];
+		}
+		else
+		{
+			[self setCurrentDownloadingMapIdentifier:nil];
+		}
 	}
 	else if ([[self directoryNameFromRequest:download.request] isEqualToString:@"patches"])
 	{
 		NSString *baseMapPath = [self originalMapPathFromIdentifier:[[self currentDownloadingPatch] baseIdentifier]];
+		
+		BOOL addedMod = NO;
 		
 		if (![[NSFileManager defaultManager] fileExistsAtPath:baseMapPath])
 		{
@@ -1357,9 +1411,12 @@ static id sharedInstance = nil;
 					 clickContext:@"ModDownloaded"];
 				}
 				
-				if ([self addModAtPath:newMapPath] && [[appDelegate window] isKeyWindow] && [NSApp isActive] && [self joiningServer])
+				addedMod = [self addModAtPath:newMapPath];
+				
+				if (addedMod && [self pendingPlugins] == nil && [[appDelegate window] isKeyWindow] && [NSApp isActive] && [self joiningServer])
 				{
 					[appDelegate joinServer:[self joiningServer]];
+					[self setJoiningServer:nil];
 				}
 			}
 			else
@@ -1372,7 +1429,10 @@ static id sharedInstance = nil;
 			[[NSFileManager defaultManager] removeItemAtPath:MOD_PATCH_DOWNLOAD_FILE error:nil];
 		}
 		
-		[self setJoiningServer:nil];
+		if (!addedMod)
+		{
+			[self setJoiningServer:nil];
+		}
 		
 		[appDelegate setStatus:nil];
 		[cancelButton setHidden:YES];
@@ -1381,7 +1441,17 @@ static id sharedInstance = nil;
 		[self setModDownload:nil];
 		
 		[self setCurrentDownloadingPatch:nil];
-		[self setCurrentDownloadingMapIdentifier:nil];
+		
+		NSArray *plugins = [[modListDictionary objectForKey:[self currentDownloadingMapIdentifier]] plugins];
+		if (plugins != nil && plugins.count > 0)
+		{
+			[self setCurrentDownloadingMapIdentifier:nil];
+			[self installPluginsWithNames:plugins];
+		}
+		else
+		{
+			[self setCurrentDownloadingMapIdentifier:nil];
+		}
 	}
 	else if ([[self directoryNameFromRequest:download.request] isEqualToString:@"plug-ins"])
 	{
@@ -1390,6 +1460,8 @@ static id sharedInstance = nil;
 		{
 			[[NSFileManager defaultManager] removeItemAtPath:unzipDirectory error:nil];
 		}
+		
+		BOOL addedPlugin = NO;
 		
 		if ([[NSFileManager defaultManager] createDirectoryAtPath:unzipDirectory withIntermediateDirectories:NO attributes:nil error:nil])
 		{
@@ -1421,7 +1493,8 @@ static id sharedInstance = nil;
 				{
 					if ([[file pathExtension] isEqualToString:@"mdplugin"] && ![[file lastPathComponent] hasPrefix:@"."])
 					{
-						[self addPluginAtPath:[unzipDirectory stringByAppendingPathComponent:file]];
+						addedPlugin = [self addPluginAtPath:[unzipDirectory stringByAppendingPathComponent:file]];
+						break;
 					}
 				}
 			}
@@ -1442,6 +1515,35 @@ static id sharedInstance = nil;
 		[cancelButton setHidden:YES];
 		[refreshButton setHidden:NO];
 		[self setCurrentDownloadingPlugin:nil];
+		
+		if (!addedPlugin)
+		{
+			[self setPendingPlugins:nil];
+		}
+		else
+		{
+			if ([[self pendingPlugins] count] > 0)
+			{
+				[[self pendingPlugins] removeObjectAtIndex:0];
+				if ([[self pendingPlugins] count] == 0)
+				{
+					[self setPendingPlugins:nil];
+				}
+				else
+				{
+					[self downloadPlugin:[[self pendingPlugins] objectAtIndex:0]];
+				}
+			}
+		}
+		
+		if ([self pendingPlugins] == nil && [self joiningServer] != nil)
+		{
+			if (addedPlugin && [[appDelegate window] isKeyWindow] && [NSApp isActive])
+			{
+				[appDelegate joinServer:[self joiningServer]];
+			}
+			[self setJoiningServer:nil];
+		}
 	}
 	
 	[download release];
@@ -1551,6 +1653,7 @@ static id sharedInstance = nil;
 			[cancelButton setHidden:YES];
 			[refreshButton setHidden:NO];
 			[self setModDownload:nil];
+			[self setPendingPlugins:nil];
 			
 			if ([[NSFileManager defaultManager] fileExistsAtPath:destination])
 			{
@@ -1801,6 +1904,8 @@ static id sharedInstance = nil;
 		[self setCurrentDownloadingMapIdentifier:nil];
 		[self setCurrentDownloadingPatch:nil];
 		[self setCurrentDownloadingPlugin:nil];
+		[self setPendingPlugins:nil];
+		[self setJoiningServer:nil];
 		[appDelegate setStatus:nil];
 		[cancelButton setHidden:YES];
 		[refreshButton setHidden:NO];
