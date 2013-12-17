@@ -1965,6 +1965,7 @@ static id sharedInstance = nil;
 							@"Do you want to %@ %d plug-in%@ in order to join this game?",
 							@"Install", @"Cancel", nil, needsInstalling ? @"install" : @"update", pluginNamesToInstall.count, pluginNamesToInstall.count != 1 ? @"s" : @"") == NSOKButton)
 		{
+			[self setJoiningServer:server];
 			[self installPluginsWithNames:pluginNamesToInstall];
 		}
 	}
