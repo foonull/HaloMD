@@ -35,7 +35,7 @@
 
 @implementation MDPluginListItem
 
-@synthesize filename;
+@synthesize name;
 @synthesize enabled;
 @synthesize version;
 @synthesize build;

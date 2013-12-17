@@ -60,7 +60,7 @@
 #define MOD_PATCH_DOWNLOAD_URL [NSURL URLWithString:[NSString stringWithFormat:@"http://halomd.macgamingmods.com/mods/%@", [[self currentDownloadingPatch] path]]]
 #define MOD_PATCH_DOWNLOAD_FILE [NSTemporaryDirectory() stringByAppendingPathComponent:@"HaloMD_download_file.mdpatch"]
 
-#define PLUGIN_DOWNLOAD_URL [NSURL URLWithString:[[NSString stringWithFormat:@"http://halomd.macgamingmods.com/mods/plug-ins/%@.zip", [[self currentDownloadingPlugin] filename]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]
+#define PLUGIN_DOWNLOAD_URL [NSURL URLWithString:[[NSString stringWithFormat:@"http://halomd.macgamingmods.com/mods/plug-ins/%@.zip", [[self currentDownloadingPlugin] name]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]
 #define PLUGIN_DOWNLOAD_FILE [NSTemporaryDirectory() stringByAppendingPathComponent:@"HaloMD_download_plugin.zip"]
 
 #define PLUGINS_DIRECTORY [[appDelegate applicationSupportPath] stringByAppendingPathComponent:@"PlugIns"]
@@ -656,8 +656,8 @@ static id sharedInstance = nil;
 - (void)enablePlugin:(NSMenuItem *)menuItem
 {
 	MDPluginListItem *pluginItem = [menuItem representedObject];
-	NSString *normalPath = [PLUGINS_DIRECTORY stringByAppendingPathComponent:pluginItem.filename];
-	NSString *disabledPath = [PLUGINS_DISABLED_DIRECTORY stringByAppendingPathComponent:pluginItem.filename];
+	NSString *normalPath = [PLUGINS_DIRECTORY stringByAppendingPathComponent:[pluginItem.name stringByAppendingPathExtension:@"mdplugin"]];
+	NSString *disabledPath = [PLUGINS_DISABLED_DIRECTORY stringByAppendingPathComponent:[pluginItem.name stringByAppendingPathExtension:@"mdplugin"]];
 	
 	if (pluginItem.enabled)
 	{
@@ -709,7 +709,7 @@ static id sharedInstance = nil;
 					MDPluginListItem *pluginItem = [[MDPluginListItem alloc] init];
 					
 					pluginItem.enabled = enabled;
-					pluginItem.filename = file;
+					pluginItem.name = [file stringByDeletingPathExtension];
 					
 					[pluginItems addObject:pluginItem];
 					
@@ -765,14 +765,14 @@ static id sharedInstance = nil;
 	[self addPluginsFromDirectory:PLUGINS_DIRECTORY intoArray:newPluginItems enabled:YES];
 	[self addPluginsFromDirectory:PLUGINS_DISABLED_DIRECTORY intoArray:newPluginItems enabled:NO];
 	
-	NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"filename" ascending:YES selector:@selector(caseInsensitiveCompare:)] autorelease];
+	NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)] autorelease];
 	NSArray *sortedItems = [newPluginItems sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 	
 	if (sortedItems.count > 0)
 	{
 		for (MDPluginListItem *pluginItem in newPluginItems)
 		{
-			NSMenuItem *newMenuItem = [[NSMenuItem alloc] initWithTitle:[pluginItem.filename stringByDeletingPathExtension] action:@selector(enablePlugin:) keyEquivalent:@""];
+			NSMenuItem *newMenuItem = [[NSMenuItem alloc] initWithTitle:pluginItem.name action:@selector(enablePlugin:) keyEquivalent:@""];
 			newMenuItem.representedObject = pluginItem;
 			newMenuItem.target = self;
 			
@@ -805,7 +805,7 @@ static id sharedInstance = nil;
 	{
 		NSRunAlertPanel(@"Installation in Progress",
 						@"You are currently installing %@. Please try again when the installation finishes.",
-						@"OK", nil, nil, [[self currentDownloadingPlugin] filename]);
+						@"OK", nil, nil, [[self currentDownloadingPlugin] name]);
 		hadToReport = YES;
 	}
 	
@@ -1115,7 +1115,7 @@ static id sharedInstance = nil;
 			BOOL mapMode = [[pluginDictionary objectForKey:@"MDMapPlugin"] boolValue];
 			
 			MDPluginListItem *newItem = [[MDPluginListItem alloc] init];
-			newItem.filename = name;
+			newItem.name = name;
 			newItem.description = description;
 			newItem.build = buildNumber;
 			newItem.version = version;
@@ -1135,12 +1135,12 @@ static id sharedInstance = nil;
 			[newItem release];
 		}
 		
-		NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"filename" ascending:YES selector:@selector(caseInsensitiveCompare:)] autorelease];
+		NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)] autorelease];
 		NSArray *sortedPlugins = [pluginItems sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 		
 		for (MDPluginListItem *plugin in sortedPlugins)
 		{
-			NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:plugin.filename action:@selector(installPlugin:) keyEquivalent:@""];
+			NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:plugin.name action:@selector(installPlugin:) keyEquivalent:@""];
 			[menuItem setTarget:self];
 			[menuItem setToolTip:plugin.description];
 			[menuItem setRepresentedObject:plugin];
@@ -1148,6 +1148,21 @@ static id sharedInstance = nil;
 			[onlinePluginsMenu addItem:menuItem];
 			
 			[menuItem release];
+		}
+	}
+	
+	for (NSMenuItem *menuItem in [self pluginMenuItems])
+	{
+		MDPluginListItem *plugin = [menuItem representedObject];
+		MDPluginListItem *onlinePlugin = [pluginListDictionary objectForKey:plugin.name];
+		if (plugin == nil || onlinePlugin == nil)
+		{
+			continue;
+		}
+		
+		if (onlinePlugin.description != nil)
+		{
+			[menuItem setToolTip:onlinePlugin.description];
 		}
 	}
 }
@@ -1212,7 +1227,7 @@ static id sharedInstance = nil;
 	for (NSMenuItem *menuItem in [self pluginMenuItems])
 	{
 		MDPluginListItem *pluginItem = [menuItem representedObject];
-		MDPluginListItem *onlinePluginItem = [pluginListDictionary objectForKey:[pluginItem filename]];
+		MDPluginListItem *onlinePluginItem = [pluginListDictionary objectForKey:[pluginItem name]];
 		if (pluginItem == nil || onlinePluginItem == nil)
 		{
 			continue;
@@ -1240,7 +1255,7 @@ static id sharedInstance = nil;
 	
 	if (randomItem != nil)
 	{
-		NSAttributedString *statusString =  [NSAttributedString MDHyperlinkFromString:[NSString stringWithFormat:@"Update %@ (Plug-in)", [randomItem filename]] withURL:[NSURL URLWithString:[[NSString stringWithFormat:@"halomdplugininstall://%@", [randomItem filename]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+		NSAttributedString *statusString =  [NSAttributedString MDHyperlinkFromString:[NSString stringWithFormat:@"Update %@ (Plug-in)", [randomItem name]] withURL:[NSURL URLWithString:[[NSString stringWithFormat:@"halomdplugininstall://%@", [randomItem name]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
 		
 		[appDelegate setStatus:statusString];
 	}
@@ -1580,7 +1595,7 @@ static id sharedInstance = nil;
 			{
 				NSRunAlertPanel(@"Plug-in Installation Failed",
 								@"%@ failed to install. Perhaps the downloaded file was corrupted.",
-								@"OK", nil, nil, [[self currentDownloadingPlugin] filename]);
+								@"OK", nil, nil, [[self currentDownloadingPlugin] name]);
 			}
 			
 			[[NSFileManager defaultManager] removeItemAtPath:unzipDirectory error:nil];
@@ -1641,7 +1656,7 @@ static id sharedInstance = nil;
 			}
 			if ([[self directoryNameFromRequest:download.request] isEqualToString:@"plug-ins"])
 			{
-				[appDelegate setStatusWithoutWait:[NSString stringWithFormat:@"Installing Plug-in %@... (%d%%)", [[self currentDownloadingPlugin] filename], (int)((100.0 * currentContentLength) / expectedContentLength)]];
+				[appDelegate setStatusWithoutWait:[NSString stringWithFormat:@"Installing Plug-in %@... (%d%%)", [[self currentDownloadingPlugin] name], (int)((100.0 * currentContentLength) / expectedContentLength)]];
 			}
 			else
 			{
@@ -1713,7 +1728,7 @@ static id sharedInstance = nil;
 			{
 				NSRunAlertPanel(@"Plug-in Download Failed",
 								@"%@ failed to finish downloading.",
-								@"OK", nil, nil, [[self currentDownloadingPlugin] filename]);
+								@"OK", nil, nil, [[self currentDownloadingPlugin] name]);
 			}
 			else
 			{
@@ -1829,7 +1844,7 @@ static id sharedInstance = nil;
 {
 	[self setCurrentDownloadingPlugin:plugin];
 	
-	[appDelegate setStatus:[NSString stringWithFormat:@"Installing %@ (Plug-in)...", plugin.filename]];
+	[appDelegate setStatus:[NSString stringWithFormat:@"Installing %@ (Plug-in)...", plugin.name]];
 	
 	[resumeTimeoutDate release];
 	resumeTimeoutDate = nil;
