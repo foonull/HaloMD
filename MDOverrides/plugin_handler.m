@@ -157,9 +157,9 @@ static void *mdMapBegins(const char *mapName)
 		[gActiveMap release];
 		gActiveMap = [[NSString stringWithUTF8String:mapName] retain];
 		
-		loadMapBasedPlugins(gActiveMap);
-		
 		sendPluginMapChange(@selector(mdMapWillBegin:), gActiveMap);
+		
+		loadMapBasedPlugins(gActiveMap);
 		
 		result = haloMapBegins(mapName);
 		
