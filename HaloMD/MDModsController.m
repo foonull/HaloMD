@@ -1408,17 +1408,7 @@ static id sharedInstance = nil;
 							 clickContext:@"ModDownloaded"];
 						}
 						
-						if ([self addModAtPath:[unzipDirectory stringByAppendingPathComponent:file]])
-						{
-							addedMod = YES;
-						}
-						
-						if (addedMod && [self pendingPlugins] == nil && [[appDelegate window] isKeyWindow] && [NSApp isActive] && [self joiningServer])
-						{
-							[appDelegate joinServer:[self joiningServer]	];
-							[self setJoiningServer:nil];
-							break;
-						}
+						addedMod = [self addModAtPath:[unzipDirectory stringByAppendingPathComponent:file]];
 					}
 				}
 			}
@@ -1438,11 +1428,6 @@ static id sharedInstance = nil;
 							@"OK", nil, nil, [[modListDictionary objectForKey:[self currentDownloadingMapIdentifier]] name]);
 		}
 		
-		if (!addedMod)
-		{
-			[self setJoiningServer:nil];
-		}
-		
 		[appDelegate setStatus:nil];
 		[cancelButton setHidden:YES];
 		[refreshButton setHidden:NO];
@@ -1458,6 +1443,22 @@ static id sharedInstance = nil;
 		else
 		{
 			[self setCurrentDownloadingMapIdentifier:nil];
+		}
+		
+		if (!addedMod)
+		{
+			[self setJoiningServer:nil];
+		}
+		else
+		{
+			if ([self pendingPlugins] == nil)
+			{
+				if ([[appDelegate window] isKeyWindow] && [NSApp isActive] && [self joiningServer])
+				{
+					[appDelegate joinServer:[self joiningServer]	];
+				}
+				[self setJoiningServer:nil];
+			}
 		}
 	}
 	else if ([[self directoryNameFromRequest:download.request] isEqualToString:@"patches"])
@@ -1524,12 +1525,6 @@ static id sharedInstance = nil;
 				}
 				
 				addedMod = [self addModAtPath:newMapPath];
-				
-				if (addedMod && [self pendingPlugins] == nil && [[appDelegate window] isKeyWindow] && [NSApp isActive] && [self joiningServer])
-				{
-					[appDelegate joinServer:[self joiningServer]];
-					[self setJoiningServer:nil];
-				}
 			}
 			else
 			{
@@ -1539,11 +1534,6 @@ static id sharedInstance = nil;
 			}
 			
 			[[NSFileManager defaultManager] removeItemAtPath:MOD_PATCH_DOWNLOAD_FILE error:nil];
-		}
-		
-		if (!addedMod)
-		{
-			[self setJoiningServer:nil];
 		}
 		
 		[appDelegate setStatus:nil];
@@ -1563,6 +1553,22 @@ static id sharedInstance = nil;
 		else
 		{
 			[self setCurrentDownloadingMapIdentifier:nil];
+		}
+		
+		if (!addedMod)
+		{
+			[self setJoiningServer:nil];
+		}
+		else
+		{
+			if ([self pendingPlugins] == nil)
+			{
+				if ([[appDelegate window] isKeyWindow] && [NSApp isActive] && [self joiningServer])
+				{
+					[appDelegate joinServer:[self joiningServer]	];
+				}
+				[self setJoiningServer:nil];
+			}
 		}
 	}
 	else if ([[self directoryNameFromRequest:download.request] isEqualToString:@"plug-ins"])
