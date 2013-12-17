@@ -665,15 +665,24 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	
 	// important to check when this action is sent from double clicking in the table
 	if ([joinButton isEnabled])
-	{	
-		NSString *mapsDirectory = [[[self applicationSupportPath] stringByAppendingPathComponent:@"GameData"] stringByAppendingPathComponent:@"Maps"];
-		NSString *mapFile = [[server map] stringByAppendingPathExtension:@"map"];
-		
-		if (![[NSFileManager defaultManager] fileExistsAtPath:[mapsDirectory stringByAppendingPathComponent:mapFile]] && ![[MDServer formalizedMapsDictionary] objectForKey:[server map]])
+	{
+		if (![[MDServer formalizedMapsDictionary] objectForKey:[server map]])
 		{
-			// It's a mod that needs to be downloaded
-			[modsController requestModDownload:[server map] andJoinServer:server];
-			return;
+			NSString *mapsDirectory = [[[self applicationSupportPath] stringByAppendingPathComponent:@"GameData"] stringByAppendingPathComponent:@"Maps"];
+			NSString *mapFile = [[server map] stringByAppendingPathExtension:@"map"];
+			
+			if (![[NSFileManager defaultManager] fileExistsAtPath:[mapsDirectory stringByAppendingPathComponent:mapFile]])
+			{
+				// It's a mod that needs to be downloaded
+				[modsController requestModDownload:[server map] andJoinServer:server];
+				return;
+			}
+			
+			if ([modsController requestPluginDownloadIfNeededFromMod:[server map] andJoinServer:server])
+			{
+				// At least one plug-in needs to be downloaded
+				return;
+			}
 		}
 		
 		if ([server passwordProtected])

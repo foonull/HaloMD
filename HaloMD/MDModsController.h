@@ -113,6 +113,8 @@
 - (BOOL)writeCurrentModIdentifier:(NSString *)mapIdentifier;
 
 - (void)requestModDownload:(NSString *)mapIdentifier andJoinServer:(MDServer *)server;
+- (BOOL)requestPluginDownloadIfNeededFromMod:(NSString *)mapIdentifier andJoinServer:(MDServer *)server;
+
 - (void)enableModWithMapIdentifier:(NSString *)mapIdentifier;
 
 - (IBAction)cancelInstallation:(id)sender;

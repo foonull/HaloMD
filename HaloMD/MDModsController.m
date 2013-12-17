@@ -1878,14 +1878,7 @@ static id sharedInstance = nil;
 - (void)requestModDownload:(NSString *)mapIdentifier andJoinServer:(MDServer *)server
 {
 	MDModListItem *listItem = [modListDictionary objectForKey:mapIdentifier];
-	
-	if ([self currentDownloadingMapIdentifier])
-	{
-		NSRunAlertPanel(@"Modded Game",
-						@"In order to join this game, you will have to install %@. However, you are currently installing %@. Please try again when the installation finishes.",
-						@"OK", nil, nil, [listItem name], [[modListDictionary objectForKey:[self currentDownloadingMapIdentifier]] name]);
-	}
-	else
+	if (![self reportWhatIsInstalling])
 	{
 		NSString *modName = [[modListDictionary objectForKey:mapIdentifier] name];
 		
@@ -1920,6 +1913,59 @@ static id sharedInstance = nil;
 			[self downloadMod:mapIdentifier];
 		}
 	}
+}
+
+- (BOOL)requestPluginDownloadIfNeededFromMod:(NSString *)mapIdentifier andJoinServer:(MDServer *)server
+{
+	if ([self reportWhatIsInstalling]) return YES;
+	
+	MDModListItem *modItem = [modListDictionary objectForKey:mapIdentifier];
+	
+	NSArray *pluginNames = [modItem plugins];
+	NSMutableArray *pluginNamesToInstall = [NSMutableArray array];
+	
+	BOOL needsUpdate = NO;
+	
+	for (NSString *pluginName in pluginNames)
+	{
+		MDPluginListItem *matchingPlugin = nil;
+		for (NSMenuItem *menuItem in [self pluginMenuItems])
+		{
+			MDPluginListItem *pluginItem = [menuItem representedObject];
+			if ([pluginItem.name isEqualToString:pluginName])
+			{
+				matchingPlugin = pluginItem;
+				break;
+			}
+		}
+		
+		if (matchingPlugin == nil)
+		{
+			[pluginNamesToInstall addObject:pluginName];
+			continue;
+		}
+		
+		MDPluginListItem *onlineItem = [pluginListDictionary objectForKey:pluginName];
+		if (onlineItem == nil || onlineItem.build == 0) continue;
+		
+		if (matchingPlugin.build < onlineItem.build)
+		{
+			[pluginNamesToInstall addObject:pluginName];
+			needsUpdate = YES;
+		}
+	}
+	
+	if (pluginNamesToInstall.count > 0)
+	{
+		if (NSRunAlertPanel(@"Modded Game",
+							@"Do you want to %@ %d plug-in%@ in order to join this game?",
+							@"Install", @"Cancel", nil, !needsUpdate ? @"install" : @"update", pluginNamesToInstall.count, pluginNamesToInstall.count != 1 ? @"s" : @"") == NSOKButton)
+		{
+			[self installPluginsWithNames:pluginNamesToInstall];
+		}
+	}
+	
+	return pluginNamesToInstall.count > 0;
 }
 
 - (void)openURL:(NSString *)url
