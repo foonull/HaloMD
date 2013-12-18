@@ -37,6 +37,9 @@
 
 @protocol MDPlugin <NSObject>
 
+// You should have CFBundleVersion in your info.plist set, and it should be an integer greater than 0 that increases for each version you send out
+// It would also be a good idea to set CFBundleShortVersionString, your humanized friendly version (eg: 1.0)
+
 // If you set MDGlobalPlugin key to true in your info.plist, then your plug-in will show up in the menu and the user will be able to enable or disable it
 // If you set MDMapPlugin key to true in your info.plist, then your plug-in can be a dependence to map mods in the database
 // It is possible for a plug-in to have both of these keys set to true, and distinguish at run-time which mode it is being run through. At least one of these keys must be set to true.
