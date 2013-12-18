@@ -232,7 +232,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 
 - (NSString *)applicationSupportPath
 {
-	return [[[self libraryPath] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"HaloMD"];
+	return [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"HaloMD"];
 }
 
 - (NSString *)resourceDataPath
