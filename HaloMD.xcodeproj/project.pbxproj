@@ -24,8 +24,6 @@
 		774EF68B17C72142005ABB20 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF68A17C72142005ABB20 /* JSONKit.m */; };
 		774EF68E17C72178005ABB20 /* DSClickableURLTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF68D17C72178005ABB20 /* DSClickableURLTextField.m */; };
 		774EF69217C721D1005ABB20 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 774EF69117C721D1005ABB20 /* Sparkle.framework */; };
-		774EF69417C721D5005ABB20 /* TCMPortMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 774EF69317C721D5005ABB20 /* TCMPortMapper.framework */; };
-		774EF69517C7222D005ABB20 /* TCMPortMapper.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 774EF69317C721D5005ABB20 /* TCMPortMapper.framework */; };
 		774EF69617C7222D005ABB20 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 774EF69117C721D1005ABB20 /* Sparkle.framework */; };
 		774EF69717C7222D005ABB20 /* Growl.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 774EF68F17C721CC005ABB20 /* Growl.framework */; };
 		775B529814D331C800B874E3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 775B529614D331C800B874E3 /* InfoPlist.strings */; };
@@ -135,7 +133,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				77E6C6CE1841493200705ED5 /* MDOverrides.dylib in Copy Frameworks */,
-				774EF69517C7222D005ABB20 /* TCMPortMapper.framework in Copy Frameworks */,
 				774EF69617C7222D005ABB20 /* Sparkle.framework in Copy Frameworks */,
 				774EF69717C7222D005ABB20 /* Growl.framework in Copy Frameworks */,
 			);
@@ -185,7 +182,6 @@
 		774EF68D17C72178005ABB20 /* DSClickableURLTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DSClickableURLTextField.m; path = vendor/DSClickableURLTextField.m; sourceTree = SOURCE_ROOT; };
 		774EF68F17C721CC005ABB20 /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Growl.framework; path = vendor/Growl.framework; sourceTree = "<group>"; };
 		774EF69117C721D1005ABB20 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = vendor/Sparkle.framework; sourceTree = "<group>"; };
-		774EF69317C721D5005ABB20 /* TCMPortMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TCMPortMapper.framework; path = vendor/TCMPortMapper.framework; sourceTree = "<group>"; };
 		775B528914D331C800B874E3 /* HaloMD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HaloMD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		775B529514D331C800B874E3 /* HaloMD-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "HaloMD-Info.plist"; sourceTree = "<group>"; };
 		775B529714D331C800B874E3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -275,7 +271,6 @@
 				77E7E2951724B16000E18FB9 /* IOKit.framework in Frameworks */,
 				77E7E2971724B17300E18FB9 /* CoreFoundation.framework in Frameworks */,
 				774EF69217C721D1005ABB20 /* Sparkle.framework in Frameworks */,
-				774EF69417C721D5005ABB20 /* TCMPortMapper.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -355,7 +350,6 @@
 				7709F96A1846C256005E58F5 /* Cocoa.framework */,
 				77BC675A184040DF00F82849 /* CoreServices.framework */,
 				77BC6758184040D400F82849 /* Foundation.framework */,
-				774EF69317C721D5005ABB20 /* TCMPortMapper.framework */,
 				774EF69117C721D1005ABB20 /* Sparkle.framework */,
 				774EF68F17C721CC005ABB20 /* Growl.framework */,
 				77E7E2961724B17300E18FB9 /* CoreFoundation.framework */,

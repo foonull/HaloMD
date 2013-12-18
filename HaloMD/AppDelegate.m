@@ -44,7 +44,6 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <IOKit/IOKitLib.h>
 #import <Growl/Growl.h>
-#import <TCMPortMapper/TCMPortMapper.h>
 
 @interface AppDelegate (Private)
 
@@ -757,42 +756,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	return [[NSData dataWithBytesNoCopy:calloc(1, SAVEGAME_DATA_LENGTH) length:SAVEGAME_DATA_LENGTH freeWhenDone:YES] writeToFile:path atomically:YES];
 }
 
-- (void)mapHostPorts
-{
-	NSString *profileSettingsPath = [self profileSettingsPath];
-	if (profileSettingsPath)
-	{
-		NSData *profileData = [NSData dataWithContentsOfFile:profileSettingsPath];
-		if ([profileData length] >= 0x1002+0x4)
-		{
-			uint16_t hostPort = *(uint16_t *)([profileData bytes] + 0x1002);
-			[[TCMPortMapper sharedInstance] addPortMapping:[TCMPortMapping portMappingWithLocalPort:hostPort desiredExternalPort:hostPort transportProtocol:TCMPortMappingTransportProtocolUDP userInfo:nil]];
-			
-			[[TCMPortMapper sharedInstance] start];
-			
-			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(portMapperDidFinishWork:) name:TCMPortMapperDidFinishWorkNotification object:[TCMPortMapper sharedInstance]];
-			
-			if (![[TCMPortMapper sharedInstance] isAtWork])
-			{
-				[self portMapperDidFinishWork:nil];
-			}
-		}
-	}
-}
-
-- (void)portMapperDidFinishWork:(NSNotification *)notification
-{
-	TCMPortMapping *portMapping = [[[TCMPortMapper sharedInstance] portMappings] anyObject];
-	if ([portMapping mappingStatus] != TCMPortMappingStatusMapped)
-	{
-		NSLog(@"Error: Could not add port mapping with protocol %d, local port %d, desired external port %d, external port %d", [portMapping transportProtocol], [portMapping localPort], [portMapping desiredExternalPort], [portMapping externalPort]);
-	}
-	else if ([portMapping desiredExternalPort] != [portMapping externalPort])
-	{
-		NSLog(@"Irregularity: desired external port %d != external port %d", [portMapping desiredExternalPort], [portMapping externalPort]);
-	}
-}
-
 - (void)fixDefaultScoreButton
 {
 	NSString *profileSettingsPath = [self profileSettingsPath];
@@ -1484,8 +1447,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	
 	if ([[NSFileManager defaultManager] fileExistsAtPath:haloMDDocumentsPath])
 	{
-		//[self mapHostPorts];
-		
 	#ifndef __ppc__
 		if (![[NSUserDefaults standardUserDefaults] boolForKey:HALO_FIX_SCORE_KEY])
 		{
