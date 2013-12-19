@@ -80,11 +80,6 @@ end
 
 plugin_version = info_entries['CFBundleShortVersionString']
 
-if plugin_version.to_i == 0 or (previous_versions.count > 0 and previous_versions[0]['version'].to_i >= plugin_version.to_i)
-	puts "ERROR: Plugin version #{plugin_version} is insufficient"
-	exit 11
-end
-
 unless info_entries.key? 'MDGlobalPlugin'
 	puts "ERROR: Failed to find MDGlobalPlugin entry"
 	exit 6
