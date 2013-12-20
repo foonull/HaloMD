@@ -38,6 +38,7 @@
 @class MDServer;
 @class DSClickableURLTextField;
 @class MDChatWindowController;
+@class MDGameFavoritesWindowController;
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 {
@@ -58,6 +59,8 @@
 	
 	IBOutlet MDInspectorController *inspectorController;
 	IBOutlet MDModsController *modsController;
+	
+	MDGameFavoritesWindowController *_favoritesWindowController;
 	
 	NSTimer *queryTimer;
 	NSTimer *refreshVisibleServersTimer;

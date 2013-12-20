@@ -81,6 +81,8 @@
 		77E7E2971724B17300E18FB9 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77E7E2961724B17300E18FB9 /* CoreFoundation.framework */; };
 		77F65ECF150B1E3000D26C71 /* MDInspectorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F65ECE150B1E2F00D26C71 /* MDInspectorController.m */; };
 		77F65ED3150B253F00D26C71 /* MDPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F65ED2150B253F00D26C71 /* MDPlayer.m */; };
+		77FFC0F91863B75800122357 /* MDGameFavoritesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FFC0F71863B75800122357 /* MDGameFavoritesWindowController.m */; };
+		77FFC0FA1863B75800122357 /* MDGameFavoritesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77FFC0F81863B75800122357 /* MDGameFavoritesWindowController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -255,6 +257,9 @@
 		77F65ECE150B1E2F00D26C71 /* MDInspectorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDInspectorController.m; sourceTree = "<group>"; };
 		77F65ED1150B253F00D26C71 /* MDPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDPlayer.h; sourceTree = "<group>"; };
 		77F65ED2150B253F00D26C71 /* MDPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDPlayer.m; sourceTree = "<group>"; };
+		77FFC0F61863B75800122357 /* MDGameFavoritesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDGameFavoritesWindowController.h; sourceTree = "<group>"; };
+		77FFC0F71863B75800122357 /* MDGameFavoritesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDGameFavoritesWindowController.m; sourceTree = "<group>"; };
+		77FFC0F81863B75800122357 /* MDGameFavoritesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MDGameFavoritesWindowController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -379,6 +384,8 @@
 				775B52A014D331C800B874E3 /* AppDelegate.m */,
 				77F65ECD150B1E2F00D26C71 /* MDInspectorController.h */,
 				77F65ECE150B1E2F00D26C71 /* MDInspectorController.m */,
+				77FFC0F61863B75800122357 /* MDGameFavoritesWindowController.h */,
+				77FFC0F71863B75800122357 /* MDGameFavoritesWindowController.m */,
 				77E52D1C16D89D970015246C /* MDChatWindowController.h */,
 				77E52D1D16D89D970015246C /* MDChatWindowController.m */,
 				77971959173B698600007D80 /* MDChatWindow.h */,
@@ -407,6 +414,7 @@
 				77329B8A168D95F3007DCAE2 /* h_master_server.rb */,
 				775B52A214D331C900B874E3 /* MainMenu.xib */,
 				77E52D1E16D89D970015246C /* MDChatWindowController.xib */,
+				77FFC0F81863B75800122357 /* MDGameFavoritesWindowController.xib */,
 				775B529414D331C800B874E3 /* Supporting Files */,
 			);
 			path = HaloMD;
@@ -689,6 +697,7 @@
 				77E52D2216D8A1D60015246C /* theme.css in Resources */,
 				77E52D2816D8A31C0015246C /* index.html in Resources */,
 				77E52D2A16D8AC0F0015246C /* chatting.rb in Resources */,
+				77FFC0FA1863B75800122357 /* MDGameFavoritesWindowController.xib in Resources */,
 				77E7E28F172477E000E18FB9 /* Growl Registration Ticket.growlRegDict in Resources */,
 				777A1AF01738F588005E2883 /* chat_icon.pdf in Resources */,
 				77971957173B3D6600007D80 /* CRcv.aif in Resources */,
@@ -738,6 +747,7 @@
 				77F65ECF150B1E3000D26C71 /* MDInspectorController.m in Sources */,
 				77F65ED3150B253F00D26C71 /* MDPlayer.m in Sources */,
 				77904A38151C26BF0046EA96 /* keygen.c in Sources */,
+				77FFC0F91863B75800122357 /* MDGameFavoritesWindowController.m in Sources */,
 				77B10987185D57900080BDDF /* MDPluginListItem.m in Sources */,
 				771CA916156F59BF005A32EF /* MDHyperLink.m in Sources */,
 				77B58A921571AF4900C93121 /* MDModsController.m in Sources */,

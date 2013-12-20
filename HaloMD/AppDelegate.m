@@ -41,6 +41,7 @@
 #import "keygen.h"
 #import "DSClickableURLTextField.h"
 #import "MDChatWindowController.h"
+#import "MDGameFavoritesWindowController.h"
 #import <CoreFoundation/CoreFoundation.h>
 #import <IOKit/IOKitLib.h>
 #import <Growl/Growl.h>
@@ -2057,6 +2058,16 @@ static NSDictionary *expectedVersionsDictionary = nil;
 - (IBAction)showChatWindow:(id)sender
 {
 	[[self chatWindowController] showWindow:nil];
+}
+
+- (IBAction)showGameFavoritesWindow:(id)sender
+{
+	if (_favoritesWindowController == nil)
+	{
+		_favoritesWindowController = [[MDGameFavoritesWindowController alloc] init];
+	}
+	
+	[_favoritesWindowController attachToParentWindow:window andShowFavoritesFromPath:[[self applicationSupportPath] stringByAppendingPathComponent:@"extra_favorites.txt"]];
 }
 
 - (IBAction)showLobbyWindow:(id)sender
