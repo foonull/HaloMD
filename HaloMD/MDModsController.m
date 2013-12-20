@@ -1242,8 +1242,10 @@ static id sharedInstance = nil;
 
 - (void)showPluginUpdateNoticeIfNeeded
 {
-	NSMutableArray *itemsToUpdate = [NSMutableArray array];
 	NSMutableArray *favorableItemsToUpdate = [NSMutableArray array];
+	
+	NSMutableArray *otherItemsToUpdate = [NSMutableArray array];
+	NSMutableArray *otherMapNamesToUpdate = [NSMutableArray array];
 	
 	for (NSMenuItem *menuItem in [self pluginMenuItems])
 	{
@@ -1256,27 +1258,51 @@ static id sharedInstance = nil;
 		
 		if (pluginItem.build < onlinePluginItem.build)
 		{
-			[itemsToUpdate addObject:pluginItem];
 			if (pluginItem.globalMode && pluginItem.enabled)
 			{
 				[favorableItemsToUpdate addObject:pluginItem];
+			}
+			else if (favorableItemsToUpdate.count == 0)
+			{
+				NSString *mapCandidate = nil;
+				for (NSMenuItem *modMenuItem in [self modMenuItems])
+				{
+					MDModListItem *modItem = [modMenuItem representedObject];
+					if ([modItem.plugins containsObject:pluginItem.name])
+					{
+						mapCandidate = [modItem name];
+						break;
+					}
+				}
+				
+				if (mapCandidate != nil)
+				{
+					[otherItemsToUpdate addObject:pluginItem];
+					[otherMapNamesToUpdate addObject:mapCandidate];
+				}
 			}
 		}
 	}
 	
 	MDPluginListItem *randomItem = nil;
+	NSString *randomName = nil;
+	NSUInteger randomIndex = 0;
 	if ([favorableItemsToUpdate count] > 0)
 	{
-		randomItem = [favorableItemsToUpdate objectAtIndex:rand() % [favorableItemsToUpdate count]];
+		randomIndex = rand() % [favorableItemsToUpdate count];
+		randomItem = [favorableItemsToUpdate objectAtIndex:randomIndex];
+		randomName = randomItem.name;
 	}
-	else if ([itemsToUpdate count] > 0)
+	else if ([otherItemsToUpdate count] > 0)
 	{
-		randomItem = [itemsToUpdate objectAtIndex:rand() % [itemsToUpdate count]];
+		randomIndex = rand() % [otherItemsToUpdate count];
+		randomItem = [otherItemsToUpdate objectAtIndex:randomIndex];
+		randomName = [otherMapNamesToUpdate objectAtIndex:randomIndex];
 	}
 	
 	if (randomItem != nil)
 	{
-		NSAttributedString *statusString =  [NSAttributedString MDHyperlinkFromString:[NSString stringWithFormat:@"Update %@ (Extension)", [randomItem name]] withURL:[NSURL URLWithString:[[NSString stringWithFormat:@"halomdplugininstall://%@", [randomItem name]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+		NSAttributedString *statusString =  [NSAttributedString MDHyperlinkFromString:[NSString stringWithFormat:@"Update %@", randomName] withURL:[NSURL URLWithString:[[NSString stringWithFormat:@"halomdplugininstall://%@", [randomItem name]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
 		
 		[appDelegate setStatus:statusString];
 	}
