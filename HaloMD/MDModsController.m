@@ -257,8 +257,8 @@ static id sharedInstance = nil;
 	if ([NSBundle bundleWithPath:filename] == nil)
 	{
 		NSLog(@"%@ is not a valid plugin bundle", filename);
-		NSRunAlertPanel(@"Failed Adding Plug-In",
-						@"%@ is not a valid Plug-In",
+		NSRunAlertPanel(@"Failed Adding Extension",
+						@"%@ is not a valid extension",
 						@"OK", nil, nil, [[filename lastPathComponent] stringByDeletingPathExtension]);
 		return NO;
 	}
@@ -327,7 +327,7 @@ static id sharedInstance = nil;
 	if (![[NSFileManager defaultManager] moveItemAtPath:filename toPath:destination error:&error])
 	{
 		NSLog(@"Error moving plugin: %@", error);
-		NSRunAlertPanel(@"Failed Adding Plug-In",
+		NSRunAlertPanel(@"Failed Adding Extension",
 						@"%@ could not be moved into PlugIns",
 						@"OK", nil, nil, [[filename lastPathComponent] stringByDeletingPathExtension]);
 		return NO;
@@ -806,7 +806,7 @@ static id sharedInstance = nil;
 	
 	if (!addedPlugins)
 	{
-		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@"No Available Plug-Ins" action:@selector(doNothing:) keyEquivalent:@""];
+		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@"No Available Extensions" action:@selector(doNothing:) keyEquivalent:@""];
 		[menuItem setEnabled:NO];
 		[pluginsMenu addItem:menuItem];
 		[menuItem release];
@@ -1276,7 +1276,7 @@ static id sharedInstance = nil;
 	
 	if (randomItem != nil)
 	{
-		NSAttributedString *statusString =  [NSAttributedString MDHyperlinkFromString:[NSString stringWithFormat:@"Update %@ (Plug-in)", [randomItem name]] withURL:[NSURL URLWithString:[[NSString stringWithFormat:@"halomdplugininstall://%@", [randomItem name]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+		NSAttributedString *statusString =  [NSAttributedString MDHyperlinkFromString:[NSString stringWithFormat:@"Update %@ (Extension)", [randomItem name]] withURL:[NSURL URLWithString:[[NSString stringWithFormat:@"halomdplugininstall://%@", [randomItem name]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
 		
 		[appDelegate setStatus:statusString];
 	}
@@ -1615,7 +1615,7 @@ static id sharedInstance = nil;
 			}
 			else
 			{
-				NSRunAlertPanel(@"Plug-in Installation Failed",
+				NSRunAlertPanel(@"Extension Installation Failed",
 								@"%@ failed to install. Perhaps the downloaded file was corrupted.",
 								@"OK", nil, nil, [[self currentDownloadingPlugin] name]);
 			}
@@ -1683,7 +1683,7 @@ static id sharedInstance = nil;
 			}
 			if ([[self directoryNameFromRequest:download.request] isEqualToString:@"plug-ins"])
 			{
-				[appDelegate setStatusWithoutWait:[NSString stringWithFormat:@"Installing Plug-in %@... (%d%%)", [[self currentDownloadingPlugin] name], (int)((100.0 * currentContentLength) / expectedContentLength)]];
+				[appDelegate setStatusWithoutWait:[NSString stringWithFormat:@"Installing Extension %@... (%d%%)", [[self currentDownloadingPlugin] name], (int)((100.0 * currentContentLength) / expectedContentLength)]];
 			}
 			else
 			{
@@ -1753,7 +1753,7 @@ static id sharedInstance = nil;
 		{
 			if ([[self directoryNameFromRequest:download.request] isEqualToString:@"plug-ins"])
 			{
-				NSRunAlertPanel(@"Plug-in Download Failed",
+				NSRunAlertPanel(@"Extension Download Failed",
 								@"%@ failed to finish downloading.",
 								@"OK", nil, nil, [[self currentDownloadingPlugin] name]);
 			}
@@ -1871,7 +1871,7 @@ static id sharedInstance = nil;
 {
 	[self setCurrentDownloadingPlugin:plugin];
 	
-	[appDelegate setStatus:[NSString stringWithFormat:@"Installing %@ (Plug-in)...", plugin.name]];
+	[appDelegate setStatus:[NSString stringWithFormat:@"Installing %@ (Extension)...", plugin.name]];
 	
 	[resumeTimeoutDate release];
 	resumeTimeoutDate = nil;
@@ -1980,7 +1980,7 @@ static id sharedInstance = nil;
 	if (pluginNamesToInstall.count > 0)
 	{
 		if (NSRunAlertPanel(@"Modded Game",
-							@"Do you want to %@ %d plug-in%@ in order to join this game?",
+							@"Do you want to %@ %d extension %@ in order to join this game?",
 							@"Install", @"Cancel", nil, needsInstalling ? @"install" : @"update", pluginNamesToInstall.count, pluginNamesToInstall.count != 1 ? @"s" : @"") == NSOKButton)
 		{
 			[self setJoiningServer:server];
