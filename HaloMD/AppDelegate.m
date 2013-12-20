@@ -1579,7 +1579,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	NSString *extraFavoritesPath = [[self applicationSupportPath] stringByAppendingPathComponent:@"extra_favorites.txt"];
 	if (![[NSFileManager defaultManager] fileExistsAtPath:extraFavoritesPath])
 	{
-		if (![@"#Add lines in format ip_address:port_number\n\n" writeToFile:extraFavoritesPath atomically:YES encoding:NSUTF8StringEncoding error:NULL])
+		if (![@"#Add lines in format ip_address:port_number. Start a line as '#' to provide a comment.\n\n" writeToFile:extraFavoritesPath atomically:YES encoding:NSUTF8StringEncoding error:NULL])
 		{
 			return [NSArray array];
 		}
