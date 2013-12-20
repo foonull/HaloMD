@@ -127,6 +127,11 @@ static id sharedInstance = nil;
 			{
 				[theMenuItem setState:NSOffState];
 			}
+			
+			if ([appDelegate isHaloOpen])
+			{
+				return NO;
+			}
 		}
 	}
 	else if ([theMenuItem action] == @selector(downloadModList:))
