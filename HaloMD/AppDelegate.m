@@ -379,7 +379,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	@try
 	{
 #ifndef __ppc__
-		[haloTask setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:[[[NSBundle mainBundle] privateFrameworksPath] stringByAppendingPathComponent:@"MDOverrides.dylib"], @"DYLD_INSERT_LIBRARIES", [[NSBundle mainBundle] builtInPlugInsPath], @"MD_BUILTIN_PLUGIN_DIRECTORY", @"MD_STOCK_GAME_DATA_DIRECTORY", [self resourceGameDataPath], nil]];
+		[haloTask setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:[[[NSBundle mainBundle] privateFrameworksPath] stringByAppendingPathComponent:@"MDOverrides.dylib"], @"DYLD_INSERT_LIBRARIES", [[NSBundle mainBundle] builtInPlugInsPath], @"MD_BUILTIN_PLUGIN_DIRECTORY", [self resourceGameDataPath], @"MD_STOCK_GAME_DATA_DIRECTORY", nil]];
 #endif
 		[haloTask setLaunchPath:launchPath];
 		[haloTask setArguments:[NSArray array]];
