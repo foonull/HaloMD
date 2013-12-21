@@ -248,17 +248,17 @@ static void updateMyStatus(void)
 	struct RArray *rosterElements = (struct RArray *)rb_funcall(gChatController->chatting, rb_intern("roster"), 0);
 	if ((VALUE)rosterElements != Qnil && TYPE(rosterElements) == T_ARRAY)
 	{
-		for (long rosterElementIndex = 0; rosterElementIndex < rosterElements->len; rosterElementIndex++)
+		for (long rosterElementIndex = 0; rosterElementIndex < RARRAY_LEN(rosterElements); rosterElementIndex++)
 		{
-			struct RArray *userItems = (struct RArray *)rosterElements->ptr[rosterElementIndex];
-			if ((VALUE)userItems != Qnil && TYPE(userItems) == T_ARRAY && userItems->len >= 2 && userItems->ptr[0] != Qnil && userItems->ptr[1] != Qnil)
+			struct RArray *userItems = (struct RArray *)RARRAY_PTR(rosterElements)[rosterElementIndex];
+			if ((VALUE)userItems != Qnil && TYPE(userItems) == T_ARRAY && RARRAY_LEN(userItems) >= 2 && RARRAY_PTR(userItems)[0] != Qnil && RARRAY_PTR(userItems)[1] != Qnil)
 			{
-				StringValue(userItems->ptr[0]);
+				StringValue(RARRAY_PTR(userItems)[0]);
 				
-				NSString *nickname = [[[NSString alloc] initWithBytes:RSTRING_PTR(userItems->ptr[0]) length:RSTRING_LEN(userItems->ptr[0]) encoding:NSUTF8StringEncoding] autorelease];
+				NSString *nickname = [[[NSString alloc] initWithBytes:RSTRING_PTR(RARRAY_PTR(userItems)) length:RSTRING_LEN(RARRAY_PTR(userItems)[0]) encoding:NSUTF8StringEncoding] autorelease];
 				if ([nickname isEqualToString:nicknameToAdd])
 				{
-					VALUE presence = userItems->ptr[1];
+					VALUE presence = RARRAY_PTR(userItems)[1];
 					VALUE statusValue = rb_funcall(presence, rb_intern("status"), 0);
 					if (statusValue != Qnil) StringValue(statusValue);
 					NSString *status = statusValue == Qnil ? nil : [[[NSString alloc] initWithBytes:RSTRING_PTR(statusValue) length:RSTRING_LEN(statusValue) encoding:NSUTF8StringEncoding] autorelease];
