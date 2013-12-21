@@ -88,7 +88,7 @@ end
 previous_versions = mod_entries['Mods'].select {|entry| entry['name'] == mod_name}
 if previous_versions.count > 0
 	puts "Found #{previous_versions.count} previous version(s) of #{mod_name}:"
-	previous_items = previous_versions.map {|entry| ["Identifier: #{entry['identifier']}", "Version: #{entry['human_version']}", "Description: #{entry['description']}"].join("\n")}
+	previous_items = previous_versions.map {|entry| ["Identifier: #{entry['identifier']}", "Version: #{entry['human_version']}", "Description: #{entry['description']}", "Plug-ins: #{entry['plug-ins'] == nil ? '' : entry['plug-ins'].join(', ')}"].join("\n")}
 	puts previous_items.join("\n\n")
 else
 	puts "No previous versions of #{mod_name} were found."
