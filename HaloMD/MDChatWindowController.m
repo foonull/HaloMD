@@ -255,7 +255,7 @@ static void updateMyStatus(void)
 			{
 				StringValue(RARRAY_PTR(userItems)[0]);
 				
-				NSString *nickname = [[[NSString alloc] initWithBytes:RSTRING_PTR(RARRAY_PTR(userItems)) length:RSTRING_LEN(RARRAY_PTR(userItems)[0]) encoding:NSUTF8StringEncoding] autorelease];
+				NSString *nickname = [[[NSString alloc] initWithBytes:RSTRING_PTR(RARRAY_PTR(userItems)[0]) length:RSTRING_LEN(RARRAY_PTR(userItems)[0]) encoding:NSUTF8StringEncoding] autorelease];
 				if ([nickname isEqualToString:nicknameToAdd])
 				{
 					VALUE presence = RARRAY_PTR(userItems)[1];
