@@ -480,7 +480,7 @@ DQ
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button verticalHuggingPriority="750" id="536">
-                        <rect key="frame" x="551" y="9" width="88" height="32"/>
+                        <rect key="frame" x="551" y="5" width="88" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                         <buttonCell key="cell" type="push" title="Start" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="537">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -605,7 +605,7 @@ DQ
                         </tableHeaderView>
                     </scrollView>
                     <button verticalHuggingPriority="750" id="568">
-                        <rect key="frame" x="463" y="9" width="88" height="32"/>
+                        <rect key="frame" x="463" y="5" width="88" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                         <buttonCell key="cell" type="push" title="Join" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="569">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -616,7 +616,7 @@ DQ
                         </connections>
                     </button>
                     <textField verticalHuggingPriority="750" id="570" customClass="DSClickableURLTextField">
-                        <rect key="frame" x="17" y="20" width="335" height="17"/>
+                        <rect key="frame" x="17" y="16" width="335" height="17"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" id="571">
                             <font key="font" metaFont="system"/>
@@ -625,7 +625,7 @@ DQ
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="750" id="617">
-                        <rect key="frame" x="375" y="9" width="88" height="32"/>
+                        <rect key="frame" x="375" y="5" width="88" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                         <buttonCell key="cell" type="push" title="Refresh" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="618">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -636,11 +636,11 @@ DQ
                         </connections>
                     </button>
                     <progressIndicator horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" id="623">
-                        <rect key="frame" x="357" y="19" width="16" height="16"/>
+                        <rect key="frame" x="357" y="15" width="16" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                     </progressIndicator>
                     <button verticalHuggingPriority="750" id="893">
-                        <rect key="frame" x="375" y="9" width="88" height="32"/>
+                        <rect key="frame" x="375" y="5" width="88" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="894">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
