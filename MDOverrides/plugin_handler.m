@@ -196,7 +196,7 @@ static NSDictionary *modListDictionaryFromPathWithoutExtension(NSString *pathWit
 			modsDictionary = [NSDictionary dictionaryWithContentsOfFile:fullPath];
 			if (modsDictionary == nil)
 			{
-				NSLog(@"Failed decodong plist at %@", fullPath);
+				NSLog(@"Failed decoding plist at %@", fullPath);
 			}
 		}
 		else
