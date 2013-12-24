@@ -46,6 +46,7 @@ puts "Converting #{info_plist_path} to json..."
 print_and_execute_command("plutil -convert json \"#{info_plist_path}\" -o \"#{OUTPUT_PATH}/plugin.json\"")
 
 info_entries = JSON.parse(IO.read(File.join(OUTPUT_PATH, 'plugin.json')))
+File.delete(File.join(OUTPUT_PATH, 'plugin.json'))
 
 puts "Fetching mods/plugin list..."
 print_and_execute_command("curl #{MODS_URL} | zcat > \"#{JSON_PATH}\"")
@@ -158,6 +159,10 @@ print_and_execute_command("gzip < \"#{JSON_PATH}\" > \"#{JSON_PATH}.gz\"")
 
 puts "Converting json to plist..."
 print_and_execute_command("plutil -convert xml1 \"#{JSON_PATH}\" -o \"#{OUTPUT_PATH}/mods.plist\"")
+print_and_execute_command("plutil -convert binary1 \"#{OUTPUT_PATH}/mods.plist\"")
+
+puts "Writing gzipped plist file... (#{OUTPUT_PATH}/mods.plist.gz)"
+print_and_execute_command("gzip < \"#{OUTPUT_PATH}/mods.plist\" > \"#{OUTPUT_PATH}/mods.plist.gz\"")
 
 puts "Zipping plugin..."
 plugin_zip_path = File.join(Dir.pwd, OUTPUT_PATH, "#{plugin_name}.zip")

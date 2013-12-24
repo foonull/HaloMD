@@ -244,3 +244,7 @@ print_and_execute_command("gzip < \"#{JSON_PATH}\" > \"#{JSON_PATH}.gz\"")
 
 puts "Converting json to plist..."
 print_and_execute_command("plutil -convert xml1 \"#{JSON_PATH}\" -o \"#{OUTPUT_PATH}/mods.plist\"")
+print_and_execute_command("plutil -convert binary1 \"#{OUTPUT_PATH}/mods.plist\"")
+
+puts "Writing gzipped plist file... (#{OUTPUT_PATH}/mods.plist.gz)"
+print_and_execute_command("gzip < \"#{OUTPUT_PATH}/mods.plist\" > \"#{OUTPUT_PATH}/mods.plist.gz\"")
