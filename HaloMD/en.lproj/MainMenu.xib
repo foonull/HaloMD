@@ -472,15 +472,15 @@ DQ
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="263" y="258" width="653" height="330"/>
+            <rect key="contentRect" x="263" y="258" width="653" height="334"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <value key="minSize" type="size" width="653" height="200"/>
             <view key="contentView" id="372">
-                <rect key="frame" x="0.0" y="0.0" width="653" height="330"/>
+                <rect key="frame" x="0.0" y="0.0" width="653" height="334"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button verticalHuggingPriority="750" id="536">
-                        <rect key="frame" x="551" y="5" width="88" height="32"/>
+                        <rect key="frame" x="551" y="7" width="88" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                         <buttonCell key="cell" type="push" title="Start" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="537">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -494,7 +494,7 @@ DQ
                         </connections>
                     </button>
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="541">
-                        <rect key="frame" x="20" y="45" width="613" height="265"/>
+                        <rect key="frame" x="20" y="49" width="613" height="265"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" id="pSt-Uv-SHh">
                             <rect key="frame" x="1" y="17" width="611" height="247"/>
@@ -605,7 +605,7 @@ DQ
                         </tableHeaderView>
                     </scrollView>
                     <button verticalHuggingPriority="750" id="568">
-                        <rect key="frame" x="463" y="5" width="88" height="32"/>
+                        <rect key="frame" x="463" y="7" width="88" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                         <buttonCell key="cell" type="push" title="Join" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="569">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -616,7 +616,7 @@ DQ
                         </connections>
                     </button>
                     <textField verticalHuggingPriority="750" id="570" customClass="DSClickableURLTextField">
-                        <rect key="frame" x="17" y="16" width="335" height="17"/>
+                        <rect key="frame" x="17" y="18" width="335" height="17"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" id="571">
                             <font key="font" metaFont="system"/>
@@ -625,7 +625,7 @@ DQ
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="750" id="617">
-                        <rect key="frame" x="375" y="5" width="88" height="32"/>
+                        <rect key="frame" x="375" y="7" width="88" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                         <buttonCell key="cell" type="push" title="Refresh" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="618">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -636,11 +636,11 @@ DQ
                         </connections>
                     </button>
                     <progressIndicator horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" id="623">
-                        <rect key="frame" x="357" y="15" width="16" height="16"/>
+                        <rect key="frame" x="357" y="17" width="16" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                     </progressIndicator>
                     <button verticalHuggingPriority="750" id="893">
-                        <rect key="frame" x="375" y="5" width="88" height="32"/>
+                        <rect key="frame" x="375" y="7" width="88" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="894">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
