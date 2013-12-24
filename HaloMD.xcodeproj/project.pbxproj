@@ -21,7 +21,6 @@
 		774EF67D17C72117005ABB20 /* crc32forge.py in Resources */ = {isa = PBXBuildFile; fileRef = 774EF67C17C72117005ABB20 /* crc32forge.py */; };
 		774EF68717C72134005ABB20 /* SCEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF68317C72134005ABB20 /* SCEvent.m */; };
 		774EF68817C72134005ABB20 /* SCEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF68617C72134005ABB20 /* SCEvents.m */; };
-		774EF68B17C72142005ABB20 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF68A17C72142005ABB20 /* JSONKit.m */; };
 		774EF68E17C72178005ABB20 /* DSClickableURLTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF68D17C72178005ABB20 /* DSClickableURLTextField.m */; };
 		774EF69217C721D1005ABB20 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 774EF69117C721D1005ABB20 /* Sparkle.framework */; };
 		774EF69617C7222D005ABB20 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 774EF69117C721D1005ABB20 /* Sparkle.framework */; };
@@ -42,7 +41,6 @@
 		77B10987185D57900080BDDF /* MDPluginListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B10986185D57900080BDDF /* MDPluginListItem.m */; };
 		77B10988185D8CF50080BDDF /* mach_override.c in Sources */ = {isa = PBXBuildFile; fileRef = 77BC6753184040A600F82849 /* mach_override.c */; };
 		77B1098A185D8E210080BDDF /* MDPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B10989185D8E210080BDDF /* MDPlugin.h */; };
-		77B1098D185E3AB40080BDDF /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF68A17C72142005ABB20 /* JSONKit.m */; };
 		77B58A921571AF4900C93121 /* MDModsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B58A911571AF4900C93121 /* MDModsController.m */; };
 		77B58AAA1572BF6200C93121 /* MDModListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 77B58AA91572BF6200C93121 /* MDModListItem.m */; };
 		77BC6755184040A600F82849 /* plugin_handler.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BC6752184040A600F82849 /* plugin_handler.m */; };
@@ -178,8 +176,6 @@
 		774EF68417C72134005ABB20 /* SCEventListenerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCEventListenerProtocol.h; path = vendor/SCEvents/SCEventListenerProtocol.h; sourceTree = SOURCE_ROOT; };
 		774EF68517C72134005ABB20 /* SCEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCEvents.h; path = vendor/SCEvents/SCEvents.h; sourceTree = SOURCE_ROOT; };
 		774EF68617C72134005ABB20 /* SCEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCEvents.m; path = vendor/SCEvents/SCEvents.m; sourceTree = SOURCE_ROOT; };
-		774EF68917C72142005ABB20 /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSONKit.h; path = vendor/JSONKit.h; sourceTree = SOURCE_ROOT; };
-		774EF68A17C72142005ABB20 /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSONKit.m; path = vendor/JSONKit.m; sourceTree = SOURCE_ROOT; };
 		774EF68C17C72178005ABB20 /* DSClickableURLTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DSClickableURLTextField.h; path = vendor/DSClickableURLTextField.h; sourceTree = SOURCE_ROOT; };
 		774EF68D17C72178005ABB20 /* DSClickableURLTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DSClickableURLTextField.m; path = vendor/DSClickableURLTextField.m; sourceTree = SOURCE_ROOT; };
 		774EF68F17C721CC005ABB20 /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Growl.framework; path = vendor/Growl.framework; sourceTree = "<group>"; };
@@ -507,8 +503,6 @@
 			children = (
 				774EF68C17C72178005ABB20 /* DSClickableURLTextField.h */,
 				774EF68D17C72178005ABB20 /* DSClickableURLTextField.m */,
-				774EF68917C72142005ABB20 /* JSONKit.h */,
-				774EF68A17C72142005ABB20 /* JSONKit.m */,
 				774EF67E17C7211F005ABB20 /* SCEvents */,
 			);
 			name = Dependencies;
@@ -759,7 +753,6 @@
 				7797195B173B698600007D80 /* MDChatWindow.m in Sources */,
 				774EF68717C72134005ABB20 /* SCEvent.m in Sources */,
 				774EF68817C72134005ABB20 /* SCEvents.m in Sources */,
-				774EF68B17C72142005ABB20 /* JSONKit.m in Sources */,
 				774EF68E17C72178005ABB20 /* DSClickableURLTextField.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -768,7 +761,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				77B1098D185E3AB40080BDDF /* JSONKit.m in Sources */,
 				77B10988185D8CF50080BDDF /* mach_override.c in Sources */,
 				77BC6755184040A600F82849 /* plugin_handler.m in Sources */,
 			);

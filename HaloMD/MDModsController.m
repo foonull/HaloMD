@@ -42,13 +42,15 @@
 #import "MDHyperLink.h"
 #import "SCEvents.h"
 #import "SCEvent.h"
-#import "JSONKit.h"
 
 #define MAPS_DIRECTORY [[[appDelegate applicationSupportPath] stringByAppendingPathComponent:@"GameData"] stringByAppendingPathComponent:@"Maps"]
-#define MODS_TEMP_LIST_PATH [NSTemporaryDirectory() stringByAppendingPathComponent:@"HaloMD_mods_list.json"]
-#define MODS_LIST_PATH [[appDelegate applicationSupportPath] stringByAppendingPathComponent:@"HaloMD_mods_list.json"]
+#define MODS_TEMP_LIST_PATH [NSTemporaryDirectory() stringByAppendingPathComponent:@"HaloMD_mods_list"]
 
-#define MULTIPLAYER_CODES_URL [NSURL URLWithString:@"http://halomd.macgamingmods.com/mods/mods.json.gz"]
+#define MODS_LIST_PATH_WITH_EXTENSION(extension) ([[appDelegate applicationSupportPath] stringByAppendingPathComponent:@"HaloMD_mods_list."extension])
+
+#define MODS_LIST_PATH (gJsonSerializaionExists ? MODS_LIST_PATH_WITH_EXTENSION(@"json") : MODS_LIST_PATH_WITH_EXTENSION(@"plist"))
+
+#define MULTIPLAYER_CODES_URL [NSURL URLWithString:[NSString stringWithFormat:@"http://halomd.macgamingmods.com/mods/mods.%@.gz", gJsonSerializaionExists ? @"json" : @"plist"]]
 
 #define MOD_DOWNLOAD_URL [NSURL URLWithString:[NSString stringWithFormat:@"http://halomd.macgamingmods.com/mods/%@.zip", [self currentDownloadingMapIdentifier]]]
 #define MOD_DOWNLOAD_FILE [NSTemporaryDirectory() stringByAppendingPathComponent:@"HaloMD_download_file.zip"]
@@ -88,12 +90,14 @@ static id sharedInstance = nil;
 	return sharedInstance;
 }
 
+static BOOL gJsonSerializaionExists = NO;
 - (id)init
 {
 	self = [super init];
 	if (self)
 	{
 		sharedInstance = self;
+		gJsonSerializaionExists = NSClassFromString(@"NSJSONSerialization") != nil;
 	}
 	
 	return self;
@@ -969,23 +973,26 @@ static id sharedInstance = nil;
 	}
 }
 
-- (NSDictionary *)dictionaryFromJSONPath:(NSString *)jsonPath
+- (NSDictionary *)dictionaryFromPath:(NSString *)path
 {
 	NSDictionary *dictionary = nil;
-	if ([[NSFileManager defaultManager] fileExistsAtPath:jsonPath])
+	if ([[NSFileManager defaultManager] fileExistsAtPath:path])
 	{
-		NSData *jsonData = [NSData dataWithContentsOfFile:jsonPath];
-		if (jsonData != nil)
+		if ([[path pathExtension] isEqualToString:@"plist"])
 		{
-			Class jsonSerializationClass = NSClassFromString(@"NSJSONSerialization");
-			if (jsonSerializationClass != nil)
+			dictionary = [NSDictionary dictionaryWithContentsOfFile:path];
+		}
+		else if ([[path pathExtension] isEqualToString:@"json"] && gJsonSerializaionExists)
+		{
+			NSData *jsonData = [NSData dataWithContentsOfFile:path];
+			if (jsonData != nil)
 			{
 				NSError *error = nil;
-				dictionary = [jsonSerializationClass JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
-			}
-			else
-			{
-				dictionary = [[JSONDecoder decoder] objectWithData:jsonData];
+				dictionary = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+				if (error != nil)
+				{
+					NSLog(@"Error decoding JSON: %@", error);
+				}
 			}
 		}
 	}
@@ -994,7 +1001,7 @@ static id sharedInstance = nil;
 
 - (void)makeModsList
 {
-	NSDictionary *modsDictionary = [[self dictionaryFromJSONPath:MODS_LIST_PATH] objectForKey:@"Mods"];
+	NSDictionary *modsDictionary = [[self dictionaryFromPath:MODS_LIST_PATH] objectForKey:@"Mods"];
 	if (modsDictionary == nil)
 	{
 		NSLog(@"Mods: Failed to load %@", MODS_LIST_PATH);
@@ -1107,12 +1114,12 @@ static id sharedInstance = nil;
 
 - (void)makePluginsList
 {
-	NSDictionary *pluginsDictionary = [[self dictionaryFromJSONPath:MODS_LIST_PATH] objectForKey:@"Plug-ins"];
+	NSDictionary *pluginsDictionary = [[self dictionaryFromPath:MODS_LIST_PATH] objectForKey:@"Plug-ins"];
 	[self setPluginListDictionary:[NSMutableDictionary dictionary]];
 	
 	if (pluginsDictionary == nil)
 	{
-		NSLog(@"Plug-ins: Failed to load %@", MODS_LIST_PATH);
+		NSLog(@"Failed to find Plug-ins key in %@", MODS_LIST_PATH);
 		[self removeAllItemsFromMenu:onlinePluginsMenu];
 	}
 	else
@@ -2035,7 +2042,24 @@ static id sharedInstance = nil;
 }
 
 - (void)initiateAndForceDownloadList:(NSNumber *)shouldForceDownloadList
-{	
+{
+	NSString *modsListPath = MODS_LIST_PATH;
+	
+	if (!gJsonSerializaionExists)
+	{
+		NSString *jsonPath = MODS_LIST_PATH_WITH_EXTENSION(@"json");
+		if ([[NSFileManager defaultManager] fileExistsAtPath:jsonPath])
+		{
+			[[NSFileManager defaultManager] removeItemAtPath:jsonPath error:NULL];
+			
+			// remove old plist from way back ages ago (before we ever used json)
+			if ([[NSFileManager defaultManager] fileExistsAtPath:modsListPath])
+			{
+				[[NSFileManager defaultManager] removeItemAtPath:modsListPath error:NULL];
+			}
+		}
+	}
+	
 	[self makeModMenuItems];
 	[self makeModsList]; // In case the file doesn't download, use local copy
 	
@@ -2043,7 +2067,7 @@ static id sharedInstance = nil;
 	[self makePluginsList];
 	
 	id dateLastChecked = [[NSUserDefaults standardUserDefaults] objectForKey:MODS_LIST_DOWNLOAD_TIME_KEY];
-	if ([shouldForceDownloadList boolValue] || ![[NSFileManager defaultManager] fileExistsAtPath:MODS_LIST_PATH] || [dateLastChecked isKindOfClass:[NSString class]] || [[NSDate date] timeIntervalSinceDate:dateLastChecked] > 10.0 * 60)
+	if ([shouldForceDownloadList boolValue] || ![[NSFileManager defaultManager] fileExistsAtPath:modsListPath] || [dateLastChecked isKindOfClass:[NSString class]] || [[NSDate date] timeIntervalSinceDate:dateLastChecked] > 10.0 * 60)
 	{
 		if ([shouldForceDownloadList boolValue])
 		{

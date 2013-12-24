@@ -27,7 +27,6 @@
 #import <Foundation/Foundation.h>
 #import "mach_override.h"
 #import "MDPlugin.h"
-#import "JSONKit.h"
 
 @interface NSObject (MDPluginPrivate)
 
@@ -182,26 +181,39 @@ static void addPluginsInDirectory(NSMutableArray *pluginPaths, NSString *directo
 	}
 }
 
-static NSDictionary *modListDictionaryFromJSONPath(NSString *jsonPath)
+static NSDictionary *modListDictionaryFromPathWithoutExtension(NSString *pathWithoutExtension)
 {
 	NSDictionary *modsDictionary = nil;
-	if ([[NSFileManager defaultManager] fileExistsAtPath:jsonPath])
+	BOOL jsonSerializationExists = NSClassFromString(@"NSJSONSerialization") != nil;
+	
+	NSString *fileExtension = jsonSerializationExists ? @"json" : @"plist";
+	NSString *fullPath = [pathWithoutExtension stringByAppendingPathExtension:fileExtension];
+	
+	if ([[NSFileManager defaultManager] fileExistsAtPath:fullPath])
 	{
-		NSData *jsonData = [NSData dataWithContentsOfFile:jsonPath];
-		if (jsonData != nil)
+		if (!jsonSerializationExists)
 		{
-			Class jsonSerializationClass = NSClassFromString(@"NSJSONSerialization");
-			if (jsonSerializationClass != nil)
+			modsDictionary = [NSDictionary dictionaryWithContentsOfFile:fullPath];
+			if (modsDictionary == nil)
+			{
+				NSLog(@"Failed decodong plist at %@", fullPath);
+			}
+		}
+		else
+		{
+			NSData *jsonData = [NSData dataWithContentsOfFile:fullPath];
+			if (jsonData != nil)
 			{
 				NSError *error = nil;
-				modsDictionary = [jsonSerializationClass JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
-			}
-			else
-			{
-				modsDictionary = [[JSONDecoder decoder] objectWithData:jsonData];
+				modsDictionary = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+				if (error != nil)
+				{
+					NSLog(@"Failed decoding JSON: %@", error);
+				}
 			}
 		}
 	}
+	
 	return [modsDictionary objectForKey:@"Mods"];
 }
 
@@ -253,12 +265,12 @@ static __attribute__((constructor)) void init()
 			NSString *appSupportPath = [libraryPath stringByAppendingPathComponent:@"Application Support"];
 			NSString *haloMDAppSupportPath = [appSupportPath stringByAppendingPathComponent:@"HaloMD"];
 			
-			NSString *modsListPath = [haloMDAppSupportPath stringByAppendingPathComponent:@"HaloMD_mods_list.json"];
-			NSString *modsDevListPath = [haloMDAppSupportPath stringByAppendingPathComponent:@"HaloMD_mods_list_dev.json"];
+			NSString *modsListPath = [haloMDAppSupportPath stringByAppendingPathComponent:@"HaloMD_mods_list"];
+			NSString *modsDevListPath = [haloMDAppSupportPath stringByAppendingPathComponent:@"HaloMD_mods_list_dev"];
 			
 			gMapBasedPluginNamesDictionary = [[NSMutableDictionary alloc] init];
-			addMapBasedPlugins(gMapBasedPluginNamesDictionary, modListDictionaryFromJSONPath(modsListPath), YES);
-			addMapBasedPlugins(gMapBasedPluginNamesDictionary, modListDictionaryFromJSONPath(modsDevListPath), NO);
+			addMapBasedPlugins(gMapBasedPluginNamesDictionary, modListDictionaryFromPathWithoutExtension(modsListPath), YES);
+			addMapBasedPlugins(gMapBasedPluginNamesDictionary, modListDictionaryFromPathWithoutExtension(modsDevListPath), NO);
 			
 			gThirdPartyPluginsDirectory = [[haloMDAppSupportPath stringByAppendingPathComponent:@"PlugIns"] copy];
 			gThirdPartyPluginsDisabledDirectory = [[haloMDAppSupportPath stringByAppendingPathComponent:@"PlugIns (Disabled)"] copy];
