@@ -29,6 +29,8 @@ OUTPUT_PATH = "md_submit_output"
 MOD_JSON_NAME = "mods.json"
 JSON_PATH = (Pathname.new(OUTPUT_PATH) + MOD_JSON_NAME).to_s
 
+MAX_NUMBER_OF_PATCHES = 3
+
 if ARGV.length < 2
 	puts "Usage: ruby #{$0} <mod_path> <HaloMD_path>"
 	exit 1
@@ -177,7 +179,7 @@ if stock_map_patch_choice == 0
 	end
 end
 
-patch_identifiers = (previous_versions.map {|entry| entry['identifier']})[0, 3]
+patch_identifiers = (previous_versions.map {|entry| entry['identifier']})[0, MAX_NUMBER_OF_PATCHES]
 unless stock_map_patch_choice == 0
 	stock_map_patch = stock_maps[stock_map_patch_choice-1]
 	puts "Selected stock map #{stock_map_patch} for patching...\n\n"
