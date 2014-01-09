@@ -79,6 +79,18 @@
 		77E7E2971724B17300E18FB9 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77E7E2961724B17300E18FB9 /* CoreFoundation.framework */; };
 		77F65ECF150B1E3000D26C71 /* MDInspectorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F65ECE150B1E2F00D26C71 /* MDInspectorController.m */; };
 		77F65ED3150B253F00D26C71 /* MDPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 77F65ED2150B253F00D26C71 /* MDPlayer.m */; };
+		77FD5246187F5BF800E2A604 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 77FD5244187F5BF800E2A604 /* InfoPlist.strings */; };
+		77FD5262187F5CA200E2A604 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 77FD525A187F5CA200E2A604 /* ioapi.c */; };
+		77FD5263187F5CA200E2A604 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 77FD525C187F5CA200E2A604 /* mztools.c */; };
+		77FD5264187F5CA200E2A604 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 77FD525E187F5CA200E2A604 /* unzip.c */; };
+		77FD5265187F5CA200E2A604 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 77FD5260187F5CA200E2A604 /* zip.c */; };
+		77FD5269187F5CBE00E2A604 /* bspatch.c in Sources */ = {isa = PBXBuildFile; fileRef = 77FD5267187F5CBE00E2A604 /* bspatch.c */; };
+		77FD526C187F5D0500E2A604 /* ZZTMapDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FD526B187F5D0500E2A604 /* ZZTMapDownloader.m */; };
+		77FD526D187F5D2200E2A604 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BC6758184040D400F82849 /* Foundation.framework */; };
+		77FD5270187F5D7700E2A604 /* mach_override.c in Sources */ = {isa = PBXBuildFile; fileRef = 77BC6753184040A600F82849 /* mach_override.c */; };
+		77FD5272187F5DFC00E2A604 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 77FD5271187F5DFC00E2A604 /* libz.dylib */; };
+		77FD5274187F5E0900E2A604 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 77FD5273187F5E0900E2A604 /* libbz2.dylib */; };
+		77FD5275187F5FF800E2A604 /* MapDownloader.mdplugin in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 77FD523E187F5BF800E2A604 /* MapDownloader.mdplugin */; };
 		77FFC0F91863B75800122357 /* MDGameFavoritesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FFC0F71863B75800122357 /* MDGameFavoritesWindowController.m */; };
 		77FFC0FA1863B75800122357 /* MDGameFavoritesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77FFC0F81863B75800122357 /* MDGameFavoritesWindowController.xib */; };
 /* End PBXBuildFile section */
@@ -111,6 +123,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 77E6C7081842B7BE00705ED5;
 			remoteInfo = MapList;
+		};
+		77FD526E187F5D3900E2A604 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 775B528014D331C800B874E3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 77FD523D187F5BF800E2A604;
+			remoteInfo = MapDownloader;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -145,6 +164,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				77FD5275187F5FF800E2A604 /* MapDownloader.mdplugin in Copy Plugins */,
 				77C595FE1842B94900C81DC0 /* MapList.mdplugin in Copy Plugins */,
 				77E6C6D018414A4700705ED5 /* ChatTextRedirect.mdplugin in Copy Plugins */,
 				77E6C6D118414A4700705ED5 /* MapLoadingMagic.mdplugin in Copy Plugins */,
@@ -253,6 +273,26 @@
 		77F65ECE150B1E2F00D26C71 /* MDInspectorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDInspectorController.m; sourceTree = "<group>"; };
 		77F65ED1150B253F00D26C71 /* MDPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDPlayer.h; sourceTree = "<group>"; };
 		77F65ED2150B253F00D26C71 /* MDPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDPlayer.m; sourceTree = "<group>"; };
+		77FD523E187F5BF800E2A604 /* MapDownloader.mdplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapDownloader.mdplugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		77FD5240187F5BF800E2A604 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		77FD5243187F5BF800E2A604 /* MapDownloader-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MapDownloader-Info.plist"; sourceTree = "<group>"; };
+		77FD5245187F5BF800E2A604 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		77FD5247187F5BF800E2A604 /* MapDownloader-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MapDownloader-Prefix.pch"; sourceTree = "<group>"; };
+		77FD5259187F5CA200E2A604 /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crypt.h; path = vendor/minizip/crypt.h; sourceTree = SOURCE_ROOT; };
+		77FD525A187F5CA200E2A604 /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ioapi.c; path = vendor/minizip/ioapi.c; sourceTree = SOURCE_ROOT; };
+		77FD525B187F5CA200E2A604 /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ioapi.h; path = vendor/minizip/ioapi.h; sourceTree = SOURCE_ROOT; };
+		77FD525C187F5CA200E2A604 /* mztools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mztools.c; path = vendor/minizip/mztools.c; sourceTree = SOURCE_ROOT; };
+		77FD525D187F5CA200E2A604 /* mztools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mztools.h; path = vendor/minizip/mztools.h; sourceTree = SOURCE_ROOT; };
+		77FD525E187F5CA200E2A604 /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = unzip.c; path = vendor/minizip/unzip.c; sourceTree = SOURCE_ROOT; };
+		77FD525F187F5CA200E2A604 /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = unzip.h; path = vendor/minizip/unzip.h; sourceTree = SOURCE_ROOT; };
+		77FD5260187F5CA200E2A604 /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip.c; path = vendor/minizip/zip.c; sourceTree = SOURCE_ROOT; };
+		77FD5261187F5CA200E2A604 /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zip.h; path = vendor/minizip/zip.h; sourceTree = SOURCE_ROOT; };
+		77FD5267187F5CBE00E2A604 /* bspatch.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = bspatch.c; path = vendor/bspatch/bspatch.c; sourceTree = SOURCE_ROOT; };
+		77FD5268187F5CBE00E2A604 /* bspatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bspatch.h; path = vendor/bspatch/bspatch.h; sourceTree = SOURCE_ROOT; };
+		77FD526A187F5D0500E2A604 /* ZZTMapDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZTMapDownloader.h; sourceTree = "<group>"; };
+		77FD526B187F5D0500E2A604 /* ZZTMapDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZTMapDownloader.m; sourceTree = "<group>"; };
+		77FD5271187F5DFC00E2A604 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
+		77FD5273187F5E0900E2A604 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/lib/libbz2.dylib; sourceTree = DEVELOPER_DIR; };
 		77FFC0F61863B75800122357 /* MDGameFavoritesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDGameFavoritesWindowController.h; sourceTree = "<group>"; };
 		77FFC0F71863B75800122357 /* MDGameFavoritesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDGameFavoritesWindowController.m; sourceTree = "<group>"; };
 		77FFC0F81863B75800122357 /* MDGameFavoritesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MDGameFavoritesWindowController.xib; sourceTree = "<group>"; };
@@ -307,6 +347,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		77FD523B187F5BF800E2A604 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77FD5274187F5E0900E2A604 /* libbz2.dylib in Frameworks */,
+				77FD5272187F5DFC00E2A604 /* libz.dylib in Frameworks */,
+				77FD526D187F5D2200E2A604 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -341,6 +391,7 @@
 				77BC678A184086DC00F82849 /* ChatTextRedirect.mdplugin */,
 				77BC67A71840913900F82849 /* MapLoadingMagic.mdplugin */,
 				77E6C7091842B7BE00705ED5 /* MapList.mdplugin */,
+				77FD523E187F5BF800E2A604 /* MapDownloader.mdplugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -348,6 +399,8 @@
 		775B528C14D331C800B874E3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				77FD5273187F5E0900E2A604 /* libbz2.dylib */,
+				77FD5271187F5DFC00E2A604 /* libz.dylib */,
 				7709F96A1846C256005E58F5 /* Cocoa.framework */,
 				77BC675A184040DF00F82849 /* CoreServices.framework */,
 				77BC6758184040D400F82849 /* Foundation.framework */,
@@ -368,6 +421,7 @@
 			children = (
 				773E8ADC1820C7C500D1A71A /* AppKit.framework */,
 				773E8AD91820C7B700D1A71A /* Foundation.framework */,
+				77FD5240187F5BF800E2A604 /* CoreData.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
@@ -491,6 +545,7 @@
 				77B10989185D8E210080BDDF /* MDPlugin.h */,
 				77BC6752184040A600F82849 /* plugin_handler.m */,
 				77E6C7031842B73100705ED5 /* mach_override */,
+				77FD5241187F5BF800E2A604 /* MapDownloader */,
 				77E6C70B1842B7BE00705ED5 /* MapList */,
 				77BC67A91840913900F82849 /* MapLoadingMagic */,
 				77BC678E184086DC00F82849 /* ChatTextRedirect */,
@@ -537,6 +592,53 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		77FD5241187F5BF800E2A604 /* MapDownloader */ = {
+			isa = PBXGroup;
+			children = (
+				77FD526A187F5D0500E2A604 /* ZZTMapDownloader.h */,
+				77FD526B187F5D0500E2A604 /* ZZTMapDownloader.m */,
+				77FD5266187F5CAA00E2A604 /* bspatch */,
+				77FD524B187F5C8600E2A604 /* minizip */,
+				77FD5242187F5BF800E2A604 /* Supporting Files */,
+			);
+			path = MapDownloader;
+			sourceTree = "<group>";
+		};
+		77FD5242187F5BF800E2A604 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				77FD5243187F5BF800E2A604 /* MapDownloader-Info.plist */,
+				77FD5244187F5BF800E2A604 /* InfoPlist.strings */,
+				77FD5247187F5BF800E2A604 /* MapDownloader-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		77FD524B187F5C8600E2A604 /* minizip */ = {
+			isa = PBXGroup;
+			children = (
+				77FD5259187F5CA200E2A604 /* crypt.h */,
+				77FD525A187F5CA200E2A604 /* ioapi.c */,
+				77FD525B187F5CA200E2A604 /* ioapi.h */,
+				77FD525C187F5CA200E2A604 /* mztools.c */,
+				77FD525D187F5CA200E2A604 /* mztools.h */,
+				77FD525E187F5CA200E2A604 /* unzip.c */,
+				77FD525F187F5CA200E2A604 /* unzip.h */,
+				77FD5260187F5CA200E2A604 /* zip.c */,
+				77FD5261187F5CA200E2A604 /* zip.h */,
+			);
+			name = minizip;
+			sourceTree = "<group>";
+		};
+		77FD5266187F5CAA00E2A604 /* bspatch */ = {
+			isa = PBXGroup;
+			children = (
+				77FD5267187F5CBE00E2A604 /* bspatch.c */,
+				77FD5268187F5CBE00E2A604 /* bspatch.h */,
+			);
+			name = bspatch;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -566,6 +668,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				77FD526F187F5D3900E2A604 /* PBXTargetDependency */,
 				77BC675D184043B300F82849 /* PBXTargetDependency */,
 				77BC679F1840899D00F82849 /* PBXTargetDependency */,
 				77BC67B91840921900F82849 /* PBXTargetDependency */,
@@ -644,6 +747,23 @@
 			productReference = 77E6C7091842B7BE00705ED5 /* MapList.mdplugin */;
 			productType = "com.apple.product-type.bundle";
 		};
+		77FD523D187F5BF800E2A604 /* MapDownloader */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 77FD5248187F5BF800E2A604 /* Build configuration list for PBXNativeTarget "MapDownloader" */;
+			buildPhases = (
+				77FD523A187F5BF800E2A604 /* Sources */,
+				77FD523B187F5BF800E2A604 /* Frameworks */,
+				77FD523C187F5BF800E2A604 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MapDownloader;
+			productName = MapDownloader;
+			productReference = 77FD523E187F5BF800E2A604 /* MapDownloader.mdplugin */;
+			productType = "com.apple.product-type.bundle";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -670,6 +790,7 @@
 				77BC6789184086DC00F82849 /* ChatTextRedirect */,
 				77BC67A61840913900F82849 /* MapLoadingMagic */,
 				77E6C7081842B7BE00705ED5 /* MapList */,
+				77FD523D187F5BF800E2A604 /* MapDownloader */,
 			);
 		};
 /* End PBXProject section */
@@ -725,6 +846,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				77E6C7101842B7BE00705ED5 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77FD523C187F5BF800E2A604 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77FD5246187F5BF800E2A604 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -793,6 +922,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		77FD523A187F5BF800E2A604 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77FD5270187F5D7700E2A604 /* mach_override.c in Sources */,
+				77FD5264187F5CA200E2A604 /* unzip.c in Sources */,
+				77FD5269187F5CBE00E2A604 /* bspatch.c in Sources */,
+				77FD526C187F5D0500E2A604 /* ZZTMapDownloader.m in Sources */,
+				77FD5265187F5CA200E2A604 /* zip.c in Sources */,
+				77FD5263187F5CA200E2A604 /* mztools.c in Sources */,
+				77FD5262187F5CA200E2A604 /* ioapi.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -815,6 +958,11 @@
 			isa = PBXTargetDependency;
 			target = 77E6C7081842B7BE00705ED5 /* MapList */;
 			targetProxy = 77C595FC1842B91A00C81DC0 /* PBXContainerItemProxy */;
+		};
+		77FD526F187F5D3900E2A604 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 77FD523D187F5BF800E2A604 /* MapDownloader */;
+			targetProxy = 77FD526E187F5D3900E2A604 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -863,6 +1011,14 @@
 			isa = PBXVariantGroup;
 			children = (
 				77E6C70F1842B7BE00705ED5 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		77FD5244187F5BF800E2A604 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				77FD5245187F5BF800E2A604 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -1227,6 +1383,71 @@
 			};
 			name = Release;
 		};
+		77FD5249187F5BF800E2A604 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_DIR)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MapDownloader/MapDownloader-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "MapDownloader/MapDownloader-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = mdplugin;
+			};
+			name = Debug;
+		};
+		77FD524A187F5BF800E2A604 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_DIR)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MapDownloader/MapDownloader-Prefix.pch";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "MapDownloader/MapDownloader-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = mdplugin;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1283,6 +1504,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		77FD5248187F5BF800E2A604 /* Build configuration list for PBXNativeTarget "MapDownloader" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				77FD5249187F5BF800E2A604 /* Debug */,
+				77FD524A187F5BF800E2A604 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
