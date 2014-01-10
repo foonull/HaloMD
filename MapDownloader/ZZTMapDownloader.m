@@ -199,7 +199,6 @@ static int widgetChangedOverride(int actionsomething, char *action_label, int al
         mach_override_ptr((void *)0x1b5bd6, haloMapLoading, (void **)&haloMapLoadOld);
         mach_override_ptr((void *)0x24bf92, widgetChangedOverride, (void **)&widgetChangedOld);
         self1 = self;
-        NSLog(@"%u", (uint32_t)sizeof(struct unicodeStringReference));
     }
     return self;
 }

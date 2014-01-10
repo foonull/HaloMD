@@ -37,6 +37,8 @@ typedef unsigned char u_char;
 #include <unistd.h>
 #include <fcntl.h>
 
+#include "bspatch.h"
+
 static off_t offtin(u_char *buf)
 {
 	off_t y;
