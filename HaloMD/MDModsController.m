@@ -389,6 +389,7 @@ static BOOL gJsonSerializaionExists = NO;
 				
 				if (0x10 + sizeof(uint32_t) > [mapData length])
 				{
+					[fileHandle closeFile];
 					continue;
 				}
 				
@@ -396,6 +397,7 @@ static BOOL gJsonSerializaionExists = NO;
 				
 				if (indexOffset + 0xC + sizeof(uint32_t) > [mapData length])
 				{
+					[fileHandle closeFile];
 					continue;
 				}
 				
@@ -411,7 +413,7 @@ static BOOL gJsonSerializaionExists = NO;
 					
 					const void *classStringBytes = [mapData bytes] + currentLocation;
 					
-					if (currentLocation + 0x14 + sizeof(uint32_t) > [mapData length]) continue;
+					if (currentLocation + 0x14 + sizeof(uint32_t) > [mapData length]) break;
 					
 					if (strncmp(classStringBytes, "rtsu", 4) == 0)
 					{
