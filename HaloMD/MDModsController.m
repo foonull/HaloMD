@@ -385,45 +385,56 @@ static BOOL gJsonSerializaionExists = NO;
 			if ([[NSFileManager defaultManager] fileExistsAtPath:mapPath])
 			{
 				NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:mapPath];
+				NSData *mapData = [NSData dataWithContentsOfFile:mapPath];
 				
-				[fileHandle seekToFileOffset:0x10];
-				uint32_t indexOffset = CFSwapInt32LittleToHost(*(uint32_t *)[[fileHandle readDataOfLength:4] bytes]);
+				if (0x10 + sizeof(uint32_t) > [mapData length])
+				{
+					continue;
+				}
 				
-				[fileHandle seekToFileOffset:indexOffset];
-				uint32_t magic = CFSwapInt32LittleToHost(*(uint32_t *)[[fileHandle readDataOfLength:4] bytes]) - indexOffset - 0x28;
+				uint32_t indexOffset = CFSwapInt32LittleToHost(*(uint32_t *)([mapData bytes] + 0x10));
 				
-				[fileHandle seekToFileOffset:indexOffset + 0xC];
-				uint32_t numberOfTags = CFSwapInt32LittleToHost(*(uint32_t *)[[fileHandle readDataOfLength:4] bytes]);
+				if (indexOffset + 0xC + sizeof(uint32_t) > [mapData length])
+				{
+					continue;
+				}
+				
+				uint32_t magic = CFSwapInt32LittleToHost(*(uint32_t *)([mapData bytes] + indexOffset)) - indexOffset - 0x28;
+				
+				uint32_t numberOfTags = CFSwapInt32LittleToHost(*(uint32_t *)([mapData bytes] + indexOffset + 0xC));
 				
 				uint32_t tagArrayOffset = indexOffset + 0x28;
 				
 				for (uint32_t tagIndex = 0; tagIndex < numberOfTags; tagIndex++)
 				{
 					uint32_t currentLocation = 0x20 * tagIndex + tagArrayOffset;
-					[fileHandle seekToFileOffset:currentLocation];
 					
-					NSData *classStringData = [fileHandle readDataOfLength:4];
+					const void *classStringBytes = [mapData bytes] + currentLocation;
 					
-					if ([classStringData length] == 4 && strncmp([classStringData bytes], "rtsu", 4) == 0)
+					if (currentLocation + 0x14 + sizeof(uint32_t) > [mapData length]) continue;
+					
+					if (strncmp(classStringBytes, "rtsu", 4) == 0)
 					{
-						[fileHandle seekToFileOffset:currentLocation + 0x10];
-						uint32_t tagOffset = CFSwapInt32LittleToHost(*(uint32_t *)[[fileHandle readDataOfLength:4] bytes]) - magic;
-						
-						[fileHandle seekToFileOffset:tagOffset];
+						uint32_t tagOffset = CFSwapInt32LittleToHost(*(uint32_t *)([mapData bytes] + currentLocation + 0x10)) - magic;
 						
 						const char *mpMapListPath = "ui\\shell\\main_menu\\mp_map_list";
 						size_t mpMapListPathLength = strlen(mpMapListPath)+1;
-						NSData *tagPathData = [fileHandle readDataOfLength:mpMapListPathLength];
 						
-						if ([tagPathData length] == mpMapListPathLength && strncmp([tagPathData bytes], mpMapListPath, mpMapListPathLength) == 0)
+						if (tagOffset + mpMapListPathLength > [mapData length]) continue;
+						
+						const void *tagPathBytes = [mapData bytes] + tagOffset;
+						
+						if (strncmp(tagPathBytes, mpMapListPath, mpMapListPathLength) == 0)
 						{
-							[fileHandle seekToFileOffset:currentLocation + 0x14];
-							uint32_t namesOffset = CFSwapInt32LittleToHost(*(uint32_t *)[[fileHandle readDataOfLength:4] bytes]) - magic + 0x1B0;
+							uint32_t namesOffset = CFSwapInt32LittleToHost(*(uint32_t *)([mapData bytes] + currentLocation + 0x14)) - magic + 0x1B0;
 							uint32_t gephyOffset = namesOffset + 0x1A0;
 							
-							[fileHandle seekToFileOffset:gephyOffset];
 							unichar buffer[13];
 							memset(buffer, 0, sizeof(buffer));
+							
+							if (gephyOffset + sizeof(buffer) > [mapData length]) break;
+							
+							[fileHandle seekToFileOffset:gephyOffset];
 							
 							NSString *mapNameUI = mapIdentifier;
 							MDModListItem *listItem = [modListDictionary objectForKey:mapIdentifier];
