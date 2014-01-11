@@ -10,6 +10,11 @@
 #import "MDPlugin.h"
 
 @interface ZZTMapDownloader : NSObject <MDPlugin, NSURLDownloadDelegate>
+{
+	NSString *_mapIdentifier; //the identifier of our downloading map. ex: bune_1
+}
+
+@property (nonatomic, copy) NSString *mapIdentifier;
 
 typedef enum {
     NONE = 0x0,

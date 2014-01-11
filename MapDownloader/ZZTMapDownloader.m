@@ -20,6 +20,8 @@
 
 @implementation ZZTMapDownloader
 
+@synthesize mapIdentifier = _mapIdentifier;
+
 static NSString *applicationSupportPath()
 {
     return [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"HaloMD"];
@@ -34,11 +36,10 @@ typedef enum {
     DOWNLOADING_PLUGIN //unsupported right now.
 } DownloadType;
 
-static NSString *mapIdentifier; //the identifier of our downloading map. ex: bune_1
 static NSString *mapHumanReadableName; //the human readable name. map identifier if unknown.
 static NSString *patchToMap = nil; //the identifier of the map we will patch. nil if we aren't patching.
 static NSString *mapMd5 = nil; //the md5 of our downloading map. it's nil if this isn't known.
-static id self1; //the class is also a download delegate.
+static ZZTMapDownloader *self1; //the class is also a download delegate.
 static NSDictionary *modList; //mod list object. We will only get the list once.
 static unichar *downloadMessage; //the message we're using to override the error.
 static uint32_t *downloadMessageLength; //pointer to message length.
@@ -132,13 +133,12 @@ static void *haloMapLoading(char *a, uint32_t b, char *c) {
         if(b == 0x3a98 && !downloading) { // when trying to connect to a server
             char *mapName = (char *)0x3D7B35;
             if([self1 pathToMap:[[NSString stringWithCString:mapName encoding:NSUTF8StringEncoding]stringByAppendingPathExtension:@"map"]] != nil) return haloMapLoadOld(a,b,c);
-            mapIdentifier = [NSString stringWithCString:mapName encoding:NSUTF8StringEncoding];
-            [mapIdentifier retain];
+			self1.mapIdentifier = [NSString stringWithCString:mapName encoding:NSUTF8StringEncoding];
             downloadType = DOWNLOADING_ZIP;
             NSURL *patchURL;
             for(NSDictionary *dict in [modList objectForKey:@"Mods"])
             {
-                if([[dict objectForKey:@"identifier"] isEqualToString:mapIdentifier]) {
+                if([[dict objectForKey:@"identifier"] isEqualToString:self1.mapIdentifier]) {
                     mapMd5 = [dict objectForKey:@"hash"];
                     if([dict objectForKey:@"patches"] != nil) {
                         for(NSDictionary *patch in [dict objectForKey:@"patches"]) {
@@ -227,10 +227,10 @@ uint32_t currentSize;
     if(currentSize != 0) return; //don't want to reset anything.
     @autoreleasepool {
         fileSize = (uint32_t)[response expectedContentLength];
-        mapHumanReadableName = mapIdentifier;
+        mapHumanReadableName = self.mapIdentifier;
         NSArray *mods = [modList objectForKey:@"Mods"];
         for(NSDictionary *mod in mods) {
-            if([[mod objectForKey:@"identifier"] isEqualToString:mapIdentifier])
+            if([[mod objectForKey:@"identifier"] isEqualToString:self.mapIdentifier])
             {
                 mapHumanReadableName = [mod objectForKey:@"name"];
                 break;
@@ -258,7 +258,7 @@ uint32_t currentSize;
             return;
         }
         downloading = false;
-        NSString *finalLocationOfMap = [[MAPS_DIRECTORY stringByAppendingPathComponent:mapIdentifier] stringByAppendingPathExtension:@"map"];
+        NSString *finalLocationOfMap = [[MAPS_DIRECTORY stringByAppendingPathComponent:self.mapIdentifier] stringByAppendingPathExtension:@"map"];
         if (downloadType == DOWNLOADING_ZIP)
         {
             NSString *unzipDirectory = [NSTemporaryDirectory() stringByAppendingPathComponent:@"HaloMD_Unzip_Ingame"];
@@ -269,10 +269,10 @@ uint32_t currentSize;
             if ([[NSFileManager defaultManager] createDirectoryAtPath:unzipDirectory withIntermediateDirectories:NO attributes:nil error:nil])
             {
                 unzFile file = unzOpen([MOD_DOWNLOAD_ARCHIVE UTF8String]);
-                unzLocateFile(file, [[mapIdentifier stringByAppendingPathExtension:@"map"]UTF8String], 0);
+                unzLocateFile(file, [[self.mapIdentifier stringByAppendingPathExtension:@"map"]UTF8String], 0);
                 unzOpenCurrentFile(file);
                 unz_file_info *finfo = calloc(sizeof(unz_file_info),0x1);
-                uint32_t fileNameBufferSize = [mapIdentifier length];
+                uint32_t fileNameBufferSize = [self.mapIdentifier length];
                 char *fileName = calloc(fileNameBufferSize,0x1);
                 char *extraField = calloc(0x200,0x1);
                 uint32_t extraFieldSize = 0x200;
@@ -292,11 +292,11 @@ uint32_t currentSize;
         } else if (downloadType == DOWNLOADING_PATCH)
         {
             NSString *patchMapPath = [[MAPS_DIRECTORY stringByAppendingPathComponent:patchToMap]stringByAppendingPathExtension:@"map"];
-            const char * argv[] = { "bspatch" , [patchMapPath UTF8String], [[[MAPS_DIRECTORY stringByAppendingPathComponent:mapIdentifier] stringByAppendingPathExtension:@"map"] UTF8String], [MOD_DOWNLOAD_PATCH UTF8String] };
-            if(bspatch_main(4, (char **)argv) != 0 || (mapMd5 != nil && ![[self md5HashFromFilePath:[[MAPS_DIRECTORY stringByAppendingPathComponent:mapIdentifier] stringByAppendingPathExtension:@"map"]] isEqualToString:mapMd5])) {
+            const char * argv[] = { "bspatch" , [patchMapPath UTF8String], [[[MAPS_DIRECTORY stringByAppendingPathComponent:self.mapIdentifier] stringByAppendingPathExtension:@"map"] UTF8String], [MOD_DOWNLOAD_PATCH UTF8String] };
+            if(bspatch_main(4, (char **)argv) != 0 || (mapMd5 != nil && ![[self md5HashFromFilePath:[[MAPS_DIRECTORY stringByAppendingPathComponent:self.mapIdentifier] stringByAppendingPathExtension:@"map"]] isEqualToString:mapMd5])) {
                 changeDownloadMessage(@"Patch failed.|nTrying archive. Hold tight!");
                 [[NSFileManager defaultManager] removeItemAtPath:finalLocationOfMap error:nil];
-                NSURL *downloadurl = [NSURL URLWithString:[NSString stringWithFormat:@"http://halomd.macgamingmods.com/mods/%s.zip",[mapIdentifier UTF8String]]];
+                NSURL *downloadurl = [NSURL URLWithString:[NSString stringWithFormat:@"http://halomd.macgamingmods.com/mods/%s.zip",[self.mapIdentifier UTF8String]]];
                 NSURLRequest *request = [NSURLRequest requestWithURL:downloadurl cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
                 activeDownload = [[NSURLDownload alloc] initWithRequest:request delegate:self1];
                 [activeDownload setDestination:MOD_DOWNLOAD_ARCHIVE allowOverwrite:YES];
