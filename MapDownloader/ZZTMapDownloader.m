@@ -191,9 +191,9 @@ static int widgetChangedOverride(int actionsomething, char *action_label, int al
 }
 - (id)initWithMode:(MDPluginMode)mode
 {
-	self = [super init];
-	if (self != nil)
-	{
+    self = [super init];
+    if (self != nil)
+    {
         modList = dictionaryFromPathWithoutExtension([applicationSupportPath() stringByAppendingPathComponent:@"HaloMD_mods_list"]);
         [modList retain];
         mach_override_ptr((void *)0x1b5bd6, haloMapLoading, (void **)&haloMapLoadOld);
