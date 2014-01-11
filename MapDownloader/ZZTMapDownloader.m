@@ -129,7 +129,7 @@ static void *(*haloMapLoadOld)(char *a, uint32_t b, char *c) = NULL;
 
 static void *haloMapLoading(char *a, uint32_t b, char *c) {
     @autoreleasepool {
-        if(b == 0x3a98 && !downloading) {
+        if(b == 0x3a98 && !downloading) { // when trying to connect to a server
             char *mapName = (char *)0x3D7B35;
             if([self1 pathToMap:[[NSString stringWithCString:mapName encoding:NSUTF8StringEncoding]stringByAppendingPathExtension:@"map"]] != nil) return haloMapLoadOld(a,b,c);
             mapIdentifier = [NSString stringWithCString:mapName encoding:NSUTF8StringEncoding];
