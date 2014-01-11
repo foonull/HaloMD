@@ -11,10 +11,12 @@
 
 @interface ZZTMapDownloader : NSObject <MDPlugin, NSURLDownloadDelegate>
 {
-	NSString *_mapIdentifier; //the identifier of our downloading map. ex: bune_1
+    NSString *_mapIdentifier; //the identifier of our downloading map. ex: bune_1
+    NSString *_patchToMap; //the identifier of the map we will patch. nil if we aren't patching.
 }
 
 @property (nonatomic, copy) NSString *mapIdentifier;
+@property (nonatomic, copy) NSString *patchToMap;
 
 typedef enum {
     NONE = 0x0,

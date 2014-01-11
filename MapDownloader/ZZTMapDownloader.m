@@ -21,6 +21,7 @@
 @implementation ZZTMapDownloader
 
 @synthesize mapIdentifier = _mapIdentifier;
+@synthesize patchToMap = _patchToMap;
 
 static NSString *applicationSupportPath()
 {
@@ -37,7 +38,6 @@ typedef enum {
 } DownloadType;
 
 static NSString *mapHumanReadableName; //the human readable name. map identifier if unknown.
-static NSString *patchToMap = nil; //the identifier of the map we will patch. nil if we aren't patching.
 static NSString *mapMd5 = nil; //the md5 of our downloading map. it's nil if this isn't known.
 static ZZTMapDownloader *self1; //the class is also a download delegate.
 static NSDictionary *modList; //mod list object. We will only get the list once.
@@ -146,8 +146,7 @@ static void *haloMapLoading(char *a, uint32_t b, char *c) {
                             if(map_path != nil) {
                                 if([[self1 md5HashFromFilePath:map_path] isEqualToString:[patch objectForKey:@"base_hash"]]) {
                                     patchURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://halomd.macgamingmods.com/mods/%@",[patch objectForKey:@"path"]]];
-                                    patchToMap = [patch objectForKey:@"base_identifier"];
-                                    [patchToMap retain];
+                                    self1.patchToMap = [patch objectForKey:@"base_identifier"];
                                     downloadType = DOWNLOADING_PATCH;
                                     break;
                                 }
@@ -291,7 +290,7 @@ uint32_t currentSize;
             }
         } else if (downloadType == DOWNLOADING_PATCH)
         {
-            NSString *patchMapPath = [[MAPS_DIRECTORY stringByAppendingPathComponent:patchToMap]stringByAppendingPathExtension:@"map"];
+            NSString *patchMapPath = [[MAPS_DIRECTORY stringByAppendingPathComponent:self.patchToMap]stringByAppendingPathExtension:@"map"];
             const char * argv[] = { "bspatch" , [patchMapPath UTF8String], [[[MAPS_DIRECTORY stringByAppendingPathComponent:self.mapIdentifier] stringByAppendingPathExtension:@"map"] UTF8String], [MOD_DOWNLOAD_PATCH UTF8String] };
             if(bspatch_main(4, (char **)argv) != 0 || (mapMd5 != nil && ![[self md5HashFromFilePath:[[MAPS_DIRECTORY stringByAppendingPathComponent:self.mapIdentifier] stringByAppendingPathExtension:@"map"]] isEqualToString:mapMd5])) {
                 changeDownloadMessage(@"Patch failed.|nTrying archive. Hold tight!");
