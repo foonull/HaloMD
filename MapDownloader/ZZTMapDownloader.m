@@ -253,60 +253,57 @@ uint32_t currentSize;
 - (void) downloadDidFinish:(NSURLDownload *)download
 {
     @autoreleasepool {
-        changeDownloadMessage([NSString stringWithFormat:@"Map: %@|nFinishing: %@",mapHumanReadableName,downloadType != DOWNLOADING_PATCH ? @"Unarchiving..." : @"Patching"]);
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC / 20), dispatch_get_main_queue(), ^(void){
-            if (downloading == false) {
-                cleanup();
-                return;
+        if (downloading == false) {
+            cleanup();
+            return;
+        }
+        downloading = false;
+        NSString *finalLocationOfMap = [[MAPS_DIRECTORY stringByAppendingPathComponent:mapIdentifier] stringByAppendingPathExtension:@"map"];
+        if (downloadType == DOWNLOADING_ZIP)
+        {
+            NSString *unzipDirectory = [NSTemporaryDirectory() stringByAppendingPathComponent:@"HaloMD_Unzip_Ingame"];
+            if ([[NSFileManager defaultManager] fileExistsAtPath:unzipDirectory])
+            {
+                [[NSFileManager defaultManager] removeItemAtPath:unzipDirectory error:nil];
             }
-            downloading = false;
-            NSString *finalLocationOfMap = [[MAPS_DIRECTORY stringByAppendingPathComponent:mapIdentifier] stringByAppendingPathExtension:@"map"];
-            if (downloadType == DOWNLOADING_ZIP)
+            if ([[NSFileManager defaultManager] createDirectoryAtPath:unzipDirectory withIntermediateDirectories:NO attributes:nil error:nil])
             {
-                NSString *unzipDirectory = [NSTemporaryDirectory() stringByAppendingPathComponent:@"HaloMD_Unzip_Ingame"];
-                if ([[NSFileManager defaultManager] fileExistsAtPath:unzipDirectory])
-                {
-                    [[NSFileManager defaultManager] removeItemAtPath:unzipDirectory error:nil];
-                }
-                if ([[NSFileManager defaultManager] createDirectoryAtPath:unzipDirectory withIntermediateDirectories:NO attributes:nil error:nil])
-                {
-                    unzFile file = unzOpen([MOD_DOWNLOAD_ARCHIVE UTF8String]);
-                    unzLocateFile(file, [[mapIdentifier stringByAppendingPathExtension:@"map"]UTF8String], 0);
-                    unzOpenCurrentFile(file);
-                    unz_file_info *finfo = calloc(sizeof(unz_file_info),0x1);
-                    uint32_t fileNameBufferSize = [mapIdentifier length];
-                    char *fileName = calloc(fileNameBufferSize,0x1);
-                    char *extraField = calloc(0x200,0x1);
-                    uint32_t extraFieldSize = 0x200;
-                    char *comment = calloc(0x200,0x1);
-                    uint32_t commentBufferSize = 0x200;
-                    unzGetCurrentFileInfo(file, finfo, fileName, fileNameBufferSize, extraField, extraFieldSize, comment, commentBufferSize);
-                    uint32_t mapSize = finfo->uncompressed_size;
-                    char *mapData = calloc(mapSize, 0x1);
-                    unzReadCurrentFile(file, mapData, mapSize);
-                    NSData *data = [NSData dataWithBytes:mapData length:mapSize];
-                    [data writeToFile:finalLocationOfMap atomically:NO];
-                    if(mapMd5 != nil && ![mapMd5 isEqualToString:[self md5HashFromFilePath:finalLocationOfMap]]) {
-                        changeDownloadMessage(@"Corrupted download. Failed!");
-                        return;
-                    }
-                }
-            } else if (downloadType == DOWNLOADING_PATCH)
-            {
-                NSString *patchMapPath = [[MAPS_DIRECTORY stringByAppendingPathComponent:patchToMap]stringByAppendingPathExtension:@"map"];
-                const char * argv[] = { "bspatch" , [patchMapPath UTF8String], [[[MAPS_DIRECTORY stringByAppendingPathComponent:mapIdentifier] stringByAppendingPathExtension:@"map"] UTF8String], [MOD_DOWNLOAD_PATCH UTF8String] };
-                if(bspatch_main(4, (char **)argv) != 0 || (mapMd5 != nil && ![[self md5HashFromFilePath:[[MAPS_DIRECTORY stringByAppendingPathComponent:mapIdentifier] stringByAppendingPathExtension:@"map"]] isEqualToString:mapMd5])) {
-                    changeDownloadMessage(@"Patch failed.|nTrying archive. Hold tight!");
-                    [[NSFileManager defaultManager] removeItemAtPath:finalLocationOfMap error:nil];
-                    NSURL *downloadurl = [NSURL URLWithString:[NSString stringWithFormat:@"http://halomd.macgamingmods.com/mods/%s.zip",[mapIdentifier UTF8String]]];
-                    NSURLRequest *request = [NSURLRequest requestWithURL:downloadurl cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
-                    activeDownload = [[NSURLDownload alloc] initWithRequest:request delegate:self1];
-                    [activeDownload setDestination:MOD_DOWNLOAD_ARCHIVE allowOverwrite:YES];
+                unzFile file = unzOpen([MOD_DOWNLOAD_ARCHIVE UTF8String]);
+                unzLocateFile(file, [[mapIdentifier stringByAppendingPathExtension:@"map"]UTF8String], 0);
+                unzOpenCurrentFile(file);
+                unz_file_info *finfo = calloc(sizeof(unz_file_info),0x1);
+                uint32_t fileNameBufferSize = [mapIdentifier length];
+                char *fileName = calloc(fileNameBufferSize,0x1);
+                char *extraField = calloc(0x200,0x1);
+                uint32_t extraFieldSize = 0x200;
+                char *comment = calloc(0x200,0x1);
+                uint32_t commentBufferSize = 0x200;
+                unzGetCurrentFileInfo(file, finfo, fileName, fileNameBufferSize, extraField, extraFieldSize, comment, commentBufferSize);
+                uint32_t mapSize = finfo->uncompressed_size;
+                char *mapData = calloc(mapSize, 0x1);
+                unzReadCurrentFile(file, mapData, mapSize);
+                NSData *data = [NSData dataWithBytes:mapData length:mapSize];
+                [data writeToFile:finalLocationOfMap atomically:NO];
+                if(mapMd5 != nil && ![mapMd5 isEqualToString:[self md5HashFromFilePath:finalLocationOfMap]]) {
+                    changeDownloadMessage(@"Corrupted download. Failed!");
                     return;
                 }
             }
-            [self rejoinServerAndCleanup];
-        });
+        } else if (downloadType == DOWNLOADING_PATCH)
+        {
+            NSString *patchMapPath = [[MAPS_DIRECTORY stringByAppendingPathComponent:patchToMap]stringByAppendingPathExtension:@"map"];
+            const char * argv[] = { "bspatch" , [patchMapPath UTF8String], [[[MAPS_DIRECTORY stringByAppendingPathComponent:mapIdentifier] stringByAppendingPathExtension:@"map"] UTF8String], [MOD_DOWNLOAD_PATCH UTF8String] };
+            if(bspatch_main(4, (char **)argv) != 0 || (mapMd5 != nil && ![[self md5HashFromFilePath:[[MAPS_DIRECTORY stringByAppendingPathComponent:mapIdentifier] stringByAppendingPathExtension:@"map"]] isEqualToString:mapMd5])) {
+                changeDownloadMessage(@"Patch failed.|nTrying archive. Hold tight!");
+                [[NSFileManager defaultManager] removeItemAtPath:finalLocationOfMap error:nil];
+                NSURL *downloadurl = [NSURL URLWithString:[NSString stringWithFormat:@"http://halomd.macgamingmods.com/mods/%s.zip",[mapIdentifier UTF8String]]];
+                NSURLRequest *request = [NSURLRequest requestWithURL:downloadurl cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
+                activeDownload = [[NSURLDownload alloc] initWithRequest:request delegate:self1];
+                [activeDownload setDestination:MOD_DOWNLOAD_ARCHIVE allowOverwrite:YES];
+                return;
+            }
+        }
+        [self rejoinServerAndCleanup];
     }
 }
 - (void) rejoinServerAndCleanup {
