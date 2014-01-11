@@ -13,10 +13,12 @@
 {
     NSString *_mapIdentifier; //the identifier of our downloading map. ex: bune_1
     NSString *_patchToMap; //the identifier of the map we will patch. nil if we aren't patching.
+    NSURLDownload *_activeDownload;
 }
 
 @property (nonatomic, copy) NSString *mapIdentifier;
 @property (nonatomic, copy) NSString *patchToMap;
+@property (nonatomic, retain) NSURLDownload *activeDownload;
 
 typedef enum {
     NONE = 0x0,

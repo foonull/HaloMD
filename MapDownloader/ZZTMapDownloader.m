@@ -22,6 +22,7 @@
 
 @synthesize mapIdentifier = _mapIdentifier;
 @synthesize patchToMap = _patchToMap;
+@synthesize activeDownload = _activeDownload;
 
 static NSString *applicationSupportPath()
 {
@@ -51,9 +52,6 @@ static unichar *ok_old; //we're replacing OK with CANCEL. this is the pointer to
 static void *ok_old_location; //the location of the "OK" text pointer, so if we cancel, we can revert it to ok_old.
 static bool downloading = false;
 static DownloadType downloadType;
-
-
-static NSURLDownload *activeDownload;
 
 static int unistrlen(unichar *chars) //Halo wants the length of the string. this is a cheap way of finding it.
 {
@@ -158,14 +156,14 @@ static void *haloMapLoading(char *a, uint32_t b, char *c) {
             }
             if(downloadType == DOWNLOADING_PATCH) {
                 NSURLRequest *request = [NSURLRequest requestWithURL:patchURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
-                activeDownload = [[NSURLDownload alloc] initWithRequest:request delegate:self1];
-                [activeDownload setDestination:MOD_DOWNLOAD_PATCH allowOverwrite:YES];
+                self1.activeDownload = [[NSURLDownload alloc] initWithRequest:request delegate:self1];
+                [self1.activeDownload setDestination:MOD_DOWNLOAD_PATCH allowOverwrite:YES];
             }
             else {
                 NSURL *downloadurl = [NSURL URLWithString:[NSString stringWithFormat:@"http://halomd.macgamingmods.com/mods/%s.zip",mapName]];
                 NSURLRequest *request = [NSURLRequest requestWithURL:downloadurl cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
-                activeDownload = [[NSURLDownload alloc] initWithRequest:request delegate:self1];
-                [activeDownload setDestination:MOD_DOWNLOAD_ARCHIVE allowOverwrite:YES];
+                self1.activeDownload = [[NSURLDownload alloc] initWithRequest:request delegate:self1];
+                [self1.activeDownload setDestination:MOD_DOWNLOAD_ARCHIVE allowOverwrite:YES];
             }
         }
     }
@@ -184,7 +182,7 @@ static int widgetChangedOverride(int actionsomething, char *action_label, int al
     if(means == USER && (strncmp(action_label,forward_label,sizeof forward_label) == 0 || strncmp(action_label,back_label,sizeof back_label) == 0) && downloading) {
         downloading = false;
         cleanup();
-        [activeDownload cancel];
+        [self1.activeDownload cancel];
     }
     return widgetChangedOld(actionsomething,action_label,alwayszero,means);
 }
@@ -297,8 +295,8 @@ uint32_t currentSize;
                 [[NSFileManager defaultManager] removeItemAtPath:finalLocationOfMap error:nil];
                 NSURL *downloadurl = [NSURL URLWithString:[NSString stringWithFormat:@"http://halomd.macgamingmods.com/mods/%s.zip",[self.mapIdentifier UTF8String]]];
                 NSURLRequest *request = [NSURLRequest requestWithURL:downloadurl cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
-                activeDownload = [[NSURLDownload alloc] initWithRequest:request delegate:self1];
-                [activeDownload setDestination:MOD_DOWNLOAD_ARCHIVE allowOverwrite:YES];
+                self.activeDownload = [[NSURLDownload alloc] initWithRequest:request delegate:self1];
+                [self.activeDownload setDestination:MOD_DOWNLOAD_ARCHIVE allowOverwrite:YES];
                 return;
             }
         }
