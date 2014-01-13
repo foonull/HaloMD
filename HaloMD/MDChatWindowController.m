@@ -134,13 +134,22 @@ static VALUE signOnSafely(VALUE self)
 	
 	NSMutableString *strippedNickname = [NSMutableString string];
 	NSString *profileName = [[NSApp delegate] profileName];
-	for (NSUInteger profileNameIndex = 0; profileNameIndex < [profileName length]; profileNameIndex++)
+	
+	if (![profileName canBeConvertedToEncoding:NSUTF8StringEncoding])
 	{
-		unichar character = [profileName characterAtIndex:profileNameIndex];
-		if (isascii(character))
+		for (NSUInteger profileNameIndex = 0; profileNameIndex < [profileName length]; profileNameIndex++)
 		{
-			[strippedNickname appendString:[NSString stringWithCharacters:&character length:1]];
+			unichar character = [profileName characterAtIndex:profileNameIndex];
+			NSString *unicodeString = [NSString stringWithCharacters:&character length:1];
+			if ([unicodeString canBeConvertedToEncoding:NSUTF8StringEncoding])
+			{
+				[strippedNickname appendString:unicodeString];
+			}
 		}
+	}
+	else
+	{
+		[strippedNickname setString:profileName];
 	}
 	
 	NSMutableString *nickname = [NSMutableString stringWithString:strippedNickname];
