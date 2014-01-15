@@ -23,6 +23,7 @@
 @synthesize mapIdentifier = _mapIdentifier;
 @synthesize patchToMap = _patchToMap;
 @synthesize activeDownload = _activeDownload;
+@synthesize modList = _modList;
 
 static NSString *applicationSupportPath()
 {
@@ -41,7 +42,6 @@ typedef enum {
 static NSString *mapHumanReadableName; //the human readable name. map identifier if unknown.
 static NSString *mapMd5 = nil; //the md5 of our downloading map. it's nil if this isn't known.
 static ZZTMapDownloader *self1; //the class is also a download delegate.
-static NSDictionary *modList; //mod list object. We will only get the list once.
 static unichar *downloadMessage; //the message we're using to override the error.
 static uint32_t *downloadMessageLength; //pointer to message length.
 static unichar *error_old; //pointer to the old error, in case we cancel
@@ -135,7 +135,7 @@ static void *haloMapLoading(char *a, uint32_t b, char *c) {
 			self1.mapIdentifier = [NSString stringWithCString:mapName encoding:NSUTF8StringEncoding];
             downloadType = DOWNLOADING_ZIP;
             NSURL *patchURL;
-            for(NSDictionary *dict in [modList objectForKey:@"Mods"])
+            for(NSDictionary *dict in [self1.modList objectForKey:@"Mods"])
             {
                 if([[dict objectForKey:@"identifier"] isEqualToString:self1.mapIdentifier]) {
                     mapMd5 = [dict objectForKey:@"hash"];
@@ -192,8 +192,7 @@ static int widgetChangedOverride(int actionsomething, char *action_label, int al
     self = [super init];
     if (self != nil)
     {
-        modList = dictionaryFromPathWithoutExtension([applicationSupportPath() stringByAppendingPathComponent:@"HaloMD_mods_list"]);
-        [modList retain];
+        self.modList = dictionaryFromPathWithoutExtension([applicationSupportPath() stringByAppendingPathComponent:@"HaloMD_mods_list"]);
         mach_override_ptr((void *)0x1b5bd6, haloMapLoading, (void **)&haloMapLoadOld);
         mach_override_ptr((void *)0x24bf92, widgetChangedOverride, (void **)&widgetChangedOld);
         self1 = self;
@@ -226,7 +225,7 @@ uint32_t currentSize;
     @autoreleasepool {
         fileSize = (uint32_t)[response expectedContentLength];
         mapHumanReadableName = self.mapIdentifier;
-        NSArray *mods = [modList objectForKey:@"Mods"];
+        NSArray *mods = [self.modList objectForKey:@"Mods"];
         for(NSDictionary *mod in mods) {
             if([[mod objectForKey:@"identifier"] isEqualToString:self.mapIdentifier])
             {
