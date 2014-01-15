@@ -285,6 +285,12 @@ uint32_t currentSize;
                 unzReadCurrentFile(file, mapData, mapSize);
                 NSData *data = [NSData dataWithBytes:mapData length:mapSize];
                 [data writeToFile:finalLocationOfMap atomically:NO];
+
+                free(fileName);
+                free(extraField);
+                free(comment);
+                free(mapData);
+
                 if(self.mapMd5 != nil && ![self.mapMd5 isEqualToString:md5HashFromFilePath(finalLocationOfMap)]) {
                     changeDownloadMessage(@"Corrupted download. Failed!");
                     return;
