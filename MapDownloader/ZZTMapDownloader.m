@@ -132,7 +132,7 @@ static void *haloMapLoading(char *a, uint32_t b, char *c) {
         if(b == 0x3a98 && !downloading) { // when trying to connect to a server
             char *mapName = (char *)0x3D7B35;
             if([self1 pathToMap:[[NSString stringWithCString:mapName encoding:NSUTF8StringEncoding]stringByAppendingPathExtension:@"map"]] != nil) return haloMapLoadOld(a,b,c);
-			self1.mapIdentifier = [NSString stringWithCString:mapName encoding:NSUTF8StringEncoding];
+            self1.mapIdentifier = [NSString stringWithCString:mapName encoding:NSUTF8StringEncoding];
             downloadType = DOWNLOADING_ZIP;
             NSURL *patchURL;
             for(NSDictionary *dict in [self1.modList objectForKey:@"Mods"])
