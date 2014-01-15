@@ -183,7 +183,9 @@ static int widgetChangedOverride(int actionsomething, char *action_label, int al
     if(means == USER && (strncmp(action_label,forward_label,sizeof forward_label) == 0 || strncmp(action_label,back_label,sizeof back_label) == 0) && downloading) {
         downloading = false;
         cleanup();
-        [self1.activeDownload cancel];
+        @autoreleasepool {
+            [self1.activeDownload cancel];
+        }
     }
     return widgetChangedOld(actionsomething,action_label,alwayszero,means);
 }
@@ -238,12 +240,12 @@ uint32_t currentSize;
 }
 - (void) download:(NSURLDownload *)download didReceiveDataOfLength:(NSUInteger)length
 {
-    if(!downloading) {
-        [download cancel];
-        return;
-    }
-    currentSize += length;
     @autoreleasepool {
+        if(!downloading) {
+            [download cancel];
+            return;
+        }
+        currentSize += length;
         changeDownloadMessage([NSString stringWithFormat:@"Map: %@|nProgress: %.00f%%",mapHumanReadableName,((float)currentSize/(float)fileSize*100.0)]);
     }
 }
