@@ -93,7 +93,9 @@ static void changeError() { //changing the error dialog box.
             } else if(strncmp(location,"rtsu",4) == 0 && strcmp((void *)*(uint32_t *)(location + 16),"ui\\shell\\error\\error_headers") == 0) {
                 struct unicodeStringTag *tag = (void *)*(uint32_t *)(location + 20);
                 unichar *downloadHeaderTemp = (unichar *)[@"DOWNLOAD" cStringUsingEncoding:NSUTF16LittleEndianStringEncoding];
-                unichar *downloadHeader = calloc(unistrlen(downloadHeaderTemp) * 0x2 + 0x2,0x1);
+                static unichar *downloadHeader;
+                free(downloadHeader);
+                downloadHeader = calloc(unistrlen(downloadHeaderTemp) * 0x2 + 0x2,0x1);
                 memcpy(downloadHeader,downloadHeaderTemp,unistrlen(downloadHeaderTemp) * 0x2 + 0x2);
                 attention_old = tag->references[0].string;
                 attention_old_location = &(tag->references[0].string);
