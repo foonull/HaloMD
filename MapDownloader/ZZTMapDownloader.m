@@ -248,7 +248,7 @@ uint32_t currentSize;
             return;
         }
         currentSize += length;
-        changeDownloadMessage([NSString stringWithFormat:@"Map: %@|nProgress: %.00f%%",self.mapHumanReadableName,((float)currentSize/(float)fileSize*100.0)]);
+        changeDownloadMessage([NSString stringWithFormat:@"Map: %@|nProgress: %.00f%%",self.mapHumanReadableName, fileSize == 0 ? 0 : ((float)currentSize/(float)fileSize*100.0)]);
     }
 }
 - (void) downloadDidFinish:(NSURLDownload *)download
