@@ -133,7 +133,7 @@ static void *haloMapLoading(char *a, uint32_t b, char *c) {
     @autoreleasepool {
         if(b == 0x3a98 && !downloading) { // when trying to connect to a server
             char *mapName = (char *)0x3D7B35;
-            if([self1 pathToMap:[[NSString stringWithCString:mapName encoding:NSUTF8StringEncoding]stringByAppendingPathExtension:@"map"]] != nil) return haloMapLoadOld(a,b,c);
+            if(pathToMap([[NSString stringWithCString:mapName encoding:NSUTF8StringEncoding]stringByAppendingPathExtension:@"map"]) != nil) return haloMapLoadOld(a,b,c);
             self1.mapIdentifier = [NSString stringWithCString:mapName encoding:NSUTF8StringEncoding];
             downloadType = DOWNLOADING_ZIP;
             NSURL *patchURL;
@@ -143,7 +143,7 @@ static void *haloMapLoading(char *a, uint32_t b, char *c) {
                     self1.mapMd5 = [dict objectForKey:@"hash"];
                     if([dict objectForKey:@"patches"] != nil) {
                         for(NSDictionary *patch in [dict objectForKey:@"patches"]) {
-                            NSString *map_path = [self1 pathToMap:[[patch objectForKey:@"base_identifier"]stringByAppendingPathExtension:@"map"]];
+                            NSString *map_path = pathToMap([[patch objectForKey:@"base_identifier"]stringByAppendingPathExtension:@"map"]);
                             if(map_path != nil) {
                                 if([[self1 md5HashFromFilePath:map_path] isEqualToString:[patch objectForKey:@"base_hash"]]) {
                                     patchURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://halomd.macgamingmods.com/mods/%@",[patch objectForKey:@"path"]]];
@@ -317,7 +317,7 @@ uint32_t currentSize;
         downloading = false;
     }
 }
-- (NSString *)pathToMap:(NSString *)map
+static NSString *pathToMap(NSString *map)
 {
     NSString *mapPath = [[[[[NSProcessInfo processInfo] environment] objectForKey:@"MD_STOCK_GAME_DATA_DIRECTORY"]stringByAppendingPathComponent:@"Maps"] stringByAppendingPathComponent:map]; //Check HaloMD bundle
     if([[NSFileManager defaultManager] fileExistsAtPath:mapPath]) return mapPath;
