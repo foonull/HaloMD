@@ -21,6 +21,7 @@
 @implementation ZZTMapDownloader
 
 @synthesize mapIdentifier = _mapIdentifier;
+@synthesize mapHumanReadableName = _mapHumanReadableName;
 @synthesize patchToMap = _patchToMap;
 @synthesize activeDownload = _activeDownload;
 @synthesize modList = _modList;
@@ -39,7 +40,6 @@ typedef enum {
     DOWNLOADING_PLUGIN //unsupported right now.
 } DownloadType;
 
-static NSString *mapHumanReadableName; //the human readable name. map identifier if unknown.
 static NSString *mapMd5 = nil; //the md5 of our downloading map. it's nil if this isn't known.
 static ZZTMapDownloader *self1; //the class is also a download delegate.
 static unichar *downloadMessage; //the message we're using to override the error.
@@ -228,12 +228,12 @@ uint32_t currentSize;
     if(currentSize != 0) return; //don't want to reset anything.
     @autoreleasepool {
         fileSize = (uint32_t)[response expectedContentLength];
-        mapHumanReadableName = self.mapIdentifier;
+        self.mapHumanReadableName = self.mapIdentifier;
         NSArray *mods = [self.modList objectForKey:@"Mods"];
         for(NSDictionary *mod in mods) {
             if([[mod objectForKey:@"identifier"] isEqualToString:self.mapIdentifier])
             {
-                mapHumanReadableName = [mod objectForKey:@"name"];
+                self.mapHumanReadableName = [mod objectForKey:@"name"];
                 break;
             }
         }
@@ -248,7 +248,7 @@ uint32_t currentSize;
             return;
         }
         currentSize += length;
-        changeDownloadMessage([NSString stringWithFormat:@"Map: %@|nProgress: %.00f%%",mapHumanReadableName,((float)currentSize/(float)fileSize*100.0)]);
+        changeDownloadMessage([NSString stringWithFormat:@"Map: %@|nProgress: %.00f%%",self.mapHumanReadableName,((float)currentSize/(float)fileSize*100.0)]);
     }
 }
 - (void) downloadDidFinish:(NSURLDownload *)download
