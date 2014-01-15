@@ -12,10 +12,11 @@
 @interface ZZTMapDownloader : NSObject <MDPlugin, NSURLDownloadDelegate>
 {
     NSString *_mapIdentifier; //the identifier of our downloading map. ex: bune_1
-	NSString *_mapHumanReadableName; //the human readable name. map identifier if unknown.
+    NSString *_mapHumanReadableName; //the human readable name. map identifier if unknown.
     NSString *_patchToMap; //the identifier of the map we will patch. nil if we aren't patching.
     NSURLDownload *_activeDownload;
-	NSDictionary *_modList; //mod list object. We will only get the list once.
+    NSDictionary *_modList; //mod list object. We will only get the list once.
+    NSString *_mapMd5; //the md5 of our downloading map. it's nil if this isn't known.
 }
 
 @property (nonatomic, copy) NSString *mapIdentifier;
@@ -23,6 +24,7 @@
 @property (nonatomic, copy) NSString *patchToMap;
 @property (nonatomic, retain) NSURLDownload *activeDownload;
 @property (nonatomic, retain) NSDictionary *modList;
+@property (nonatomic, copy) NSString *mapMd5;
 
 typedef enum {
     NONE = 0x0,

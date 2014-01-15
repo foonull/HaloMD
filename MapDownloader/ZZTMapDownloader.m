@@ -25,6 +25,7 @@
 @synthesize patchToMap = _patchToMap;
 @synthesize activeDownload = _activeDownload;
 @synthesize modList = _modList;
+@synthesize mapMd5 = _mapMd5;
 
 static NSString *applicationSupportPath()
 {
@@ -40,7 +41,6 @@ typedef enum {
     DOWNLOADING_PLUGIN //unsupported right now.
 } DownloadType;
 
-static NSString *mapMd5 = nil; //the md5 of our downloading map. it's nil if this isn't known.
 static ZZTMapDownloader *self1; //the class is also a download delegate.
 static unichar *downloadMessage; //the message we're using to override the error.
 static uint32_t *downloadMessageLength; //pointer to message length.
@@ -140,7 +140,7 @@ static void *haloMapLoading(char *a, uint32_t b, char *c) {
             for(NSDictionary *dict in [self1.modList objectForKey:@"Mods"])
             {
                 if([[dict objectForKey:@"identifier"] isEqualToString:self1.mapIdentifier]) {
-                    mapMd5 = [dict objectForKey:@"hash"];
+                    self1.mapMd5 = [dict objectForKey:@"hash"];
                     if([dict objectForKey:@"patches"] != nil) {
                         for(NSDictionary *patch in [dict objectForKey:@"patches"]) {
                             NSString *map_path = [self1 pathToMap:[[patch objectForKey:@"base_identifier"]stringByAppendingPathExtension:@"map"]];
@@ -285,7 +285,7 @@ uint32_t currentSize;
                 unzReadCurrentFile(file, mapData, mapSize);
                 NSData *data = [NSData dataWithBytes:mapData length:mapSize];
                 [data writeToFile:finalLocationOfMap atomically:NO];
-                if(mapMd5 != nil && ![mapMd5 isEqualToString:[self md5HashFromFilePath:finalLocationOfMap]]) {
+                if(self.mapMd5 != nil && ![self.mapMd5 isEqualToString:[self md5HashFromFilePath:finalLocationOfMap]]) {
                     changeDownloadMessage(@"Corrupted download. Failed!");
                     return;
                 }
@@ -294,7 +294,7 @@ uint32_t currentSize;
         {
             NSString *patchMapPath = [[MAPS_DIRECTORY stringByAppendingPathComponent:self.patchToMap]stringByAppendingPathExtension:@"map"];
             const char * argv[] = { "bspatch" , [patchMapPath UTF8String], [[[MAPS_DIRECTORY stringByAppendingPathComponent:self.mapIdentifier] stringByAppendingPathExtension:@"map"] UTF8String], [MOD_DOWNLOAD_PATCH UTF8String] };
-            if(bspatch_main(4, (char **)argv) != 0 || (mapMd5 != nil && ![[self md5HashFromFilePath:[[MAPS_DIRECTORY stringByAppendingPathComponent:self.mapIdentifier] stringByAppendingPathExtension:@"map"]] isEqualToString:mapMd5])) {
+            if(bspatch_main(4, (char **)argv) != 0 || (self.mapMd5 != nil && ![[self md5HashFromFilePath:[[MAPS_DIRECTORY stringByAppendingPathComponent:self.mapIdentifier] stringByAppendingPathExtension:@"map"]] isEqualToString:self.mapMd5])) {
                 changeDownloadMessage(@"Patch failed.|nTrying archive. Hold tight!");
                 [[NSFileManager defaultManager] removeItemAtPath:finalLocationOfMap error:nil];
                 NSURL *downloadurl = [NSURL URLWithString:[NSString stringWithFormat:@"http://halomd.macgamingmods.com/mods/%s.zip",[self.mapIdentifier UTF8String]]];
