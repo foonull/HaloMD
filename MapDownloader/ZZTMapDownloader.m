@@ -77,6 +77,7 @@ static void changeError() { //changing the error dialog box.
         for(uint32_t i=0;i<numberOfTags;i++) { //that's where our number of tags is.
             void *location = i*0x20 + tagArray;
             if(strncmp(location,"rtsu",4) == 0 && strcmp((void *)*(uint32_t *)(location + 16),"ui\\shell\\strings\\displayed_error_messages") == 0) {
+                free(downloadMessage);
                 downloadMessage = calloc(0x100,0x1);
                 struct unicodeStringTag *tag = (void *)*(uint32_t *)(location + 20);
                 downloadMessageLength = &(tag->references[35].length);
