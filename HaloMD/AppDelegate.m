@@ -1965,31 +1965,73 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	}
 }
 
+- (void)showChatButton:(BOOL)shouldShowChatButton
+{
+	NSView *themeFrame = [[[self window] contentView] superview];
+	
+	if (shouldShowChatButton)
+	{
+		static BOOL setUpFrames;
+		if (!setUpFrames)
+		{
+			// Add a chat button in the window's title bar
+			// http://13bold.com/tutorials/accessory-view/
+			BOOL supportsFullscreen = ([[self window] collectionBehavior] & NSWindowCollectionBehaviorFullScreenPrimary) != 0;
+			NSRect containerRect = [themeFrame frame];
+			NSRect accessoryViewRect = [chatButton frame];
+			NSRect newFrame = NSMakeRect(containerRect.size.width - accessoryViewRect.size.width - (supportsFullscreen ? 20 : 0), containerRect.size.height - accessoryViewRect.size.height - 2, accessoryViewRect.size.width, accessoryViewRect.size.height);
+			
+			[chatButton setFrame:newFrame];
+			
+			NSImage *icon = [NSImage imageNamed:@"chat_icon.pdf"];
+			[icon setTemplate:YES];
+			[chatButton setImage:icon];
+			
+			setUpFrames = YES;
+		}
+		
+		[themeFrame addSubview:chatButton];
+	}
+	else
+	{
+		NSMutableArray *newSubviews = [NSMutableArray array];
+		for (id view in [themeFrame subviews])
+		{
+			if (view != chatButton)
+			{
+				[newSubviews addObject:view];
+			}
+		}
+		[themeFrame setSubviews:newSubviews];
+	}
+}
+
+- (void)willEnterFullScreen:(NSNotification *)notification
+{
+	[self showChatButton:NO];
+}
+
+- (void)didExitFullScreen:(NSNotification *)notification
+{
+	[self showChatButton:YES];
+}
+
 - (void)awakeFromNib
 {
-	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name"
-																   ascending:YES
-																	selector:@selector(compare:)];
+	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(compare:)];
 	[serversTableView setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 	[sortDescriptor release];
 	
 	[serversTableView setDoubleAction:@selector(joinGame:)];
 	
-	// Add a chat button in the window's title bar
-	// http://13bold.com/tutorials/accessory-view/
-	BOOL supportsFullscreen = ([[self window] collectionBehavior] & NSWindowCollectionBehaviorFullScreenPrimary) != 0;
-	NSView *themeFrame = [[[self window] contentView] superview];
-	NSRect containerRect = [themeFrame frame];
-	NSRect accessoryViewRect = [chatButton frame];
-	NSRect newFrame = NSMakeRect(containerRect.size.width - accessoryViewRect.size.width - (supportsFullscreen ? 20 : 0), containerRect.size.height - accessoryViewRect.size.height - 2, accessoryViewRect.size.width, accessoryViewRect.size.height);
+	if (([[self window] collectionBehavior] & NSWindowCollectionBehaviorFullScreenPrimary) != 0)
+	{
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterFullScreen:) name:NSWindowWillEnterFullScreenNotification object:window];
 		
-	[chatButton setFrame:newFrame];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didExitFullScreen:) name:NSWindowDidExitFullScreenNotification object:window];
+	}
 	
-	NSImage *icon = [NSImage imageNamed:@"chat_icon.pdf"];
-	[icon setTemplate:YES];
-	[chatButton setImage:icon];
-	
-	[themeFrame addSubview:chatButton];
+	[self showChatButton:YES];
 }
 
 - (void)getUrl:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
