@@ -37,6 +37,7 @@
 
 @protocol MDPlugin <NSObject>
 
+// You should have NSPrincipalClass set to your class name that implements this protocol
 // You should have CFBundleVersion in your info.plist set, and it should be an integer greater than 0 that increases for each version you send out
 // It would also be a good idea to set CFBundleShortVersionString, your humanized friendly version (eg: 1.0)
 
@@ -45,7 +46,7 @@
 // It is possible for a plug-in to have both of these keys set to true, and distinguish at run-time which mode it is being run through. At least one of these keys must be set to true.
 // In particular, if a plug-in has both keys set to true, then it will run through global mode if the plug-in is enabled by the user, otherwise it could run through map mode if it's disabled by the user and if a map requires the plug-in.
 
-// If you want to test a map-based plug-in without first submitting the map to the database, duplicate HaloMD_mods_list.json and rename the copy to HaloMD_mods_list_dev.json (in HaloMD's app support folder), add a new entry for your map and change its identifier and create a "plug-ins" key which is an array of plug-in name strings
+// If you want to test a map-based plug-in without first submitting the map to the database, duplicate HaloMD_mods_list.json and rename the copy to HaloMD_mods_list_dev.json (in HaloMD's app support folder), add a new entry for your map and change its identifier and create a "plug-ins" key which is an array of plug-in name strings. If you're on OS X 10.6 or below, do the same except with a plist instead of a json.
 
 typedef enum
 {
@@ -57,6 +58,7 @@ typedef enum
 // For all the methods below an auto release pool is set up.
 // If you use Obj-C code elsewhere like in a function hook, you will be responsible for setting one up yourself.
 
+// If you have a map based plug-in that is not meant to be run in global mode, you are either encouraged to: a) code-sign your plug-in preventing the info.plist from being modified, or b) release self and return nil
 - (id)initWithMode:(MDPluginMode)mode;
 
 // For the methods below via MDPluginMapMode, they will only be called if mapName requires the plug-in.
