@@ -332,8 +332,8 @@ DQ
                                     <action selector="showGameInspector:" target="826" id="835"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Show Favorites…" id="eqg-4S-GOI">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Show Favorites…" keyEquivalent="f" id="eqg-4S-GOI">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="showGameFavoritesWindow:" target="494" id="DEm-7s-r6z"/>
                                 </connections>
