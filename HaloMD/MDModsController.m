@@ -1001,7 +1001,7 @@ static BOOL gJsonSerializaionExists = NO;
 			if (jsonData != nil)
 			{
 				NSError *error = nil;
-				dictionary = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+				dictionary = [NSClassFromString(@"NSJSONSerialization") JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
 				if (error != nil)
 				{
 					NSLog(@"Error decoding JSON: %@", error);
@@ -2022,8 +2022,8 @@ static BOOL gJsonSerializaionExists = NO;
 	if (pluginNamesToInstall.count > 0)
 	{
 		if (NSRunAlertPanel(@"Modded Game",
-							@"Do you want to %@ %d extension %@ in order to join this game?",
-							@"Install", @"Cancel", nil, needsInstalling ? @"install" : @"update", pluginNamesToInstall.count, pluginNamesToInstall.count != 1 ? @"s" : @"") == NSOKButton)
+							@"Do you want to %@ %lu extension %@ in order to join this game?",
+							@"Install", @"Cancel", nil, needsInstalling ? @"install" : @"update", (unsigned long)pluginNamesToInstall.count, pluginNamesToInstall.count != 1 ? @"s" : @"") == NSOKButton)
 		{
 			[self setJoiningServer:server];
 			[self installPluginsWithNames:pluginNamesToInstall];

@@ -355,7 +355,7 @@ static NSDictionary *dictionaryFromPathWithoutExtension(NSString *pathWithoutExt
             if (jsonData != nil)
             {
                 NSError *error = nil;
-                modsDictionary = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+                modsDictionary = [NSClassFromString(@"NSJSONSerialization") JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
                 if (error != nil)
                 {
                     NSLog(@"Failed decoding JSON: %@", error);
