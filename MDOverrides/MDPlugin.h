@@ -58,7 +58,7 @@ typedef enum
 // For all the methods below an auto release pool is set up.
 // If you use Obj-C code elsewhere like in a function hook, you will be responsible for setting one up yourself.
 
-// If you have a map based plug-in that is not meant to be run in global mode, you are either encouraged to: a) code-sign your plug-in preventing the info.plist from being modified, or b) release self and return nil
+// If you have a map based plug-in that is not meant to be run in global mode, you are either encouraged to: a) code-sign your plug-in preventing the info.plist from being modified, or b) return nil
 - (id)initWithMode:(MDPluginMode)mode;
 
 // For the methods below via MDPluginMapMode, they will only be called if mapName requires the plug-in.
