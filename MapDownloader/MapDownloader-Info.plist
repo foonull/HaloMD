@@ -24,6 +24,8 @@
 	<string>4</string>
 	<key>MDGlobalPlugin</key>
 	<string>true</string>
+	<key>MDMapPlugin</key>
+	<string>false</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2013 Zero2. All rights reserved.</string>
 	<key>NSPrincipalClass</key>

@@ -45,6 +45,7 @@
 // If you set MDMapPlugin key to true in your info.plist, then your plug-in can be a dependence to map mods in the database
 // It is possible for a plug-in to have both of these keys set to true, and distinguish at run-time which mode it is being run through. At least one of these keys must be set to true.
 // In particular, if a plug-in has both keys set to true, then it will run through global mode if the plug-in is enabled by the user, otherwise it could run through map mode if it's disabled by the user and if a map requires the plug-in.
+// If you are not using one of the modes, you should still have the key in your plist and set its value to false
 
 // If you want to test a map-based plug-in without first submitting the map to the database, duplicate HaloMD_mods_list.json and rename the copy to HaloMD_mods_list_dev.json (in HaloMD's app support folder), add a new entry for your map and change its identifier and create a "plug-ins" key which is an array of plug-in name strings. If you're on OS X 10.6 or below, do the same except with a plist instead of a json.
 
