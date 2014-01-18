@@ -70,10 +70,7 @@ static void loadMapBasedPlugin(NSString *mapName, NSString *pluginName, NSString
 			{
 				newPluginInstance = [newPluginInstance initWithMode:MDPluginMapMode];
 			}
-			else
-			{
-				newPluginInstance = [(id)newPluginInstance init];
-			}
+			
 			if (newPluginInstance != nil)
 			{
 				[gLoadedPluginsDictionary setObject:newPluginInstance forKey:pluginName];
