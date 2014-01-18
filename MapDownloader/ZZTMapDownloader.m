@@ -133,7 +133,7 @@ static void *haloMapLoading(char *a, uint32_t b, char *c) {
     @autoreleasepool {
         if(b == 0x3a98 && !downloading) { // when trying to connect to a server
             char *mapName = (char *)0x3D7B35;
-            if(pathToMap([[NSString stringWithCString:mapName encoding:NSUTF8StringEncoding]stringByAppendingPathExtension:@"map"]) != nil) return haloMapLoadOld(a,b,c);
+            if(mapName[0x0] == 0x0 || pathToMap([[NSString stringWithCString:mapName encoding:NSUTF8StringEncoding]stringByAppendingPathExtension:@"map"]) != nil) return haloMapLoadOld(a,b,c);
             self1.mapIdentifier = [NSString stringWithCString:mapName encoding:NSUTF8StringEncoding];
             downloadType = DOWNLOADING_ZIP;
             NSURL *patchURL;
@@ -298,13 +298,14 @@ uint32_t currentSize;
             }
         } else if (downloadType == DOWNLOADING_PATCH)
         {
-            NSString *patchMapPath = [[MAPS_DIRECTORY stringByAppendingPathComponent:self.patchToMap]stringByAppendingPathExtension:@"map"];
+            NSString *patchMapPath = pathToMap([self.patchToMap stringByAppendingPathExtension:@"map"]);
             const char * argv[] = { "bspatch" , [patchMapPath UTF8String], [[[MAPS_DIRECTORY stringByAppendingPathComponent:self.mapIdentifier] stringByAppendingPathExtension:@"map"] UTF8String], [MOD_DOWNLOAD_PATCH UTF8String] };
             if(bspatch_main(4, (char **)argv) != 0 || (self.mapMd5 != nil && ![md5HashFromFilePath([[MAPS_DIRECTORY stringByAppendingPathComponent:self.mapIdentifier] stringByAppendingPathExtension:@"map"]) isEqualToString:self.mapMd5])) {
                 changeDownloadMessage(@"Patch failed.|nTrying archive. Hold tight!");
                 [[NSFileManager defaultManager] removeItemAtPath:finalLocationOfMap error:nil];
                 NSURL *downloadurl = [NSURL URLWithString:[NSString stringWithFormat:@"http://halomd.macgamingmods.com/mods/%s.zip",[self.mapIdentifier UTF8String]]];
                 NSURLRequest *request = [NSURLRequest requestWithURL:downloadurl cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
+                downloadType = DOWNLOADING_ZIP;
                 self.activeDownload = [[NSURLDownload alloc] initWithRequest:request delegate:self1];
                 [self.activeDownload setDestination:MOD_DOWNLOAD_ARCHIVE allowOverwrite:YES];
                 return;
@@ -346,7 +347,7 @@ static NSDictionary *dictionaryFromPathWithoutExtension(NSString *pathWithoutExt
             modsDictionary = [NSDictionary dictionaryWithContentsOfFile:fullPath];
             if (modsDictionary == nil)
             {
-                NSLog(@"Failed decoding plist at %@", fullPath);
+                NSLog(@"Map Downloader Failed decoding plist at %@", fullPath);
             }
         }
         else
@@ -358,7 +359,7 @@ static NSDictionary *dictionaryFromPathWithoutExtension(NSString *pathWithoutExt
                 modsDictionary = [NSClassFromString(@"NSJSONSerialization") JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
                 if (error != nil)
                 {
-                    NSLog(@"Failed decoding JSON: %@", error);
+                    NSLog(@"Map Downloader Failed decoding JSON: %@", error);
                 }
             }
         }
