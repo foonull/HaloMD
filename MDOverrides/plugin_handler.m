@@ -68,7 +68,21 @@ static void loadMapBasedPlugin(NSString *mapName, NSString *pluginName, NSString
 			id <MDPlugin> newPluginInstance = [[pluginBundle principalClass] alloc];
 			if ([newPluginInstance respondsToSelector:@selector(initWithMode:)])
 			{
-				newPluginInstance = [newPluginInstance initWithMode:MDPluginMapMode];
+				id <MDPlugin> tempInstance = [newPluginInstance initWithMode:MDPluginMapMode];
+				if (tempInstance != nil)
+				{
+					newPluginInstance = tempInstance;
+				}
+				else
+				{
+					[newPluginInstance release];
+					newPluginInstance = nil;
+				}
+			}
+			else
+			{
+				[newPluginInstance release];
+				newPluginInstance = nil;
 			}
 			
 			if (newPluginInstance != nil)
