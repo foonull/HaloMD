@@ -71,6 +71,8 @@
 #define HALO_GAMES_PASSWORD_KEY @"HALO_GAMES_PASSWORD_KEY"
 #define HALO_LOBBY_GAMES_CACHE_KEY @"HALO_LOBBY_GAMES_CACHE_KEY2"
 
+#define MDChatWindowIdentifier @"MDChatWindowIdentifier"
+
 static NSDictionary *expectedVersionsDictionary = nil;
 + (void)initialize
 {
@@ -2105,6 +2107,13 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	if (!chatWindowController)
 	{
 		chatWindowController = [[MDChatWindowController alloc] init];
+		
+		if ([[chatWindowController window] respondsToSelector:@selector(setRestorable:)])
+		{
+			[[chatWindowController window] setRestorable:YES];
+			[[chatWindowController window] setRestorationClass:[self class]];
+			[[chatWindowController window] setIdentifier:MDChatWindowIdentifier];
+		}
 	}
 	
 	return chatWindowController;
@@ -2113,6 +2122,14 @@ static NSDictionary *expectedVersionsDictionary = nil;
 - (IBAction)showChatWindow:(id)sender
 {
 	[[self chatWindowController] showWindow:nil];
+}
+
++ (void)restoreWindowWithIdentifier:(NSString *)identifier state:(NSCoder *)state completionHandler:(void (^)(NSWindow *, NSError *))completionHandler
+{
+	if ([identifier isEqualToString:MDChatWindowIdentifier])
+	{
+		completionHandler([[[NSApp delegate] chatWindowController] window], nil);
+	}
 }
 
 - (IBAction)showGameFavoritesWindow:(id)sender
