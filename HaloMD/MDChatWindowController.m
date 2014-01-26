@@ -92,6 +92,9 @@ static VALUE requireWrapper(VALUE path)
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillBecomeActive:) name:NSApplicationWillBecomeActiveNotification object:nil];
 		
 		[[NSApp delegate] addObserver:self forKeyPath:@"inGameServer" options:NSKeyValueObservingOptionNew context:NULL];
+		
+		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(systemWillSleep:) name:NSWorkspaceWillSleepNotification object:nil];
+		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(systemDidWake:) name:NSWorkspaceDidWakeNotification object:nil];
 	}
 	return self;
 }
@@ -223,6 +226,22 @@ static VALUE exitRoomSafely(VALUE data)
 			[chatTimer release];
 			chatTimer = nil;
 		}
+	}
+}
+
+- (void)systemWillSleep:(NSNotification *)notification
+{
+	if ([[self window] isVisible] && chatTimer)
+	{
+		[self signOff];
+	}
+}
+
+- (void)systemDidWake:(NSNotification *)notification
+{
+	if ([[self window] isVisible] && !chatTimer)
+	{
+		[self signOn];
 	}
 }
 
