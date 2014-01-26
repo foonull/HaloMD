@@ -71,6 +71,7 @@
 	NSTask *haloTask;
 	BOOL isInstalled;
 	BOOL usingServerCache;
+	BOOL sleeping;
 	
 	MDServer *inGameServer;
 	

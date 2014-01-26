@@ -164,6 +164,9 @@ static NSDictionary *expectedVersionsDictionary = nil;
 			[[NSBundle bundleWithPath:growlPath] load];
 			[NSClassFromString(@"GrowlApplicationBridge") setGrowlDelegate:(id<GrowlApplicationBridgeDelegate>)self];
 		}
+		
+		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(systemWillSleep:) name:NSWorkspaceWillSleepNotification object:nil];
+		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(systemDidWake:) name:NSWorkspaceDidWakeNotification object:nil];
 	}
 	
 	return self;
@@ -1524,6 +1527,16 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	}
 }
 
+- (void)systemWillSleep:(NSNotification *)notification
+{
+	sleeping = YES;
+}
+
+- (void)systemDidWake:(NSNotification *)notification
+{
+	sleeping = NO;
+}
+
 - (void)prepareRefreshingForServer:(MDServer *)server
 {
 	[server setValid:NO];
@@ -1539,7 +1552,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 
 - (void)refreshVisibleServers:(id)object
 {
-	if ([[self window] isVisible] && !queryTimer && [serversArray count] > 0 && (![self isHaloOpen] || [[[[NSWorkspace sharedWorkspace] activeApplication] objectForKey:@"NSApplicationBundleIdentifier"] isEqualToString:[[NSBundle mainBundle] bundleIdentifier]]))
+	if (!sleeping && [[self window] isVisible] && !queryTimer && [serversArray count] > 0 && (![self isHaloOpen] || [[[[NSWorkspace sharedWorkspace] activeApplication] objectForKey:@"NSApplicationBundleIdentifier"] isEqualToString:[[NSBundle mainBundle] bundleIdentifier]]))
 	{
 		NSRange visibleRowsRange = [serversTableView rowsInRect:serversTableView.visibleRect];
 		NSArray *servers = [serversArray subarrayWithRange:visibleRowsRange];
@@ -1560,7 +1573,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 
 - (IBAction)refreshServer:(id)sender
 {
-	if (queryTimer)
+	if (queryTimer || sleeping)
 	{
 		return;
 	}
@@ -1691,7 +1704,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 
 - (IBAction)refreshServers:(id)sender
 {	
-	if (queryTimer)
+	if (queryTimer || sleeping)
 	{
 		return;
 	}
