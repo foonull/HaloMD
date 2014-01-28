@@ -401,11 +401,11 @@ static BOOL gJsonSerializaionExists = NO;
 					continue;
 				}
 				
-				uint32_t magic = CFSwapInt32LittleToHost(*(uint32_t *)([mapData bytes] + indexOffset)) - indexOffset - 0x28;
+				uint32_t magic = 0x40440000 - indexOffset;
 				
 				uint32_t numberOfTags = CFSwapInt32LittleToHost(*(uint32_t *)([mapData bytes] + indexOffset + 0xC));
 				
-				uint32_t tagArrayOffset = indexOffset + 0x28;
+				uint32_t tagArrayOffset = CFSwapInt32LittleToHost(*(uint32_t *)([mapData bytes] + indexOffset)) - magic;
 				
 				for (uint32_t tagIndex = 0; tagIndex < numberOfTags; tagIndex++)
 				{
