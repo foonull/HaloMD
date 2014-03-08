@@ -341,7 +341,39 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	[[NSUserDefaults standardUserDefaults] setBool:!state forKey:CHAT_SHOW_MESSAGE_RECEIVE_NOTIFICATION];
 }
 
-- (void)startHaloTaskWithArguments:(NSArray *)arguments
+- (void)setUpInitFile:(NSString *)command
+{
+	NSString *templateInitPath = [[[self applicationSupportPath] stringByAppendingPathComponent:@"GameData"] stringByAppendingPathComponent:@"template_init.txt"];
+	NSString *initPath = [[[self applicationSupportPath] stringByAppendingPathComponent:@"GameData"] stringByAppendingPathComponent:@"init.txt"];
+	
+	if ([[NSFileManager defaultManager] fileExistsAtPath:initPath])
+	{
+		[[NSFileManager defaultManager] removeItemAtPath:initPath
+												   error:NULL];
+	}
+	
+	NSMutableString *templateInitString = [NSMutableString stringWithContentsOfFile:templateInitPath
+																		   encoding:NSUTF8StringEncoding
+																			  error:NULL];
+	
+	if (!templateInitString)
+	{
+		NSLog(@"Failed to create templateInitString");
+		templateInitString = [NSMutableString string];
+	}
+	
+	if (command)
+	{
+		[templateInitString appendFormat:@"\n%@", command];
+	}
+	
+	[templateInitString writeToFile:initPath
+						 atomically:YES
+						   encoding:NSUTF8StringEncoding
+							  error:NULL];
+}
+
+- (void)startHaloTask
 {
 	NSBundle *haloBundle = [NSBundle bundleWithPath:[[self applicationSupportPath] stringByAppendingPathComponent:@"HaloMD.app"]];
 	NSString *launchPath = [haloBundle executablePath];
@@ -355,7 +387,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		[haloTask setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:[[[NSBundle mainBundle] privateFrameworksPath] stringByAppendingPathComponent:@"MDOverrides.dylib"], @"DYLD_INSERT_LIBRARIES", [[NSBundle mainBundle] builtInPlugInsPath], @"MD_BUILTIN_PLUGIN_DIRECTORY", [self resourceGameDataPath], @"MD_STOCK_GAME_DATA_DIRECTORY", nil]];
 #endif
 		[haloTask setLaunchPath:launchPath];
-		[haloTask setArguments:arguments];
+		[haloTask setArguments:[NSArray array]];
 		[haloTask launch];
 	}
 	@catch (NSException *exception)
@@ -390,7 +422,8 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	}
 	else
 	{
-		[self startHaloTaskWithArguments:[NSArray array]];
+		[self setUpInitFile:nil];
+		[self startHaloTask];
 		[self setInGameServer:nil];
 	}
 }
@@ -516,7 +549,8 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		[modsController enableModWithMapIdentifier:[server map]];
 	}
 	
-	[self startHaloTaskWithArguments:[NSArray arrayWithObjects:@"--connect", [NSString stringWithFormat:@"%@:%d", [server ipAddress], [server portNumber]], @"-password", password, nil]];
+	[self setUpInitFile:[NSString stringWithFormat:@"connect %@:%d \"%@\"", [server ipAddress], [server portNumber], password]];
+	[self startHaloTask];
 	
 	[self setInGameServer:server];
 	
@@ -1137,21 +1171,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		}
 	}
 	
-	NSString *oldTemplateInitPath = [gameDataPath stringByAppendingPathComponent:@"template_init.txt"];
-	NSString *initPath = [gameDataPath stringByAppendingPathComponent:@"init.txt"];;
-	
-	// We used to use template_init in the past and use connect command to connect to a server
-	// But we now use command line arguments to connect to a game, so if the template init file exists,
-	// move it over to normal init path - this should also get rid of the 'connect' command in the init file from previous versions
-	if ([[NSFileManager defaultManager] fileExistsAtPath:oldTemplateInitPath])
-	{
-		if ([[NSFileManager defaultManager] fileExistsAtPath:initPath])
-		{
-			[[NSFileManager defaultManager] removeItemAtPath:initPath error:NULL];
-		}
-		[[NSFileManager defaultManager] moveItemAtPath:oldTemplateInitPath toPath:initPath error:NULL];
-	}
-	
+	NSString *templateInitPath = [gameDataPath stringByAppendingPathComponent:@"template_init.txt"];
 	NSString *resourceAppPath = [self resourceAppPath];
 	NSString *resourceGameDataPath = [self resourceGameDataPath];
 	
@@ -1226,9 +1246,9 @@ static NSDictionary *expectedVersionsDictionary = nil;
 													   error:NULL];
 		}
 		
-		if ([[NSFileManager defaultManager] fileExistsAtPath:initPath])
+		if ([[NSFileManager defaultManager] fileExistsAtPath:templateInitPath])
 		{
-			[[NSFileManager defaultManager] removeItemAtPath:initPath
+			[[NSFileManager defaultManager] removeItemAtPath:templateInitPath
 													   error:NULL];
 		}
 		
@@ -1339,15 +1359,15 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		}
 	}
 	
-	if (![[NSFileManager defaultManager] fileExistsAtPath:initPath])
+	if (![[NSFileManager defaultManager] fileExistsAtPath:templateInitPath])
 	{
-		NSString *initString = @"sv_mapcycle_timeout 5";
-		if (![initString writeToFile:initPath
+		NSString *templateInitString = @"sv_mapcycle_timeout 5";
+		if (![templateInitString writeToFile:templateInitPath
 								  atomically:YES
 									encoding:NSUTF8StringEncoding
 									   error:NULL])
 		{
-			NSLog(@"Failed to write init.txt");
+			NSLog(@"Failed to write template_init.txt");
 		}
 	}
 	
