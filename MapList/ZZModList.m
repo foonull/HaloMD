@@ -50,7 +50,7 @@ static NSString *applicationSupportPath()
     return [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"HaloMD"];
 }
 
-static int buildNumberFromMapIdentifier(NSString *mapIdentifier) //straight from HaloMD's source
+static int buildNumberFromIdentifier(NSString *mapIdentifier) //straight from HaloMD's source
 {
     int buildNumber = 0;
     
@@ -68,9 +68,24 @@ static int buildNumberFromMapIdentifier(NSString *mapIdentifier) //straight from
     return buildNumber;
 }
 
+static NSString *mapIdentityFromIdentifier(NSString *mapIdentifier)
+{
+    if(buildNumberFromIdentifier(mapIdentifier) == 0) return mapIdentifier;
+    NSString *mapName = mapIdentifier;
+    NSRange range = [mapIdentifier rangeOfString:@"_" options:NSBackwardsSearch];
+    if (range.location != NSNotFound)
+    {
+        if (range.location+1 < [mapIdentifier length])
+        {
+            mapName = [mapIdentifier substringToIndex:range.location];
+        }
+    }
+    return mapName;
+}
+
 static bool hideMapBecauseOutdated(NSString *map) { //hide map if a later version of the map is available
     if(!mapIsOutdated(map)) return NO;
-    int buildNumber = buildNumberFromMapIdentifier(map);
+    int buildNumber = buildNumberFromIdentifier(map);
     NSString *name = mapNameFromIdentifier(map);
     NSError *error = [[NSError alloc]init];
     NSArray *files = [[NSFileManager defaultManager]contentsOfDirectoryAtPath:MAPS_DIRECTORY error:&error];
@@ -81,7 +96,7 @@ static bool hideMapBecauseOutdated(NSString *map) { //hide map if a later versio
                 NSString *fileWithoutExtension = [[file lastPathComponent]stringByDeletingPathExtension];
                 if(![mapNameFromIdentifier(name) isEqualToString:mapNameFromIdentifier(fileWithoutExtension)])
                     continue;
-                if(buildNumberFromMapIdentifier(fileWithoutExtension) > buildNumber)
+                if(buildNumberFromIdentifier(fileWithoutExtension) > buildNumber)
                     return YES;
             }
         }
@@ -92,13 +107,13 @@ static bool hideMapBecauseOutdated(NSString *map) { //hide map if a later versio
 static bool mapIsOutdated(NSString *map) { //check if there is a newer version of the map
     @autoreleasepool {
         NSString *mapName = mapNameFromIdentifier(map);
-        int buildNumber = buildNumberFromMapIdentifier(map);
+        int buildNumber = buildNumberFromIdentifier(map);
         if(modsList == nil || buildNumber == 0) return NO;
         if([mapName isEqualToString:map]) return NO;
         NSArray *arrayMods = [modsList objectForKey:@"Mods"];
         for(NSUInteger i=0;i<[arrayMods count];i++) {
             if([[[arrayMods objectAtIndex:i]objectForKey:@"name"] isEqualToString:mapName]) {
-                if(buildNumberFromMapIdentifier([[arrayMods objectAtIndex:i]objectForKey:@"identifier"]) > buildNumber) return YES;
+                if(buildNumberFromIdentifier([[arrayMods objectAtIndex:i]objectForKey:@"identifier"]) > buildNumber) return YES;
             }
         }
     }
@@ -178,7 +193,7 @@ static NSString *mapDescriptionFromIdentifier(NSString *identifier) {
                     [mod objectForKey:@"identifier"],
                     [mod objectForKey:@"human_version"],
                     mapIsOutdated(identifier) ? @"Outdated Map!|nRedownload on|nHaloMD to update." : @"Latest version"];
-                            //give instructions on how to update the map if it's outdated
+            //give instructions on how to update the map if it's outdated
         }
     }
     NSString *stockMap = stockMapName(identifier);
@@ -221,7 +236,7 @@ static void refreshMaps(void) { //remake the map array
         NSString *file = [files objectAtIndex:i];
         if([file hasSuffix:@".map"]) {
             NSString *fileWithoutExtension = [[file lastPathComponent]stringByDeletingPathExtension];
-            if(![stockMapName(fileWithoutExtension) isEqualToString:fileWithoutExtension] ||(buildNumberFromMapIdentifier(fileWithoutExtension) > 0 && !hideMapBecauseOutdated(fileWithoutExtension))) {
+            if(![stockMapName(fileWithoutExtension) isEqualToString:fileWithoutExtension] ||(buildNumberFromIdentifier(fileWithoutExtension) > 0 && !hideMapBecauseOutdated(fileWithoutExtension))) {
                 [mapsAdded addObject:fileWithoutExtension];
             }
         }
@@ -374,6 +389,30 @@ static NSDictionary *dictionaryFromPathWithoutExtension(NSString *pathWithoutExt
     
     return modsDictionary;
 }
+static void (*runCommand)(char *command,char *error_result,char *command_name) = NULL;
+static void interceptCommand(char *command,char *error_result, char *command_name)
+{
+    if(strcmp(command_name,"sv_map") == 0) {
+        @autoreleasepool {
+            NSMutableArray *args = [[[NSString stringWithFormat:@"%s",command] componentsSeparatedByString:@" "]mutableCopy];
+            if([args count] >= 2) {
+                NSString *map = [args objectAtIndex:1];
+                if(![mapsAdded containsObject:map] && mapIdentityFromIdentifier(map) == map) {
+                    NSString *bestMap = map;
+                    for(NSString *mapSearched in mapsAdded) {
+                        if([mapIdentityFromIdentifier(mapSearched) isEqualToString:map] && buildNumberFromIdentifier(mapSearched) > buildNumberFromIdentifier(map)) {
+                            bestMap = mapSearched;
+                        }
+                    }
+                    [args setObject:bestMap atIndexedSubscript:1];
+                    return runCommand((char *)[[args componentsJoinedByString:@" "]UTF8String],error_result,command_name);
+                }
+            }
+        }
+        
+    }
+    return runCommand(command,error_result,command_name);
+}
 
 - (id)initWithMode:(MDPluginMode)mode
 {
@@ -383,6 +422,7 @@ static NSDictionary *dictionaryFromPathWithoutExtension(NSString *pathWithoutExt
         mapsAdded = [[NSMutableArray alloc]init];
 		modsList = dictionaryFromPathWithoutExtension([applicationSupportPath() stringByAppendingPathComponent:@"HaloMD_mods_list"]);
         [modsList retain];
+        mach_override_ptr((void *)0x11e3de, interceptCommand, (void **)&runCommand);
         
         void *mapLimitInstructions = (void *)0x1558D6; //deleting the 18 map limit
         mprotect((void *)0x155000,0x1000, PROT_READ|PROT_WRITE);
