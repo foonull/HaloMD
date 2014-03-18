@@ -50,10 +50,6 @@
 		77BC679A1840880F00F82849 /* MDChatTextRedirect.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BC67991840880F00F82849 /* MDChatTextRedirect.m */; };
 		77BC679B1840892C00F82849 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BC6758184040D400F82849 /* Foundation.framework */; };
 		77BC67A118408EFC00F82849 /* mach_override.c in Sources */ = {isa = PBXBuildFile; fileRef = 77BC6753184040A600F82849 /* mach_override.c */; };
-		77BC67AE1840913900F82849 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 77BC67AC1840913900F82849 /* InfoPlist.strings */; };
-		77BC67B31840917900F82849 /* mach_override.c in Sources */ = {isa = PBXBuildFile; fileRef = 77BC6753184040A600F82849 /* mach_override.c */; };
-		77BC67B41840918200F82849 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BC6758184040D400F82849 /* Foundation.framework */; };
-		77BC67B7184091C600F82849 /* MDMapLoadingMagic.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BC67B6184091C600F82849 /* MDMapLoadingMagic.m */; };
 		77C595FB1842B8E900C81DC0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BC6758184040D400F82849 /* Foundation.framework */; };
 		77C595FE1842B94900C81DC0 /* MapList.mdplugin in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 77E6C7091842B7BE00705ED5 /* MapList.mdplugin */; };
 		77C595FF1842B97800C81DC0 /* mach_override.c in Sources */ = {isa = PBXBuildFile; fileRef = 77BC6753184040A600F82849 /* mach_override.c */; };
@@ -69,7 +65,6 @@
 		77E6C6CB18413AC800705ED5 /* plugin.icns in Resources */ = {isa = PBXBuildFile; fileRef = 77E6C6CA18413AC800705ED5 /* plugin.icns */; };
 		77E6C6CE1841493200705ED5 /* MDOverrides.dylib in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 77BC674D1840405100F82849 /* MDOverrides.dylib */; };
 		77E6C6D018414A4700705ED5 /* ChatTextRedirect.mdplugin in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 77BC678A184086DC00F82849 /* ChatTextRedirect.mdplugin */; };
-		77E6C6D118414A4700705ED5 /* MapLoadingMagic.mdplugin in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 77BC67A71840913900F82849 /* MapLoadingMagic.mdplugin */; };
 		77E6C7101842B7BE00705ED5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 77E6C70E1842B7BE00705ED5 /* InfoPlist.strings */; };
 		77E6C7171842B86200705ED5 /* ZZModList.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E6C7161842B86200705ED5 /* ZZModList.m */; };
 		77E7E2871720FCB100E18FB9 /* MDModPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E7E2861720FCB000E18FB9 /* MDModPatch.m */; };
@@ -109,13 +104,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 77BC6789184086DC00F82849;
 			remoteInfo = ChatTextRedirect;
-		};
-		77BC67B81840921900F82849 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 775B528014D331C800B874E3 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 77BC67A61840913900F82849;
-			remoteInfo = MapLoadingMagic;
 		};
 		77C595FC1842B91A00C81DC0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -167,7 +155,6 @@
 				77FD5275187F5FF800E2A604 /* MapDownloader.mdplugin in Copy Plugins */,
 				77C595FE1842B94900C81DC0 /* MapList.mdplugin in Copy Plugins */,
 				77E6C6D018414A4700705ED5 /* ChatTextRedirect.mdplugin in Copy Plugins */,
-				77E6C6D118414A4700705ED5 /* MapLoadingMagic.mdplugin in Copy Plugins */,
 			);
 			name = "Copy Plugins";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -239,12 +226,6 @@
 		77BC67981840880F00F82849 /* MDChatTextRedirect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDChatTextRedirect.h; sourceTree = "<group>"; };
 		77BC67991840880F00F82849 /* MDChatTextRedirect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDChatTextRedirect.m; sourceTree = "<group>"; };
 		77BC67A21840901E00F82849 /* ChatTextRedirect-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ChatTextRedirect-Prefix.pch"; sourceTree = "<group>"; };
-		77BC67A71840913900F82849 /* MapLoadingMagic.mdplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapLoadingMagic.mdplugin; sourceTree = BUILT_PRODUCTS_DIR; };
-		77BC67AB1840913900F82849 /* MapLoadingMagic-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MapLoadingMagic-Info.plist"; sourceTree = "<group>"; };
-		77BC67AD1840913900F82849 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		77BC67AF1840913900F82849 /* MapLoadingMagic-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MapLoadingMagic-Prefix.pch"; sourceTree = "<group>"; };
-		77BC67B5184091C600F82849 /* MDMapLoadingMagic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDMapLoadingMagic.h; sourceTree = "<group>"; };
-		77BC67B6184091C600F82849 /* MDMapLoadingMagic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDMapLoadingMagic.m; sourceTree = "<group>"; };
 		77CF348515DA33FB005ECB2F /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = ../../../../../System/Library/Frameworks/CoreServices.framework; sourceTree = "<group>"; };
 		77D44A5A164A076100510501 /* lock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lock.png; sourceTree = "<group>"; };
 		77DD81F214EDFDE200EBA4CE /* Ruby.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ruby.framework; path = ../../../../../../System/Library/Frameworks/Ruby.framework; sourceTree = "<group>"; };
@@ -331,14 +312,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		77BC67A41840913900F82849 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				77BC67B41840918200F82849 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		77E6C7061842B7BE00705ED5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -389,7 +362,6 @@
 				775B528914D331C800B874E3 /* HaloMD.app */,
 				77BC674D1840405100F82849 /* MDOverrides.dylib */,
 				77BC678A184086DC00F82849 /* ChatTextRedirect.mdplugin */,
-				77BC67A71840913900F82849 /* MapLoadingMagic.mdplugin */,
 				77E6C7091842B7BE00705ED5 /* MapList.mdplugin */,
 				77FD523E187F5BF800E2A604 /* MapDownloader.mdplugin */,
 			);
@@ -519,26 +491,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		77BC67A91840913900F82849 /* MapLoadingMagic */ = {
-			isa = PBXGroup;
-			children = (
-				77BC67B5184091C600F82849 /* MDMapLoadingMagic.h */,
-				77BC67B6184091C600F82849 /* MDMapLoadingMagic.m */,
-				77BC67AA1840913900F82849 /* Supporting Files */,
-			);
-			path = MapLoadingMagic;
-			sourceTree = "<group>";
-		};
-		77BC67AA1840913900F82849 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				77BC67AB1840913900F82849 /* MapLoadingMagic-Info.plist */,
-				77BC67AC1840913900F82849 /* InfoPlist.strings */,
-				77BC67AF1840913900F82849 /* MapLoadingMagic-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		77BC67BC1840949C00F82849 /* Code Injection */ = {
 			isa = PBXGroup;
 			children = (
@@ -547,7 +499,6 @@
 				77E6C7031842B73100705ED5 /* mach_override */,
 				77FD5241187F5BF800E2A604 /* MapDownloader */,
 				77E6C70B1842B7BE00705ED5 /* MapList */,
-				77BC67A91840913900F82849 /* MapLoadingMagic */,
 				77BC678E184086DC00F82849 /* ChatTextRedirect */,
 			);
 			name = "Code Injection";
@@ -671,7 +622,6 @@
 				77FD526F187F5D3900E2A604 /* PBXTargetDependency */,
 				77BC675D184043B300F82849 /* PBXTargetDependency */,
 				77BC679F1840899D00F82849 /* PBXTargetDependency */,
-				77BC67B91840921900F82849 /* PBXTargetDependency */,
 				77C595FD1842B91A00C81DC0 /* PBXTargetDependency */,
 			);
 			name = HaloMD;
@@ -711,23 +661,6 @@
 			name = ChatTextRedirect;
 			productName = ChatTextRedirect;
 			productReference = 77BC678A184086DC00F82849 /* ChatTextRedirect.mdplugin */;
-			productType = "com.apple.product-type.bundle";
-		};
-		77BC67A61840913900F82849 /* MapLoadingMagic */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 77BC67B01840913900F82849 /* Build configuration list for PBXNativeTarget "MapLoadingMagic" */;
-			buildPhases = (
-				77BC67A31840913900F82849 /* Sources */,
-				77BC67A41840913900F82849 /* Frameworks */,
-				77BC67A51840913900F82849 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = MapLoadingMagic;
-			productName = MapLoadingMagic;
-			productReference = 77BC67A71840913900F82849 /* MapLoadingMagic.mdplugin */;
 			productType = "com.apple.product-type.bundle";
 		};
 		77E6C7081842B7BE00705ED5 /* MapList */ = {
@@ -788,7 +721,6 @@
 				775B528814D331C800B874E3 /* HaloMD */,
 				77BC674C1840405100F82849 /* MDOverrides */,
 				77BC6789184086DC00F82849 /* ChatTextRedirect */,
-				77BC67A61840913900F82849 /* MapLoadingMagic */,
 				77E6C7081842B7BE00705ED5 /* MapList */,
 				77FD523D187F5BF800E2A604 /* MapDownloader */,
 			);
@@ -830,14 +762,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				77BC6793184086DC00F82849 /* InfoPlist.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		77BC67A51840913900F82849 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				77BC67AE1840913900F82849 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -904,15 +828,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		77BC67A31840913900F82849 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				77BC67B7184091C600F82849 /* MDMapLoadingMagic.m in Sources */,
-				77BC67B31840917900F82849 /* mach_override.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		77E6C7051842B7BE00705ED5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -948,11 +863,6 @@
 			isa = PBXTargetDependency;
 			target = 77BC6789184086DC00F82849 /* ChatTextRedirect */;
 			targetProxy = 77BC679E1840899D00F82849 /* PBXContainerItemProxy */;
-		};
-		77BC67B91840921900F82849 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 77BC67A61840913900F82849 /* MapLoadingMagic */;
-			targetProxy = 77BC67B81840921900F82849 /* PBXContainerItemProxy */;
 		};
 		77C595FD1842B91A00C81DC0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -995,14 +905,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				77BC6792184086DC00F82849 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		77BC67AC1840913900F82849 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				77BC67AD1840913900F82849 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -1253,71 +1155,6 @@
 			};
 			name = Release;
 		};
-		77BC67B11840913900F82849 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = NO;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "MapLoadingMagic/MapLoadingMagic-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				INFOPLIST_FILE = "MapLoadingMagic/MapLoadingMagic-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				WRAPPER_EXTENSION = mdplugin;
-			};
-			name = Debug;
-		};
-		77BC67B21840913900F82849 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = NO;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				COMBINE_HIDPI_IMAGES = YES;
-				ENABLE_NS_ASSERTIONS = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "MapLoadingMagic/MapLoadingMagic-Prefix.pch";
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				INFOPLIST_FILE = "MapLoadingMagic/MapLoadingMagic-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				WRAPPER_EXTENSION = mdplugin;
-			};
-			name = Release;
-		};
 		77E6C7131842B7BE00705ED5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1487,15 +1324,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		77BC67B01840913900F82849 /* Build configuration list for PBXNativeTarget "MapLoadingMagic" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				77BC67B11840913900F82849 /* Debug */,
-				77BC67B21840913900F82849 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		77E6C7121842B7BE00705ED5 /* Build configuration list for PBXNativeTarget "MapList" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1512,6 +1340,7 @@
 				77FD524A187F5BF800E2A604 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
