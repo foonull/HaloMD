@@ -213,7 +213,7 @@ static void refreshMaps(void) { //remake the map array
     static MapListEntry **mapsPointer = (void *)0x3691c0;
 
     if(newMaps != NULL) {
-        for(uint32_t i=0;i<[gMapsAdded count]-1;i++) {
+        for(uint32_t i=0;i<[gMapsAdded count];i++) {
             free(newMaps[i].name);
         }
     }
