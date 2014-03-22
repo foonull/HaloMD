@@ -394,10 +394,10 @@ static void interceptCommand(char *command,char *error_result, char *command_nam
 {
     if(strcmp(command_name,"sv_map") == 0) {
         @autoreleasepool {
-            NSMutableArray *args = [[[NSString stringWithFormat:@"%s",command] componentsSeparatedByString:@" "]mutableCopy];
+            NSMutableArray *args = [[[[NSString stringWithCString:command encoding:NSUTF8StringEncoding] componentsSeparatedByString:@" "]mutableCopy]autorelease];
             if([args count] >= 2) {
                 NSString *map = [args objectAtIndex:1];
-                if(![mapsAdded containsObject:map] && mapIdentityFromIdentifier(map) == map) {
+                if(![mapsAdded containsObject:map] && [mapIdentityFromIdentifier(map) isEqualToString:map]) {
                     NSString *bestMap = map;
                     for(NSString *mapSearched in mapsAdded) {
                         if([mapIdentityFromIdentifier(mapSearched) isEqualToString:map] && buildNumberFromIdentifier(mapSearched) > buildNumberFromIdentifier(map)) {
