@@ -199,18 +199,7 @@ static NSString *mapDescriptionFromIdentifier(NSString *identifier) {
             [stockMap isEqualToString:identifier] ? @"Custom map" : @"Retail Halo map"];
 }
 
-static struct unicodeStringReference *referencesMapName = NULL;
-static uint32_t referencesMapNameCount;
-
-static struct unicodeStringReference *referencesMapDesc = NULL;
-static uint32_t referencesMapDescCount;
-
-static struct bitmapBitmap *mapPicturesBitmaps = NULL;
-
-static MapListEntry **mapsPointer = (void *)0x3691c0;
-static MapListEntry *newMaps = NULL;
-
-static void changeMapEntry(char *desiredMap, int tableIndex)
+static void changeMapEntry(MapListEntry **mapsPointer, char *desiredMap, int tableIndex)
 {
     char *mapName = calloc(strlen(desiredMap),1); //map needs to be allocated, or else Halo hates it
     memcpy(mapName,desiredMap,strlen(desiredMap));
@@ -220,6 +209,9 @@ static void changeMapEntry(char *desiredMap, int tableIndex)
 }
 
 static void refreshMaps(void) { //remake the map array
+    static MapListEntry *newMaps;
+    static MapListEntry **mapsPointer = (void *)0x3691c0;
+
     if(newMaps != NULL) {
         for(uint32_t i=0;i<[mapsAdded count]-1;i++) {
             free(newMaps[i].name);
@@ -243,7 +235,7 @@ static void refreshMaps(void) { //remake the map array
     *mapsPointer = newMaps;
     [mapsAdded sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     for(uint32_t i=0;i<mapsCount;i++) {
-        changeMapEntry((char *)[[mapsAdded objectAtIndex:i]UTF8String], i);
+        changeMapEntry(mapsPointer, (char *)[[mapsAdded objectAtIndex:i]UTF8String], i);
     }
     *mapsPointer = newMaps;
 }
@@ -262,6 +254,12 @@ typedef enum {
 } MapIconOffsets;
 
 static void replaceUstr(void) { //refreshes map names and descriptions - required on map load
+    static struct unicodeStringReference *referencesMapName;
+    static struct unicodeStringReference *referencesMapDesc;
+    static uint32_t referencesMapNameCount;
+    static uint32_t referencesMapDescCount;
+    static struct bitmapBitmap *mapPicturesBitmaps;
+
     uint32_t count = [mapsAdded count];
     
     MapTag *tagArray = (MapTag *)*(uint32_t *)(HALO_INDEX_LOCATION);
