@@ -245,8 +245,8 @@ static BOOL gJsonSerializaionExists = NO;
 	else
 	{
 		NSRunAlertPanel(@"Failed Adding Mod",
-						errorString,
-						@"OK", nil, nil);
+						@"%@",
+						@"OK", nil, nil, errorString);
 	}
 	
 	return success;

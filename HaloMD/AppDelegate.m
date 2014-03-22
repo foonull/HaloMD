@@ -745,7 +745,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 
 - (void)abortInstallation:(NSArray *)arguments
 {
-	NSRunAlertPanel([arguments objectAtIndex:0], [arguments objectAtIndex:1], nil, nil, nil);
+	NSRunAlertPanel([arguments objectAtIndex:0], @"%@", nil, nil, nil, [arguments objectAtIndex:1]);
 	if ([arguments count] > 2)
 	{
 		[self deinstallGameAndTerminate];
