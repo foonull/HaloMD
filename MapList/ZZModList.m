@@ -40,10 +40,8 @@
 
 @implementation ZZModList
 
-NSMutableArray *mapsAdded;
-NSDictionary *modsList;
-
-bool loaded = false;
+static NSMutableArray *mapsAdded;
+static NSDictionary *modsList;
 
 static NSString *applicationSupportPath()
 {
@@ -87,8 +85,7 @@ static bool hideMapBecauseOutdated(NSString *map) { //hide map if a later versio
     if(!mapIsOutdated(map)) return NO;
     int buildNumber = buildNumberFromIdentifier(map);
     NSString *name = mapNameFromIdentifier(map);
-    NSError *error = [[NSError alloc]init];
-    NSArray *files = [[NSFileManager defaultManager]contentsOfDirectoryAtPath:MAPS_DIRECTORY error:&error];
+    NSArray *files = [[NSFileManager defaultManager]contentsOfDirectoryAtPath:MAPS_DIRECTORY error:nil];
     for(NSUInteger i=0;i<[files count];i++) {
         NSString *file = [files objectAtIndex:i];
         if([file hasSuffix:@".map"]) {
@@ -202,17 +199,16 @@ static NSString *mapDescriptionFromIdentifier(NSString *identifier) {
             [stockMap isEqualToString:identifier] ? @"Custom map" : @"Retail Halo map"];
 }
 
-struct unicodeStringReference *referencesMapName = NULL;
-uint32_t referencesMapNameCount;
+static struct unicodeStringReference *referencesMapName = NULL;
+static uint32_t referencesMapNameCount;
 
-struct unicodeStringReference *referencesMapDesc = NULL;
-uint32_t referencesMapDescCount;
+static struct unicodeStringReference *referencesMapDesc = NULL;
+static uint32_t referencesMapDescCount;
 
-struct bitmapBitmap *mapPicturesBitmaps = NULL;
-uint32_t bitmapsCount;
+static struct bitmapBitmap *mapPicturesBitmaps = NULL;
 
-MapListEntry **mapsPointer = (void *)0x3691c0;
-MapListEntry *newMaps = NULL;
+static MapListEntry **mapsPointer = (void *)0x3691c0;
+static MapListEntry *newMaps = NULL;
 
 static void changeMapEntry(char *desiredMap, int tableIndex)
 {
