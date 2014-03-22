@@ -36,7 +36,7 @@
 #import "mach_override.h"
 
 #define MAPS_DIRECTORY [[applicationSupportPath() stringByAppendingPathComponent:@"GameData"]stringByAppendingPathComponent:@"Maps"]
-#define HALO_MAPS_COUNT *(uint32_t *)(0x3D2D84)
+#define SET_HALO_MAPS_COUNT(value) (*(uint32_t *)(0x3D2D84) = value)
 
 @implementation ZZModList
 
@@ -229,7 +229,7 @@ static void refreshMaps(void) { //remake the map array
         }
     }
     uint32_t mapsCount = [gMapsAdded count];
-    HALO_MAPS_COUNT = mapsCount; //we need to override map count or else the 18 map limit remover died in vain
+    SET_HALO_MAPS_COUNT(mapsCount); //we need to override map count or else the 18 map limit remover died in vain
     newMaps = malloc(sizeof(MapListEntry) * (mapsCount));
     *mapsPointer = newMaps;
     [gMapsAdded sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
