@@ -218,8 +218,7 @@ static void refreshMaps(void) { //remake the map array
         }
     }
     [gMapsAdded removeAllObjects];
-    NSError *error = [[NSError alloc]init];
-    NSArray *files = [[NSFileManager defaultManager]contentsOfDirectoryAtPath:MAPS_DIRECTORY error:&error];
+    NSArray *files = [[NSFileManager defaultManager]contentsOfDirectoryAtPath:MAPS_DIRECTORY error:NULL];
     for(NSUInteger i=0;i<[files count];i++) {
         NSString *file = [files objectAtIndex:i];
         if([file hasSuffix:@".map"]) {
