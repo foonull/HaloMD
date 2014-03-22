@@ -221,7 +221,7 @@ static void refreshMaps(void) { //remake the map array
     NSArray *files = [[NSFileManager defaultManager]contentsOfDirectoryAtPath:MAPS_DIRECTORY error:NULL];
     for(NSUInteger i=0;i<[files count];i++) {
         NSString *file = [files objectAtIndex:i];
-        if([file hasSuffix:@".map"]) {
+        if([[file pathExtension] isEqualToString:@"map"]) {
             NSString *fileWithoutExtension = [[file lastPathComponent]stringByDeletingPathExtension];
             if(![stockMapName(fileWithoutExtension) isEqualToString:fileWithoutExtension] ||(buildNumberFromIdentifier(fileWithoutExtension) > 0 && !hideMapBecauseOutdated(fileWithoutExtension))) {
                 [gMapsAdded addObject:fileWithoutExtension];
