@@ -129,7 +129,7 @@ static NSString *stockMapName(NSString *map) { //hardcode human names of stock m
     else if([map isEqualToString:@"damnation"])
         return @"Damnation";
     else if([map isEqualToString:@"dangercanyon"])
-        return @"voidDangercanyon";
+        return @"Danger Canyon";
     else if([map isEqualToString:@"deathisland"])
         return @"Death Island";
     else if([map isEqualToString:@"gephyrophobia"])
