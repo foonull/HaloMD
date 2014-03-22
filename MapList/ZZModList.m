@@ -410,11 +410,11 @@ static void interceptCommand(char *command,char *error_result, char *command_nam
 
 - (id)initWithMode:(MDPluginMode)mode
 {
-	self = [super init];
-	if (self != nil)
-	{
+    self = [super init];
+    if (self != nil)
+    {
         mapsAdded = [[NSMutableArray alloc]init];
-		modsList = dictionaryFromPathWithoutExtension([applicationSupportPath() stringByAppendingPathComponent:@"HaloMD_mods_list"]);
+        modsList = dictionaryFromPathWithoutExtension([applicationSupportPath() stringByAppendingPathComponent:@"HaloMD_mods_list"]);
         [modsList retain];
         mach_override_ptr((void *)0x11e3de, interceptCommand, (void **)&runCommand);
         
@@ -422,9 +422,8 @@ static void interceptCommand(char *command,char *error_result, char *command_nam
         mprotect((void *)0x155000,0x1000, PROT_READ|PROT_WRITE);
         memset(mapLimitInstructions,0x90,5);
         mprotect((void *)0x155000,0x1000, PROT_READ|PROT_EXEC);
-        
-	}
-	return self;
+    }
+    return self;
 }
 
 @end
