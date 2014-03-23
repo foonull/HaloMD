@@ -236,7 +236,6 @@ static void refreshMaps(void) { //remake the map array
     for(uint32_t i=0;i<mapsCount;i++) {
         changeMapEntry(mapsPointer, (char *)[[gMapsAdded objectAtIndex:i]UTF8String], i);
     }
-    *mapsPointer = newMaps;
 }
 
 #define HALO_INDEX_LOCATION 0x40440000 //same on Halo PC and CE
