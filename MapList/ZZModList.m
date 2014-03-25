@@ -88,7 +88,7 @@ static NSString *mapIdentityFromIdentifier(NSString *mapIdentifier)
     return mapName;
 }
 
-static bool hideMapBecauseOutdated(NSString *map) { //hide map if a later version of the map is available
+static BOOL hideMapBecauseOutdated(NSString *map) { //hide map if a later version of the map is available
     if(!mapIsOutdated(map)) return NO;
 
     int buildNumber = buildNumberFromIdentifier(map);
@@ -107,7 +107,7 @@ static bool hideMapBecauseOutdated(NSString *map) { //hide map if a later versio
     return NO;
 }
 
-static bool mapIsOutdated(NSString *map) { //check if there is a newer version of the map
+static BOOL mapIsOutdated(NSString *map) { //check if there is a newer version of the map
     NSString *mapName = mapNameFromIdentifier(map);
     int buildNumber = buildNumberFromIdentifier(map);
 
