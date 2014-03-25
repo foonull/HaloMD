@@ -35,7 +35,6 @@
 #import "ZZModList.h"
 #import "mach_override.h"
 
-#define MAPS_DIRECTORY [[applicationSupportPath() stringByAppendingPathComponent:@"GameData"]stringByAppendingPathComponent:@"Maps"]
 #define SET_HALO_MAPS_COUNT(value) (*(uint32_t *)(0x3D2D84) = value)
 
 @implementation ZZModList
@@ -43,9 +42,14 @@
 static NSMutableArray *gMapsAdded;
 static NSDictionary *gModsList;
 
-static NSString *applicationSupportPath()
+static NSString *applicationSupportPath(void)
 {
     return [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"HaloMD"];
+}
+
+static NSString *mapsDirectory(void)
+{
+    return [[applicationSupportPath() stringByAppendingPathComponent:@"GameData"] stringByAppendingPathComponent:@"Maps"];
 }
 
 static int buildNumberFromIdentifier(NSString *mapIdentifier) //straight from HaloMD's source
@@ -89,7 +93,7 @@ static bool hideMapBecauseOutdated(NSString *map) { //hide map if a later versio
 
     int buildNumber = buildNumberFromIdentifier(map);
     NSString *name = mapNameFromIdentifier(map);
-    NSArray *files = [[NSFileManager defaultManager]contentsOfDirectoryAtPath:MAPS_DIRECTORY error:nil];
+    NSArray *files = [[NSFileManager defaultManager]contentsOfDirectoryAtPath:mapsDirectory() error:nil];
     for (NSUInteger i=0; i<[files count]; i++) {
         NSString *file = [files objectAtIndex:i];
         if ([[file pathExtension] isEqualToString:@"map"]) {
@@ -229,7 +233,7 @@ static void refreshMaps(void) { //remake the map array
     }
     [gMapsAdded removeAllObjects];
 
-    NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:MAPS_DIRECTORY error:NULL];
+    NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mapsDirectory() error:NULL];
     for(NSUInteger i = 0; i < [files count]; i++) {
         NSString *file = [files objectAtIndex:i];
         if ([[file pathExtension] isEqualToString:@"map"]) {
