@@ -276,7 +276,7 @@ static void replaceUstr(void) { //refreshes map names and descriptions - require
 
     static struct bitmapBitmap *mapPicturesBitmaps;
 
-    uint32_t count = [gMapsAdded count];
+    uint32_t mapsCount = [gMapsAdded count];
     
     MapTag *tagArray = (MapTag *)*(uint32_t *)(HALO_INDEX_LOCATION);
     uint32_t numberOfTags = *(uint32_t *)(HALO_INDEX_LOCATION + TAG_COUNT_OFFSET);
@@ -304,12 +304,12 @@ static void replaceUstr(void) { //refreshes map names and descriptions - require
                 }
 
                 struct unicodeStringTag *tag = tagArray[i].dataOffset;
-                tag->referencesCount = count;
-                *mapReference = malloc(count * sizeof(**mapReference));
+                tag->referencesCount = mapsCount;
+                *mapReference = malloc(mapsCount * sizeof(**mapReference));
                 tag->references = *mapReference;
-                *mapCountReference = [gMapsAdded count];
+                *mapCountReference = mapsCount;
 
-                for (uint32_t q = 0; q < [gMapsAdded count]; q++) {
+                for (uint32_t q = 0; q < mapsCount; q++) {
                     NSString *map = mapNameFromIdentifier([gMapsAdded objectAtIndex:q]);
                     uint32_t length = sizeof(unichar) * ([map length]+1);
                     (*mapReference)[q].length = length;
@@ -320,11 +320,11 @@ static void replaceUstr(void) { //refreshes map names and descriptions - require
             }
         }
         else if(tagArray[i].classA == *(uint32_t *)&"mtib" && strcmp(tagArray[i].nameOffset,TAG_MAP_ICONS) == 0) {
-            if(mapPicturesBitmaps != NULL) free(mapPicturesBitmaps);
-            mapPicturesBitmaps = calloc(sizeof(struct bitmapBitmap), count);
+            if (mapPicturesBitmaps != NULL) free(mapPicturesBitmaps);
+            mapPicturesBitmaps = calloc(sizeof(struct bitmapBitmap), mapsCount);
             struct bitmapTag *tag = tagArray[i].dataOffset;
 
-            for(uint32_t i=0;i<[gMapsAdded count];i++) {
+            for(uint32_t i = 0; i < mapsCount; i++) {
                 mapPicturesBitmaps[i].bitmapSignature = *(uint32_t *)&"mtib";
                 mapPicturesBitmaps[i].width = 256;
                 mapPicturesBitmaps[i].height = 128;
@@ -343,9 +343,9 @@ static void replaceUstr(void) { //refreshes map names and descriptions - require
             mapPicturesBitmaps[[gMapsAdded indexOfObject:@"crossing"]].pixelOffset = CROSSING_OFFSET;
             mapPicturesBitmaps[[gMapsAdded indexOfObject:@"barrier"]].pixelOffset = BARRIER_OFFSET;
             tag->bitmap = mapPicturesBitmaps;
-            tag->bitmapsCount = count;
-            for(uint32_t i = 0; i < tag->sequenceCount; i++) {
-                tag->sequence[i].finalIndex = [gMapsAdded count];
+            tag->bitmapsCount = mapsCount;
+            for (uint32_t i = 0; i < tag->sequenceCount; i++) {
+                tag->sequence[i].finalIndex = mapsCount;
             }
         }
     }
@@ -425,7 +425,7 @@ static void interceptCommand(char *command,char *error_result, char *command_nam
     self = [super init];
     if (self != nil)
     {
-        gMapsAdded = [[NSMutableArray alloc]init];
+        gMapsAdded = [[NSMutableArray alloc] init];
         gModsList = [dictionaryFromPathWithoutExtension([applicationSupportPath() stringByAppendingPathComponent:@"HaloMD_mods_list"]) retain];
         
         mach_override_ptr((void *)0x11e3de, interceptCommand, (void **)&runCommand);
