@@ -269,9 +269,11 @@ typedef enum {
 
 static void replaceUstr(void) { //refreshes map names and descriptions - required on map load
     static struct unicodeStringReference *referencesMapName;
-    static struct unicodeStringReference *referencesMapDesc;
     static uint32_t referencesMapNameCount;
+
+    static struct unicodeStringReference *referencesMapDesc;
     static uint32_t referencesMapDescCount;
+
     static struct bitmapBitmap *mapPicturesBitmaps;
 
     uint32_t count = [gMapsAdded count];
@@ -280,48 +282,41 @@ static void replaceUstr(void) { //refreshes map names and descriptions - require
     uint32_t numberOfTags = *(uint32_t *)(HALO_INDEX_LOCATION + TAG_COUNT_OFFSET);
     
     for(uint32_t i = 0; i < numberOfTags; i++) {
-        if (tagArray[i].classA == *(uint32_t *)&"rtsu" && strcmp(tagArray[i].nameOffset,TAG_MAP_NAMES) == 0) {
-            if (referencesMapName != NULL) {
-                for (uint32_t q = 0; q < referencesMapNameCount; q++) {
-                    free(referencesMapName[q].string);
-                }
-                free(referencesMapName);
+        if (tagArray[i].classA == *(uint32_t *)&"rtsu") {
+            struct unicodeStringReference **mapReference = NULL;
+            uint32_t *mapCountReference = NULL;
+
+            if (strcmp(tagArray[i].nameOffset,TAG_MAP_NAMES) == 0) {
+                mapReference = &referencesMapName;
+                mapCountReference = &referencesMapNameCount;
+            }
+            else if (strcmp(tagArray[i].nameOffset,TAG_MAP_DESCRIPTIONS) == 0) {
+                mapReference = &referencesMapDesc;
+                mapCountReference = &referencesMapDescCount;
             }
 
-            struct unicodeStringTag *tag = tagArray[i].dataOffset;
-            tag->referencesCount = count;
-            referencesMapName = malloc(count * sizeof(struct unicodeStringReference));
-            tag->references = referencesMapName;
-            referencesMapNameCount = [gMapsAdded count];
-            for (uint32_t q = 0; q < [gMapsAdded count]; q++) {
-                NSString *map = mapNameFromIdentifier([gMapsAdded objectAtIndex:q]);
-                uint32_t length = sizeof(unichar) * ([map length]+1);
-                referencesMapName[q].length = length;
-                unichar *newmap_name = calloc(length,1); //allocate map name or else a disaster beyond your imagination will occur
-                memcpy(newmap_name,[map cStringUsingEncoding:NSUTF16LittleEndianStringEncoding],length);
-                referencesMapName[q].string = newmap_name;
-            }
-        }
-        else if(tagArray[i].classA == *(uint32_t *)&"rtsu" && strcmp(tagArray[i].nameOffset,TAG_MAP_DESCRIPTIONS) == 0) {
-            if (referencesMapDesc != NULL) {
-                for (uint32_t q = 0; q < referencesMapDescCount; q++) {
-                    free(referencesMapDesc[q].string);
+            if (mapReference != NULL && mapCountReference != NULL) {
+                if (*mapReference != NULL) {
+                    for (uint32_t q = 0; q < *mapCountReference; q++) {
+                        free((*mapReference)[q].string);
+                    }
+                    free(*mapReference);
                 }
-                free(referencesMapDesc);
-            }
 
-            struct unicodeStringTag *tag = tagArray[i].dataOffset;
-            tag->referencesCount = count;
-            referencesMapDesc = malloc(count * sizeof(struct unicodeStringReference));
-            tag->references = referencesMapDesc;
-            referencesMapDescCount = [gMapsAdded count];
-            for (uint32_t q = 0; q < [gMapsAdded count]; q++) {
-                NSString *desc = mapDescriptionFromIdentifier([gMapsAdded objectAtIndex:q]);
-                uint32_t length = sizeof(unichar) * ([desc length]+1);
-                referencesMapDesc[q].length = length;
-                unichar *newmap_name = calloc(length,1);
-                memcpy(newmap_name,[desc cStringUsingEncoding:NSUTF16LittleEndianStringEncoding],length);
-                referencesMapDesc[q].string = newmap_name;
+                struct unicodeStringTag *tag = tagArray[i].dataOffset;
+                tag->referencesCount = count;
+                *mapReference = malloc(count * sizeof(**mapReference));
+                tag->references = *mapReference;
+                *mapCountReference = [gMapsAdded count];
+
+                for (uint32_t q = 0; q < [gMapsAdded count]; q++) {
+                    NSString *map = mapNameFromIdentifier([gMapsAdded objectAtIndex:q]);
+                    uint32_t length = sizeof(unichar) * ([map length]+1);
+                    (*mapReference)[q].length = length;
+                    unichar *newmap_name = calloc(length,1); //allocate map name or else a disaster beyond your imagination will occur
+                    memcpy(newmap_name,[map cStringUsingEncoding:NSUTF16LittleEndianStringEncoding],length);
+                    (*mapReference)[q].string = newmap_name;
+                }
             }
         }
         else if(tagArray[i].classA == *(uint32_t *)&"mtib" && strcmp(tagArray[i].nameOffset,TAG_MAP_ICONS) == 0) {
