@@ -89,29 +89,25 @@ static bool hideMapBecauseOutdated(NSString *map) { //hide map if a later versio
     for(NSUInteger i=0;i<[files count];i++) {
         NSString *file = [files objectAtIndex:i];
         if([[file pathExtension] isEqualToString:@"map"]) {
-            @autoreleasepool {
                 NSString *fileWithoutExtension = [[file lastPathComponent]stringByDeletingPathExtension];
                 if(![mapNameFromIdentifier(name) isEqualToString:mapNameFromIdentifier(fileWithoutExtension)])
                     continue;
                 if(buildNumberFromIdentifier(fileWithoutExtension) > buildNumber)
                     return YES;
-            }
         }
     }
     return NO;
 }
 
 static bool mapIsOutdated(NSString *map) { //check if there is a newer version of the map
-    @autoreleasepool {
-        NSString *mapName = mapNameFromIdentifier(map);
-        int buildNumber = buildNumberFromIdentifier(map);
-        if(gModsList == nil || buildNumber == 0) return NO;
-        if([mapName isEqualToString:map]) return NO;
-        NSArray *arrayMods = [gModsList objectForKey:@"Mods"];
-        for(NSUInteger i=0;i<[arrayMods count];i++) {
-            if([[[arrayMods objectAtIndex:i]objectForKey:@"name"] isEqualToString:mapName]) {
-                if(buildNumberFromIdentifier([[arrayMods objectAtIndex:i]objectForKey:@"identifier"]) > buildNumber) return YES;
-            }
+    NSString *mapName = mapNameFromIdentifier(map);
+    int buildNumber = buildNumberFromIdentifier(map);
+    if(gModsList == nil || buildNumber == 0) return NO;
+    if([mapName isEqualToString:map]) return NO;
+    NSArray *arrayMods = [gModsList objectForKey:@"Mods"];
+    for(NSUInteger i=0;i<[arrayMods count];i++) {
+        if([[[arrayMods objectAtIndex:i]objectForKey:@"name"] isEqualToString:mapName]) {
+            if(buildNumberFromIdentifier([[arrayMods objectAtIndex:i]objectForKey:@"identifier"]) > buildNumber) return YES;
         }
     }
     return NO;
