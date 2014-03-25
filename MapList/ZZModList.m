@@ -58,8 +58,10 @@ static int buildNumberFromIdentifier(NSString *mapIdentifier) //straight from Ha
         if (range.location+1 < [mapIdentifier length])
         {
             NSString *identifierNumber = [mapIdentifier substringFromIndex:range.location+1];
-            if([[[NSNumber numberWithInteger:[identifierNumber intValue]]stringValue] isEqualToString:identifierNumber])
+            if ([[[NSNumber numberWithInteger:[identifierNumber intValue]] stringValue] isEqualToString:identifierNumber])
+            {
                 buildNumber = [identifierNumber intValue];
+            }
         }
     }
     
@@ -68,7 +70,8 @@ static int buildNumberFromIdentifier(NSString *mapIdentifier) //straight from Ha
 
 static NSString *mapIdentityFromIdentifier(NSString *mapIdentifier)
 {
-    if(buildNumberFromIdentifier(mapIdentifier) == 0) return mapIdentifier;
+    if (buildNumberFromIdentifier(mapIdentifier) == 0) return mapIdentifier;
+
     NSString *mapName = mapIdentifier;
     NSRange range = [mapIdentifier rangeOfString:@"_" options:NSBackwardsSearch];
     if (range.location != NSNotFound)
@@ -83,13 +86,14 @@ static NSString *mapIdentityFromIdentifier(NSString *mapIdentifier)
 
 static bool hideMapBecauseOutdated(NSString *map) { //hide map if a later version of the map is available
     if(!mapIsOutdated(map)) return NO;
+
     int buildNumber = buildNumberFromIdentifier(map);
     NSString *name = mapNameFromIdentifier(map);
     NSArray *files = [[NSFileManager defaultManager]contentsOfDirectoryAtPath:MAPS_DIRECTORY error:nil];
-    for(NSUInteger i=0;i<[files count];i++) {
+    for (NSUInteger i=0; i<[files count]; i++) {
         NSString *file = [files objectAtIndex:i];
-        if([[file pathExtension] isEqualToString:@"map"]) {
-                NSString *fileWithoutExtension = [[file lastPathComponent]stringByDeletingPathExtension];
+        if ([[file pathExtension] isEqualToString:@"map"]) {
+                NSString *fileWithoutExtension = [[file lastPathComponent] stringByDeletingPathExtension];
                 if(![mapNameFromIdentifier(name) isEqualToString:mapNameFromIdentifier(fileWithoutExtension)])
                     continue;
                 if(buildNumberFromIdentifier(fileWithoutExtension) > buildNumber)
@@ -102,12 +106,17 @@ static bool hideMapBecauseOutdated(NSString *map) { //hide map if a later versio
 static bool mapIsOutdated(NSString *map) { //check if there is a newer version of the map
     NSString *mapName = mapNameFromIdentifier(map);
     int buildNumber = buildNumberFromIdentifier(map);
+
     if(gModsList == nil || buildNumber == 0) return NO;
+
     if([mapName isEqualToString:map]) return NO;
+
     NSArray *arrayMods = [gModsList objectForKey:@"Mods"];
-    for(NSUInteger i=0;i<[arrayMods count];i++) {
-        if([[[arrayMods objectAtIndex:i]objectForKey:@"name"] isEqualToString:mapName]) {
-            if(buildNumberFromIdentifier([[arrayMods objectAtIndex:i]objectForKey:@"identifier"]) > buildNumber) return YES;
+    for (NSUInteger i=0; i < [arrayMods count]; i++) {
+        if ([[[arrayMods objectAtIndex:i] objectForKey:@"name"] isEqualToString:mapName]) {
+            if (buildNumberFromIdentifier([[arrayMods objectAtIndex:i] objectForKey:@"identifier"]) > buildNumber) {
+                return YES;
+            }
         }
     }
     return NO;
@@ -161,13 +170,15 @@ static NSString *stockMapName(NSString *map) { //hardcode human names of stock m
 }
 
 static NSString *mapNameFromIdentifier(NSString *identifier) {
-    if(gModsList == nil) return identifier;
+    if (gModsList == nil) return identifier;
+
     NSArray *arrayMods = [gModsList objectForKey:@"Mods"];
-    for(NSDictionary *mod in arrayMods) {
-        if([[mod objectForKey:@"identifier"] isEqualToString:identifier]) {
+    for (NSDictionary *mod in arrayMods) {
+        if ([[mod objectForKey:@"identifier"] isEqualToString:identifier]) {
             return [mod objectForKey:@"name"];
         }
     }
+
     return stockMapName(identifier);
 }
 
@@ -178,10 +189,12 @@ static NSString *mapDescriptionFromIdentifier(NSString *identifier) {
         return @"So Close,|nYet So Far..";
     else if([identifier isEqualToString:@"bloodgulch"])
         return @"The Quick|nand the Dead"; //we already know it supports vehicles
+
     if(gModsList == nil) return @"N/A";
+
     NSArray *arrayMods = [gModsList objectForKey:@"Mods"];
-    for(NSDictionary *mod in arrayMods) {
-        if([[mod objectForKey:@"identifier"] isEqualToString:identifier]) {
+    for (NSDictionary *mod in arrayMods) {
+        if ([[mod objectForKey:@"identifier"] isEqualToString:identifier]) {
             return [NSString stringWithFormat:@"File: %@|nVersion: %@|n|n%@",
                     [mod objectForKey:@"identifier"],
                     [mod objectForKey:@"human_version"],
@@ -189,6 +202,7 @@ static NSString *mapDescriptionFromIdentifier(NSString *identifier) {
             //give instructions on how to update the map if it's outdated
         }
     }
+
     NSString *stockMap = stockMapName(identifier);
     return [NSString stringWithFormat:@"File: %@|n%@",
             identifier,
@@ -208,29 +222,31 @@ static void refreshMaps(void) { //remake the map array
     static MapListEntry *newMaps;
     static MapListEntry **mapsPointer = (void *)0x3691c0;
 
-    if(newMaps != NULL) {
-        for(uint32_t i=0;i<[gMapsAdded count];i++) {
+    if (newMaps != NULL) {
+        for(uint32_t i = 0;i < [gMapsAdded count]; i++) {
             free(newMaps[i].name);
         }
     }
     [gMapsAdded removeAllObjects];
-    NSArray *files = [[NSFileManager defaultManager]contentsOfDirectoryAtPath:MAPS_DIRECTORY error:NULL];
-    for(NSUInteger i=0;i<[files count];i++) {
+
+    NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:MAPS_DIRECTORY error:NULL];
+    for(NSUInteger i = 0; i < [files count]; i++) {
         NSString *file = [files objectAtIndex:i];
-        if([[file pathExtension] isEqualToString:@"map"]) {
-            NSString *fileWithoutExtension = [[file lastPathComponent]stringByDeletingPathExtension];
-            if(![stockMapName(fileWithoutExtension) isEqualToString:fileWithoutExtension] ||(buildNumberFromIdentifier(fileWithoutExtension) > 0 && !hideMapBecauseOutdated(fileWithoutExtension))) {
+        if ([[file pathExtension] isEqualToString:@"map"]) {
+            NSString *fileWithoutExtension = [[file lastPathComponent] stringByDeletingPathExtension];
+            if (![stockMapName(fileWithoutExtension) isEqualToString:fileWithoutExtension] ||(buildNumberFromIdentifier(fileWithoutExtension) > 0 && !hideMapBecauseOutdated(fileWithoutExtension))) {
                 [gMapsAdded addObject:fileWithoutExtension];
             }
         }
     }
+
     uint32_t mapsCount = [gMapsAdded count];
     SET_HALO_MAPS_COUNT(mapsCount); //we need to override map count or else the 18 map limit remover died in vain
     newMaps = malloc(sizeof(MapListEntry) * (mapsCount));
     *mapsPointer = newMaps;
     [gMapsAdded sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-    for(uint32_t i=0;i<mapsCount;i++) {
-        changeMapEntry(mapsPointer, (char *)[[gMapsAdded objectAtIndex:i]UTF8String], i);
+    for(uint32_t i = 0; i < mapsCount; i++) {
+        changeMapEntry(mapsPointer, (char *)[[gMapsAdded objectAtIndex:i] UTF8String], i);
     }
 }
 
@@ -259,20 +275,21 @@ static void replaceUstr(void) { //refreshes map names and descriptions - require
     MapTag *tagArray = (MapTag *)*(uint32_t *)(HALO_INDEX_LOCATION);
     uint32_t numberOfTags = *(uint32_t *)(HALO_INDEX_LOCATION + TAG_COUNT_OFFSET);
     
-    for(uint32_t i=0;i<numberOfTags;i++) {
-        if(tagArray[i].classA == *(uint32_t *)&"rtsu" && strcmp(tagArray[i].nameOffset,TAG_MAP_NAMES) == 0) {
-            if(referencesMapName != NULL) {
-                for(uint32_t q=0;q<referencesMapNameCount;q++) {
+    for(uint32_t i = 0; i < numberOfTags; i++) {
+        if (tagArray[i].classA == *(uint32_t *)&"rtsu" && strcmp(tagArray[i].nameOffset,TAG_MAP_NAMES) == 0) {
+            if (referencesMapName != NULL) {
+                for (uint32_t q = 0; q < referencesMapNameCount; q++) {
                     free(referencesMapName[q].string);
                 }
                 free(referencesMapName);
             }
+
             struct unicodeStringTag *tag = tagArray[i].dataOffset;
             tag->referencesCount = count;
             referencesMapName = malloc(count * sizeof(struct unicodeStringReference));
             tag->references = referencesMapName;
             referencesMapNameCount = [gMapsAdded count];
-            for(uint32_t q=0;q<[gMapsAdded count];q++) {
+            for (uint32_t q = 0; q < [gMapsAdded count]; q++) {
                 NSString *map = mapNameFromIdentifier([gMapsAdded objectAtIndex:q]);
                 uint32_t length = sizeof(unichar) * ([map length]+1);
                 referencesMapName[q].length = length;
@@ -282,18 +299,19 @@ static void replaceUstr(void) { //refreshes map names and descriptions - require
             }
         }
         else if(tagArray[i].classA == *(uint32_t *)&"rtsu" && strcmp(tagArray[i].nameOffset,TAG_MAP_DESCRIPTIONS) == 0) {
-            if(referencesMapDesc != NULL) {
-                for(uint32_t q=0;q<referencesMapDescCount;q++) {
+            if (referencesMapDesc != NULL) {
+                for (uint32_t q = 0; q < referencesMapDescCount; q++) {
                     free(referencesMapDesc[q].string);
                 }
                 free(referencesMapDesc);
             }
+
             struct unicodeStringTag *tag = tagArray[i].dataOffset;
             tag->referencesCount = count;
             referencesMapDesc = malloc(count * sizeof(struct unicodeStringReference));
             tag->references = referencesMapDesc;
             referencesMapDescCount = [gMapsAdded count];
-            for(uint32_t q=0;q<[gMapsAdded count];q++) {
+            for (uint32_t q = 0; q < [gMapsAdded count]; q++) {
                 NSString *desc = mapDescriptionFromIdentifier([gMapsAdded objectAtIndex:q]);
                 uint32_t length = sizeof(unichar) * ([desc length]+1);
                 referencesMapDesc[q].length = length;
@@ -306,6 +324,7 @@ static void replaceUstr(void) { //refreshes map names and descriptions - require
             if(mapPicturesBitmaps != NULL) free(mapPicturesBitmaps);
             mapPicturesBitmaps = calloc(sizeof(struct bitmapBitmap), count);
             struct bitmapTag *tag = tagArray[i].dataOffset;
+
             for(uint32_t i=0;i<[gMapsAdded count];i++) {
                 mapPicturesBitmaps[i].bitmapSignature = *(uint32_t *)&"mtib";
                 mapPicturesBitmaps[i].width = 256;
@@ -320,12 +339,13 @@ static void replaceUstr(void) { //refreshes map names and descriptions - require
                 mapPicturesBitmaps[i].bitmapLoneID = tagArray[i].identity;
                 mapPicturesBitmaps[i].ffffffff = -1;
             }
+
             mapPicturesBitmaps[[gMapsAdded indexOfObject:@"bloodgulch"]].pixelOffset = BLOODGULCH_OFFSET;
             mapPicturesBitmaps[[gMapsAdded indexOfObject:@"crossing"]].pixelOffset = CROSSING_OFFSET;
             mapPicturesBitmaps[[gMapsAdded indexOfObject:@"barrier"]].pixelOffset = BARRIER_OFFSET;
             tag->bitmap = mapPicturesBitmaps;
             tag->bitmapsCount = count;
-            for(uint32_t i=0;i<tag->sequenceCount;i++) {
+            for(uint32_t i = 0; i < tag->sequenceCount; i++) {
                 tag->sequence[i].finalIndex = [gMapsAdded count];
             }
         }
@@ -380,24 +400,23 @@ static NSDictionary *dictionaryFromPathWithoutExtension(NSString *pathWithoutExt
 static void (*runCommand)(char *command,char *error_result,char *command_name) = NULL;
 static void interceptCommand(char *command,char *error_result, char *command_name)
 {
-    if(strcmp(command_name,"sv_map") == 0) {
+    if (strcmp(command_name,"sv_map") == 0) {
         @autoreleasepool {
-            NSMutableArray *args = [[[[NSString stringWithCString:command encoding:NSUTF8StringEncoding] componentsSeparatedByString:@" "]mutableCopy]autorelease];
-            if([args count] >= 2) {
+            NSMutableArray *args = [[[[NSString stringWithCString:command encoding:NSUTF8StringEncoding] componentsSeparatedByString:@" "] mutableCopy] autorelease];
+            if ([args count] >= 2) {
                 NSString *map = [args objectAtIndex:1];
-                if(![gMapsAdded containsObject:map] && [mapIdentityFromIdentifier(map) isEqualToString:map]) {
+                if (![gMapsAdded containsObject:map] && [mapIdentityFromIdentifier(map) isEqualToString:map]) {
                     NSString *bestMap = map;
-                    for(NSString *mapSearched in gMapsAdded) {
-                        if([mapIdentityFromIdentifier(mapSearched) isEqualToString:map] && buildNumberFromIdentifier(mapSearched) > buildNumberFromIdentifier(map)) {
+                    for (NSString *mapSearched in gMapsAdded) {
+                        if ([mapIdentityFromIdentifier(mapSearched) isEqualToString:map] && buildNumberFromIdentifier(mapSearched) > buildNumberFromIdentifier(map)) {
                             bestMap = mapSearched;
                         }
                     }
                     [args setObject:bestMap atIndexedSubscript:1];
-                    return runCommand((char *)[[args componentsJoinedByString:@" "]UTF8String],error_result,command_name);
+                    return runCommand((char *)[[args componentsJoinedByString:@" "] UTF8String],error_result,command_name);
                 }
             }
         }
-        
     }
     return runCommand(command,error_result,command_name);
 }
