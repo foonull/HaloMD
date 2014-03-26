@@ -299,12 +299,10 @@ static void replaceUstr(void) { //refreshes map names and descriptions - require
             }
 
             if (mapReference != NULL && mapCountReference != NULL && mapStringFunction != NULL) {
-                if (*mapReference != NULL) {
-                    for (uint32_t q = 0; q < *mapCountReference; q++) {
-                        free((*mapReference)[q].string);
-                    }
-                    free(*mapReference);
+                for (uint32_t q = 0; q < *mapCountReference; q++) {
+                    free((*mapReference)[q].string);
                 }
+                free(*mapReference);
 
                 struct unicodeStringTag *tag = tagArray[i].dataOffset;
                 tag->referencesCount = mapsCount;
@@ -324,7 +322,7 @@ static void replaceUstr(void) { //refreshes map names and descriptions - require
             }
         }
         else if(tagArray[i].classA == *(uint32_t *)&"mtib" && strcmp(tagArray[i].nameOffset,TAG_MAP_ICONS) == 0) {
-            if (mapPicturesBitmaps != NULL) free(mapPicturesBitmaps);
+            free(mapPicturesBitmaps);
             mapPicturesBitmaps = calloc(sizeof(struct bitmapBitmap), mapsCount);
             struct bitmapTag *tag = tagArray[i].dataOffset;
 
