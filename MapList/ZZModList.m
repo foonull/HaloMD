@@ -93,7 +93,7 @@ static BOOL hideMapBecauseOutdated(NSString *map) { //hide map if a later versio
 
     int buildNumber = buildNumberFromIdentifier(map);
     NSString *name = mapNameFromIdentifier(map);
-    NSArray *files = [[NSFileManager defaultManager]contentsOfDirectoryAtPath:mapsDirectory() error:nil];
+    NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mapsDirectory() error:nil];
     for (NSUInteger i=0; i<[files count]; i++) {
         NSString *file = [files objectAtIndex:i];
         if ([[file pathExtension] isEqualToString:@"map"]) {
