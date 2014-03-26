@@ -323,7 +323,7 @@ static void replaceUstr(NSMutableArray *mapsAdded) { //refreshes map names and d
         }
         else if(tagArray[i].classA == *(uint32_t *)&"mtib" && strcmp(tagArray[i].nameOffset,TAG_MAP_ICONS) == 0) {
             free(mapPicturesBitmaps);
-            mapPicturesBitmaps = calloc(sizeof(struct bitmapBitmap), mapsCount);
+            mapPicturesBitmaps = calloc(sizeof(*mapPicturesBitmaps), mapsCount);
             struct bitmapTag *tag = tagArray[i].dataOffset;
 
             for(uint32_t i = 0; i < mapsCount; i++) {
