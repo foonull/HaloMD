@@ -222,16 +222,16 @@ static void changeMapEntry(MapListEntry **mapsPointer, char *desiredMap, int tab
     (*mapsPointer)[tableIndex].index = tableIndex;
 }
 
-static void refreshMaps(void) { //remake the map array
+static void refreshMaps(NSMutableArray *mapsAdded) { //remake the map array
     static MapListEntry *newMaps;
     static MapListEntry **mapsPointer = (void *)0x3691c0;
 
     if (newMaps != NULL) {
-        for(uint32_t i = 0;i < [gMapsAdded count]; i++) {
+        for(uint32_t i = 0;i < [mapsAdded count]; i++) {
             free(newMaps[i].name);
         }
     }
-    [gMapsAdded removeAllObjects];
+    [mapsAdded removeAllObjects];
 
     NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mapsDirectory() error:NULL];
     for(NSUInteger i = 0; i < [files count]; i++) {
@@ -239,18 +239,18 @@ static void refreshMaps(void) { //remake the map array
         if ([[file pathExtension] isEqualToString:@"map"]) {
             NSString *fileWithoutExtension = [[file lastPathComponent] stringByDeletingPathExtension];
             if (![stockMapName(fileWithoutExtension) isEqualToString:fileWithoutExtension] ||(buildNumberFromIdentifier(fileWithoutExtension) > 0 && !hideMapBecauseOutdated(fileWithoutExtension))) {
-                [gMapsAdded addObject:fileWithoutExtension];
+                [mapsAdded addObject:fileWithoutExtension];
             }
         }
     }
 
-    uint32_t mapsCount = [gMapsAdded count];
+    uint32_t mapsCount = [mapsAdded count];
     SET_HALO_MAPS_COUNT(mapsCount); //we need to override map count or else the 18 map limit remover died in vain
     newMaps = malloc(sizeof(MapListEntry) * (mapsCount));
     *mapsPointer = newMaps;
-    [gMapsAdded sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    [mapsAdded sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     for(uint32_t i = 0; i < mapsCount; i++) {
-        changeMapEntry(mapsPointer, (char *)[[gMapsAdded objectAtIndex:i] UTF8String], i);
+        changeMapEntry(mapsPointer, (char *)[[mapsAdded objectAtIndex:i] UTF8String], i);
     }
 }
 
@@ -267,7 +267,7 @@ typedef enum {
     GENERIC_OFFSET = 0xDA1630 //? icon
 } MapIconOffsets;
 
-static void replaceUstr(void) { //refreshes map names and descriptions - required on map load
+static void replaceUstr(NSMutableArray *mapsAdded) { //refreshes map names and descriptions - required on map load
     static struct unicodeStringReference *referencesMapName;
     static uint32_t referencesMapNameCount;
 
@@ -276,7 +276,7 @@ static void replaceUstr(void) { //refreshes map names and descriptions - require
 
     static struct bitmapBitmap *mapPicturesBitmaps;
 
-    uint32_t mapsCount = [gMapsAdded count];
+    uint32_t mapsCount = [mapsAdded count];
     
     MapTag *tagArray = (MapTag *)*(uint32_t *)(HALO_INDEX_LOCATION);
     uint32_t numberOfTags = *(uint32_t *)(HALO_INDEX_LOCATION + TAG_COUNT_OFFSET);
@@ -311,7 +311,7 @@ static void replaceUstr(void) { //refreshes map names and descriptions - require
                 *mapCountReference = mapsCount;
 
                 for (uint32_t q = 0; q < mapsCount; q++) {
-                    NSString *mapString = mapStringFunction([gMapsAdded objectAtIndex:q]);
+                    NSString *mapString = mapStringFunction([mapsAdded objectAtIndex:q]);
                     uint32_t length = sizeof(unichar) * ([mapString length]+1);
                     (*mapReference)[q].length = length;
 
@@ -341,9 +341,9 @@ static void replaceUstr(void) { //refreshes map names and descriptions - require
                 mapPicturesBitmaps[i].ffffffff = -1;
             }
 
-            mapPicturesBitmaps[[gMapsAdded indexOfObject:@"bloodgulch"]].pixelOffset = BLOODGULCH_OFFSET;
-            mapPicturesBitmaps[[gMapsAdded indexOfObject:@"crossing"]].pixelOffset = CROSSING_OFFSET;
-            mapPicturesBitmaps[[gMapsAdded indexOfObject:@"barrier"]].pixelOffset = BARRIER_OFFSET;
+            mapPicturesBitmaps[[mapsAdded indexOfObject:@"bloodgulch"]].pixelOffset = BLOODGULCH_OFFSET;
+            mapPicturesBitmaps[[mapsAdded indexOfObject:@"crossing"]].pixelOffset = CROSSING_OFFSET;
+            mapPicturesBitmaps[[mapsAdded indexOfObject:@"barrier"]].pixelOffset = BARRIER_OFFSET;
             tag->bitmap = mapPicturesBitmaps;
             tag->bitmapsCount = mapsCount;
             for (uint32_t i = 0; i < tag->sequenceCount; i++) {
@@ -355,8 +355,8 @@ static void replaceUstr(void) { //refreshes map names and descriptions - require
 
 - (void)mapDidBegin:(NSString *)mapName
 {
-    refreshMaps();
-    replaceUstr();
+    refreshMaps(gMapsAdded);
+    replaceUstr(gMapsAdded);
 }
 
 - (void)mapDidEnd:(NSString *)mapName
