@@ -94,12 +94,13 @@ static BOOL hideMapBecauseOutdated(NSString *map) { //hide map if a later versio
     int buildNumber = buildNumberFromIdentifier(map);
     NSString *name = mapNameFromIdentifier(map);
     NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mapsDirectory() error:nil];
-    for (NSUInteger i=0; i<[files count]; i++) {
-        NSString *file = [files objectAtIndex:i];
+    for (NSString *file in files) {
         if ([[file pathExtension] isEqualToString:@"map"]) {
                 NSString *fileWithoutExtension = [[file lastPathComponent] stringByDeletingPathExtension];
+
                 if(![mapNameFromIdentifier(name) isEqualToString:mapNameFromIdentifier(fileWithoutExtension)])
                     continue;
+
                 if(buildNumberFromIdentifier(fileWithoutExtension) > buildNumber)
                     return YES;
         }
@@ -115,10 +116,9 @@ static BOOL mapIsOutdated(NSString *map) { //check if there is a newer version o
 
     if([mapName isEqualToString:map]) return NO;
 
-    NSArray *arrayMods = [gModsList objectForKey:@"Mods"];
-    for (NSUInteger i=0; i < [arrayMods count]; i++) {
-        if ([[[arrayMods objectAtIndex:i] objectForKey:@"name"] isEqualToString:mapName]) {
-            if (buildNumberFromIdentifier([[arrayMods objectAtIndex:i] objectForKey:@"identifier"]) > buildNumber) {
+    for (NSDictionary *modDictionary in [gModsList objectForKey:@"Mods"]) {
+        if ([[modDictionary objectForKey:@"name"] isEqualToString:mapName]) {
+            if (buildNumberFromIdentifier([modDictionary objectForKey:@"identifier"]) > buildNumber) {
                 return YES;
             }
         }
@@ -234,8 +234,7 @@ static void refreshMaps(NSMutableArray *mapsAdded) { //remake the map array
     [mapsAdded removeAllObjects];
 
     NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mapsDirectory() error:NULL];
-    for(NSUInteger i = 0; i < [files count]; i++) {
-        NSString *file = [files objectAtIndex:i];
+    for (NSString *file in files) {
         if ([[file pathExtension] isEqualToString:@"map"]) {
             NSString *fileWithoutExtension = [[file lastPathComponent] stringByDeletingPathExtension];
             if (![stockMapName(fileWithoutExtension) isEqualToString:fileWithoutExtension] ||(buildNumberFromIdentifier(fileWithoutExtension) > 0 && !hideMapBecauseOutdated(fileWithoutExtension))) {
