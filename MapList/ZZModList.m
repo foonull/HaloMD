@@ -265,7 +265,14 @@ typedef enum {
     BLOODGULCH_OFFSET = 0xD75630,
     CROSSING_OFFSET = 0xD91630,
     GENERIC_OFFSET = 0xDA1630 //? icon
-} MapIconOffsets;
+} MapIconOffset;
+
+static void setMapPixelOffset(struct bitmapBitmap *mapPicturesBitmaps, NSMutableArray *maps, NSString *mapName, MapIconOffset mapIconOffset) {
+    NSUInteger mapIndex = [maps indexOfObject:mapName];
+    if (mapIndex != NSNotFound) {
+        mapPicturesBitmaps[mapIndex].pixelOffset = mapIconOffset;
+    }
+}
 
 static void replaceUstr(NSMutableArray *mapsAdded) { //refreshes map names and descriptions - required on map load
     static struct unicodeStringReference *referencesMapName;
@@ -341,9 +348,10 @@ static void replaceUstr(NSMutableArray *mapsAdded) { //refreshes map names and d
                 mapPicturesBitmaps[i].ffffffff = -1;
             }
 
-            mapPicturesBitmaps[[mapsAdded indexOfObject:@"bloodgulch"]].pixelOffset = BLOODGULCH_OFFSET;
-            mapPicturesBitmaps[[mapsAdded indexOfObject:@"crossing"]].pixelOffset = CROSSING_OFFSET;
-            mapPicturesBitmaps[[mapsAdded indexOfObject:@"barrier"]].pixelOffset = BARRIER_OFFSET;
+            setMapPixelOffset(mapPicturesBitmaps, mapsAdded, @"bloodgulch", BLOODGULCH_OFFSET);
+            setMapPixelOffset(mapPicturesBitmaps, mapsAdded, @"crossing", CROSSING_OFFSET);
+            setMapPixelOffset(mapPicturesBitmaps, mapsAdded, @"barrier", BARRIER_OFFSET);
+
             tag->bitmap = mapPicturesBitmaps;
             tag->bitmapsCount = mapsCount;
             for (uint32_t i = 0; i < tag->sequenceCount; i++) {
