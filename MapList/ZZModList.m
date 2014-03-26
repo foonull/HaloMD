@@ -285,17 +285,20 @@ static void replaceUstr(void) { //refreshes map names and descriptions - require
         if (tagArray[i].classA == *(uint32_t *)&"rtsu") {
             struct unicodeStringReference **mapReference = NULL;
             uint32_t *mapCountReference = NULL;
+            NSString *(*mapStringFunction)(NSString *) = NULL;
 
             if (strcmp(tagArray[i].nameOffset,TAG_MAP_NAMES) == 0) {
                 mapReference = &referencesMapName;
                 mapCountReference = &referencesMapNameCount;
+                mapStringFunction = mapNameFromIdentifier;
             }
             else if (strcmp(tagArray[i].nameOffset,TAG_MAP_DESCRIPTIONS) == 0) {
                 mapReference = &referencesMapDesc;
                 mapCountReference = &referencesMapDescCount;
+                mapStringFunction = mapDescriptionFromIdentifier;
             }
 
-            if (mapReference != NULL && mapCountReference != NULL) {
+            if (mapReference != NULL && mapCountReference != NULL && mapStringFunction != NULL) {
                 if (*mapReference != NULL) {
                     for (uint32_t q = 0; q < *mapCountReference; q++) {
                         free((*mapReference)[q].string);
@@ -310,12 +313,13 @@ static void replaceUstr(void) { //refreshes map names and descriptions - require
                 *mapCountReference = mapsCount;
 
                 for (uint32_t q = 0; q < mapsCount; q++) {
-                    NSString *map = mapNameFromIdentifier([gMapsAdded objectAtIndex:q]);
-                    uint32_t length = sizeof(unichar) * ([map length]+1);
+                    NSString *mapString = mapStringFunction([gMapsAdded objectAtIndex:q]);
+                    uint32_t length = sizeof(unichar) * ([mapString length]+1);
                     (*mapReference)[q].length = length;
-                    unichar *newmap_name = calloc(length,1); //allocate map name or else a disaster beyond your imagination will occur
-                    memcpy(newmap_name,[map cStringUsingEncoding:NSUTF16LittleEndianStringEncoding],length);
-                    (*mapReference)[q].string = newmap_name;
+
+                    unichar *newMapString = calloc(length,1); //allocate or else a disaster beyond your imagination will occur
+                    memcpy(newMapString,[mapString cStringUsingEncoding:NSUTF16LittleEndianStringEncoding],length);
+                    (*mapReference)[q].string = newMapString;
                 }
             }
         }
