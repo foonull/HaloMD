@@ -174,13 +174,13 @@ static NSString *stockMapName(NSString *map) { //hardcode human names of stock m
 }
 
 static NSString *mapNameFromIdentifier(NSString *identifier) {
-    if (gModsList == nil) return identifier;
-
-    for (NSDictionary *mod in [gModsList objectForKey:@"Mods"]) {
-        if ([[mod objectForKey:@"identifier"] isEqualToString:identifier]) {
-            return [mod objectForKey:@"name"];
-        }
-    }
+    if (gModsList != nil) {
+		for (NSDictionary *mod in [gModsList objectForKey:@"Mods"]) {
+			if ([[mod objectForKey:@"identifier"] isEqualToString:identifier]) {
+				return [mod objectForKey:@"name"];
+			}
+		}
+	}
 
     return stockMapName(identifier);
 }
