@@ -32,6 +32,7 @@
 //
 
 #import "MDNetworking.h"
+#import "AppDelegate.h"
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -97,6 +97,8 @@
 - (NSArray *)servers;
 - (MDServer *)selectedServer;
 
+- (void)retrievedServers:(NSArray *)servers;
+
 - (void)joinServer:(MDServer *)server;
 
 - (BOOL)isHaloOpenAndRunningFullscreen;
