@@ -46,13 +46,12 @@
 @interface MDModsController : NSObject <SCEventListenerProtocol, NSURLDownloadDelegate>
 {
 	IBOutlet AppDelegate *appDelegate;
-	IBOutlet NSMenu *modsMenu;
 	IBOutlet NSMenu *onlineModsMenu;
 	IBOutlet NSMenu *pluginsMenu;
 	IBOutlet NSMenu *onlinePluginsMenu;
 	IBOutlet NSButton *cancelButton;
 	IBOutlet NSButton *refreshButton;
-	NSMutableArray *modMenuItems;
+	NSMutableArray *localModItems;
 	NSMutableDictionary *modListDictionary;
 	NSMutableArray *pluginMenuItems;
 	NSMutableDictionary *pluginListDictionary;
@@ -81,10 +80,9 @@
 	BOOL isInitiated;
 	BOOL isDownloadingModList;
 	BOOL didDownloadModList;
-	BOOL isWritingUI;
 }
 
-@property (nonatomic, retain) NSMutableArray *modMenuItems;
+@property (nonatomic, retain) NSMutableArray *localModItems;
 @property (nonatomic, retain) NSMutableDictionary *modListDictionary;
 @property (nonatomic, retain) NSMutableArray *pluginMenuItems;
 @property (nonatomic, retain) NSMutableDictionary *pluginListDictionary;
@@ -95,7 +93,6 @@
 @property (nonatomic, readwrite) BOOL didDownloadModList;
 @property (nonatomic, copy) NSString *pendingDownload;
 @property (nonatomic, retain) NSMutableArray *pendingPlugins;
-@property (nonatomic, readwrite) BOOL isWritingUI;
 @property (nonatomic, retain) MDModPatch *currentDownloadingPatch;
 @property (nonatomic, retain) MDPluginListItem *currentDownloadingPlugin;
 @property (nonatomic, retain) MDServer *joiningServer;
@@ -109,13 +106,8 @@
 - (BOOL)addModAtPath:(NSString *)filename;
 - (BOOL)addPluginAtPath:(NSString *)filename preferringEnabledState:(BOOL)preferringEnabledState;
 
-- (NSString *)readCurrentModIdentifierFromExecutable;
-- (BOOL)writeCurrentModIdentifier:(NSString *)mapIdentifier;
-
 - (void)requestModDownload:(NSString *)mapIdentifier andJoinServer:(MDServer *)server;
 - (BOOL)requestPluginDownloadIfNeededFromMod:(NSString *)mapIdentifier andJoinServer:(MDServer *)server;
-
-- (void)enableModWithMapIdentifier:(NSString *)mapIdentifier;
 
 - (IBAction)cancelInstallation:(id)sender;
 - (IBAction)addMods:(id)sender;

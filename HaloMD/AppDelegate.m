@@ -544,11 +544,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		return;
 	}
 	
-	if (![[server map] isEqualToString:MODDED_SLOT_IDENTIFIER] || ![[MDServer formalizedMapsDictionary] objectForKey:[server map]])
-	{
-		[modsController enableModWithMapIdentifier:[server map]];
-	}
-	
 	[self setUpInitFile:[NSString stringWithFormat:@"connect %@:%d \"%@\"", [server ipAddress], [server portNumber], password]];
 	[self startHaloTask];
 	
@@ -1031,16 +1026,9 @@ static NSDictionary *expectedVersionsDictionary = nil;
 			{
 				[self performSelectorOnMainThread:@selector(requireUserToTerminateHalo) withObject:nil waitUntilDone:YES];
 				
-				NSString * currentMapIdentifier = nil;
-				
 				// Trash old library file if it exists, safe and necessary for executable file (so that icon doesn't mess up)
 				if ([[NSFileManager defaultManager] fileExistsAtPath:libraryFile])
 				{
-					if ([[libraryFile lastPathComponent] isEqualToString:@"Halo"] || (![[libraryFile lastPathComponent] isEqualToString:@"bitmaps.map"] && [[libraryFile lastPathComponent] isEqualToString:@"sounds.map"] && [[[libraryFile lastPathComponent] pathExtension] isEqualToString:@"map"]))
-					{
-						currentMapIdentifier = [modsController readCurrentModIdentifierFromExecutable];
-					}
-					
 					if ([[libraryFile pathExtension] isEqualToString:@"map"])
 					{
 						// Move to backup file
@@ -1075,11 +1063,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 					NSLog(@"Overwrote & Updated %@", file);
 					[currentVersionsDictionary setObject:[expectedVersionsDictionary objectForKey:file] forKey:file];
 					[[NSUserDefaults standardUserDefaults] setObject:currentVersionsDictionary forKey:HALO_FILE_VERSIONS_KEY];
-					
-					if (currentMapIdentifier)
-					{
-						[modsController writeCurrentModIdentifier:currentMapIdentifier];
-					}
 				}
 				else
 				{

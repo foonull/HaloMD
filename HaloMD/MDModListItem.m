@@ -44,4 +44,14 @@
 @synthesize patches;
 @synthesize plugins;
 
+- (BOOL)isEqual:(id)other
+{
+	return [other isKindOfClass:[self class]] && [[self identifier] isEqualToString:[other identifier]];
+}
+
+- (NSUInteger)hash
+{
+	return [[self identifier] hash];
+}
+
 @end

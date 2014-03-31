@@ -68,7 +68,7 @@
 
 @implementation MDModsController
 
-@synthesize modMenuItems;
+@synthesize localModItems;
 @synthesize modListDictionary;
 @synthesize pluginMenuItems;
 @synthesize pluginListDictionary;
@@ -78,7 +78,6 @@
 @synthesize urlToOpen;
 @synthesize didDownloadModList;
 @synthesize pendingDownload;
-@synthesize isWritingUI;
 @synthesize currentDownloadingPatch;
 @synthesize currentDownloadingPlugin;
 @synthesize joiningServer;
@@ -110,11 +109,7 @@ static BOOL gJsonSerializaionExists = NO;
 
 - (BOOL)validateMenuItem:(NSMenuItem *)theMenuItem
 {
-	if ([[modsMenu itemArray] containsObject:theMenuItem] && ![appDelegate isInstalled])
-	{
-		return NO;
-	}
-	else if ([[pluginsMenu itemArray] containsObject:theMenuItem])
+	if ([[pluginsMenu itemArray] containsObject:theMenuItem])
 	{
 		MDPluginListItem *pluginItem = [theMenuItem representedObject];
 		if (pluginItem != nil && [pluginItem isKindOfClass:[MDPluginListItem class]])
@@ -233,11 +228,6 @@ static BOOL gJsonSerializaionExists = NO;
 			[[NSFileManager defaultManager] moveItemAtPath:filename
 													toPath:destination
 													 error:nil];
-			
-			if (mapIdentifier && ![appDelegate isHaloOpen])
-			{
-				[self writeCurrentModIdentifier:mapIdentifier];
-			}
 			
 			success = YES;
 		}
@@ -365,251 +355,32 @@ static BOOL gJsonSerializaionExists = NO;
 					 contextInfo:NULL];
 }
 
-- (void)markNotWritingUI
-{
-	self.isWritingUI = NO;
-}
-
-- (void)_writeCurrentUI:(id)unusedObject
-{
-	NSAutoreleasePool *autoreleasePool = [[NSAutoreleasePool alloc] init];
-	
-	NSString *mapIdentifier = [self readCurrentModIdentifierFromExecutable];
-	if ([[NSFileManager defaultManager] fileExistsAtPath:[MAPS_DIRECTORY stringByAppendingPathComponent:[mapIdentifier stringByAppendingPathExtension:@"map"]]])
-	{
-		NSArray *mapsToModify = [NSArray arrayWithObjects:@"ui.map", @"bloodgulch.map", @"crossing.map", @"barrier.map", nil];
-		for (NSString *mapToModify in mapsToModify)
-		{
-			NSString *mapPath = [[[[appDelegate applicationSupportPath] stringByAppendingPathComponent:@"GameData"] stringByAppendingPathComponent:@"Maps"] stringByAppendingPathComponent:mapToModify];
-			
-			if ([[NSFileManager defaultManager] fileExistsAtPath:mapPath])
-			{
-				NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:mapPath];
-				NSData *mapData = [NSData dataWithContentsOfFile:mapPath];
-				
-				if (0x10 + sizeof(uint32_t) > [mapData length])
-				{
-					[fileHandle closeFile];
-					continue;
-				}
-				
-				uint32_t indexOffset = CFSwapInt32LittleToHost(*(uint32_t *)([mapData bytes] + 0x10));
-				
-				if (indexOffset + 0xC + sizeof(uint32_t) > [mapData length])
-				{
-					[fileHandle closeFile];
-					continue;
-				}
-				
-				uint32_t magic = 0x40440000 - indexOffset;
-				
-				uint32_t numberOfTags = CFSwapInt32LittleToHost(*(uint32_t *)([mapData bytes] + indexOffset + 0xC));
-				
-				uint32_t tagArrayOffset = CFSwapInt32LittleToHost(*(uint32_t *)([mapData bytes] + indexOffset)) - magic;
-				
-				for (uint32_t tagIndex = 0; tagIndex < numberOfTags; tagIndex++)
-				{
-					uint32_t currentLocation = 0x20 * tagIndex + tagArrayOffset;
-					
-					const void *classStringBytes = [mapData bytes] + currentLocation;
-					
-					if (currentLocation + 0x14 + sizeof(uint32_t) > [mapData length]) break;
-					
-					if (strncmp(classStringBytes, "rtsu", 4) == 0)
-					{
-						uint32_t tagOffset = CFSwapInt32LittleToHost(*(uint32_t *)([mapData bytes] + currentLocation + 0x10)) - magic;
-						
-						const char *mpMapListPath = "ui\\shell\\main_menu\\mp_map_list";
-						size_t mpMapListPathLength = strlen(mpMapListPath)+1;
-						
-						if (tagOffset + mpMapListPathLength > [mapData length]) continue;
-						
-						const void *tagPathBytes = [mapData bytes] + tagOffset;
-						
-						if (strncmp(tagPathBytes, mpMapListPath, mpMapListPathLength) == 0)
-						{
-							uint32_t namesOffset = CFSwapInt32LittleToHost(*(uint32_t *)([mapData bytes] + currentLocation + 0x14)) - magic + 0x1B0;
-							uint32_t gephyOffset = namesOffset + 0x1A0;
-							
-							unichar buffer[13];
-							memset(buffer, 0, sizeof(buffer));
-							
-							if (gephyOffset + sizeof(buffer) > [mapData length]) break;
-							
-							[fileHandle seekToFileOffset:gephyOffset];
-							
-							NSString *mapNameUI = mapIdentifier;
-							MDModListItem *listItem = [modListDictionary objectForKey:mapIdentifier];
-							if (listItem)
-							{
-								mapNameUI = [listItem name];
-							}
-							
-							[mapNameUI getCharacters:buffer range:NSMakeRange(0, MIN([mapNameUI length], sizeof(buffer) / sizeof(unichar)))];
-							[fileHandle writeData:[NSData dataWithBytes:buffer length:sizeof(buffer)]];
-						}
-					}
-				}
-				
-				[fileHandle closeFile];
-			}
-		}
-	}
-	
-	[self performSelectorOnMainThread:@selector(markNotWritingUI) withObject:nil waitUntilDone:NO];
-	
-	[autoreleasePool release];
-}
-
-- (void)writeCurrentUI
-{
-	if (self.isWritingUI)
-	{
-		// Try again later
-		[self performSelector:@selector(writeCurrentUI) withObject:nil afterDelay:0.01];
-	}
-	else
-	{
-		[NSThread detachNewThreadSelector:@selector(_writeCurrentUI:) toTarget:self withObject:nil];
-	}
-}
-
-- (BOOL)writeCurrentModIdentifier:(NSString *)mapIdentifier
-{
-	BOOL success = NO;
-	
-	if ([[NSFileManager defaultManager] fileExistsAtPath:[MAPS_DIRECTORY stringByAppendingPathComponent:[mapIdentifier stringByAppendingPathExtension:@"map"]]])
-	{
-		NSString *haloExecutablePath = [[[[[appDelegate applicationSupportPath] stringByAppendingPathComponent:@"HaloMD.app"] stringByAppendingPathComponent:@"Contents"] stringByAppendingPathComponent:@"MacOS"] stringByAppendingPathComponent:@"Halo"];
-		NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:haloExecutablePath];
-		
-		if (fileHandle)
-		{
-			char buffer[[MODDED_SLOT_IDENTIFIER length]+1];
-			memset(buffer, 0, sizeof(buffer));
-			
-			strncpy(buffer, [mapIdentifier UTF8String], sizeof(buffer)-1);
-			
-			[fileHandle seekToFileOffset:0x3BCEEC];
-			[fileHandle writeData:[NSData dataWithBytes:buffer length:sizeof(buffer)]];
-			
-			[fileHandle seekToFileOffset:0x76B3B0];
-			[fileHandle writeData:[NSData dataWithBytes:buffer length:sizeof(buffer)]];
-			
-			[self writeCurrentUI];
-			
-			[fileHandle closeFile];
-			
-			success = YES;
-		}
-	}
-	
-	return success;
-}
-
-- (void)enableModWithMapIdentifier:(NSString *)mapIdentifier
-{
-	for (NSMenuItem *item in [self modMenuItems])
-	{
-		if ([[[item representedObject] identifier] isEqualToString:mapIdentifier])
-		{
-			[self enableMod:item];
-			break;
-		}
-	}
-}
-
-- (void)enableMod:(NSMenuItem *)menuItem
-{
-	if ([menuItem state] == NSOnState)
-	{
-		return;
-	}
-	
-	if ([appDelegate isHaloOpen])
-	{
-		if (NSRunAlertPanel(@"Halo is Running",
-						    @"You have to quit Halo in order to enable this mod.",
-						    @"Quit", @"Cancel", nil) == NSOKButton)
-		{
-			[appDelegate terminateHaloInstances];
-		}
-		else
-		{
-			return;
-		}
-	}
-	
-	if ([self writeCurrentModIdentifier:[[menuItem representedObject] identifier]])
-	{
-		[menuItem setState:NSOnState];
-		
-		for (NSMenuItem *item in [self modMenuItems])
-		{
-			if (item != menuItem)
-			{
-				[item setState:NSOffState];
-			}
-		}
-	}
-}
-
 - (NSArray *)mapsToIgnore
 {
-	return [[[NSArray alloc] initWithObjects:@"bloodgulch", @"beavercreek", @"bitmaps", @"boardingaction", @"carousel", @"chillout", @"damnation", @"dangercanyon", @"deathisland", @"hangemhigh", @"icefields", @"infinity", @"longest", @"prisoner", @"putput", @"ratrace", @"sidewinder", @"sounds", @"timberland", @"ui", @"wizard", @"a10", @"a30", @"a50", @"b30", @"b40", @"c10", @"c20", @"c40", @"d20", @"d40", nil] autorelease];
-}
-
-- (NSString *)readCurrentModIdentifierFromExecutable
-{
-	NSString *modIdentifier = nil;
-	
-	NSString *haloExecutablePath = [[[[[appDelegate applicationSupportPath] stringByAppendingPathComponent:@"HaloMD.app"] stringByAppendingPathComponent:@"Contents"] stringByAppendingPathComponent:@"MacOS"] stringByAppendingPathComponent:@"Halo"];
-	NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:haloExecutablePath];
-	if (fileHandle)
-	{
-		[fileHandle seekToFileOffset:0x3BCEEC];
-		NSData *identifierData = [fileHandle readDataOfLength:[MODDED_SLOT_IDENTIFIER length]+1];
-		modIdentifier = [[[NSString alloc] initWithData:identifierData encoding:NSUTF8StringEncoding] autorelease];
-		// Remove ending zeroes
-		modIdentifier = [NSString stringWithCString:[modIdentifier UTF8String] encoding:NSUTF8StringEncoding];
-	}
-	
-	return modIdentifier;
+	return [[[NSArray alloc] initWithObjects:@"bloodgulch", @"barrier", @"crossing", @"beavercreek", @"bitmaps", @"boardingaction", @"carousel", @"chillout", @"damnation", @"dangercanyon", @"deathisland", @"hangemhigh", @"icefields", @"infinity", @"longest", @"prisoner", @"putput", @"ratrace", @"sidewinder", @"sounds", @"timberland", @"ui", @"wizard", @"a10", @"a30", @"a50", @"b30", @"b40", @"c10", @"c20", @"c40", @"d20", @"d40", nil] autorelease];
 }
 
 - (void)makeModMenuItems
 {
-	NSString *initialModIdentifier = nil;
-	
-	if (!modMenuItems)
+	if ([self localModItems] == nil)
 	{
-		[self setModMenuItems:[NSMutableArray array]];
+		[self setLocalModItems:[NSMutableArray array]];
 	}
 	else
 	{
-		for (id menuItem in modMenuItems)
-		{
-			[modsMenu removeItem:menuItem];
-		}
-		
-		[[self modMenuItems] removeAllObjects];
-		
-		if ([[[modsMenu itemArray] lastObject] action] == @selector(doNothing:))
-		{
-			[modsMenu removeItem:[[modsMenu itemArray] lastObject]];
-		}
+		[[self localModItems] removeAllObjects];
 	}
-	
-	initialModIdentifier = [self readCurrentModIdentifierFromExecutable];
 	
 	NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:MAPS_DIRECTORY];
 	NSString *file = nil;
 	
 	[directoryEnumerator skipDescendents];
 	
+	NSArray *ignoredMaps = [self mapsToIgnore];
+
 	while (file = [directoryEnumerator nextObject])
 	{
-		if ([[file pathExtension] isEqualToString:@"map"] && ![[self mapsToIgnore] containsObject:[file stringByDeletingPathExtension]])
+		if ([[file pathExtension] isEqualToString:@"map"] && ![ignoredMaps containsObject:[file stringByDeletingPathExtension]])
 		{
 			MDModListItem *listItem = [[MDModListItem alloc] init];
 			[listItem setIdentifier:[file stringByDeletingPathExtension]];
@@ -625,48 +396,19 @@ static BOOL gJsonSerializaionExists = NO;
 					[fileHandle seekToFileOffset:0x20];
 					
 					NSData *mapNameData = [fileHandle readDataOfLength:[MODDED_SLOT_IDENTIFIER length]+1];
-					NSString *mapIdentifier = [[NSString alloc] initWithData:mapNameData encoding:NSUTF8StringEncoding];
+					NSString *mapIdentifier = [[[NSString alloc] initWithData:mapNameData encoding:NSUTF8StringEncoding] autorelease];
 					
 					// Remove ending zeroes
-					[mapIdentifier autorelease];
 					mapIdentifier = [NSString stringWithCString:[mapIdentifier UTF8String] encoding:NSUTF8StringEncoding];
 					
 					if ([mapIdentifier isEqualToString:[listItem identifier]])
 					{
-						NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:[listItem name] ? [listItem name] : @"" action:@selector(enableMod:) keyEquivalent:@""];
-						[menuItem setTarget:self];
-						[menuItem setRepresentedObject:listItem];
-						
-						if (initialModIdentifier && [mapIdentifier isEqualToString:initialModIdentifier])
-						{
-							[menuItem setState:NSOnState];
-							initialModIdentifier = nil;
-						}
-						
-						[[self modMenuItems] addObject:menuItem];
-						[modsMenu addItem:menuItem];
-						
-						[menuItem release];
+						[[self localModItems] addObject:listItem];
 					}
 				}
 			}
 			
 			[listItem release];
-		}
-	}
-	
-	if ([[self modMenuItems] count] == 0)
-	{
-		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@"No Available Mods" action:@selector(doNothing:) keyEquivalent:@""];
-		[menuItem setEnabled:NO];
-		[modsMenu addItem:menuItem];
-		[menuItem release];
-	}
-	else if (initialModIdentifier && ![appDelegate isHaloOpen]) // A mod isn't swapped in, let's swap one in
-	{
-		if ([[self modMenuItems] count] > 0)
-		{
-			[self enableMod:[[self modMenuItems] objectAtIndex:0]];
 		}
 	}
 }
@@ -893,84 +635,6 @@ static BOOL gJsonSerializaionExists = NO;
 	[self installOnlinePlugin:[sender representedObject]];
 }
 
-- (void)updateModMenuTitles
-{
-	NSMutableArray *itemsToRemove = [NSMutableArray array];
-	
-	for (NSMenuItem *modMenuItem in modMenuItems)
-	{
-		MDModListItem *item = [[self modListDictionary] objectForKey:[[modMenuItem representedObject] identifier]];
-		if (item)
-		{
-			BOOL shouldAddMenuItem = YES;
-			
-			for (NSMenuItem *previousMenuItem in modMenuItems)
-			{
-				if (previousMenuItem == modMenuItem)
-				{
-					break;
-				}
-				
-				if (![itemsToRemove containsObject:previousMenuItem] && [[[previousMenuItem representedObject] name] isEqualToString:[item name]])
-				{
-					int previousBuildNumber =  [self buildNumberFromMapIdentifier:[[previousMenuItem representedObject] identifier]];
-					int currentBuildNumber = [self buildNumberFromMapIdentifier:[item identifier]];
-					
-					if (currentBuildNumber > previousBuildNumber)
-					{
-						[itemsToRemove addObject:previousMenuItem];
-					}
-					else if (currentBuildNumber < previousBuildNumber)
-					{
-						shouldAddMenuItem = NO;
-					}
-				}
-			}
-			
-			if (shouldAddMenuItem)
-			{
-				[modMenuItem setRepresentedObject:item];
-				if ([item name])
-				{
-					[modMenuItem setTitle:[item name]];
-				}
-				if ([item description])
-				{
-					[modMenuItem setToolTip:[item description]];
-				}
-			}
-		}
-	}
-	
-	for (id modMenuItem in itemsToRemove)
-	{
-		// This should never fail but just to be safe, removing something not in the menu could raise an exception
-		if ([[modsMenu itemArray] containsObject:modMenuItem])
-		{
-			[modsMenu removeItem:modMenuItem];
-		}
-		[[self modMenuItems] removeObject:modMenuItem];
-	}
-	
-	// Sort the mods based on title
-	NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES selector:@selector(caseInsensitiveCompare:)] autorelease];
-	NSArray *sortedMenuItems = [[self modMenuItems] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-	
-	for (id modItem in [self modMenuItems])
-	{
-		[modsMenu removeItem:modItem];
-	}
-	
-	[self setModMenuItems:[NSMutableArray arrayWithArray:sortedMenuItems]];
-	
-	for (id modItem in [self modMenuItems])
-	{
-		[modsMenu addItem:modItem];
-	}
-	
-	[appDelegate updateHiddenServers];
-}
-
 - (void)removeAllItemsFromMenu:(NSMenu *)menu
 {
 	if ([menu respondsToSelector:@selector(removeAllItems)])
@@ -1117,11 +781,7 @@ static BOOL gJsonSerializaionExists = NO;
 		[onlineModsMenu addItem:refreshDownloadListMenuItem];
 		[refreshDownloadListMenuItem release];
 		
-		[self updateModMenuTitles];
-		
 		[appDelegate updateHiddenServers];
-		
-		[self writeCurrentUI];
 	}
 }
 
@@ -1208,39 +868,25 @@ static BOOL gJsonSerializaionExists = NO;
 {
 	NSMutableArray *itemsToUpdate = [NSMutableArray array];
 	
-	for (NSMenuItem *modMenuItem in modMenuItems)
+	for (MDModListItem *modItem in [self localModItems])
 	{
-		MDModListItem *modItem = [modMenuItem representedObject];
+		NSString *modName = [[[self modListDictionary] objectForKey:modItem.identifier] name];
+		if (modName == nil) continue;
 		
-		BOOL isLatestVersionInstalled = YES;
-		for (NSMenuItem *innerMenuItem in modMenuItems)
+		MDModListItem *onlineItem = nil;
+		for (NSMenuItem *onlineMenuItem in [onlineModsMenu itemArray])
 		{
-			MDModListItem *innerModItem = [innerMenuItem representedObject];
-			
-			if (innerMenuItem != modMenuItem && [[modItem name] isEqualToString:[innerModItem name]] && [self buildNumberFromMapIdentifier:[modItem identifier]] < [self buildNumberFromMapIdentifier:[innerModItem identifier]])
+			MDModListItem *onlineModItem = [onlineMenuItem representedObject];
+			if (onlineModItem != nil && [[onlineModItem name] isEqualToString:modName])
 			{
-				isLatestVersionInstalled = NO;
+				onlineItem = onlineModItem;
 				break;
 			}
 		}
 		
-		if (isLatestVersionInstalled)
+		if (onlineItem != nil && ![[self localModItems] containsObject:onlineItem] && [self buildNumberFromMapIdentifier:[onlineItem identifier]] > [self buildNumberFromMapIdentifier:[modItem identifier]])
 		{
-			MDModListItem *onlineItem = nil;
-			for (NSMenuItem *onlineMenuItem in [onlineModsMenu itemArray])
-			{
-				MDModListItem *onlineModItem = [onlineMenuItem representedObject];
-				if (onlineModItem && [[onlineModItem name] isEqualToString:[modItem name]])
-				{
-					onlineItem = onlineModItem;
-					break;
-				}
-			}
-			
-			if ([self buildNumberFromMapIdentifier:[onlineItem identifier]] > [self buildNumberFromMapIdentifier:[modItem identifier]])
-			{
-				[itemsToUpdate addObject:onlineItem];
-			}
+			[itemsToUpdate addObject:onlineItem];
 		}
 	}
 	
@@ -1281,10 +927,10 @@ static BOOL gJsonSerializaionExists = NO;
 			else if (favorableItemsToUpdate.count == 0)
 			{
 				NSString *mapCandidate = nil;
-				for (NSMenuItem *modMenuItem in [self modMenuItems])
+				for (MDModListItem *modItem in [self localModItems])
 				{
-					MDModListItem *modItem = [modMenuItem representedObject];
-					if ([modItem.plugins containsObject:pluginItem.name])
+					NSArray *plugins = [[[self modListDictionary] objectForKey:modItem.identifier] plugins];
+					if ([plugins containsObject:pluginItem.name])
 					{
 						mapCandidate = [modItem name];
 						break;
@@ -1930,20 +1576,20 @@ static BOOL gJsonSerializaionExists = NO;
 	MDModListItem *listItem = [modListDictionary objectForKey:mapIdentifier];
 	if (![self reportWhatIsInstalling])
 	{
-		NSString *modName = [[modListDictionary objectForKey:mapIdentifier] name];
+		NSString *modName = [listItem name];
 		
-		NSMenuItem *menuItem = nil;
-		for (id item in [self modMenuItems])
+		MDModListItem *modItem = nil;
+		for (MDModListItem *item in [self localModItems])
 		{
-			if ([[[item representedObject] name] isEqualToString:modName] && (!menuItem || [self buildNumberFromMapIdentifier:[[menuItem representedObject] identifier]] > [self buildNumberFromMapIdentifier:[[item representedObject] identifier]]))
+			if ([[item name] isEqualToString:modName] && (modItem == nil || [self buildNumberFromMapIdentifier:[modItem identifier]] > [self buildNumberFromMapIdentifier:[item identifier]]))
 			{
-				menuItem = item;
+				modItem = item;
 			}
 		}
 		
-		if (menuItem)
+		if (modItem != nil)
 		{
-			MDModListItem *currentListItem = [modListDictionary objectForKey:[[menuItem representedObject] identifier]];
+			MDModListItem *currentListItem = [modListDictionary objectForKey:[modItem identifier]];
 			int currentBuildNumber = [self buildNumberFromMapIdentifier:[currentListItem identifier]];
 			int desiredBuildNumber = [self buildNumberFromMapIdentifier:mapIdentifier];
 			
@@ -2114,7 +1760,7 @@ static BOOL gJsonSerializaionExists = NO;
 	if ([event.eventPath isEqualToString:MAPS_DIRECTORY])
 	{
 		[self makeModMenuItems];
-		[self updateModMenuTitles];
+		[appDelegate updateHiddenServers];
 	}
 	else
 	{
