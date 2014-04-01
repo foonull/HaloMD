@@ -90,7 +90,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 									   [NSNumber numberWithInteger:28], @"Maps/ui.map",
 									   [NSNumber numberWithInteger:8], @"Maps/bitmaps.map",
 									   [NSNumber numberWithInteger:26], @"Maps/crossing.map",
-									   [NSNumber numberWithInteger:3], @"Maps/magiciswaiting.map",
 									   nil] retain];
 		
 		NSMutableArray *defaultVersionNumbers = [NSMutableArray array];
