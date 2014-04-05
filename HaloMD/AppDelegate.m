@@ -1242,28 +1242,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	{
 		[self setStatusWithoutWait:@"Applying Updates..."];
 		
-		NSNumber *bloodgulchVersion = [[[NSUserDefaults standardUserDefaults] objectForKey:HALO_FILE_VERSIONS_KEY] objectForKey:@"Maps/bloodgulch.map"];
-		if (bloodgulchVersion && [bloodgulchVersion isLessThan:[NSNumber numberWithInteger:10]])
-		{
-			// Remove shaft, crossing as infinity, and barrier as boardingaction if it exists from a21 or before
-			NSArray *brokenMaps = [NSArray arrayWithObjects:@"putput.map", @"infinity.map", @"boardingaction.map", nil];
-			NSString *mapsPath = [gameDataPath stringByAppendingPathComponent:@"Maps"];
-			for (NSString *map in brokenMaps)
-			{
-				if ([[NSFileManager defaultManager] fileExistsAtPath:[mapsPath stringByAppendingPathComponent:map]])
-				{
-					[self performSelectorOnMainThread:@selector(requireUserToTerminateHalo) withObject:nil waitUntilDone:YES];
-					
-					NSLog(@"Removing (assuming) broken %@", map);
-					[[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
-																 source:[[mapsPath stringByAppendingPathComponent:map] stringByDeletingLastPathComponent]
-															destination:@""
-																  files:[NSArray arrayWithObject:map]
-																	tag:NULL];
-				}
-			}
-		}
-		
 		[self updateChangesFrom:resourceAppPath
 							 to:appPath];
 		
