@@ -415,7 +415,7 @@ static void interceptCommand(char *command,char *error_result, char *command_nam
                 if (![gMapsAdded containsObject:map] && [mapIdentityFromIdentifier(map) isEqualToString:map]) {
                     NSString *bestMap = map;
                     for (NSString *mapSearched in gMapsAdded) {
-                        if ([mapIdentityFromIdentifier(mapSearched) isEqualToString:map] && buildNumberFromIdentifier(mapSearched) > buildNumberFromIdentifier(map)) {
+                        if ([mapIdentityFromIdentifier(mapSearched) isEqualToString:map] && buildNumberFromIdentifier(mapSearched) > buildNumberFromIdentifier(bestMap)) {
                             bestMap = mapSearched;
                         }
                     }
