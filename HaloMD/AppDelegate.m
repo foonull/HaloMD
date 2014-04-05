@@ -67,7 +67,6 @@
 #define HALO_MD_IDENTIFIER @"com.null.halominidemo"
 #define HALO_MD_IDENTIFIER_FILE [HALO_MD_IDENTIFIER stringByAppendingString:@".plist"]
 #define HALO_FILE_VERSIONS_KEY @"HALO_FILE_VERSIONS_KEY"
-#define HALO_FIX_SCORE_KEY @"HALO_FIX_SCORE_KEY"
 #define HALO_GAMES_PASSWORD_KEY @"HALO_GAMES_PASSWORD_KEY"
 #define HALO_LOBBY_GAMES_CACHE_KEY @"HALO_LOBBY_GAMES_CACHE_KEY2"
 
@@ -109,8 +108,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 							   forKey:MODS_LIST_DOWNLOAD_TIME_KEY];
 		
 		[registeredDefaults setObject:[NSArray arrayWithObjects:@"162.220.241.236:2302", @"162.217.250.28:2300", @"66.225.231.168:2306", @"178.18.17.14:2302", @"108.61.151.174:2300", @"10.1.1.1:49149:3425", nil] forKey:HALO_LOBBY_GAMES_CACHE_KEY];
-		
-		[registeredDefaults setObject:[NSNumber numberWithBool:NO] forKey:HALO_FIX_SCORE_KEY];
 		
 		[registeredDefaults setObject:[NSNumber numberWithBool:YES] forKey:CHAT_PLAY_MESSAGE_SOUNDS];
 		[registeredDefaults setObject:[NSNumber numberWithBool:NO] forKey:CHAT_SHOW_MESSAGE_RECEIVE_NOTIFICATION];
@@ -756,35 +753,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	return [[NSData dataWithBytesNoCopy:calloc(1, SAVEGAME_DATA_LENGTH) length:SAVEGAME_DATA_LENGTH freeWhenDone:YES] writeToFile:path atomically:YES];
 }
 
-- (void)fixDefaultScoreButton
-{
-	NSString *profileSettingsPath = [self profileSettingsPath];
-	if (profileSettingsPath)
-	{
-		NSMutableData *profileData = [NSMutableData dataWithContentsOfFile:profileSettingsPath];
-		if ([profileData length] >= 0x156+2)
-		{
-			uint16_t oneKeyCode = *(uint16_t *)([profileData bytes] + 0x156);
-			if (oneKeyCode == 0x7FFF)
-			{
-				// Good, the one key isn't in use
-				uint16_t functionOneKeyCode = *(uint16_t *)([profileData bytes] + 0x136);
-				if (functionOneKeyCode == 0x000C)
-				{
-					// Good, F1 is being used as score key
-					// Have 1 be score key, but keep F1 too so as to not cause confusion
-					*(uint16_t *)([profileData mutableBytes] + 0x156) = 0x000C;
-					
-					[[NSFileManager defaultManager] removeItemAtPath:profileSettingsPath error:nil];
-					[profileData writeToFile:profileSettingsPath atomically:YES];
-					
-					[self fixCRC32ChecksumAtProfilePath:profileSettingsPath];
-				}
-			}
-		}
-	}
-}
-
 - (NSString *)profileSettingsPath
 {
 	return [[[[[[[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent:@"HLMD"] stringByAppendingPathComponent:[self architecture]] stringByAppendingPathComponent:@"savegames"] stringByAppendingPathComponent:[self profileName]] stringByAppendingPathComponent:@"blam"] stringByAppendingPathExtension:@"sav"];
@@ -1406,21 +1374,8 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		[self performSelectorOnMainThread:@selector(pickUserName)
 							   withObject:nil
 							waitUntilDone:YES];
-		
-		[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:HALO_FIX_SCORE_KEY];
 	}
 #endif
-	
-	if ([[NSFileManager defaultManager] fileExistsAtPath:haloMDDocumentsPath])
-	{
-	#ifndef __ppc__
-		if (![[NSUserDefaults standardUserDefaults] boolForKey:HALO_FIX_SCORE_KEY])
-		{
-			[self fixDefaultScoreButton];
-			[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:HALO_FIX_SCORE_KEY];
-		}
-	#endif
-	}
 	
 	isInstalled = YES;
 	
