@@ -685,6 +685,8 @@ static BOOL gJsonSerializaionExists = NO;
 	}
 	else
 	{
+		NSFileManager *fileManager = [[[NSFileManager alloc] init] autorelease];
+
 		// Remove blank separator and refresh list options..
 		NSMutableArray *onlineItemsToRemove = [NSMutableArray array];
 		for (id item in [onlineModsMenu itemArray])
@@ -737,6 +739,7 @@ static BOOL gJsonSerializaionExists = NO;
 				[menuItem setTarget:self];
 				[menuItem setRepresentedObject:listItem];
 				[menuItem setToolTip:[listItem description]];
+				[menuItem setState:[fileManager fileExistsAtPath:[MAPS_DIRECTORY stringByAppendingPathComponent:[[listItem identifier] stringByAppendingPathExtension:@"map"]]] ? NSOnState : NSOffState];
 				
 				NSMenuItem *previousItem = [onlineModsMenu itemWithTitle:[listItem name]];
 				if (previousItem)
