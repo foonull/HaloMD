@@ -600,7 +600,18 @@ static BOOL gJsonSerializaionExists = NO;
 
 - (void)installOnlineMod:(id)sender
 {
-	[self installOnlineModWithIdentifier:[[sender representedObject] identifier]];
+	MDModListItem *listItem = [sender representedObject];
+	NSFileManager *fileManager = [[[NSFileManager alloc] init] autorelease];
+	NSString *mapPath = [MAPS_DIRECTORY stringByAppendingPathComponent:[[listItem identifier] stringByAppendingPathExtension:@"map"]];
+
+	if (![fileManager fileExistsAtPath:mapPath] || [[listItem plugins] count] > 0 || [listItem md5Hash] == nil || ![[self md5HashFromFilePath:mapPath] isEqualToString:[listItem md5Hash]])
+	{
+		[self installOnlineModWithIdentifier:[listItem identifier]];
+	}
+	else
+	{
+		[[NSWorkspace sharedWorkspace] selectFile:mapPath inFileViewerRootedAtPath:MAPS_DIRECTORY];
+	}
 }
 
 - (void)installOnlinePlugin:(MDPluginListItem *)plugin
