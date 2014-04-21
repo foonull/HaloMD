@@ -646,6 +646,11 @@ static VALUE sendMessageSafely(VALUE data)
 {
     [super windowDidLoad];
 	
+	if ([[self window] respondsToSelector:@selector(animationBehavior)]) // easy way to tell if >= 10.7?
+	{
+		[[self window] setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
+	}
+	
 	[rosterTableView setDoubleAction:@selector(initiateUserFromRoster:)];
     
 	[webView setDrawsBackground:NO];

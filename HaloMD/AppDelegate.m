@@ -1954,6 +1954,11 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	
 	[serversTableView setDoubleAction:@selector(joinGame:)];
 	
+	if ([[self window] respondsToSelector:@selector(animationBehavior)]) // easy way to tell if >= 10.7?
+	{
+		[[self window] setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
+	}
+	
 	if (([[self window] collectionBehavior] & NSWindowCollectionBehaviorFullScreenPrimary) != 0)
 	{
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterFullScreen:) name:NSWindowWillEnterFullScreenNotification object:window];
