@@ -173,7 +173,7 @@ static BOOL gJsonSerializaionExists = NO;
 		errorString = [NSString stringWithFormat:@"%@ could not be added because its build number is invalid.", [[filename lastPathComponent] stringByDeletingPathExtension]];
 		NSLog(@"ERROR: Build number of %@ is invalid", filename);
 	}
-	else if ([[[filename lastPathComponent] stringByDeletingPathExtension] length] > [MODDED_SLOT_IDENTIFIER length])
+	else if ([[[filename lastPathComponent] stringByDeletingPathExtension] length] > MAXIMUM_MAP_NAME_LENGTH)
 	{
 		errorString = [NSString stringWithFormat:@"%@ could not be added because its filename is too long.", [[filename lastPathComponent] stringByDeletingPathExtension]];
 		NSLog(@"ERROR: File name of %@ is too long", filename);
@@ -190,7 +190,7 @@ static BOOL gJsonSerializaionExists = NO;
 		{
 			[fileHandle seekToFileOffset:0x20];
 			
-			NSData *mapNameData = [fileHandle readDataOfLength:[MODDED_SLOT_IDENTIFIER length]+1];
+			NSData *mapNameData = [fileHandle readDataOfLength:MAXIMUM_MAP_NAME_LENGTH+1];
 			mapIdentifier = [[NSString alloc] initWithData:mapNameData encoding:NSUTF8StringEncoding];
 			
 			// Remove ending zeroes
@@ -395,7 +395,7 @@ static BOOL gJsonSerializaionExists = NO;
 				{
 					[fileHandle seekToFileOffset:0x20];
 					
-					NSData *mapNameData = [fileHandle readDataOfLength:[MODDED_SLOT_IDENTIFIER length]+1];
+					NSData *mapNameData = [fileHandle readDataOfLength:MAXIMUM_MAP_NAME_LENGTH+1];
 					NSString *mapIdentifier = [[[NSString alloc] initWithData:mapNameData encoding:NSUTF8StringEncoding] autorelease];
 					
 					// Remove ending zeroes

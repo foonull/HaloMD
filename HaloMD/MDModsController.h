@@ -36,7 +36,7 @@
 
 #define MODS_LIST_DOWNLOAD_TIME_KEY @"MODS_LIST_DOWNLOAD_TIME_KEY"
 
-#define MODDED_SLOT_IDENTIFIER @"gephyrophobia"
+#define MAXIMUM_MAP_NAME_LENGTH 31
 
 @class AppDelegate;
 @class MDModPatch;
