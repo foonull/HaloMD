@@ -261,13 +261,6 @@ static __attribute__((constructor)) void init()
 	{
 		// Reserve memory halo wants before halo initiates, should help fix a bug in 10.9 where GPU drivers may have been loaded here
 		mmap((void *)0x40000000, 0x1b40000, PROT_READ | PROT_WRITE, MAP_FIXED | MAP_ANON | MAP_PRIVATE, -1, 0);
-		
-        // Bypass unnecessary path check. This allows people with periods in their username to run HaloMD.
-        mprotect((void *)0x1000,0x6F000, PROT_READ|PROT_WRITE);
-        const char instructions[0x5] = {0xE9, 0x49, 0x0, 0x0, 0x0};
-        void *location = (void *)0x2EA6;
-        memcpy(location, instructions, sizeof(instructions));
-        mprotect((void *)0x1000,0x6F000, PROT_READ|PROT_EXEC);
         
 		@autoreleasepool
 		{
