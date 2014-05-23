@@ -35,7 +35,7 @@ NAT_SERVER_PORT = 27900 #UDP
 #MD related ports
 LOBBY_SERVER_PORT = 29920 #TCP
 
-GAME_VERSION = "01.00.09.0620"
+GAME_VERSIONS = ["01.00.09.0620", "01.00.10.0621"]
 
 class Game
 	attr_reader :address, :port, :last_updated
@@ -145,7 +145,7 @@ class MasterServer
 				data, receiver = @nat_server.recvfrom(1024)
 				data_array = data.split("\0")
 
-				if data_array.length >= 12 and data_array[2] == "localport" and data_array[11] == GAME_VERSION
+				if data_array.length >= 12 and data_array[2] == "localport" and GAME_VERSIONS.include? data_array[11]
 					game_port = data_array[3].to_i
 					if game_port > 0
 						game = get_game(receiver[3], game_port)
@@ -187,7 +187,7 @@ class MasterServer
 						else
 							data_array = data.split("\0")
 							#do some kind of validation at least...
-							if data_array.length >= 5 and data_array[4] == GAME_VERSION
+							if data_array.length >= 5 and GAME_VERSIONS.include? data_array[4]
 								@games << Game.new(receiver[3], receiver[1])
 							end
 						end
@@ -232,4 +232,3 @@ end
 
 #Create and run the Master Server
 MasterServer.new
-
