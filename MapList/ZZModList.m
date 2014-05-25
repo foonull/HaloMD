@@ -410,7 +410,7 @@ static void (*runCommand)(char *command,char *error_result,char *command_name) =
 static void interceptCommand(char *command,char *error_result, char *command_name)
 {
     NSArray *args = [[[[NSString stringWithCString:command encoding:NSUTF8StringEncoding] componentsSeparatedByString:@" "] mutableCopy] autorelease];
-    if ([[[args objectAtIndex:0] lowercaseString] isEqualToString:@"sv_map_show_outdated"]) {
+    if ([[[args objectAtIndex:0] lowercaseString] isEqualToString:@"sv_maplist_show_outdated"]) {
         //Disable hiding of outdated maps.
         if([args count] >= 2) {
             showOutdatedOverride = [[args objectAtIndex:1]boolValue];
