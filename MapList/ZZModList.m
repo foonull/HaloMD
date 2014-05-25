@@ -384,7 +384,7 @@ static NSDictionary *dictionaryFromPathWithoutExtension(NSString *pathWithoutExt
             modsDictionary = [NSDictionary dictionaryWithContentsOfFile:fullPath];
             if (modsDictionary == nil)
             {
-                NSLog(@"Map Downloader Failed decoding plist at %@", fullPath);
+                NSLog(@"Map List Failed decoding plist at %@", fullPath);
             }
         }
         else
@@ -396,7 +396,7 @@ static NSDictionary *dictionaryFromPathWithoutExtension(NSString *pathWithoutExt
                 modsDictionary = [NSClassFromString(@"NSJSONSerialization") JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
                 if (error != nil)
                 {
-                    NSLog(@"Map Downloader Failed decoding JSON: %@", error);
+                    NSLog(@"Map List Failed decoding JSON: %@", error);
                 }
             }
         }
