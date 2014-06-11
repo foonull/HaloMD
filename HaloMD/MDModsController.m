@@ -36,7 +36,7 @@
 #import "MDModPatch.h"
 #import "MDPluginListItem.h"
 #import "MDServer.h"
-#import <CommonCrypto/CommonDigest.h>
+#import "MDHashDigest.h"
 #import <Growl/Growl.h>
 #import "AppDelegate.h"
 #import "MDHyperLink.h"
@@ -194,7 +194,6 @@ static BOOL gJsonSerializaionExists = NO;
 			mapIdentifier = [[NSString alloc] initWithData:mapNameData encoding:NSUTF8StringEncoding];
 			
 			// Remove ending zeroes
-			[mapIdentifier autorelease];
 			mapIdentifier = [NSString stringWithCString:[mapIdentifier UTF8String] encoding:NSUTF8StringEncoding];
 			
 			if (![mapIdentifier isEqualToString:[[filename lastPathComponent] stringByDeletingPathExtension]])
@@ -326,38 +325,28 @@ static BOOL gJsonSerializaionExists = NO;
 	return YES;
 }
 
-- (void)openPanelDidEnd:(NSOpenPanel *)openPanel returnCode:(int)returnCode contextInfo:(void  *)contextInfo
-{
-	if (returnCode == NSOKButton)
-	{
-		for (NSString *filename in [openPanel filenames])
-		{
-			[self addModAtPath:filename];
-		}
-	}
-	
-	[openPanel release];
-}
-
 - (IBAction)addMods:(id)sender
 {
-	NSOpenPanel *openPanel = [[NSOpenPanel openPanel] retain];
+	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 	[openPanel setTitle:@"Add Mods"];
 	[openPanel setCanChooseFiles:YES];
 	[openPanel setAllowsMultipleSelection:YES];
 	[openPanel setPrompt:@"Add"];
 	
-	[openPanel beginForDirectory:nil
-							file:nil
-						   types:[NSArray arrayWithObject:@"map"]
-				modelessDelegate:self
-				  didEndSelector:@selector(openPanelDidEnd:returnCode:contextInfo:)
-					 contextInfo:NULL];
+	[openPanel beginWithCompletionHandler:^(NSInteger returnCode) {
+		if (returnCode == NSOKButton)
+		{
+			for (NSURL *url in [openPanel URLs])
+			{
+				[self addModAtPath:@([url fileSystemRepresentation])];
+			}
+		}
+	}];
 }
 
 - (NSArray *)mapsToIgnore
 {
-	return [[[NSArray alloc] initWithObjects:@"bloodgulch", @"barrier", @"crossing", @"beavercreek", @"bitmaps", @"boardingaction", @"carousel", @"chillout", @"damnation", @"dangercanyon", @"deathisland", @"hangemhigh", @"icefields", @"infinity", @"longest", @"prisoner", @"putput", @"ratrace", @"sidewinder", @"sounds", @"timberland", @"ui", @"wizard", @"a10", @"a30", @"a50", @"b30", @"b40", @"c10", @"c20", @"c40", @"d20", @"d40", nil] autorelease];
+	return @[@"bloodgulch", @"barrier", @"crossing", @"beavercreek", @"bitmaps", @"boardingaction", @"carousel", @"chillout", @"damnation", @"dangercanyon", @"deathisland", @"hangemhigh", @"icefields", @"infinity", @"longest", @"prisoner", @"putput", @"ratrace", @"sidewinder", @"sounds", @"timberland", @"ui", @"wizard", @"a10", @"a30", @"a50", @"b30", @"b40", @"c10", @"c20", @"c40", @"d20", @"d40"];
 }
 
 - (void)makeModMenuItems
@@ -396,7 +385,7 @@ static BOOL gJsonSerializaionExists = NO;
 					[fileHandle seekToFileOffset:0x20];
 					
 					NSData *mapNameData = [fileHandle readDataOfLength:MAXIMUM_MAP_NAME_LENGTH+1];
-					NSString *mapIdentifier = [[[NSString alloc] initWithData:mapNameData encoding:NSUTF8StringEncoding] autorelease];
+					NSString *mapIdentifier = [[NSString alloc] initWithData:mapNameData encoding:NSUTF8StringEncoding];
 					
 					// Remove ending zeroes
 					mapIdentifier = [NSString stringWithCString:[mapIdentifier UTF8String] encoding:NSUTF8StringEncoding];
@@ -407,8 +396,6 @@ static BOOL gJsonSerializaionExists = NO;
 					}
 				}
 			}
-			
-			[listItem release];
 		}
 	}
 }
@@ -480,8 +467,6 @@ static BOOL gJsonSerializaionExists = NO;
 					pluginItem.version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 					
 					[pluginItems addObject:pluginItem];
-					
-					[pluginItem release];
 				}
 			}
 		}
@@ -536,7 +521,7 @@ static BOOL gJsonSerializaionExists = NO;
 	[self addPluginsFromDirectory:PLUGINS_DIRECTORY intoArray:newPluginItems enabled:YES];
 	[self addPluginsFromDirectory:PLUGINS_DISABLED_DIRECTORY intoArray:newPluginItems enabled:NO];
 	
-	NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)] autorelease];
+	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
 	NSArray *sortedItems = [newPluginItems sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 	
 	BOOL addedPlugins = NO;
@@ -555,7 +540,6 @@ static BOOL gJsonSerializaionExists = NO;
 			}
 			
 			[[self pluginMenuItems] addObject:newMenuItem];
-			[newMenuItem release];
 		}
 	}
 	
@@ -564,7 +548,6 @@ static BOOL gJsonSerializaionExists = NO;
 		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@"No Available Extensions" action:@selector(doNothing:) keyEquivalent:@""];
 		[menuItem setEnabled:NO];
 		[pluginsMenu addItem:menuItem];
-		[menuItem release];
 	}
 }
 
@@ -601,7 +584,7 @@ static BOOL gJsonSerializaionExists = NO;
 - (void)installOnlineMod:(id)sender
 {
 	MDModListItem *listItem = [sender representedObject];
-	NSFileManager *fileManager = [[[NSFileManager alloc] init] autorelease];
+	NSFileManager *fileManager = [[NSFileManager alloc] init];
 	NSString *mapPath = [MAPS_DIRECTORY stringByAppendingPathComponent:[[listItem identifier] stringByAppendingPathExtension:@"map"]];
 
 	if (![fileManager fileExistsAtPath:mapPath] || [[listItem plugins] count] > 0 || [listItem md5Hash] == nil || ![[self md5HashFromFilePath:mapPath] isEqualToString:[listItem md5Hash]])
@@ -689,7 +672,7 @@ static BOOL gJsonSerializaionExists = NO;
 
 - (void)updateOnlineModStates
 {
-	NSFileManager *fileManager = [[[NSFileManager alloc] init] autorelease];
+	NSFileManager *fileManager = [[NSFileManager alloc] init];
 
 	for (NSMenuItem *menuItem in [onlineModsMenu itemArray])
 	{
@@ -745,7 +728,6 @@ static BOOL gJsonSerializaionExists = NO;
 				[newPatch setBaseHash:[patchDictionary objectForKey:@"base_hash"]];
 				[newPatch setPath:[patchDictionary objectForKey:@"path"]];
 				[patches addObject:newPatch];
-				[newPatch release];
 			}
 			
 			[listItem setPatches:patches];
@@ -781,15 +763,11 @@ static BOOL gJsonSerializaionExists = NO;
 				}
 				
 				[[self modListDictionary] setObject:listItem forKey:[listItem identifier]];
-				
-				[menuItem release];
 			}
-			
-			[listItem release];
 		}
 		
 		// Sort the online menu items
-		NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES selector:@selector(caseInsensitiveCompare:)] autorelease];
+		NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES selector:@selector(caseInsensitiveCompare:)];
 		NSArray *sortedMenuItems = [[onlineModsMenu itemArray] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 		
 		[self removeAllItemsFromMenu:onlineModsMenu];
@@ -804,7 +782,6 @@ static BOOL gJsonSerializaionExists = NO;
 		[refreshDownloadListMenuItem setTarget:self];
 		[onlineModsMenu addItem:[NSMenuItem separatorItem]];
 		[onlineModsMenu addItem:refreshDownloadListMenuItem];
-		[refreshDownloadListMenuItem release];
 		
 		[self updateOnlineModStates];
 
@@ -854,11 +831,9 @@ static BOOL gJsonSerializaionExists = NO;
 			{
 				[pluginListDictionary setObject:newItem forKey:name];
 			}
-			
-			[newItem release];
 		}
 		
-		NSSortDescriptor *sortDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)] autorelease];
+		NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
 		NSArray *sortedPlugins = [pluginItems sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 		
 		for (MDPluginListItem *plugin in sortedPlugins)
@@ -869,8 +844,6 @@ static BOOL gJsonSerializaionExists = NO;
 			[menuItem setRepresentedObject:plugin];
 			
 			[onlinePluginsMenu addItem:menuItem];
-			
-			[menuItem release];
 		}
 	}
 	
@@ -1015,8 +988,7 @@ static BOOL gJsonSerializaionExists = NO;
 {
 	// Check download list every 30 minutes
 	[downloadModListTimer invalidate];
-	[downloadModListTimer release];
-	downloadModListTimer = [[NSTimer scheduledTimerWithTimeInterval:60*30 target:self selector:@selector(downloadModList) userInfo:nil repeats:YES] retain];
+	downloadModListTimer = [NSTimer scheduledTimerWithTimeInterval:60*30 target:self selector:@selector(downloadModList) userInfo:nil repeats:YES];
 }
 
 - (IBAction)downloadModList:(id)sender
@@ -1102,8 +1074,6 @@ static BOOL gJsonSerializaionExists = NO;
 				NSLog(@"Failed unzipping: %@, %@", [exception name], [exception reason]);
 				didUnzip = NO;
 			}
-			
-			[unzipTask release];
 			
 			if (didUnzip)
 			{
@@ -1214,8 +1184,6 @@ static BOOL gJsonSerializaionExists = NO;
 				didPatch = NO;
 			}
 			
-			[patchTask release];
-			
 			NSString *mapHash = [[modListDictionary objectForKey:[self currentDownloadingMapIdentifier]] md5Hash];
 			if (mapHash && ![mapHash isEqualToString:[self md5HashFromFilePath:newMapPath]])
 			{
@@ -1312,8 +1280,6 @@ static BOOL gJsonSerializaionExists = NO;
 				didUnzip = NO;
 			}
 			
-			[unzipTask release];
-			
 			if (didUnzip)
 			{
 				NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:unzipDirectory];
@@ -1380,8 +1346,6 @@ static BOOL gJsonSerializaionExists = NO;
 			}
 		}
 	}
-	
-	[download release];
 }
 
 - (void)download:(NSURLDownload *)download didReceiveDataOfLength:(NSUInteger)length
@@ -1425,7 +1389,6 @@ static BOOL gJsonSerializaionExists = NO;
 	currentContentLength = startingByte;
 	expectedContentLength = [response expectedContentLength];
 	
-	[resumeTimeoutDate release];
 	resumeTimeoutDate = nil;
 }
 
@@ -1455,7 +1418,7 @@ static BOOL gJsonSerializaionExists = NO;
 		
 		if (!resumeTimeoutDate)
 		{
-			resumeTimeoutDate = [[NSDate date] retain];
+			resumeTimeoutDate = [NSDate date];
 		}
 		
 		if ([[NSDate date] timeIntervalSinceDate:resumeTimeoutDate] <= 7.0 && [download resumeData])
@@ -1496,8 +1459,6 @@ static BOOL gJsonSerializaionExists = NO;
 			}
 		}
 	}
-	
-	[download release];
 }
 
 - (NSString *)originalMapPathFromIdentifier:(NSString *)identifier
@@ -1509,17 +1470,7 @@ static BOOL gJsonSerializaionExists = NO;
 - (NSString *)md5HashFromFilePath:(NSString *)filePath
 {
 	NSData *data = [NSData dataWithContentsOfFile:filePath];
-	unsigned char *result = calloc(CC_MD5_DIGEST_LENGTH, 1);
-	CC_MD5([data bytes], (unsigned int)[data length], result);
-	
-	NSMutableString *hash = [NSMutableString string];
-	for (int hashIndex = 0; hashIndex < CC_MD5_DIGEST_LENGTH; hashIndex++)
-	{
-		[hash appendFormat:@"%02x", result[hashIndex]];
-	}
-	free(result);
-	
-	return [[hash copy] autorelease];
+	return [MDHashDigest md5HashFromBytes:data.bytes length:(CC_LONG)data.length];
 }
 
 - (void)downloadMod:(NSString *)mapIdentifier
@@ -1568,7 +1519,6 @@ static BOOL gJsonSerializaionExists = NO;
 	
 	[self setCurrentDownloadingPatch:foundPatch];
 	
-	[resumeTimeoutDate release];
 	resumeTimeoutDate = nil;
 	
 	NSURL *downloadURL = [self currentDownloadingPatch] ? MOD_PATCH_DOWNLOAD_URL : MOD_DOWNLOAD_URL;
@@ -1588,7 +1538,6 @@ static BOOL gJsonSerializaionExists = NO;
 	
 	[appDelegate setStatus:[NSString stringWithFormat:@"Installing %@ (Extension)...", plugin.name]];
 	
-	[resumeTimeoutDate release];
 	resumeTimeoutDate = nil;
 	
 	NSURLRequest *request = [NSURLRequest requestWithURL:PLUGIN_DOWNLOAD_URL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];

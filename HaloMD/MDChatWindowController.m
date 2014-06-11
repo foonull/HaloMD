@@ -38,54 +38,30 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "AppDelegate.h"
 #import "MDServer.h"
+#import "MDHashDigest.h"
+
+@interface MDChatWindowController ()
+
+@property (nonatomic) MDChatConnection *connection;
+@property (nonatomic) BOOL signedOnBefore;
+@property (nonatomic) NSString *desiredNickname;
+@property (nonatomic) NSString *userIdentifier;
+@property (nonatomic) NSUInteger numberOfAttemptsJoined;
+
+@end
 
 @implementation MDChatWindowController
 
 @synthesize myNick;
 
-static MDChatWindowController *gChatController = nil;
-
-static VALUE processMessage(VALUE self, VALUE type, VALUE message, VALUE nick, VALUE text);
-
 #define MD_STATUS_PREFIX @"!MD"
-
-static VALUE requireWrapper(VALUE path)
-{
-	StringValue(path);
-	rb_require(StringValueCStr(path));
-	return Qnil;
-}
 
 - (id)init
 {
 	self = [super initWithWindowNibName:NSStringFromClass([self class])];
 	if (self)
 	{
-		setenv("RUBYLIB", [[[NSBundle mainBundle] resourcePath] UTF8String], 1);
-		
-		ruby_init();
-		ruby_init_loadpath();
-		
-		gChatController = self;
-		chatting = Qnil;
-		
 		previousMaxScroll = -1;
-		
-		NSString *chatScriptPath = [[NSBundle mainBundle] pathForResource:@"chatting" ofType:@"rb"];
-		
-		chattingClass = rb_define_class("Chatting", rb_cObject);
-		rb_define_method(chattingClass, "process", processMessage, 4);
-		rb_define_method(chattingClass, "clear", clearAllMessages, 0);
-		rb_define_method(chattingClass, "presence_changed", presenceChanged, 1);
-		
-		int requireState = 0;
-		rb_protect(requireWrapper, rb_str_new2([chatScriptPath UTF8String]), &requireState);
-		if (requireState != 0)
-		{
-			NSLog(@"Failed to initiate Chat window Controller. Ruby Require Failed");
-			[self release];
-			return nil;
-		}
 		
 		roster = [[NSMutableArray alloc] init];
 		
@@ -95,6 +71,47 @@ static VALUE requireWrapper(VALUE path)
 		
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(systemWillSleep:) name:NSWorkspaceWillSleepNotification object:nil];
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(systemDidWake:) name:NSWorkspaceDidWakeNotification object:nil];
+		
+		NSMutableString *strippedNickname = [NSMutableString string];
+		NSString *profileName = [[NSApp delegate] profileName];
+		
+		if (![profileName canBeConvertedToEncoding:NSUTF8StringEncoding])
+		{
+			for (NSUInteger profileNameIndex = 0; profileNameIndex < [profileName length]; profileNameIndex++)
+			{
+				unichar character = [profileName characterAtIndex:profileNameIndex];
+				NSString *unicodeString = [NSString stringWithCharacters:&character length:1];
+				if ([unicodeString canBeConvertedToEncoding:NSUTF8StringEncoding])
+				{
+					[strippedNickname appendString:unicodeString];
+				}
+			}
+		}
+		else
+		{
+			[strippedNickname setString:profileName];
+		}
+		
+		NSMutableString *nickname = [NSMutableString stringWithString:strippedNickname];
+		if (!nickname || [nickname length] == 0)
+		{
+			nickname = [NSMutableString stringWithString:@"HaloNewb"];
+		}
+		
+		[nickname replaceOccurrencesOfString:@" " withString:@"_" options:NSLiteralSearch range:NSMakeRange(0, [nickname length])];
+		
+		NSString *serialKey = [[NSApp delegate] machineSerialKey];
+		if (serialKey == nil)
+		{
+			serialKey = [[NSApp delegate] serialKey];
+		}
+		if (serialKey == nil)
+		{
+			serialKey = [[NSApp delegate] randomSerialKey];
+		}
+		
+		_desiredNickname = [nickname copy];
+		_userIdentifier = [[MDHashDigest md5HashFromBytes:[serialKey UTF8String] length:(CC_LONG)strlen([serialKey UTF8String])] copy];
 	}
 	return self;
 }
@@ -103,7 +120,7 @@ static VALUE requireWrapper(VALUE path)
 {
 	if ([keyPath isEqualToString:@"inGameServer"])
 	{
-		updateMyStatus();
+		[self updateMyStatus];
 	}
 }
 
@@ -125,74 +142,35 @@ static VALUE requireWrapper(VALUE path)
 	[self setNumberOfUnreadMentions:0];
 }
 
-static BOOL signedOnForFirstTime = NO;
-
-static VALUE signOnSafely(VALUE self)
-{
-	if (gChatController->chatting == Qnil)
-	{
-		rb_define_variable("$chatting", &(gChatController->chatting));
-		gChatController->chatting = rb_funcall(gChatController->chattingClass, rb_intern("new"), 0);
-	}
-	
-	NSMutableString *strippedNickname = [NSMutableString string];
-	NSString *profileName = [[NSApp delegate] profileName];
-	
-	if (![profileName canBeConvertedToEncoding:NSUTF8StringEncoding])
-	{
-		for (NSUInteger profileNameIndex = 0; profileNameIndex < [profileName length]; profileNameIndex++)
-		{
-			unichar character = [profileName characterAtIndex:profileNameIndex];
-			NSString *unicodeString = [NSString stringWithCharacters:&character length:1];
-			if ([unicodeString canBeConvertedToEncoding:NSUTF8StringEncoding])
-			{
-				[strippedNickname appendString:unicodeString];
-			}
-		}
-	}
-	else
-	{
-		[strippedNickname setString:profileName];
-	}
-	
-	NSMutableString *nickname = [NSMutableString stringWithString:strippedNickname];
-	if (!nickname || [nickname length] == 0)
-	{
-		nickname = [NSMutableString stringWithString:@"HaloNewb"];
-	}
-	
-	[nickname replaceOccurrencesOfString:@" " withString:@"_" options:NSLiteralSearch range:NSMakeRange(0, [nickname length])];
-	
-	NSString *serialKey = [[NSApp delegate] machineSerialKey];
-	if (!serialKey)
-	{
-		serialKey = [[NSApp delegate] serialKey];
-	}
-	if (!serialKey)
-	{
-		serialKey = [[NSApp delegate] randomSerialKey];
-	}
-	
-	gChatController->chatTimer = [[NSTimer scheduledTimerWithTimeInterval:0.05
-												  target:gChatController
-												selector:@selector(updateChat:)
-												userInfo:nil
-												 repeats:YES] retain];
-	
-	rb_funcall(gChatController->chatting, rb_intern("connect_and_auth"), 2, rb_str_new2([serialKey UTF8String]), rb_str_new2([nickname UTF8String]));
-	
-	signedOnForFirstTime = YES;
-	
-	return Qnil;
-}
-
 - (void)signOn
 {
-	int exceptionState = 0;
-	rb_protect(signOnSafely, Qnil, &exceptionState);
-	if (exceptionState != 0)
+	NSString *nickname = _desiredNickname;
+	
+	if (_connection != nil && !_connection.isInRoom)
 	{
-		NSLog(@"Error: Failed to sign on properly");
+		_connection = nil;
+		_numberOfAttemptsJoined++;
+		nickname = [_desiredNickname stringByAppendingFormat:@"%lu", (unsigned long)(_numberOfAttemptsJoined + 1)];
+	}
+	else if (_connection.isInRoom)
+	{
+		return;
+	}
+	
+	if (_connection == nil)
+	{
+		_connection = [[MDChatConnection alloc] initWithNickname:nickname userIdentifier:_userIdentifier delegate:self];
+	}
+	
+	BOOL success = [_connection joinRoom];
+	if (success && !_signedOnBefore)
+	{
+		_signedOnBefore = YES;
+		
+		if (_numberOfAttemptsJoined < 5)
+		{
+			[self performSelector:@selector(signOn) withObject:nil afterDelay:10.0];
+		}
 	}
 }
 
@@ -201,37 +179,18 @@ static VALUE signOnSafely(VALUE self)
 	willTerminate = YES;
 }
 
-static VALUE exitRoomSafely(VALUE data)
-{
-	rb_funcall(gChatController->chatting, rb_intern("exit"), 0);
-	return Qnil;
-}
-
 - (void)signOff
 {
 	if (!willTerminate)
 	{
-		if (chatting != Qnil)
-		{
-			int exceptionState = 0;
-			rb_protect(exitRoomSafely, Qnil, &exceptionState);
-			if (exceptionState != 0)
-			{
-				NSLog(@"Error: Failed to exit chatroom");
-			}
-		}
-		if (chatTimer)
-		{
-			[chatTimer invalidate];
-			[chatTimer release];
-			chatTimer = nil;
-		}
+		[_connection leaveRoom];
+		_numberOfAttemptsJoined = 0;
 	}
 }
 
 - (void)systemWillSleep:(NSNotification *)notification
 {
-	if ([[self window] isVisible] && chatTimer)
+	if ([[self window] isVisible])
 	{
 		[self signOff];
 	}
@@ -239,7 +198,7 @@ static VALUE exitRoomSafely(VALUE data)
 
 - (void)systemDidWake:(NSNotification *)notification
 {
-	if ([[self window] isVisible] && !chatTimer)
+	if ([[self window] isVisible])
 	{
 		[self signOn];
 	}
@@ -262,86 +221,10 @@ static VALUE exitRoomSafely(VALUE data)
 	return nil;
 }
 
-static void updateMyStatus(void)
+- (void)updateMyStatus
 {
-	if (gChatController->chatTimer && gChatController->chatting != Qnil)
-	{
-		NSString *currentStatus = [gChatController currentStatus];
-		rb_funcall(gChatController->chatting, rb_intern("set_status"), 1, currentStatus == nil ? Qnil : rb_str_new2([currentStatus UTF8String]));
-	}
-}
-
-- (void)addNickToRoster:(NSString *)nicknameToAdd
-{
-	struct RArray *rosterElements = (struct RArray *)rb_funcall(gChatController->chatting, rb_intern("roster"), 0);
-	if ((VALUE)rosterElements != Qnil && TYPE(rosterElements) == T_ARRAY)
-	{
-		for (long rosterElementIndex = 0; rosterElementIndex < RARRAY_LEN(rosterElements); rosterElementIndex++)
-		{
-			struct RArray *userItems = (struct RArray *)RARRAY_PTR(rosterElements)[rosterElementIndex];
-			if ((VALUE)userItems != Qnil && TYPE(userItems) == T_ARRAY && RARRAY_LEN(userItems) >= 2 && RARRAY_PTR(userItems)[0] != Qnil && RARRAY_PTR(userItems)[1] != Qnil)
-			{
-				StringValue(RARRAY_PTR(userItems)[0]);
-				
-				NSString *nickname = [[[NSString alloc] initWithBytes:RSTRING_PTR(RARRAY_PTR(userItems)[0]) length:RSTRING_LEN(RARRAY_PTR(userItems)[0]) encoding:NSUTF8StringEncoding] autorelease];
-				if ([nickname isEqualToString:nicknameToAdd])
-				{
-					VALUE presence = RARRAY_PTR(userItems)[1];
-					VALUE statusValue = rb_funcall(presence, rb_intern("status"), 0);
-					if (statusValue != Qnil) StringValue(statusValue);
-					NSString *status = statusValue == Qnil ? nil : [[[NSString alloc] initWithBytes:RSTRING_PTR(statusValue) length:RSTRING_LEN(statusValue) encoding:NSUTF8StringEncoding] autorelease];
-					VALUE fromValue = rb_funcall(presence, rb_intern("from"), 0);
-					VALUE jabberIdentifierValue = fromValue == Qnil ? Qnil : rb_funcall(fromValue, rb_intern("to_s"), 0);
-					if (jabberIdentifierValue != Qnil) StringValue(jabberIdentifierValue);
-					NSString *jabberIdentifier = jabberIdentifierValue == Qnil ? nil : [[[NSString alloc] initWithBytes:RSTRING_PTR(jabberIdentifierValue) length:RSTRING_LEN(jabberIdentifierValue) encoding:NSUTF8StringEncoding] autorelease];
-					
-					MDChatRosterElement *newRosterElement = [[MDChatRosterElement alloc] init];
-					[newRosterElement setName:nickname];
-					[newRosterElement setStatus:status];
-					[newRosterElement setJabberIdentifier:jabberIdentifier];
-					
-					[roster addObject:newRosterElement];
-					
-					[rosterTableView reloadData];
-					
-					break;
-				}
-			}
-		}
-	}
-}
-
-static VALUE presenceChanged(VALUE self, VALUE presence)
-{
-	NSAutoreleasePool *autoreleasePool = [[NSAutoreleasePool alloc] init];
-	
-	VALUE fromValue = rb_funcall(presence, rb_intern("from"), 0);
-	VALUE jabberIdentifierValue = fromValue == Qnil ? Qnil : rb_funcall(fromValue, rb_intern("to_s"), 0);
-	if (jabberIdentifierValue != Qnil) StringValue(jabberIdentifierValue);
-	NSString *jabberIdentifier = jabberIdentifierValue == Qnil ? nil : [[[NSString alloc] initWithBytes:RSTRING_PTR(jabberIdentifierValue) length:RSTRING_LEN(jabberIdentifierValue) encoding:NSUTF8StringEncoding] autorelease];
-	
-	if (jabberIdentifier)
-	{
-		for (MDChatRosterElement *rosterElement in gChatController->roster)
-		{
-			if ([[rosterElement jabberIdentifier] isEqualToString:jabberIdentifier])
-			{
-				VALUE statusValue = rb_funcall(presence, rb_intern("status"), 0);
-				if (statusValue != Qnil) StringValue(statusValue);
-				NSString *status = statusValue == Qnil ? nil : [[[NSString alloc] initWithBytes:RSTRING_PTR(statusValue) length:RSTRING_LEN(statusValue) encoding:NSUTF8StringEncoding] autorelease];
-				
-				[rosterElement setStatus:status];
-				
-				[gChatController->rosterTableView reloadData];
-				
-				break;
-			}
-		}
-	}
-	
-	[autoreleasePool release];
-	
-	return Qnil;
+	NSString *currentStatus = [self currentStatus];
+	[_connection setStatus:currentStatus != nil ? currentStatus : @""];
 }
 
 - (NSArray *)tokensFromString:(NSString *)string
@@ -390,15 +273,8 @@ static VALUE presenceChanged(VALUE self, VALUE presence)
 	return tokens;
 }
 
-- (void)processMessageWithArguments:(NSArray *)arguments
+- (void)processMessage:(NSString *)messageString type:(NSString *)typeString nickname:(NSString *)nickString text:(NSString *)textString
 {
-	NSString *typeString = [arguments objectAtIndex:0];
-	NSString *messageString = [arguments objectAtIndex:1];
-	NSString *nickString = [arguments objectAtIndex:2];
-	if ((id)nickString == [NSNull null]) nickString = nil;
-	NSString *textString = [arguments objectAtIndex:3];
-	if ((id)textString == [NSNull null]) textString = nil;
-	
 	DOMDocument *document = [[webView mainFrame] DOMDocument];
 	DOMElement *contentBlock = [document getElementById:@"content"];
 	
@@ -423,22 +299,12 @@ static VALUE presenceChanged(VALUE self, VALUE presence)
 		}
 	}
 	
-	if ([[NSArray arrayWithObjects:@"on_message", @"on_private_message", @"my_message", @"my_private_message", @"on_leave", @"on_self_leave", @"on_join", @"connection_failed", @"connection_failed_timeout", @"muc_join_failed", @"connection_initiating", @"muc_joined", @"roster", @"subject", nil] containsObject:typeString])
+	if ([@[@"on_message", @"on_private_message", @"my_message", @"my_private_message", @"on_leave", @"on_self_leave", @"on_join", @"connection_failed", @"connection_failed_timeout", @"muc_join_failed", @"connection_initiating", @"muc_joined", @"roster", @"subject"] containsObject:typeString])
 	{
-		DOMElement *newParagraph = [document createElement:@"p"];
-		[newParagraph setAttribute:@"class" value:[typeString stringByAppendingString:@" message"]];
-		
-		for (id messageDOMComponent in messageDOMComponents)
-		{
-			[newParagraph appendChild:messageDOMComponent];
-		}
-		
-		[contentBlock appendChild:newParagraph];
-		
 		MDChatRosterElement *foundRosterElement = nil;
-		if (nickString && [[NSArray arrayWithObjects:@"on_join", @"muc_joined", @"on_leave", @"on_self_leave", nil] containsObject:typeString])
+		if (nickString && [@[@"on_join", @"muc_joined", @"on_leave", @"on_self_leave"] containsObject:typeString])
 		{
-			for (id rosterElement in roster)
+			for (MDChatRosterElement *rosterElement in roster)
 			{
 				if ([[rosterElement name] isEqualToString:nickString])
 				{
@@ -448,27 +314,63 @@ static VALUE presenceChanged(VALUE self, VALUE presence)
 			}
 		}
 		
-		if (nickString && !foundRosterElement && [[NSArray arrayWithObjects:@"on_join", @"muc_joined", nil] containsObject:typeString])
+		BOOL canWriteMessage = YES;
+		if (nickString != nil && [@[@"on_join", @"muc_joined"] containsObject:typeString])
 		{
-			[self addNickToRoster:nickString];
+			if (foundRosterElement == nil)
+			{
+				MDChatRosterElement *newRosterElement = [[MDChatRosterElement alloc] init];
+				[newRosterElement setName:nickString];
+				newRosterElement.status = textString;
+				
+				[roster addObject:newRosterElement];
+				[rosterTableView reloadData];
+			}
+			else
+			{
+				foundRosterElement.status = textString;
+				[rosterTableView reloadData];
+				
+				canWriteMessage = NO;
+			}
 		}
-		else if (nickString && foundRosterElement && [[NSArray arrayWithObjects:@"on_leave", @"on_self_leave", nil] containsObject:typeString])
+		else if (nickString != nil && [@[@"on_leave", @"on_self_leave"] containsObject:typeString])
 		{
-			[roster removeObject:foundRosterElement];
-			[rosterTableView reloadData];
+			if (foundRosterElement != nil)
+			{
+				[roster removeObject:foundRosterElement];
+				[rosterTableView reloadData];
+			}
+			else
+			{
+				canWriteMessage = NO;
+			}
 		}
 		
-		if ([[NSArray arrayWithObjects:@"muc_joined", @"on_subject", nil] containsObject:typeString])
+		if (canWriteMessage)
+		{
+			DOMElement *newParagraph = [document createElement:@"p"];
+			[newParagraph setAttribute:@"class" value:[typeString stringByAppendingString:@" message"]];
+			
+			for (id messageDOMComponent in messageDOMComponents)
+			{
+				[newParagraph appendChild:messageDOMComponent];
+			}
+			
+			[contentBlock appendChild:newParagraph];
+		}
+		
+		if ([@[@"muc_joined", @"on_subject"] containsObject:typeString])
 		{
 			if (nickString)
 			{
 				[self setMyNick:nickString];
 			}
 			
-			updateMyStatus();
+			[self updateMyStatus];
 		}
 		
-		if ([[NSArray arrayWithObjects:@"on_message", @"on_private_message", nil] containsObject:typeString])
+		if ([@[@"on_message", @"on_private_message"] containsObject:typeString])
 		{
 			if (textString)
 			{
@@ -483,7 +385,7 @@ static VALUE presenceChanged(VALUE self, VALUE presence)
 				}
 				
 				if (foundMention)
-				{	
+				{
 					[NSClassFromString(@"GrowlApplicationBridge")
 					 notifyWithTitle:nickString ? nickString : @""
 					 description:textString
@@ -495,7 +397,7 @@ static VALUE presenceChanged(VALUE self, VALUE presence)
 					
 					if (![NSApp isActive])
 					{
-						[gChatController setNumberOfUnreadMentions:gChatController->numberOfUnreadMentions+1];
+						[self setNumberOfUnreadMentions:numberOfUnreadMentions+1];
 					}
 				}
 				else if (![NSApp isActive] && [[NSUserDefaults standardUserDefaults] boolForKey:CHAT_SHOW_MESSAGE_RECEIVE_NOTIFICATION] && ![[NSApp delegate] isHaloOpenAndRunningFullscreen])
@@ -514,12 +416,11 @@ static VALUE presenceChanged(VALUE self, VALUE presence)
 				{
 					NSSound *receiveSound = [[NSSound alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"CRcv" ofType:@"aif"] byReference:YES];
 					[receiveSound play];
-					[receiveSound release];
 				}
 			}
 		}
 		
-		if ([[NSArray arrayWithObjects:@"connection_failed", @"connection_failed_timeout", @"muc_join_failed", @"on_self_leave", nil] containsObject:typeString])
+		if ([@[@"connection_failed", @"connection_failed_timeout", @"muc_join_failed", @"on_self_leave"] containsObject:typeString])
 		{
 			[self signOff];
 		}
@@ -550,37 +451,6 @@ static VALUE presenceChanged(VALUE self, VALUE presence)
 	previousMaxScroll = scrollMax;
 }
 
-static VALUE processMessage(VALUE self, VALUE type, VALUE message, VALUE nick, VALUE text)
-{
-	NSAutoreleasePool *autoreleasePool = [[NSAutoreleasePool alloc] init];
-	
-	if (type == Qnil || message == Qnil)
-	{
-		NSLog(@"Error: type or message was nil on processMessage");
-	}
-	else
-	{
-		StringValue(type);
-		StringValue(message);
-		if (nick != Qnil) StringValue(nick);
-		if (text != Qnil) StringValue(text);
-		
-		NSString *typeString = [[[NSString alloc] initWithBytes:RSTRING_PTR(type) length:RSTRING_LEN(type) encoding:NSUTF8StringEncoding] autorelease];
-		
-		NSString *messageString = [[[NSString alloc] initWithBytes:RSTRING_PTR(message) length:RSTRING_LEN(message) encoding:NSUTF8StringEncoding] autorelease];
-		
-		id nickString = nick == Qnil ? [NSNull null] : [[[NSString alloc] initWithBytes:RSTRING_PTR(nick) length:RSTRING_LEN(nick) encoding:NSUTF8StringEncoding] autorelease];
-		
-		id textString = text == Qnil ?  [NSNull null] : [[[NSString alloc] initWithBytes:RSTRING_PTR(text) length:RSTRING_LEN(text) encoding:NSUTF8StringEncoding] autorelease];
-		
-		[gChatController performSelector:@selector(processMessageWithArguments:) withObject:[NSArray arrayWithObjects:typeString, messageString, nickString, textString, nil] afterDelay:0.01];
-	}
-	
-	[autoreleasePool release];
-	
-	return Qnil;
-}
-
 - (void)clearAllMessages
 {
 	DOMDocument *document = [[webView mainFrame] DOMDocument];
@@ -602,43 +472,68 @@ static VALUE processMessage(VALUE self, VALUE type, VALUE message, VALUE nick, V
 	}
 }
 
-static VALUE clearAllMessages(VALUE self)
+- (void)executeCommand:(NSString *)command
 {
-	NSAutoreleasePool *autoreleasePool = [[NSAutoreleasePool alloc] init];
+	NSArray *commandComponents = [command componentsSeparatedByString:@" "];
+	if (commandComponents.count == 0) return;
 	
-	[gChatController performSelector:@selector(clearAllMessages) withObject:nil afterDelay:0.01];
+	NSString *commandType = [[commandComponents objectAtIndex:0] lowercaseString];
 	
-	[autoreleasePool release];
-	
-	return Qnil;
-}
-
-static VALUE sendMessageSafely(VALUE data)
-{
-	const char *messageString = [[[gChatController->textView textStorage] mutableString] UTF8String];
-	if (gChatController->chatting != Qnil && gChatController->chatTimer && rb_funcall(gChatController->chatting, rb_intern("send_message"), 1, rb_str_new2(messageString)) == Qtrue)
+	if ([@[@"msg", @"message"] containsObject:commandType])
 	{
-		[[[gChatController->textView textStorage] mutableString] setString:@""];
-		[gChatController adjustTextView];
-		
-		if ([[NSUserDefaults standardUserDefaults] boolForKey:CHAT_PLAY_MESSAGE_SOUNDS] && *messageString != '/')
+		if (commandComponents.count > 2)
 		{
-			NSSound *sendSound = [[NSSound alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"CSnd" ofType:@"aif"] byReference:YES];
-			[sendSound play];
-			[sendSound release];
+			NSString *nickname = [commandComponents objectAtIndex:1];
+			NSString *message = [[commandComponents subarrayWithRange:NSMakeRange(2, commandComponents.count - 2)] componentsJoinedByString:@" "];
+			
+			[_connection sendPrivateMessage:message toUser:nickname];
 		}
 	}
-	
-	return Qnil;
+	else if ([@[@"users", @"roster"] containsObject:commandType])
+	{
+		NSArray *nicknames = [roster valueForKey:NSStringFromSelector(@selector(name))];
+		[self processMessage:[NSString stringWithFormat:@"Users: %@", [nicknames componentsJoinedByString:@", "]] type:@"roster" nickname:nil text:nil];
+	}
+	else if ([@[@"subject", @"topic"] containsObject:commandType])
+	{
+		if (_connection.subject != nil)
+		{
+			[self processMessage:[NSString stringWithFormat:@"Topic: %@", _connection.subject] type:@"on_subject" nickname:nil text:nil];
+		}
+	}
+	else if ([commandType isEqualToString:@"clear"])
+	{
+		[self clearAllMessages];
+	}
 }
 
 - (void)sendMessage
 {
-	int exceptionState = 0;
-	rb_protect(sendMessageSafely, Qnil, &exceptionState);
-	if (exceptionState != 0)
+	NSString *message = [[[textView textStorage] mutableString] copy];
+	
+	if ([message hasPrefix:@"/"])
 	{
-		NSLog(@"Error: Failed to send message");
+		if ([message length] > 0)
+		{
+			[self executeCommand:[message substringFromIndex:1]];
+			
+			[[[textView textStorage] mutableString] setString:@""];
+			[self adjustTextView];
+		}
+	}
+	else
+	{
+		if ([_connection sendMessage:message])
+		{
+			[[[textView textStorage] mutableString] setString:@""];
+			[self adjustTextView];
+			
+			if ([[NSUserDefaults standardUserDefaults] boolForKey:CHAT_PLAY_MESSAGE_SOUNDS] && ![message hasPrefix:@"/"])
+			{
+				NSSound *sendSound = [[NSSound alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"CSnd" ofType:@"aif"] byReference:YES];
+				[sendSound play];
+			}
+		}
 	}
 }
 
@@ -704,7 +599,7 @@ static VALUE sendMessageSafely(VALUE data)
 {
 	[super showWindow:sender];
 	
-	if (signedOnForFirstTime && !chatTimer)
+	if (_signedOnBefore)
 	{
 		[self signOn];
 	}
@@ -715,23 +610,6 @@ static VALUE sendMessageSafely(VALUE data)
 	if ([notification object] == [self window])
 	{
 		[self signOff];
-	}
-}
-
-static VALUE pollSafely(VALUE data)
-{
-	// Allow ruby's interpreter to process events
-	rb_funcall(gChatController->chatting, rb_intern("poll"), 0);
-	
-	return Qnil;
-}
-
-- (void)updateChat:(id)unused
-{
-	if (chatting != Qnil)
-	{
-		int exceptionState = 0;
-		rb_protect(pollSafely, Qnil, &exceptionState);
 	}
 }
 
@@ -888,16 +766,16 @@ static VALUE pollSafely(VALUE data)
 		MDChatRosterElement *rosterElement = [roster objectAtIndex:rowIndex];
 		if ([[tableColumn identifier] isEqualToString:@"player"])
 		{
-			NSMutableAttributedString *userItem = [[[NSMutableAttributedString alloc] init] autorelease];
+			NSMutableAttributedString *userItem = [[NSMutableAttributedString alloc] init];
 			
 			BOOL isInGame = [[rosterElement status] hasPrefix:MD_STATUS_PREFIX];
 			
-			NSTextAttachment *attachment = [[[NSTextAttachment alloc] init] autorelease];
+			NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
 			id cell = [attachment attachmentCell];
 			[cell setImage:isInGame ? inGameImage : inChatImage];
 			NSAttributedString *imageString = [NSAttributedString attributedStringWithAttachment:attachment];
 			[userItem appendAttributedString:imageString];
-			[userItem appendAttributedString:[[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@", [rosterElement name]]] autorelease]];
+			[userItem appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@", [rosterElement name]]]];
 			
 			if (isInGame)
 			{
@@ -922,7 +800,6 @@ static VALUE pollSafely(VALUE data)
 						NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont systemFontOfSize:systemFontSize / 1.5], NSFontAttributeName, nil];
 						NSAttributedString *serverName = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@", [foundServer name]] attributes:attributes];
 						[userItem appendAttributedString:serverName];
-						[serverName release];
 					}
 				}
 			}

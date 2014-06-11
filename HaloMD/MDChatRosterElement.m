@@ -36,7 +36,6 @@
 @implementation MDChatRosterElement
 
 @synthesize name;
-@synthesize jabberIdentifier;
 @synthesize status;
 
 @end

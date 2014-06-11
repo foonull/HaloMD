@@ -52,7 +52,6 @@
 	IBOutlet NSProgressIndicator *installProgressIndicator;
 	IBOutlet NSButton *chatButton;
 	IBOutlet MDChatWindowController *chatWindowController;
-	IBOutlet NSWindow *window;
 	
 	IBOutlet NSTextField *haloNameTextField;
 	IBOutlet NSWindow *haloNameWindow;

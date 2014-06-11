@@ -79,17 +79,17 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	// Currently, a subclass is created because in another class, I'm using KVO on a property of AppDelegate
 	if (self == [AppDelegate class])
 	{
-		expectedVersionsDictionary = [[NSDictionary dictionaryWithObjectsAndKeys:
-									   [NSNumber numberWithInteger:19], @"Contents/MacOS/Halo",
-									   [NSNumber numberWithInteger:3], @"Contents/Resources/HaloAppIcon.icns",
-									   [NSNumber numberWithInteger:2], @"Contents/Resources/HaloDataIcon.icns",
-									   [NSNumber numberWithInteger:2], @"Contents/Resources/HaloDocIcon.icns",
-									   [NSNumber numberWithInteger:24], @"Maps/bloodgulch.map",
-									   [NSNumber numberWithInteger:24], @"Maps/barrier.map",
-									   [NSNumber numberWithInteger:28], @"Maps/ui.map",
-									   [NSNumber numberWithInteger:8], @"Maps/bitmaps.map",
-									   [NSNumber numberWithInteger:26], @"Maps/crossing.map",
-									   nil] retain];
+		expectedVersionsDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+									  @19, @"Contents/MacOS/Halo",
+									  @3, @"Contents/Resources/HaloAppIcon.icns",
+									  @2, @"Contents/Resources/HaloDataIcon.icns",
+									  @2, @"Contents/Resources/HaloDocIcon.icns",
+									  @24, @"Maps/bloodgulch.map",
+									  @24, @"Maps/barrier.map",
+									  @28, @"Maps/ui.map",
+									   @8, @"Maps/bitmaps.map",
+									   @26, @"Maps/crossing.map",
+									   nil];
 		
 		NSMutableArray *defaultVersionNumbers = [NSMutableArray array];
 		for (int index = 0; index < [expectedVersionsDictionary count]; index++)
@@ -107,10 +107,10 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		[registeredDefaults setObject:@""
 							   forKey:MODS_LIST_DOWNLOAD_TIME_KEY];
 		
-		[registeredDefaults setObject:[NSArray arrayWithObjects:@"162.220.241.236:2302", @"162.217.250.28:2300", @"66.225.231.168:2306", @"178.18.17.14:2302", @"108.61.151.174:2300", @"10.1.1.1:49149:3425", nil] forKey:HALO_LOBBY_GAMES_CACHE_KEY];
+		[registeredDefaults setObject:@[@"162.220.241.236:2302", @"162.217.250.28:2300", @"66.225.231.168:2306", @"178.18.17.14:2302", @"108.61.151.174:2300", @"10.1.1.1:49149:3425"] forKey:HALO_LOBBY_GAMES_CACHE_KEY];
 		
-		[registeredDefaults setObject:[NSNumber numberWithBool:YES] forKey:CHAT_PLAY_MESSAGE_SOUNDS];
-		[registeredDefaults setObject:[NSNumber numberWithBool:NO] forKey:CHAT_SHOW_MESSAGE_RECEIVE_NOTIFICATION];
+		[registeredDefaults setObject:@YES forKey:CHAT_PLAY_MESSAGE_SOUNDS];
+		[registeredDefaults setObject:@NO forKey:CHAT_SHOW_MESSAGE_RECEIVE_NOTIFICATION];
 		
 		[[NSUserDefaults standardUserDefaults] registerDefaults:registeredDefaults];
 	}
@@ -142,7 +142,8 @@ static NSDictionary *expectedVersionsDictionary = nil;
 {
 	CFStringRef serialKey = NULL;
 	[self copySerialNumber:&serialKey];
-	return [(NSString *)serialKey autorelease];
+#warning not sure if this is correct bridging; verify that this works
+	return (__bridge NSString *)serialKey;
 }
 
 - (id)init
@@ -374,7 +375,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	NSBundle *haloBundle = [NSBundle bundleWithPath:[[self applicationSupportPath] stringByAppendingPathComponent:@"HaloMD.app"]];
 	NSString *launchPath = [haloBundle executablePath];
 	
-	[haloTask release];
 	haloTask = [[NSTask alloc] init];
 	
 	@try
@@ -474,7 +474,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	if ([haloTask isRunning])
 	{
 		[haloTask terminate];
-		[haloTask release];
 		haloTask = nil;
 	}
 	
@@ -625,8 +624,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 			}
 		}
 	}
-	
-	[message release];
 }
 
 - (void)setStatusWithoutWait:(id)message
@@ -640,14 +637,13 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	if (statusTimer)
 	{
 		[statusTimer invalidate];
-		[statusTimer release];
 	}
 	
-	statusTimer = [[NSTimer scheduledTimerWithTimeInterval:waitTimeInterval
+	statusTimer = [NSTimer scheduledTimerWithTimeInterval:waitTimeInterval
 													target:self
 												  selector:@selector(_setStatus:)
-												  userInfo:[message retain]
-												   repeats:NO] retain];
+												  userInfo:message
+												   repeats:NO];
 }
 
 - (void)setStatus:(id)message
@@ -816,7 +812,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		@try
 		{
 			[fixCRCTask setLaunchPath:@"/usr/bin/python"];
-			[fixCRCTask setArguments:[NSArray arrayWithObjects:[[NSBundle mainBundle] pathForResource:@"crc32forge" ofType:@"py"], blamPath, nil]];
+			[fixCRCTask setArguments:@[[[NSBundle mainBundle] pathForResource:@"crc32forge" ofType:@"py"], blamPath]];
 			[fixCRCTask launch];
 			[fixCRCTask waitUntilExit];
 			if ([fixCRCTask terminationStatus] != 0)
@@ -828,8 +824,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		{
 			NSLog(@"Fix CRC Task Exception: %@, %@", [exception name], [exception reason]);
 		}
-		
-		[fixCRCTask release];
 	}
 }
 
@@ -931,7 +925,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 			
 			[[NSData dataWithBytesNoCopy:bytes length:LAST_PROFILE_USED_PATH_LENGTH freeWhenDone:NO] writeToFile:lastProfileUsedPath atomically:YES];
 			
-			[profileDirectoryWindowsPath release];
 			free(bytes);
 		}
 	}
@@ -1085,314 +1078,307 @@ static NSDictionary *expectedVersionsDictionary = nil;
 
 - (void)installGame
 {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	
-	NSString *appSupportPath = [self applicationSupportPath];
-	
-	if (![[NSFileManager defaultManager] fileExistsAtPath:appSupportPath])
+	@autoreleasepool
 	{
-		if (![[NSFileManager defaultManager] createDirectoryAtPath:appSupportPath
-									   withIntermediateDirectories:NO
-														attributes:nil
-															 error:NULL])
+		NSString *appSupportPath = [self applicationSupportPath];
+		
+		if (![[NSFileManager defaultManager] fileExistsAtPath:appSupportPath])
 		{
-			NSLog(@"Could not create applicaton support directory: %@", appSupportPath);
-			[self performSelectorOnMainThread:@selector(abortInstallation:) withObject:[NSArray arrayWithObjects:@"Install Error", @"HaloMD could not create the application support folder.", [NSNull null], nil] waitUntilDone:YES];
-		}
-	}
-	
-	NSString *gameDataPath = [appSupportPath stringByAppendingPathComponent:@"GameData"];
-	NSString *appPath = [appSupportPath stringByAppendingPathComponent:@"HaloMD.app"];
-	BOOL gameDataPathExists = [[NSFileManager defaultManager] fileExistsAtPath:gameDataPath];
-	BOOL gameAppPathExists = [[NSFileManager defaultManager] fileExistsAtPath:appPath];
-	if (!gameDataPathExists || !gameAppPathExists)
-	{
-		if (gameDataPathExists)
-		{
-			[[NSFileManager defaultManager] removeItemAtPath:gameDataPath
-													   error:NULL];
-			gameDataPathExists = NO;
-		}
-		else if (gameAppPathExists)
-		{
-			[[NSFileManager defaultManager] removeItemAtPath:appPath
-													   error:NULL];
-			gameAppPathExists = NO;
-		}
-	}
-	
-	NSString *templateInitPath = [gameDataPath stringByAppendingPathComponent:@"template_init.txt"];
-	NSString *resourceAppPath = [self resourceAppPath];
-	NSString *resourceGameDataPath = [self resourceGameDataPath];
-	
-	if (!gameDataPathExists && !gameAppPathExists)
-	{
-		[self setStatusWithoutWait:@"Installing... This may take a few minutes."];
-		[installProgressIndicator startAnimation:nil];
-		
-		if (!resourceGameDataPath)
-		{
-			NSLog(@"Could not find data path: %@", resourceGameDataPath);
-			[self performSelectorOnMainThread:@selector(abortInstallation:) withObject:[NSArray arrayWithObjects:@"Install Error", @"HaloMD could not find the Data.", nil] waitUntilDone:YES];
-		}
-		
-		NSString *tempGameDataPath = [gameDataPath stringByAppendingString:@"1"];
-		
-		if ([[NSFileManager defaultManager] fileExistsAtPath:tempGameDataPath])
-		{
-			[[NSFileManager defaultManager] removeItemAtPath:tempGameDataPath
-													   error:NULL];
-		}
-		
-		if (![[NSFileManager defaultManager] copyItemAtPath:resourceGameDataPath
-													 toPath:tempGameDataPath
-													  error:NULL])
-		{
-			NSLog(@"Could not copy GameData!");
-			[self performSelectorOnMainThread:@selector(abortInstallation:) withObject:[NSArray arrayWithObjects:@"Install Error", @"HaloMD could not copy Game Data.", [NSNull null], nil] waitUntilDone:YES];
-		}
-		
-		if (![[NSFileManager defaultManager] moveItemAtPath:tempGameDataPath
-													 toPath:gameDataPath
-													  error:NULL])
-		{
-			NSLog(@"Could not move game data path!");
-			[self performSelectorOnMainThread:@selector(abortInstallation:) withObject:[NSArray arrayWithObjects:@"Install Error", @"HaloMD could not move Game Data.", [NSNull null], nil] waitUntilDone:YES];
-		}
-		
-		if (!resourceAppPath)
-		{
-			NSLog(@"Could not find data path: %@", resourceAppPath);
-			[self performSelectorOnMainThread:@selector(abortInstallation:) withObject:[NSArray arrayWithObjects:@"Install Error", @"HaloMD could not find the App Data.", nil] waitUntilDone:YES];
-		}
-		
-		NSString *tempAppPath = [appPath stringByAppendingString:@"1"];
-		
-		if ([[NSFileManager defaultManager] fileExistsAtPath:tempAppPath])
-		{
-			[[NSFileManager defaultManager] removeItemAtPath:tempAppPath
-													   error:NULL];
-		}
-		
-		if (![[NSFileManager defaultManager] copyItemAtPath:resourceAppPath
-													 toPath:tempAppPath
-													  error:NULL])
-		{
-			NSLog(@"Could not copy GameData!");
-			[self performSelectorOnMainThread:@selector(abortInstallation:) withObject:[NSArray arrayWithObjects:@"Install Error", @"HaloMD could not copy Game Data.", [NSNull null], nil] waitUntilDone:YES];
-		}
-		
-		if (![[NSFileManager defaultManager] moveItemAtPath:tempAppPath
-													 toPath:appPath
-													  error:NULL])
-		{
-			NSLog(@"Could not move app path!");
-			[self performSelectorOnMainThread:@selector(abortInstallation:) withObject:[NSArray arrayWithObjects:@"Install Error", @"HaloMD could not move App Data.", [NSNull null], nil] waitUntilDone:YES];
-		}
-		
-		if ([[NSFileManager defaultManager] fileExistsAtPath:[self preferencesPath]])
-		{
-			[[NSFileManager defaultManager] removeItemAtPath:[self preferencesPath]
-													   error:NULL];
-		}
-		
-		if ([[NSFileManager defaultManager] fileExistsAtPath:templateInitPath])
-		{
-			[[NSFileManager defaultManager] removeItemAtPath:templateInitPath
-													   error:NULL];
-		}
-		
-		[[NSUserDefaults standardUserDefaults] setObject:expectedVersionsDictionary forKey:HALO_FILE_VERSIONS_KEY];
-		
-		[installProgressIndicator stopAnimation:nil];
-	}
-	else
-	{
-		[self setStatusWithoutWait:@"Applying Updates..."];
-		
-		[self updateChangesFrom:resourceAppPath
-							 to:appPath];
-		
-		[self updateChangesFrom:resourceGameDataPath
-							 to:gameDataPath];
-	}
-	
-	// Create preferences file if it doesn't exist
-	if (![[NSFileManager defaultManager] fileExistsAtPath:[self preferencesPath]])
-	{
-		NSMutableData *preferencesData = [NSMutableData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:HALO_MD_IDENTIFIER ofType:@"plist"]];
-		
-		const char *randomKey = [[self randomSerialKey] UTF8String];
-		
-		[preferencesData replaceBytesInRange:NSMakeRange(0xA5, strlen(randomKey)+1)
-								   withBytes:randomKey];
-		
-		// Obtain graphics card information to decide whether to use vertex shaders only or not
-		NSTask *graphicsQueryTask = [[NSTask alloc] init];
-		
-		[graphicsQueryTask setLaunchPath:@"/usr/sbin/system_profiler"];
-		[graphicsQueryTask setArguments:[NSArray arrayWithObjects:@"-xml", @"SPDisplaysDataType", nil]];
-		
-		NSPipe *pipe = [[NSPipe alloc] init];
-		[graphicsQueryTask setStandardOutput:pipe];
-		
-		NSData *graphicsQueryData = nil;
-		
-		@try
-		{
-			[graphicsQueryTask launch];
-			graphicsQueryData = [[pipe fileHandleForReading] readDataToEndOfFile];
-		}
-		@catch (NSException *exception)
-		{
-			NSLog(@"ERROR: Graphics query task: %@: %@", [exception name], [exception reason]);
-		}
-		
-		[pipe release];
-		[graphicsQueryTask release];
-		
-		BOOL shouldOnlyUseVertexShaders = NO;
-		
-		@try
-		{
-			NSArray *properties = [[[[NSString alloc] initWithData:graphicsQueryData encoding:NSUTF8StringEncoding] autorelease] propertyList];
-			NSArray *graphicsCardItems = [[properties objectAtIndex:0] objectForKey:@"_items"];
-			
-			NSString *graphicsCard = [[graphicsCardItems objectAtIndex:0] objectForKey:@"sppci_model"];
-			
-			// Does the user have an integrated graphics card? http://support.apple.com/kb/HT3246
-			if ([graphicsCardItems count] == 1 && ([[NSArray arrayWithObjects:@"GMA 950", @"GMA X3100", @"NVIDIA GeForce 9400M", @"NVIDIA GeForce 320M", nil] containsObject:graphicsCard] || [graphicsCard hasPrefix:@"Intel HD Graphics"]))
+			if (![[NSFileManager defaultManager] createDirectoryAtPath:appSupportPath
+										   withIntermediateDirectories:NO
+															attributes:nil
+																 error:NULL])
 			{
-				shouldOnlyUseVertexShaders = YES;
-			}
-		}
-		@catch (NSException *exception)
-		{
-			NSLog(@"ERROR: Failed to obtain graphics card information: %@: %@", [exception name], [exception reason]);
-		}
-		
-		if (shouldOnlyUseVertexShaders)
-		{
-			char shadersFlag = 1;
-			[preferencesData replaceBytesInRange:NSMakeRange(0x44, 1)
-									   withBytes:&shadersFlag];
-			
-			NSLog(@"Using vertex shaders only to avoid graphical glitches since the graphics card is integrated");
-		}
-		
-		if (![preferencesData writeToFile:[self preferencesPath] atomically:YES])
-		{
-			NSLog(@"Failed to write preferences file!");
-			[self performSelectorOnMainThread:@selector(abortInstallation:) withObject:[NSArray arrayWithObjects:@"Fatal Error", @"HaloMD could not write its preference file.", nil] waitUntilDone:YES];
-		}
-	}
-	
-	if (![[NSFileManager defaultManager] fileExistsAtPath:templateInitPath])
-	{
-		NSString *templateInitString = @"sv_mapcycle_timeout 5";
-		if (![templateInitString writeToFile:templateInitPath
-								  atomically:YES
-									encoding:NSUTF8StringEncoding
-									   error:NULL])
-		{
-			NSLog(@"Failed to write template_init.txt");
-		}
-	}
-	
-	if (![[NSFileManager defaultManager] changeCurrentDirectoryPath:[appSupportPath stringByAppendingPathComponent:@"GameData"]])
-	{
-		NSLog(@"Could not change current directory path to game data");
-		[self performSelectorOnMainThread:@selector(abortInstallation:) withObject:[NSArray arrayWithObjects:@"Fatal Error", @"HaloMD could not change its current working directory.", nil] waitUntilDone:YES];
-	}
-	
-	NSString *documentsPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
-	NSString *haloMDDocumentsPath = [documentsPath stringByAppendingPathComponent:@"HLMD"];
-	
-	if ([[NSFileManager defaultManager] fileExistsAtPath:haloMDDocumentsPath])
-	{
-		// Remove all saved campaign games
-		NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:haloMDDocumentsPath];
-		NSString *filePath;
-		NSMutableArray *pathsToRemove = [[NSMutableArray alloc] init];
-		NSMutableArray *savebinsToAdd = [[NSMutableArray alloc] init]; // Fixing us not adding this before, argh
-		
-		BOOL foundProfile = NO;
-		
-		while (filePath = [directoryEnumerator nextObject])
-		{
-			NSString *fullFilePath = [haloMDDocumentsPath stringByAppendingPathComponent:filePath];
-			
-			if ([[filePath lastPathComponent] isEqualToString:@"saved"])
-			{
-				[directoryEnumerator skipDescendents];
-			}
-			else if ([[filePath lastPathComponent] isEqualToString:@"savegame.bin"] || [[filePath lastPathComponent] isEqualToString:@"savegame.sav"] || [[filePath lastPathComponent] isEqualToString:@"checkpoints"])
-			{
-				[pathsToRemove addObject:fullFilePath];
-			}
-			else if ([[filePath lastPathComponent] isEqualToString:@"blam.sav"])
-			{
-				foundProfile = YES;
-				
-				NSString *savegameBinPath = [[fullFilePath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"savegame.bin"];
-				if (![[NSFileManager defaultManager] fileExistsAtPath:savegameBinPath])
-				{
-					[savebinsToAdd addObject:savegameBinPath];
-				}
+				NSLog(@"Could not create applicaton support directory: %@", appSupportPath);
+				[self performSelectorOnMainThread:@selector(abortInstallation:) withObject:[NSArray arrayWithObjects:@"Install Error", @"HaloMD could not create the application support folder.", [NSNull null], nil] waitUntilDone:YES];
 			}
 		}
 		
-		if (!foundProfile)
+		NSString *gameDataPath = [appSupportPath stringByAppendingPathComponent:@"GameData"];
+		NSString *appPath = [appSupportPath stringByAppendingPathComponent:@"HaloMD.app"];
+		BOOL gameDataPathExists = [[NSFileManager defaultManager] fileExistsAtPath:gameDataPath];
+		BOOL gameAppPathExists = [[NSFileManager defaultManager] fileExistsAtPath:appPath];
+		if (!gameDataPathExists || !gameAppPathExists)
 		{
-			[[NSFileManager defaultManager] removeItemAtPath:haloMDDocumentsPath error:NULL];
+			if (gameDataPathExists)
+			{
+				[[NSFileManager defaultManager] removeItemAtPath:gameDataPath
+														   error:NULL];
+				gameDataPathExists = NO;
+			}
+			else if (gameAppPathExists)
+			{
+				[[NSFileManager defaultManager] removeItemAtPath:appPath
+														   error:NULL];
+				gameAppPathExists = NO;
+			}
+		}
+		
+		NSString *templateInitPath = [gameDataPath stringByAppendingPathComponent:@"template_init.txt"];
+		NSString *resourceAppPath = [self resourceAppPath];
+		NSString *resourceGameDataPath = [self resourceGameDataPath];
+		
+		if (!gameDataPathExists && !gameAppPathExists)
+		{
+			[self setStatusWithoutWait:@"Installing... This may take a few minutes."];
+			[installProgressIndicator startAnimation:nil];
+			
+			if (!resourceGameDataPath)
+			{
+				NSLog(@"Could not find data path: %@", resourceGameDataPath);
+				[self performSelectorOnMainThread:@selector(abortInstallation:) withObject:[NSArray arrayWithObjects:@"Install Error", @"HaloMD could not find the Data.", nil] waitUntilDone:YES];
+			}
+			
+			NSString *tempGameDataPath = [gameDataPath stringByAppendingString:@"1"];
+			
+			if ([[NSFileManager defaultManager] fileExistsAtPath:tempGameDataPath])
+			{
+				[[NSFileManager defaultManager] removeItemAtPath:tempGameDataPath
+														   error:NULL];
+			}
+			
+			if (![[NSFileManager defaultManager] copyItemAtPath:resourceGameDataPath
+														 toPath:tempGameDataPath
+														  error:NULL])
+			{
+				NSLog(@"Could not copy GameData!");
+				[self performSelectorOnMainThread:@selector(abortInstallation:) withObject:[NSArray arrayWithObjects:@"Install Error", @"HaloMD could not copy Game Data.", [NSNull null], nil] waitUntilDone:YES];
+			}
+			
+			if (![[NSFileManager defaultManager] moveItemAtPath:tempGameDataPath
+														 toPath:gameDataPath
+														  error:NULL])
+			{
+				NSLog(@"Could not move game data path!");
+				[self performSelectorOnMainThread:@selector(abortInstallation:) withObject:[NSArray arrayWithObjects:@"Install Error", @"HaloMD could not move Game Data.", [NSNull null], nil] waitUntilDone:YES];
+			}
+			
+			if (!resourceAppPath)
+			{
+				NSLog(@"Could not find data path: %@", resourceAppPath);
+				[self performSelectorOnMainThread:@selector(abortInstallation:) withObject:[NSArray arrayWithObjects:@"Install Error", @"HaloMD could not find the App Data.", nil] waitUntilDone:YES];
+			}
+			
+			NSString *tempAppPath = [appPath stringByAppendingString:@"1"];
+			
+			if ([[NSFileManager defaultManager] fileExistsAtPath:tempAppPath])
+			{
+				[[NSFileManager defaultManager] removeItemAtPath:tempAppPath
+														   error:NULL];
+			}
+			
+			if (![[NSFileManager defaultManager] copyItemAtPath:resourceAppPath
+														 toPath:tempAppPath
+														  error:NULL])
+			{
+				NSLog(@"Could not copy GameData!");
+				[self performSelectorOnMainThread:@selector(abortInstallation:) withObject:[NSArray arrayWithObjects:@"Install Error", @"HaloMD could not copy Game Data.", [NSNull null], nil] waitUntilDone:YES];
+			}
+			
+			if (![[NSFileManager defaultManager] moveItemAtPath:tempAppPath
+														 toPath:appPath
+														  error:NULL])
+			{
+				NSLog(@"Could not move app path!");
+				[self performSelectorOnMainThread:@selector(abortInstallation:) withObject:[NSArray arrayWithObjects:@"Install Error", @"HaloMD could not move App Data.", [NSNull null], nil] waitUntilDone:YES];
+			}
+			
+			if ([[NSFileManager defaultManager] fileExistsAtPath:[self preferencesPath]])
+			{
+				[[NSFileManager defaultManager] removeItemAtPath:[self preferencesPath]
+														   error:NULL];
+			}
+			
+			if ([[NSFileManager defaultManager] fileExistsAtPath:templateInitPath])
+			{
+				[[NSFileManager defaultManager] removeItemAtPath:templateInitPath
+														   error:NULL];
+			}
+			
+			[[NSUserDefaults standardUserDefaults] setObject:expectedVersionsDictionary forKey:HALO_FILE_VERSIONS_KEY];
+			
+			[installProgressIndicator stopAnimation:nil];
 		}
 		else
 		{
-			for (NSString *filePath in pathsToRemove)
+			[self setStatusWithoutWait:@"Applying Updates..."];
+			
+			[self updateChangesFrom:resourceAppPath
+								 to:appPath];
+			
+			[self updateChangesFrom:resourceGameDataPath
+								 to:gameDataPath];
+		}
+		
+		// Create preferences file if it doesn't exist
+		if (![[NSFileManager defaultManager] fileExistsAtPath:[self preferencesPath]])
+		{
+			NSMutableData *preferencesData = [NSMutableData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:HALO_MD_IDENTIFIER ofType:@"plist"]];
+			
+			const char *randomKey = [[self randomSerialKey] UTF8String];
+			
+			[preferencesData replaceBytesInRange:NSMakeRange(0xA5, strlen(randomKey)+1)
+									   withBytes:randomKey];
+			
+			// Obtain graphics card information to decide whether to use vertex shaders only or not
+			NSTask *graphicsQueryTask = [[NSTask alloc] init];
+			
+			[graphicsQueryTask setLaunchPath:@"/usr/sbin/system_profiler"];
+			[graphicsQueryTask setArguments:[NSArray arrayWithObjects:@"-xml", @"SPDisplaysDataType", nil]];
+			
+			NSPipe *pipe = [[NSPipe alloc] init];
+			[graphicsQueryTask setStandardOutput:pipe];
+			
+			NSData *graphicsQueryData = nil;
+			
+			@try
 			{
-				[[NSFileManager defaultManager] removeItemAtPath:filePath error:NULL];
-				if ([[filePath lastPathComponent] isEqualToString:@"savegame.bin"])
-				{
-					[self writeZeroedSaveGameAtPath:filePath];
-				}
+				[graphicsQueryTask launch];
+				graphicsQueryData = [[pipe fileHandleForReading] readDataToEndOfFile];
+			}
+			@catch (NSException *exception)
+			{
+				NSLog(@"ERROR: Graphics query task: %@: %@", [exception name], [exception reason]);
 			}
 			
-			for (NSString *path in savebinsToAdd)
+			BOOL shouldOnlyUseVertexShaders = NO;
+			
+			@try
 			{
-				[self writeZeroedSaveGameAtPath:path];
+				NSArray *properties = [[[NSString alloc] initWithData:graphicsQueryData encoding:NSUTF8StringEncoding] propertyList];
+				NSArray *graphicsCardItems = [[properties objectAtIndex:0] objectForKey:@"_items"];
+				
+				NSString *graphicsCard = [[graphicsCardItems objectAtIndex:0] objectForKey:@"sppci_model"];
+				
+				// Does the user have an integrated graphics card? http://support.apple.com/kb/HT3246
+				if ([graphicsCardItems count] == 1 && ([[NSArray arrayWithObjects:@"GMA 950", @"GMA X3100", @"NVIDIA GeForce 9400M", @"NVIDIA GeForce 320M", nil] containsObject:graphicsCard] || [graphicsCard hasPrefix:@"Intel HD Graphics"]))
+				{
+					shouldOnlyUseVertexShaders = YES;
+				}
+			}
+			@catch (NSException *exception)
+			{
+				NSLog(@"ERROR: Failed to obtain graphics card information: %@: %@", [exception name], [exception reason]);
+			}
+			
+			if (shouldOnlyUseVertexShaders)
+			{
+				char shadersFlag = 1;
+				[preferencesData replaceBytesInRange:NSMakeRange(0x44, 1)
+										   withBytes:&shadersFlag];
+				
+				NSLog(@"Using vertex shaders only to avoid graphical glitches since the graphics card is integrated");
+			}
+			
+			if (![preferencesData writeToFile:[self preferencesPath] atomically:YES])
+			{
+				NSLog(@"Failed to write preferences file!");
+				[self performSelectorOnMainThread:@selector(abortInstallation:) withObject:[NSArray arrayWithObjects:@"Fatal Error", @"HaloMD could not write its preference file.", nil] waitUntilDone:YES];
 			}
 		}
 		
-		[savebinsToAdd release];
-		[pathsToRemove release];
-	}
-	
+		if (![[NSFileManager defaultManager] fileExistsAtPath:templateInitPath])
+		{
+			NSString *templateInitString = @"sv_mapcycle_timeout 5";
+			if (![templateInitString writeToFile:templateInitPath
+									  atomically:YES
+										encoding:NSUTF8StringEncoding
+										   error:NULL])
+			{
+				NSLog(@"Failed to write template_init.txt");
+			}
+		}
+		
+		if (![[NSFileManager defaultManager] changeCurrentDirectoryPath:[appSupportPath stringByAppendingPathComponent:@"GameData"]])
+		{
+			NSLog(@"Could not change current directory path to game data");
+			[self performSelectorOnMainThread:@selector(abortInstallation:) withObject:[NSArray arrayWithObjects:@"Fatal Error", @"HaloMD could not change its current working directory.", nil] waitUntilDone:YES];
+		}
+		
+		NSString *documentsPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+		NSString *haloMDDocumentsPath = [documentsPath stringByAppendingPathComponent:@"HLMD"];
+		
+		if ([[NSFileManager defaultManager] fileExistsAtPath:haloMDDocumentsPath])
+		{
+			// Remove all saved campaign games
+			NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:haloMDDocumentsPath];
+			NSString *filePath;
+			NSMutableArray *pathsToRemove = [[NSMutableArray alloc] init];
+			NSMutableArray *savebinsToAdd = [[NSMutableArray alloc] init]; // Fixing us not adding this before, argh
+			
+			BOOL foundProfile = NO;
+			
+			while (filePath = [directoryEnumerator nextObject])
+			{
+				NSString *fullFilePath = [haloMDDocumentsPath stringByAppendingPathComponent:filePath];
+				
+				if ([[filePath lastPathComponent] isEqualToString:@"saved"])
+				{
+					[directoryEnumerator skipDescendents];
+				}
+				else if ([[filePath lastPathComponent] isEqualToString:@"savegame.bin"] || [[filePath lastPathComponent] isEqualToString:@"savegame.sav"] || [[filePath lastPathComponent] isEqualToString:@"checkpoints"])
+				{
+					[pathsToRemove addObject:fullFilePath];
+				}
+				else if ([[filePath lastPathComponent] isEqualToString:@"blam.sav"])
+				{
+					foundProfile = YES;
+					
+					NSString *savegameBinPath = [[fullFilePath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"savegame.bin"];
+					if (![[NSFileManager defaultManager] fileExistsAtPath:savegameBinPath])
+					{
+						[savebinsToAdd addObject:savegameBinPath];
+					}
+				}
+			}
+			
+			if (!foundProfile)
+			{
+				[[NSFileManager defaultManager] removeItemAtPath:haloMDDocumentsPath error:NULL];
+			}
+			else
+			{
+				for (NSString *filePath in pathsToRemove)
+				{
+					[[NSFileManager defaultManager] removeItemAtPath:filePath error:NULL];
+					if ([[filePath lastPathComponent] isEqualToString:@"savegame.bin"])
+					{
+						[self writeZeroedSaveGameAtPath:filePath];
+					}
+				}
+				
+				for (NSString *path in savebinsToAdd)
+				{
+					[self writeZeroedSaveGameAtPath:path];
+				}
+			}
+		}
+		
 #ifndef __ppc__
-	// haven't figured out how checksum works for big endian byte order
-	if (![[NSFileManager defaultManager] fileExistsAtPath:haloMDDocumentsPath])
-	{
-		[self performSelectorOnMainThread:@selector(pickUserName)
-							   withObject:nil
-							waitUntilDone:YES];
-	}
+		// haven't figured out how checksum works for big endian byte order
+		if (![[NSFileManager defaultManager] fileExistsAtPath:haloMDDocumentsPath])
+		{
+			[self performSelectorOnMainThread:@selector(pickUserName)
+								   withObject:nil
+								waitUntilDone:YES];
+		}
 #endif
-	
-	isInstalled = YES;
-	
-	[self setStatusWithoutWait:@""];
-	
-	[modsController performSelectorOnMainThread:@selector(initiateAndForceDownloadList:) withObject:[NSNumber numberWithBool:shiftKeyHeldDown] waitUntilDone:YES];
-	
-	[self performSelectorOnMainThread:@selector(refreshServers:) withObject:nil waitUntilDone:YES];
-	
-	[launchButton setEnabled:YES];
-	
-	if ([self openFiles])
-	{
-		[self performSelectorOnMainThread:@selector(addOpenFiles) withObject:nil waitUntilDone:NO];
+		
+		isInstalled = YES;
+		
+		[self setStatusWithoutWait:@""];
+		
+		[modsController performSelectorOnMainThread:@selector(initiateAndForceDownloadList:) withObject:[NSNumber numberWithBool:shiftKeyHeldDown] waitUntilDone:YES];
+		
+		[self performSelectorOnMainThread:@selector(refreshServers:) withObject:nil waitUntilDone:YES];
+		
+		[launchButton setEnabled:YES];
+		
+		if ([self openFiles])
+		{
+			[self performSelectorOnMainThread:@selector(addOpenFiles) withObject:nil waitUntilDone:NO];
+		}
 	}
-	
-	[pool release];
 }
 
 - (void)anotherApplicationDidLaunch:(NSNotification *)notification
@@ -1538,8 +1524,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		}
 	}
 	
-	[favoritesString release];
-	
 	return extraServerFavorites;
 }
 
@@ -1573,7 +1557,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 				[server setIpAddress:[serverAndPortArray objectAtIndex:0]];
 				[server setPortNumber:[[serverAndPortArray objectAtIndex:1] intValue]];
 				[waitingServersArray addObject:server];
-				[server release];
 			}
 			else if ([serverAndPortArray count] == 3)
 			{
@@ -1602,16 +1585,16 @@ static NSDictionary *expectedVersionsDictionary = nil;
 
 - (void)grabExtraFavorites:(NSArray	 *)servers
 {
-	NSAutoreleasePool *autoreleasePool = [[NSAutoreleasePool alloc] init];
-	if (servers)
+	@autoreleasepool
 	{
-		// Attach extra server favorites, make sure to filter out duplicates
-		servers = [[NSSet setWithArray:[servers arrayByAddingObjectsFromArray:[self extraFavoriteServers]]] allObjects];
+		if (servers)
+		{
+			// Attach extra server favorites, make sure to filter out duplicates
+			servers = [[NSSet setWithArray:[servers arrayByAddingObjectsFromArray:[self extraFavoriteServers]]] allObjects];
+		}
+		
+		[self performSelectorOnMainThread:@selector(handleServerRetrieval:) withObject:servers waitUntilDone:NO];
 	}
-	
-	[self performSelectorOnMainThread:@selector(handleServerRetrieval:) withObject:servers waitUntilDone:NO];
-	
-	[autoreleasePool release];
 }
 
 - (void)retrievedServers:(NSArray *)servers
@@ -1690,11 +1673,11 @@ static NSDictionary *expectedVersionsDictionary = nil;
 {
 	if (!queryTimer)
 	{
-		queryTimer = [[NSTimer scheduledTimerWithTimeInterval:0.01
+		queryTimer = [NSTimer scheduledTimerWithTimeInterval:0.01
 													   target:self
 													 selector:@selector(queryServers:)
 													 userInfo:nil
-													  repeats:YES] retain];
+													  repeats:YES];
 		
 		[refreshButton setEnabled:NO];
 		[serversTableView reloadData];
@@ -1758,14 +1741,10 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		
 		[players addObject:player];
 		
-		[player release];
-		
 		playerDataIndex += 3;
 	}
 	
 	[targetServer setPlayers:players];
-	
-	[players release];
 	
 	[targetServer setName:[self gameStringFromCString:serverName]];
 	[targetServer setMap:[[self gameStringFromCString:mapName] lowercaseString]];
@@ -1879,7 +1858,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 				NSMutableAttributedString *attributedStatus = [[NSMutableAttributedString alloc] initWithString:@"You may be having "];
 				[attributedStatus appendAttributedString:[NSAttributedString MDHyperlinkFromString:@"hosting issues." withURL:[NSURL URLWithString:@"http://halomd.net/hosting"]]];
 				[self setStatus:attributedStatus];
-				[attributedStatus release];
 				
 				break;
 			}
@@ -1888,12 +1866,15 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		[waitingServersArray removeAllObjects];
 		
 		[queryTimer invalidate];
-		[queryTimer release];
 		queryTimer = nil;
 		
 		[refreshButton setEnabled:YES];
 	}
 }
+
+#ifndef NSAppKitVersionNumber10_9
+#define NSAppKitVersionNumber10_9 1265
+#endif
 
 - (void)showChatButton:(BOOL)shouldShowChatButton
 {
@@ -1907,9 +1888,23 @@ static NSDictionary *expectedVersionsDictionary = nil;
 			// Add a chat button in the window's title bar
 			// http://13bold.com/tutorials/accessory-view/
 			BOOL supportsFullscreen = ([[self window] collectionBehavior] & NSWindowCollectionBehaviorFullScreenPrimary) != 0;
+			CGFloat chatIconOffset = 0.0f;
+			
+			if (floor(NSAppKitVersionNumber) > floor(NSAppKitVersionNumber10_9))
+			{
+				chatIconOffset = 2.0f;
+			}
+			else if (floor(NSAppKitVersionNumber) >= floor(NSAppKitVersionNumber10_7))
+			{
+				if (supportsFullscreen)
+				{
+					chatIconOffset = 20.0f;
+				}
+			}
+			
 			NSRect containerRect = [themeFrame frame];
 			NSRect accessoryViewRect = [chatButton frame];
-			NSRect newFrame = NSMakeRect(containerRect.size.width - accessoryViewRect.size.width - (supportsFullscreen ? 20 : 0), containerRect.size.height - accessoryViewRect.size.height - 2, accessoryViewRect.size.width, accessoryViewRect.size.height);
+			NSRect newFrame = NSMakeRect(containerRect.size.width - accessoryViewRect.size.width - chatIconOffset, containerRect.size.height - accessoryViewRect.size.height - 2, accessoryViewRect.size.width, accessoryViewRect.size.height);
 			
 			[chatButton setFrame:newFrame];
 			
@@ -1950,7 +1945,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 {
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(compare:)];
 	[serversTableView setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-	[sortDescriptor release];
 	
 	[serversTableView setDoubleAction:@selector(joinGame:)];
 	

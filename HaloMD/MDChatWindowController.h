@@ -32,23 +32,20 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <Ruby/ruby.h>
+#import "MDChatConnection.h"
 
 #define CHAT_PLAY_MESSAGE_SOUNDS @"CHAT_PLAY_MESSAGE_SOUNDS"
 #define CHAT_SHOW_MESSAGE_RECEIVE_NOTIFICATION @"CHAT_SHOW_MESSAGE_RECEIVE_NOTIFICATION"
 
 @class WebView;
 
-@interface MDChatWindowController : NSWindowController
+@interface MDChatWindowController : NSWindowController <MDChatConnectionDelegate>
 {
 	IBOutlet WebView *webView;
 	IBOutlet NSTextView *textView;
 	IBOutlet NSSplitView *chatSplitView;
 	IBOutlet NSSplitView *rosterSplitView;
 	IBOutlet NSTableView *rosterTableView;
-	VALUE chatting;
-	VALUE chattingClass;
-	NSTimer *chatTimer;
 	int previousMaxScroll;
 	uint64_t numberOfUnreadMentions;
 	NSMutableArray *roster;

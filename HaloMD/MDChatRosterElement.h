@@ -36,12 +36,10 @@
 @interface MDChatRosterElement : NSObject
 {
 	NSString *name;
-	NSString *jabberIdentifier;
 	NSString *status;
 }
 
 @property (nonatomic, copy) NSString *name;
-@property (nonatomic, copy) NSString *jabberIdentifier;
 @property (nonatomic, copy) NSString *status;
 
 @end

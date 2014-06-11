@@ -52,17 +52,16 @@
 
 + (void)cancelHostResolution:(NSValue *)hostRefValue
 {
-	NSAutoreleasePool *autoreleasePool = [[NSAutoreleasePool alloc] init];
-	
-	CFHostRef hostRef = [hostRefValue pointerValue];
-	
-	[NSThread sleepForTimeInterval:3];
-	
-	CFHostCancelInfoResolution(hostRef, kCFHostAddresses);
-	
-	CFRelease(hostRef);
-	
-	[autoreleasePool release];
+	@autoreleasepool
+	{
+		CFHostRef hostRef = [hostRefValue pointerValue];
+		
+		[NSThread sleepForTimeInterval:3];
+		
+		CFHostCancelInfoResolution(hostRef, kCFHostAddresses);
+		
+		CFRelease(hostRef);
+	}
 }
 
 + (NSArray *)socketAddressesFromHost:(NSString *)host
@@ -135,13 +134,12 @@
 
 + (void)retrieveServersThread:(id)delegate
 {
-	NSAutoreleasePool *autoreleasePool = [[NSAutoreleasePool alloc] init];
-	
-	NSArray *retrievedServers = [self retrieveServers];
-	
-	[delegate performSelectorOnMainThread:@selector(retrievedServers:) withObject:retrievedServers waitUntilDone:NO];
-	
-	[autoreleasePool release];
+	@autoreleasepool
+	{
+		NSArray *retrievedServers = [self retrieveServers];
+		
+		[delegate performSelectorOnMainThread:@selector(retrievedServers:) withObject:retrievedServers waitUntilDone:NO];
+	}
 }
 
 + (void)retrieveServers:(id)delegate

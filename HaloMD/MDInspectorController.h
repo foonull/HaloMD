@@ -37,7 +37,7 @@
 
 @interface MDInspectorController : NSObject <NSApplicationDelegate, NSWindowDelegate>
 {
-	IBOutlet AppDelegate *appController;
+	__unsafe_unretained IBOutlet AppDelegate *appController;
 	
 	IBOutlet NSPanel *inspectorPanel;
 	IBOutlet NSTextField *addressTextField;

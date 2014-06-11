@@ -45,7 +45,7 @@
 
 @interface MDModsController : NSObject <SCEventListenerProtocol, NSURLDownloadDelegate>
 {
-	IBOutlet AppDelegate *appDelegate;
+	__unsafe_unretained IBOutlet AppDelegate *appDelegate;
 	IBOutlet NSMenu *onlineModsMenu;
 	IBOutlet NSMenu *pluginsMenu;
 	IBOutlet NSMenu *onlinePluginsMenu;

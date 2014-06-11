@@ -60,8 +60,6 @@
 		[NSApp beginSheet:self.window modalForWindow:parentWindow modalDelegate:nil didEndSelector:nil contextInfo:NULL];
 		[[[_textView textStorage] mutableString] setString:favorites];
 	}
-	
-	[favorites release];
 }
 
 - (IBAction)cancel:(id)sender
@@ -82,7 +80,6 @@
 	}
 	
 	self.favoritesPath = nil;
-	[newFavorites release];
 	[NSApp endSheet:self.window];
 	[self.window close];
 }
