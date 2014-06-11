@@ -17,8 +17,6 @@
 		77297C5819452F9C00B83D9C /* MDHashDigest.m in Sources */ = {isa = PBXBuildFile; fileRef = 77297C5719452F9C00B83D9C /* MDHashDigest.m */; };
 		773E8ADB1820C7C000D1A71A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 773E8AD91820C7B700D1A71A /* Foundation.framework */; };
 		773E8ADE1820C7CE00D1A71A /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 773E8ADC1820C7C500D1A71A /* AppKit.framework */; };
-		774EF67917C7210B005ABB20 /* xmpp4r in Resources */ = {isa = PBXBuildFile; fileRef = 774EF67817C7210B005ABB20 /* xmpp4r */; };
-		774EF67B17C72111005ABB20 /* xmpp4r.rb in Resources */ = {isa = PBXBuildFile; fileRef = 774EF67A17C72111005ABB20 /* xmpp4r.rb */; };
 		774EF67D17C72117005ABB20 /* crc32forge.py in Resources */ = {isa = PBXBuildFile; fileRef = 774EF67C17C72117005ABB20 /* crc32forge.py */; };
 		774EF68717C72134005ABB20 /* SCEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF68317C72134005ABB20 /* SCEvent.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		774EF68817C72134005ABB20 /* SCEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 774EF68617C72134005ABB20 /* SCEvents.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -1436,8 +1434,6 @@
 				77971958173B3D6600007D80 /* CSnd.aif in Resources */,
 				770C153D1741CC37001380A8 /* game_icon.pdf in Resources */,
 				770C15411742E1FD001380A8 /* in_chat_icon.pdf in Resources */,
-				774EF67917C7210B005ABB20 /* xmpp4r in Resources */,
-				774EF67B17C72111005ABB20 /* xmpp4r.rb in Resources */,
 				774EF67D17C72117005ABB20 /* crc32forge.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
