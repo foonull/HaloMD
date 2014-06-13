@@ -320,7 +320,7 @@ static void replaceUstr(NSMutableArray *mapsAdded) { //refreshes map names and d
                     uint32_t length = sizeof(unichar) * ([mapString length]+1);
                     (*mapReference)[q].length = length;
                     
-                    unichar *newMapString = calloc(length,1); //allocate or else a disaster beyond your imagination will occur
+                    unichar *newMapString = calloc(length,sizeof(unichar)); //allocate or else a disaster beyond your imagination will occur
                     memcpy(newMapString,[mapString cStringUsingEncoding:NSUTF16LittleEndianStringEncoding],length);
                     (*mapReference)[q].string = newMapString;
                 }
