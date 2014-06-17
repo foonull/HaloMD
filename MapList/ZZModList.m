@@ -35,7 +35,8 @@
 #import "ZZModList.h"
 #import "mach_override.h"
 
-#define SET_HALO_MAPS_COUNT(value) (*(uint32_t *)(0x3D2D84) = value)
+#define HALO_MAPS_COUNT 0x3D2D84
+#define SET_HALO_MAPS_COUNT(value) (*(uint32_t *)(HALO_MAPS_COUNT) = value)
 
 @implementation ZZModList
 
@@ -213,7 +214,7 @@ static NSString *mapDescriptionFromIdentifier(NSString *identifier) {
 
 static void changeMapEntry(MapListEntry **mapsPointer, char *desiredMap, int tableIndex)
 {
-    char *mapName = calloc(strlen(desiredMap),1); //map needs to be allocated, or else Halo hates it
+    char *mapName = calloc(strlen(desiredMap) + 1,sizeof(char)); //map needs to be allocated, or else Halo hates it
     memcpy(mapName,desiredMap,strlen(desiredMap));
     (*mapsPointer)[tableIndex].name = mapName;
     (*mapsPointer)[tableIndex].enabled = 1;
@@ -221,21 +222,21 @@ static void changeMapEntry(MapListEntry **mapsPointer, char *desiredMap, int tab
 }
 
 static void refreshMaps(NSMutableArray *mapsAdded) { //remake the map array
-    static MapListEntry *newMaps;
+    static MapListEntry *newMaps = NULL;
     static MapListEntry **mapsPointer = (void *)0x3691c0;
-    
     if (newMaps != NULL) {
         for(uint32_t i = 0;i < [mapsAdded count]; i++) {
             free(newMaps[i].name);
         }
+        free(newMaps);
     }
     [mapsAdded removeAllObjects];
     
     NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mapsDirectory() error:NULL];
     for (NSString *file in files) {
         if ([[file pathExtension] isEqualToString:@"map"]) {
-            NSString *fileWithoutExtension = [[file lastPathComponent] stringByDeletingPathExtension];
-            if (![stockMapName(fileWithoutExtension) isEqualToString:fileWithoutExtension] ||(buildNumberFromIdentifier(fileWithoutExtension) > 0 && !hideMapBecauseOutdated(fileWithoutExtension))) {
+            NSString *fileWithoutExtension = [[[file lastPathComponent] stringByDeletingPathExtension]lowercaseString];
+            if (true || ![stockMapName(fileWithoutExtension) isEqualToString:fileWithoutExtension] ||(buildNumberFromIdentifier(fileWithoutExtension) > 0 && !hideMapBecauseOutdated(fileWithoutExtension))) {
                 [mapsAdded addObject:fileWithoutExtension];
             }
         }
@@ -287,47 +288,48 @@ static void replaceUstr(NSMutableArray *mapsAdded) { //refreshes map names and d
     
     for(uint32_t i = 0; i < numberOfTags; i++) {
         if (tagArray[i].classA == *(uint32_t *)&"rtsu") {
-            struct unicodeStringReference **mapReference = NULL;
-            uint32_t *mapCountReference = NULL;
-            NSString *(*mapStringFunction)(NSString *) = NULL;
-            
+            struct unicodeStringReference *mapReference;
+            NSString *(*mapStringFunction)(NSString *);
             
             if (strcmp(tagArray[i].nameOffset,TAG_MAP_NAMES) == 0) {
-                mapReference = &referencesMapName;
-                mapCountReference = &referencesMapNameCount;
                 mapStringFunction = mapNameFromIdentifier;
+                if(referencesMapName != NULL) {
+                    for(uint32_t i=0;i<referencesMapNameCount;i++) {
+                        free(referencesMapName[i].string);
+                    }
+                }
             }
             else if (strcmp(tagArray[i].nameOffset,TAG_MAP_DESCRIPTIONS) == 0) {
-                mapReference = &referencesMapDesc;
-                mapCountReference = &referencesMapDescCount;
                 mapStringFunction = mapDescriptionFromIdentifier;
+                if(referencesMapDesc != NULL) {
+                    for(uint32_t i=0;i<referencesMapDescCount;i++) {
+                        free(referencesMapDesc[i].string);
+                    }
+                }
+            }
+            else
+                continue;
+            
+            struct unicodeStringTag *tag = tagArray[i].dataOffset;
+            tag->referencesCount = mapsCount;
+            mapReference = calloc(mapsCount , sizeof(*mapReference));
+            tag->references = mapReference;
+                
+            for (uint32_t q = 0; q < mapsCount; q++) {
+                NSString *mapString = mapStringFunction([mapsAdded objectAtIndex:q]);
+                uint32_t length = sizeof(unichar) * ([mapString length]+1);
+                (mapReference)[q].length = length;
+                    
+                unichar *newMapString = calloc(length,1); //allocate or else a disaster beyond your imagination will occur
+                memcpy(newMapString,[mapString cStringUsingEncoding:NSUTF16LittleEndianStringEncoding],length-2);
+                (mapReference)[q].string = newMapString;
             }
             
-            if (mapReference != NULL && mapCountReference != NULL && mapStringFunction != NULL) {
-                for (uint32_t q = 0; q < *mapCountReference; q++) {
-                    free((*mapReference)[q].string);
-                }
-                free(*mapReference);
-                
-                struct unicodeStringTag *tag = tagArray[i].dataOffset;
-                tag->referencesCount = mapsCount;
-                *mapReference = malloc(mapsCount * sizeof(**mapReference));
-                tag->references = *mapReference;
-                *mapCountReference = mapsCount;
-                
-                for (uint32_t q = 0; q < mapsCount; q++) {
-                    NSString *mapString = mapStringFunction([mapsAdded objectAtIndex:q]);
-                    uint32_t length = sizeof(unichar) * ([mapString length]+1);
-                    (*mapReference)[q].length = length;
-                    
-                    unichar *newMapString = calloc(length,1); //allocate or else a disaster beyond your imagination will occur
-                    memcpy(newMapString,[mapString cStringUsingEncoding:NSUTF16LittleEndianStringEncoding],length);
-                    (*mapReference)[q].string = newMapString;
-                }
-            }
         }
         else if(tagArray[i].classA == *(uint32_t *)&"mtib" && strcmp(tagArray[i].nameOffset,TAG_MAP_ICONS) == 0) {
+            #warning Getting a "pointer being freed was not allocated" and an eventual crash.
             free(mapPicturesBitmaps);
+            
             mapPicturesBitmaps = calloc(sizeof(*mapPicturesBitmaps), mapsCount);
             struct bitmapTag *tag = tagArray[i].dataOffset;
             
@@ -343,7 +345,7 @@ static void replaceUstr(NSMutableArray *mapsAdded) { //refreshes map names and d
                 mapPicturesBitmaps[i].pixelOffset = GENERIC_OFFSET;
                 mapPicturesBitmaps[i].pixelCount = 16384;
                 mapPicturesBitmaps[i].bitmapLoneID = tagArray[i].identity;
-                mapPicturesBitmaps[i].ffffffff = -1;
+                mapPicturesBitmaps[i].ffffffff = 0xFFFFFFFF;
             }
             
             setMapPixelOffset(mapPicturesBitmaps, mapsAdded, @"bloodgulch", BLOODGULCH_OFFSET);
@@ -409,7 +411,7 @@ static void *(*haloprintf)(void *color, const char *message, ...) = (void *)0x15
 static void (*runCommand)(char *command,char *error_result,char *command_name) = NULL;
 static void interceptCommand(char *command,char *error_result, char *command_name)
 {
-    NSArray *args = [[[[NSString stringWithCString:command encoding:NSUTF8StringEncoding] componentsSeparatedByString:@" "] mutableCopy] autorelease];
+    NSArray *args = [[[NSString stringWithCString:command encoding:NSUTF8StringEncoding] componentsSeparatedByString:@" "] mutableCopy];
     if ([[[args objectAtIndex:0] lowercaseString] isEqualToString:@"sv_maplist_show_outdated"]) {
         //Disable hiding of outdated maps.
         if([args count] >= 2) {
@@ -422,7 +424,7 @@ static void interceptCommand(char *command,char *error_result, char *command_nam
     }
     else if ([[[args objectAtIndex:0] lowercaseString] isEqualToString:@"sv_map"]) {
         //Overrides the old sv_map command, modified so a build number doesn't have to be typed.
-        NSMutableArray *newArgs = [[args mutableCopy]autorelease];
+        NSMutableArray *newArgs = [args mutableCopy];
         if ([args count] >= 2) {
             NSString *map = [newArgs objectAtIndex:1];
             if (![gMapsAdded containsObject:map] && [mapIdentityFromIdentifier(map) isEqualToString:map]) {
