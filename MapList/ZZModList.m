@@ -43,6 +43,7 @@
 static NSMutableArray *gMapsAdded;
 static NSDictionary *gModsList;
 static bool showOutdatedOverride = false;
+static bool showAllMapsOverride = false;
 
 static NSString *applicationSupportPath(void)
 {
@@ -236,7 +237,7 @@ static void refreshMaps(NSMutableArray *mapsAdded) { //remake the map array
     for (NSString *file in files) {
         if ([[file pathExtension] isEqualToString:@"map"]) {
             NSString *fileWithoutExtension = [[[file lastPathComponent] stringByDeletingPathExtension]lowercaseString];
-            if (true || ![stockMapName(fileWithoutExtension) isEqualToString:fileWithoutExtension] ||(buildNumberFromIdentifier(fileWithoutExtension) > 0 && !hideMapBecauseOutdated(fileWithoutExtension))) {
+            if (showAllMapsOverride || ![stockMapName(fileWithoutExtension) isEqualToString:fileWithoutExtension] ||(buildNumberFromIdentifier(fileWithoutExtension) > 0 && !hideMapBecauseOutdated(fileWithoutExtension))) {
                 [mapsAdded addObject:fileWithoutExtension];
             }
         }
@@ -420,6 +421,16 @@ static void interceptCommand(char *command,char *error_result, char *command_nam
             replaceUstr(gMapsAdded);
         }
         haloprintf(NULL,showOutdatedOverride ? "true" : "false");
+        return;
+    }
+    else if ([[[args objectAtIndex:0] lowercaseString] isEqualToString:@"sv_maplist_show_all"]) {
+        //Disable hiding of outdated maps.
+        if([args count] >= 2) {
+            showAllMapsOverride = [[args objectAtIndex:1]boolValue];
+            refreshMaps(gMapsAdded);
+            replaceUstr(gMapsAdded);
+        }
+        haloprintf(NULL,showAllMapsOverride ? "true" : "false");
         return;
     }
     else if ([[[args objectAtIndex:0] lowercaseString] isEqualToString:@"sv_map"]) {
