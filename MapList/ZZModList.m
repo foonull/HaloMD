@@ -412,7 +412,7 @@ static void *(*haloprintf)(void *color, const char *message, ...) = (void *)0x15
 static void (*runCommand)(char *command,char *error_result,char *command_name) = NULL;
 static void interceptCommand(char *command,char *error_result, char *command_name)
 {
-    NSArray *args = [[[NSString stringWithCString:command encoding:NSUTF8StringEncoding] componentsSeparatedByString:@" "] mutableCopy];
+    NSArray *args = [[NSString stringWithCString:command encoding:NSUTF8StringEncoding] componentsSeparatedByString:@" "];
     if ([[[args objectAtIndex:0] lowercaseString] isEqualToString:@"sv_maplist_show_outdated"]) {
         //Disable hiding of outdated maps.
         if([args count] >= 2) {
@@ -421,7 +421,6 @@ static void interceptCommand(char *command,char *error_result, char *command_nam
             replaceUstr(gMapsAdded);
         }
         haloprintf(NULL,showOutdatedOverride ? "true" : "false");
-        return;
     }
     else if ([[[args objectAtIndex:0] lowercaseString] isEqualToString:@"sv_maplist_show_all"]) {
         //Disable hiding of outdated maps.
@@ -431,11 +430,10 @@ static void interceptCommand(char *command,char *error_result, char *command_nam
             replaceUstr(gMapsAdded);
         }
         haloprintf(NULL,showAllMapsOverride ? "true" : "false");
-        return;
     }
     else if ([[[args objectAtIndex:0] lowercaseString] isEqualToString:@"sv_map"]) {
         //Overrides the old sv_map command, modified so a build number doesn't have to be typed.
-        NSMutableArray *newArgs = [args mutableCopy];
+        NSMutableArray *newArgs = [[args mutableCopy]autorelease];
         if ([args count] >= 2) {
             NSString *map = [newArgs objectAtIndex:1];
             if (![gMapsAdded containsObject:map] && [mapIdentityFromIdentifier(map) isEqualToString:map]) {
@@ -450,7 +448,9 @@ static void interceptCommand(char *command,char *error_result, char *command_nam
             }
         }
     }
-    return runCommand(command,error_result,command_name);
+    else {
+        return runCommand(command,error_result,command_name);
+    }
 }
 
 - (id)initWithMode:(MDPluginMode)mode
