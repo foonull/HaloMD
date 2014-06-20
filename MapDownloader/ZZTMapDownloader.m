@@ -78,7 +78,7 @@ static void changeError() { //changing the error dialog box.
             void *location = i*0x20 + tagArray;
             if(strncmp(location,"rtsu",4) == 0 && strcmp((void *)*(uint32_t *)(location + 16),"ui\\shell\\strings\\displayed_error_messages") == 0) {
                 free(downloadMessage);
-                downloadMessage = calloc(0x100,0x1);
+                downloadMessage = calloc(0x100,sizeof(unichar));
                 struct unicodeStringTag *tag = (void *)*(uint32_t *)(location + 20);
                 downloadMessageLength = &(tag->references[35].length);
                 error_old = tag->references[35].string;
@@ -95,7 +95,7 @@ static void changeError() { //changing the error dialog box.
                 unichar *downloadHeaderTemp = (unichar *)[@"DOWNLOAD" cStringUsingEncoding:NSUTF16LittleEndianStringEncoding];
                 static unichar *downloadHeader;
                 free(downloadHeader);
-                downloadHeader = calloc(unistrlen(downloadHeaderTemp) * 0x2 + 0x2,0x1);
+                downloadHeader = calloc(unistrlen(downloadHeaderTemp) + 0x2,sizeof(unichar));
                 memcpy(downloadHeader,downloadHeaderTemp,unistrlen(downloadHeaderTemp) * 0x2 + 0x2);
                 attention_old = tag->references[0].string;
                 attention_old_location = &(tag->references[0].string);
