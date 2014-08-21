@@ -54,7 +54,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0b27</string>
+	<string>1.0b28</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -77,7 +77,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1074</string>
+	<string>1075</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
 	<key>LSMinimumSystemVersionByArchitecture</key>

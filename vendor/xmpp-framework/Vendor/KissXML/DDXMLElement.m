@@ -1,10 +1,6 @@
 #import "DDXMLPrivate.h"
 #import "NSString+DDXML.h"
 
-#if ! __has_feature(objc_arc)
-#warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
-#endif
-
 /**
  * Welcome to KissXML.
  * 
@@ -31,7 +27,7 @@
 **/
 + (id)nodeWithElementPrimitive:(xmlNodePtr)node owner:(DDXMLNode *)owner
 {
-	return [[DDXMLElement alloc] initWithElementPrimitive:node owner:owner];
+	return [[[DDXMLElement alloc] initWithElementPrimitive:node owner:owner] autorelease];
 }
 
 - (id)initWithElementPrimitive:(xmlNodePtr)node owner:(DDXMLNode *)inOwner
@@ -53,6 +49,7 @@
 	// Promote initializers which use proper parameter types to enable compiler to catch more mistakes.
 	NSAssert(NO, @"Use initWithElementPrimitive:owner:");
 	
+	[self release];
 	return nil;
 }
 
@@ -63,6 +60,7 @@
 	xmlNodePtr node = xmlNewNode(NULL, [name xmlChar]);
 	if (node == NULL)
 	{
+		[self release];
 		return nil;
 	}
 	
@@ -76,6 +74,7 @@
 	xmlNodePtr node = xmlNewNode(NULL, [name xmlChar]);
 	if (node == NULL)
 	{
+		[self release];
 		return nil;
 	}
 	
@@ -92,6 +91,7 @@
 	xmlNodePtr node = xmlNewNode(NULL, [name xmlChar]);
 	if (node == NULL)
 	{
+		[self release];
 		return nil;
 	}
 	
@@ -106,13 +106,16 @@
 	DDXMLDocument *doc = [[DDXMLDocument alloc] initWithXMLString:string options:0 error:error];
 	if (doc == nil)
 	{
+		[self release];
 		return nil;
 	}
 	
 	DDXMLElement *result = [doc rootElement];
 	[result detach];
+	[doc release];
 	
-	return result;
+	[self release];
+	return [result retain];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -323,7 +326,8 @@
 	xmlAddChild((xmlNodePtr)genericPtr, (xmlNodePtr)attribute->genericPtr);
 	
 	// The attribute is now part of the xml tree heirarchy
-	attribute->owner = self;
+	[attribute->owner release];
+	attribute->owner = [self retain];
 }
 
 - (void)removeAttributeForName:(NSString *)name
@@ -472,7 +476,8 @@
 	}
 	
 	// The namespace is now part of the xml tree heirarchy
-	namespace->owner = self;
+	[namespace->owner release];
+	namespace->owner = [self retain];
 	
 	if ([namespace isKindOfClass:[DDXMLNamespaceNode class]])
 	{
@@ -705,7 +710,8 @@
 	xmlAddChild((xmlNodePtr)genericPtr, (xmlNodePtr)child->genericPtr);
 	
 	// The node is now part of the xml tree heirarchy
-	child->owner = self;
+	[child->owner release];
+	child->owner = [self retain];
 }
 
 - (void)insertChild:(DDXMLNode *)child atIndex:(NSUInteger)index
@@ -731,7 +737,8 @@
 			{
 				xmlAddPrevSibling(childNodePtr, (xmlNodePtr)child->genericPtr);
 				
-				child->owner = self;
+				[child->owner release];
+				child->owner = [self retain];
 				
 				return;
 			}
@@ -745,7 +752,8 @@
 	{
 		xmlAddChild((xmlNodePtr)genericPtr, (xmlNodePtr)child->genericPtr);
 		
-		child->owner = self;
+		[child->owner release];
+		child->owner = [self retain];
 		
 		return;
 	}

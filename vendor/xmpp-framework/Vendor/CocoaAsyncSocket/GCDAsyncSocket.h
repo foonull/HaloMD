@@ -3,46 +3,25 @@
 //  
 //  This class is in the public domain.
 //  Originally created by Robbie Hanson in Q3 2010.
-//  Updated and maintained by Deusty LLC and the Apple development community.
+//  Updated and maintained by Deusty LLC and the Mac development community.
 //  
-//  https://github.com/robbiehanson/CocoaAsyncSocket
+//  http://code.google.com/p/cocoaasyncsocket/
 //
 
 #import <Foundation/Foundation.h>
+#import <Security/Security.h>
 #import <dispatch/dispatch.h>
-#import <Availability.h>
-
-#include <sys/socket.h> // AF_INET, AF_INET6
 
 @class GCDAsyncReadPacket;
 @class GCDAsyncWritePacket;
-@class GCDAsyncSocketPreBuffer;
 
 extern NSString *const GCDAsyncSocketException;
 extern NSString *const GCDAsyncSocketErrorDomain;
 
-extern NSString *const GCDAsyncSocketQueueName;
-extern NSString *const GCDAsyncSocketThreadName;
-
-extern NSString *const GCDAsyncSocketManuallyEvaluateTrust;
-#if TARGET_OS_IPHONE
-extern NSString *const GCDAsyncSocketUseCFStreamForTLS;
-#endif
-#define GCDAsyncSocketSSLPeerName     (NSString *)kCFStreamSSLPeerName
-#define GCDAsyncSocketSSLCertificates (NSString *)kCFStreamSSLCertificates
-#define GCDAsyncSocketSSLIsServer     (NSString *)kCFStreamSSLIsServer
-extern NSString *const GCDAsyncSocketSSLPeerID;
-extern NSString *const GCDAsyncSocketSSLProtocolVersionMin;
-extern NSString *const GCDAsyncSocketSSLProtocolVersionMax;
-extern NSString *const GCDAsyncSocketSSLSessionOptionFalseStart;
-extern NSString *const GCDAsyncSocketSSLSessionOptionSendOneByteRecord;
-extern NSString *const GCDAsyncSocketSSLCipherSuites;
 #if !TARGET_OS_IPHONE
+extern NSString *const GCDAsyncSocketSSLCipherSuites;
 extern NSString *const GCDAsyncSocketSSLDiffieHellmanParameters;
 #endif
-
-#define GCDAsyncSocketLoggingContext 65535
-
 
 enum GCDAsyncSocketError
 {
@@ -63,6 +42,51 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @interface GCDAsyncSocket : NSObject
+{
+	uint32_t flags;
+	uint16_t config;
+	
+	id delegate;
+	dispatch_queue_t delegateQueue;
+	
+	int socket4FD;
+	int socket6FD;
+	int connectIndex;
+	NSData * connectInterface4;
+	NSData * connectInterface6;
+	
+	dispatch_queue_t socketQueue;
+	
+	dispatch_source_t accept4Source;
+	dispatch_source_t accept6Source;
+	dispatch_source_t connectTimer;
+	dispatch_source_t readSource;
+	dispatch_source_t writeSource;
+	dispatch_source_t readTimer;
+	dispatch_source_t writeTimer;
+	
+	NSMutableArray *readQueue;
+	NSMutableArray *writeQueue;
+	
+	GCDAsyncReadPacket *currentRead;
+	GCDAsyncWritePacket *currentWrite;
+	
+	unsigned long socketFDBytesAvailable;
+	
+	NSMutableData *partialReadBuffer;
+		
+#if TARGET_OS_IPHONE
+	CFStreamClientContext streamContext;
+	CFReadStreamRef readStream;
+	CFWriteStreamRef writeStream;
+#else
+	SSLContextRef sslContext;
+	NSMutableData *sslReadBuffer;
+	size_t sslWriteCachedLength;
+#endif
+	
+	id userData;
+}
 
 /**
  * GCDAsyncSocket uses the standard delegate paradigm,
@@ -75,8 +99,6 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * The socket queue is optional.
  * If you pass NULL, GCDAsyncSocket will automatically create it's own socket queue.
  * If you choose to provide a socket queue, the socket queue must not be a concurrent queue.
- * If you choose to provide a socket queue, and the socket queue has a configured target queue,
- * then please see the discussion for the method markSocketQueueTargetQueue.
  * 
  * The delegate queue and socket queue can optionally be the same.
 **/
@@ -87,19 +109,50 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
 
 #pragma mark Configuration
 
-@property (atomic, weak, readwrite) id delegate;
-@property (atomic, readwrite) dispatch_queue_t delegateQueue;
+- (id)delegate;
+- (void)setDelegate:(id)delegate;
+- (void)synchronouslySetDelegate:(id)delegate;
+
+- (dispatch_queue_t)delegateQueue;
+- (void)setDelegateQueue:(dispatch_queue_t)delegateQueue;
+- (void)synchronouslySetDelegateQueue:(dispatch_queue_t)delegateQueue;
 
 - (void)getDelegate:(id *)delegatePtr delegateQueue:(dispatch_queue_t *)delegateQueuePtr;
 - (void)setDelegate:(id)delegate delegateQueue:(dispatch_queue_t)delegateQueue;
+- (void)synchronouslySetDelegate:(id)delegate delegateQueue:(dispatch_queue_t)delegateQueue;
 
 /**
- * If you are setting the delegate to nil within the delegate's dealloc method,
- * you may need to use the synchronous versions below.
+ * Traditionally sockets are not closed until the conversation is over.
+ * However, it is technically possible for the remote enpoint to close its write stream.
+ * Our socket would then be notified that there is no more data to be read,
+ * but our socket would still be writeable and the remote endpoint could continue to receive our data.
+ * 
+ * The argument for this confusing functionality stems from the idea that a client could shut down its
+ * write stream after sending a request to the server, thus notifying the server there are to be no further requests.
+ * In practice, however, this technique did little to help server developers.
+ * 
+ * To make matters worse, from a TCP perspective there is no way to tell the difference from a read stream close
+ * and a full socket close. They both result in the TCP stack receiving a FIN packet. The only way to tell
+ * is by continuing to write to the socket. If it was only a read stream close, then writes will continue to work.
+ * Otherwise an error will be occur shortly (when the remote end sends us a RST packet).
+ * 
+ * In addition to the technical challenges and confusion, many high level socket/stream API's provide
+ * no support for dealing with the problem. If the read stream is closed, the API immediately declares the
+ * socket to be closed, and shuts down the write stream as well. In fact, this is what Apple's CFStream API does.
+ * It might sound like poor design at first, but in fact it simplifies development.
+ * 
+ * The vast majority of the time if the read stream is closed it's because the remote endpoint closed its socket.
+ * Thus it actually makes sense to close the socket at this point.
+ * And in fact this is what most networking developers want and expect to happen.
+ * However, if you are writing a server that interacts with a plethora of clients,
+ * you might encounter a client that uses the discouraged technique of shutting down its write stream.
+ * If this is the case, you can set this property to NO,
+ * and make use of the socketDidCloseReadStream delegate method.
+ * 
+ * The default value is YES.
 **/
-- (void)synchronouslySetDelegate:(id)delegate;
-- (void)synchronouslySetDelegateQueue:(dispatch_queue_t)delegateQueue;
-- (void)synchronouslySetDelegate:(id)delegate delegateQueue:(dispatch_queue_t)delegateQueue;
+- (BOOL)autoDisconnectOnClosedReadStream;
+- (void)setAutoDisconnectOnClosedReadStream:(BOOL)flag;
 
 /**
  * By default, both IPv4 and IPv6 are enabled.
@@ -113,17 +166,21 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * If a DNS lookup returns both IPv4 and IPv6 results, the preferred protocol will be chosen.
  * By default, the preferred protocol is IPv4, but may be configured as desired.
 **/
+- (BOOL)isIPv4Enabled;
+- (void)setIPv4Enabled:(BOOL)flag;
 
-@property (atomic, assign, readwrite, getter=isIPv4Enabled) BOOL IPv4Enabled;
-@property (atomic, assign, readwrite, getter=isIPv6Enabled) BOOL IPv6Enabled;
+- (BOOL)isIPv6Enabled;
+- (void)setIPv6Enabled:(BOOL)flag;
 
-@property (atomic, assign, readwrite, getter=isIPv4PreferredOverIPv6) BOOL IPv4PreferredOverIPv6;
+- (BOOL)isIPv4PreferredOverIPv6;
+- (void)setPreferIPv4OverIPv6:(BOOL)flag;
 
 /**
  * User data allows you to associate arbitrary information with the socket.
  * This data is not used internally by socket in any way.
 **/
-@property (atomic, strong, readwrite) id userData;
+- (id)userData;
+- (void)setUserData:(id)arbitraryUserData;
 
 #pragma mark Accepting
 
@@ -214,7 +271,7 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
 
 /**
  * Connects to the given address, specified as a sockaddr structure wrapped in a NSData object.
- * For example, a NSData object returned from NSNetService's addresses method.
+ * For example, a NSData object returned from NSNetservice's addresses method.
  * 
  * If you have an existing struct sockaddr you can convert it to a NSData object like so:
  * struct sockaddr sa  -> NSData *dsa = [NSData dataWithBytes:&remoteAddr length:remoteAddr.sa_len];
@@ -234,7 +291,7 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * Connects to the given address, using the specified interface and timeout.
  * 
  * The address is specified as a sockaddr structure wrapped in a NSData object.
- * For example, a NSData object returned from NSNetService's addresses method.
+ * For example, a NSData object returned from NSNetservice's addresses method.
  * 
  * If you have an existing struct sockaddr you can convert it to a NSData object like so:
  * struct sockaddr sa  -> NSData *dsa = [NSData dataWithBytes:&remoteAddr length:remoteAddr.sa_len];
@@ -323,44 +380,41 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * 
  * If a socket is in the process of connecting, it may be neither disconnected nor connected.
 **/
-@property (atomic, readonly) BOOL isDisconnected;
-@property (atomic, readonly) BOOL isConnected;
+- (BOOL)isDisconnected;
+- (BOOL)isConnected;
 
 /**
  * Returns the local or remote host and port to which this socket is connected, or nil and 0 if not connected.
  * The host will be an IP address.
 **/
-@property (atomic, readonly) NSString *connectedHost;
-@property (atomic, readonly) uint16_t  connectedPort;
+- (NSString *)connectedHost;
+- (uint16_t)connectedPort;
 
-@property (atomic, readonly) NSString *localHost;
-@property (atomic, readonly) uint16_t  localPort;
+- (NSString *)localHost;
+- (uint16_t)localPort;
 
 /**
  * Returns the local or remote address to which this socket is connected,
  * specified as a sockaddr structure wrapped in a NSData object.
  * 
- * @seealso connectedHost
- * @seealso connectedPort
- * @seealso localHost
- * @seealso localPort
+ * See also the connectedHost, connectedPort, localHost and localPort methods.
 **/
-@property (atomic, readonly) NSData *connectedAddress;
-@property (atomic, readonly) NSData *localAddress;
+- (NSData *)connectedAddress;
+- (NSData *)localAddress;
 
 /**
  * Returns whether the socket is IPv4 or IPv6.
  * An accepting socket may be both.
 **/
-@property (atomic, readonly) BOOL isIPv4;
-@property (atomic, readonly) BOOL isIPv6;
+- (BOOL)isIPv4;
+- (BOOL)isIPv6;
 
 /**
  * Returns whether or not the socket has been secured via SSL/TLS.
  * 
  * See also the startTLS method.
 **/
-@property (atomic, readonly) BOOL isSecure;
+- (BOOL)isSecure;
 
 #pragma mark Reading
 
@@ -372,7 +426,7 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
 // You may optionally set a timeout for any read/write operation. (To not timeout, use a negative time interval.)
 // If a read/write opertion times out, the corresponding "socket:shouldTimeout..." delegate method
 // is called to optionally allow you to extend the timeout.
-// Upon a timeout, the "socket:didDisconnectWithError:" method is called
+// Upon a timeout, the "socket:willDisconnectWithError:" method is called, followed by "socketDidDisconnect".
 // 
 // The tag is for your convenience.
 // You can use it as an array index, step number, state id, pointer, etc.
@@ -395,10 +449,9 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * If the bufferOffset is greater than the length of the given buffer,
  * the method will do nothing, and the delegate will not be called.
  * 
- * If you pass a buffer, you must not alter it in any way while the socket is using it.
+ * If you pass a buffer, you must not alter it in any way while AsyncSocket is using it.
  * After completion, the data returned in socket:didReadData:withTag: will be a subset of the given buffer.
- * That is, it will reference the bytes that were appended to the given buffer via
- * the method [NSData dataWithBytesNoCopy:length:freeWhenDone:NO].
+ * That is, it will reference the bytes that were appended to the given buffer.
 **/
 - (void)readDataWithTimeout:(NSTimeInterval)timeout
 					 buffer:(NSMutableData *)buffer
@@ -418,10 +471,9 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * If the bufferOffset is greater than the length of the given buffer,
  * the method will do nothing, and the delegate will not be called.
  * 
- * If you pass a buffer, you must not alter it in any way while the socket is using it.
+ * If you pass a buffer, you must not alter it in any way while AsyncSocket is using it.
  * After completion, the data returned in socket:didReadData:withTag: will be a subset of the given buffer.
- * That is, it will reference the bytes that were appended to the given buffer  via
- * the method [NSData dataWithBytesNoCopy:length:freeWhenDone:NO].
+ * That is, it will reference the bytes that were appended to the given buffer.
 **/
 - (void)readDataWithTimeout:(NSTimeInterval)timeout
                      buffer:(NSMutableData *)buffer
@@ -452,8 +504,7 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * 
  * If you pass a buffer, you must not alter it in any way while AsyncSocket is using it.
  * After completion, the data returned in socket:didReadData:withTag: will be a subset of the given buffer.
- * That is, it will reference the bytes that were appended to the given buffer via
- * the method [NSData dataWithBytesNoCopy:length:freeWhenDone:NO].
+ * That is, it will reference the bytes that were appended to the given buffer.
 **/
 - (void)readDataToLength:(NSUInteger)length
              withTimeout:(NSTimeInterval)timeout
@@ -467,20 +518,11 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * If the timeout value is negative, the read operation will not use a timeout.
  * 
  * If you pass nil or zero-length data as the "data" parameter,
- * the method will do nothing (except maybe print a warning), and the delegate will not be called.
+ * the method will do nothing, and the delegate will not be called.
  * 
  * To read a line from the socket, use the line separator (e.g. CRLF for HTTP, see below) as the "data" parameter.
- * If you're developing your own custom protocol, be sure your separator can not occur naturally as
- * part of the data between separators.
- * For example, imagine you want to send several small documents over a socket.
- * Using CRLF as a separator is likely unwise, as a CRLF could easily exist within the documents.
- * In this particular example, it would be better to use a protocol similar to HTTP with
- * a header that includes the length of the document.
- * Also be careful that your separator cannot occur naturally as part of the encoding for a character.
- * 
- * The given data (separator) parameter should be immutable.
- * For performance reasons, the socket will retain it, not copy it.
- * So if it is immutable, don't modify it while the socket is using it.
+ * Note that this method is not character-set aware, so if a separator can occur naturally as part of the encoding for
+ * a character, the read will prematurely end.
 **/
 - (void)readDataToData:(NSData *)data withTimeout:(NSTimeInterval)timeout tag:(long)tag;
 
@@ -493,25 +535,15 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * If the buffer if nil, a buffer will automatically be created for you.
  * 
  * If the bufferOffset is greater than the length of the given buffer,
- * the method will do nothing (except maybe print a warning), and the delegate will not be called.
+ * the method will do nothing, and the delegate will not be called.
  * 
- * If you pass a buffer, you must not alter it in any way while the socket is using it.
+ * If you pass a buffer, you must not alter it in any way while AsyncSocket is using it.
  * After completion, the data returned in socket:didReadData:withTag: will be a subset of the given buffer.
- * That is, it will reference the bytes that were appended to the given buffer via
- * the method [NSData dataWithBytesNoCopy:length:freeWhenDone:NO].
+ * That is, it will reference the bytes that were appended to the given buffer.
  * 
  * To read a line from the socket, use the line separator (e.g. CRLF for HTTP, see below) as the "data" parameter.
- * If you're developing your own custom protocol, be sure your separator can not occur naturally as
- * part of the data between separators.
- * For example, imagine you want to send several small documents over a socket.
- * Using CRLF as a separator is likely unwise, as a CRLF could easily exist within the documents.
- * In this particular example, it would be better to use a protocol similar to HTTP with
- * a header that includes the length of the document.
- * Also be careful that your separator cannot occur naturally as part of the encoding for a character.
- * 
- * The given data (separator) parameter should be immutable.
- * For performance reasons, the socket will retain it, not copy it.
- * So if it is immutable, don't modify it while the socket is using it.
+ * Note that this method is not character-set aware, so if a separator can occur naturally as part of the encoding for
+ * a character, the read will prematurely end.
 **/
 - (void)readDataToData:(NSData *)data
            withTimeout:(NSTimeInterval)timeout
@@ -530,22 +562,13 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * The read will complete successfully if exactly maxLength bytes are read and the given data is found at the end.
  * 
  * If you pass nil or zero-length data as the "data" parameter,
- * the method will do nothing (except maybe print a warning), and the delegate will not be called.
+ * the method will do nothing, and the delegate will not be called.
  * If you pass a maxLength parameter that is less than the length of the data parameter,
- * the method will do nothing (except maybe print a warning), and the delegate will not be called.
+ * the method will do nothing, and the delegate will not be called.
  * 
  * To read a line from the socket, use the line separator (e.g. CRLF for HTTP, see below) as the "data" parameter.
- * If you're developing your own custom protocol, be sure your separator can not occur naturally as
- * part of the data between separators.
- * For example, imagine you want to send several small documents over a socket.
- * Using CRLF as a separator is likely unwise, as a CRLF could easily exist within the documents.
- * In this particular example, it would be better to use a protocol similar to HTTP with
- * a header that includes the length of the document.
- * Also be careful that your separator cannot occur naturally as part of the encoding for a character.
- * 
- * The given data (separator) parameter should be immutable.
- * For performance reasons, the socket will retain it, not copy it.
- * So if it is immutable, don't modify it while the socket is using it.
+ * Note that this method is not character-set aware, so if a separator can occur naturally as part of the encoding for
+ * a character, the read will prematurely end.
 **/
 - (void)readDataToData:(NSData *)data withTimeout:(NSTimeInterval)timeout maxLength:(NSUInteger)length tag:(long)tag;
 
@@ -562,28 +585,18 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * it is treated similarly to a timeout - the socket is closed with a GCDAsyncSocketReadMaxedOutError.
  * The read will complete successfully if exactly maxLength bytes are read and the given data is found at the end.
  * 
- * If you pass a maxLength parameter that is less than the length of the data (separator) parameter,
- * the method will do nothing (except maybe print a warning), and the delegate will not be called.
+ * If you pass a maxLength parameter that is less than the length of the data parameter,
+ * the method will do nothing, and the delegate will not be called.
  * If the bufferOffset is greater than the length of the given buffer,
- * the method will do nothing (except maybe print a warning), and the delegate will not be called.
+ * the method will do nothing, and the delegate will not be called.
  * 
- * If you pass a buffer, you must not alter it in any way while the socket is using it.
+ * If you pass a buffer, you must not alter it in any way while AsyncSocket is using it.
  * After completion, the data returned in socket:didReadData:withTag: will be a subset of the given buffer.
- * That is, it will reference the bytes that were appended to the given buffer via
- * the method [NSData dataWithBytesNoCopy:length:freeWhenDone:NO].
+ * That is, it will reference the bytes that were appended to the given buffer.
  * 
  * To read a line from the socket, use the line separator (e.g. CRLF for HTTP, see below) as the "data" parameter.
- * If you're developing your own custom protocol, be sure your separator can not occur naturally as
- * part of the data between separators.
- * For example, imagine you want to send several small documents over a socket.
- * Using CRLF as a separator is likely unwise, as a CRLF could easily exist within the documents.
- * In this particular example, it would be better to use a protocol similar to HTTP with
- * a header that includes the length of the document.
- * Also be careful that your separator cannot occur naturally as part of the encoding for a character.
- * 
- * The given data (separator) parameter should be immutable.
- * For performance reasons, the socket will retain it, not copy it.
- * So if it is immutable, don't modify it while the socket is using it.
+ * Note that this method is not character-set aware, so if a separator can occur naturally as part of the encoding for
+ * a character, the read will prematurely end.
 **/
 - (void)readDataToData:(NSData *)data
            withTimeout:(NSTimeInterval)timeout
@@ -592,12 +605,6 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
              maxLength:(NSUInteger)length
                    tag:(long)tag;
 
-/**
- * Returns progress of the current read, from 0.0 to 1.0, or NaN if no current read (use isnan() to check).
- * The parameters "tag", "done" and "total" will be filled in if they aren't NULL.
-**/
-- (float)progressOfReadReturningTag:(long *)tagPtr bytesDone:(NSUInteger *)donePtr total:(NSUInteger *)totalPtr;
-
 #pragma mark Writing
 
 /**
@@ -605,25 +612,8 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * 
  * If you pass in nil or zero-length data, this method does nothing and the delegate will not be called.
  * If the timeout value is negative, the write operation will not use a timeout.
- * 
- * Thread-Safety Note:
- * If the given data parameter is mutable (NSMutableData) then you MUST NOT alter the data while
- * the socket is writing it. In other words, it's not safe to alter the data until after the delegate method
- * socket:didWriteDataWithTag: is invoked signifying that this particular write operation has completed.
- * This is due to the fact that GCDAsyncSocket does NOT copy the data. It simply retains it.
- * This is for performance reasons. Often times, if NSMutableData is passed, it is because
- * a request/response was built up in memory. Copying this data adds an unwanted/unneeded overhead.
- * If you need to write data from an immutable buffer, and you need to alter the buffer before the socket
- * completes writing the bytes (which is NOT immediately after this method returns, but rather at a later time
- * when the delegate method notifies you), then you should first copy the bytes, and pass the copy to this method.
 **/
 - (void)writeData:(NSData *)data withTimeout:(NSTimeInterval)timeout tag:(long)tag;
-
-/**
- * Returns progress of the current write, from 0.0 to 1.0, or NaN if no current write (use isnan() to check).
- * The parameters "tag", "done" and "total" will be filled in if they aren't NULL.
-**/
-- (float)progressOfWriteReturningTag:(long *)tagPtr bytesDone:(NSUInteger *)donePtr total:(NSUInteger *)totalPtr;
 
 #pragma mark Security
 
@@ -634,116 +624,22 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * are finished. This allows one the option of sending a protocol dependent StartTLS message, and queuing
  * the upgrade to TLS at the same time, without having to wait for the write to finish.
  * Any reads or writes scheduled after this method is called will occur over the secured connection.
- *
- * ==== The available TOP-LEVEL KEYS are:
  * 
- * - GCDAsyncSocketManuallyEvaluateTrust
- *     The value must be of type NSNumber, encapsulating a BOOL value.
- *     If you set this to YES, then the underlying SecureTransport system will not evaluate the SecTrustRef of the peer.
- *     Instead it will pause at the moment evaulation would typically occur,
- *     and allow us to handle the security evaluation however we see fit.
- *     So GCDAsyncSocket will invoke the delegate method socket:shouldTrustPeer: passing the SecTrustRef.
- *
- *     Note that if you set this option, then all other configuration keys are ignored.
- *     Evaluation will be completely up to you during the socket:didReceiveTrust:completionHandler: delegate method.
- *
- *     For more information on trust evaluation see:
- *     Apple's Technical Note TN2232 - HTTPS Server Trust Evaluation
- *     https://developer.apple.com/library/ios/technotes/tn2232/_index.html
- *     
- *     If unspecified, the default value is NO.
- *
- * - GCDAsyncSocketUseCFStreamForTLS (iOS only)
- *     The value must be of type NSNumber, encapsulating a BOOL value.
- *     By default GCDAsyncSocket will use the SecureTransport layer to perform encryption.
- *     This gives us more control over the security protocol (many more configuration options),
- *     plus it allows us to optimize things like sys calls and buffer allocation.
- *     
- *     However, if you absolutely must, you can instruct GCDAsyncSocket to use the old-fashioned encryption
- *     technique by going through the CFStream instead. So instead of using SecureTransport, GCDAsyncSocket
- *     will instead setup a CFRead/CFWriteStream. And then set the kCFStreamPropertySSLSettings property
- *     (via CFReadStreamSetProperty / CFWriteStreamSetProperty) and will pass the given options to this method.
- *     
- *     Thus all the other keys in the given dictionary will be ignored by GCDAsyncSocket,
- *     and will passed directly CFReadStreamSetProperty / CFWriteStreamSetProperty.
- *     For more infomation on these keys, please see the documentation for kCFStreamPropertySSLSettings.
- *
- *     If unspecified, the default value is NO.
- *
- * ==== The available CONFIGURATION KEYS are:
- *
+ * The possible keys and values for the TLS settings are well documented.
+ * Some possible keys are:
+ * - kCFStreamSSLLevel
+ * - kCFStreamSSLAllowsExpiredCertificates
+ * - kCFStreamSSLAllowsExpiredRoots
+ * - kCFStreamSSLAllowsAnyRoot
+ * - kCFStreamSSLValidatesCertificateChain
  * - kCFStreamSSLPeerName
- *     The value must be of type NSString.
- *     It should match the name in the X.509 certificate given by the remote party.
- *     See Apple's documentation for SSLSetPeerDomainName.
- *
  * - kCFStreamSSLCertificates
- *     The value must be of type NSArray.
- *     See Apple's documentation for SSLSetCertificate.
- *
  * - kCFStreamSSLIsServer
- *     The value must be of type NSNumber, encapsulationg a BOOL value.
- *     See Apple's documentation for SSLCreateContext for iOS.
- *     This is optional for iOS. If not supplied, a NO value is the default.
- *     This is not needed for Mac OS X, and the value is ignored.
- *
- * - GCDAsyncSocketSSLPeerID
- *     The value must be of type NSData.
- *     You must set this value if you want to use TLS session resumption.
- *     See Apple's documentation for SSLSetPeerID.
- *
- * - GCDAsyncSocketSSLProtocolVersionMin
- * - GCDAsyncSocketSSLProtocolVersionMax
- *     The value(s) must be of type NSNumber, encapsulting a SSLProtocol value.
- *     See Apple's documentation for SSLSetProtocolVersionMin & SSLSetProtocolVersionMax.
- *     See also the SSLProtocol typedef.
  * 
- * - GCDAsyncSocketSSLSessionOptionFalseStart
- *     The value must be of type NSNumber, encapsulating a BOOL value.
- *     See Apple's documentation for kSSLSessionOptionFalseStart.
+ * Please refer to Apple's documentation for associated values, as well as other possible keys.
  * 
- * - GCDAsyncSocketSSLSessionOptionSendOneByteRecord
- *     The value must be of type NSNumber, encapsulating a BOOL value.
- *     See Apple's documentation for kSSLSessionOptionSendOneByteRecord.
- * 
- * - GCDAsyncSocketSSLCipherSuites
- *     The values must be of type NSArray.
- *     Each item within the array must be a NSNumber, encapsulating
- *     See Apple's documentation for SSLSetEnabledCiphers.
- *     See also the SSLCipherSuite typedef.
- *
- * - GCDAsyncSocketSSLDiffieHellmanParameters (Mac OS X only)
- *     The value must be of type NSData.
- *     See Apple's documentation for SSLSetDiffieHellmanParams.
- * 
- * ==== The following UNAVAILABLE KEYS are: (with throw an exception)
- * 
- * - kCFStreamSSLAllowsAnyRoot (UNAVAILABLE)
- *     You MUST use manual trust evaluation instead (see GCDAsyncSocketManuallyEvaluateTrust).
- *     Corresponding deprecated method: SSLSetAllowsAnyRoot
- * 
- * - kCFStreamSSLAllowsExpiredRoots (UNAVAILABLE)
- *     You MUST use manual trust evaluation instead (see GCDAsyncSocketManuallyEvaluateTrust).
- *     Corresponding deprecated method: SSLSetAllowsExpiredRoots
- *
- * - kCFStreamSSLAllowsExpiredCertificates (UNAVAILABLE)
- *     You MUST use manual trust evaluation instead (see GCDAsyncSocketManuallyEvaluateTrust).
- *     Corresponding deprecated method: SSLSetAllowsExpiredCerts
- *
- * - kCFStreamSSLValidatesCertificateChain (UNAVAILABLE)
- *     You MUST use manual trust evaluation instead (see GCDAsyncSocketManuallyEvaluateTrust).
- *     Corresponding deprecated method: SSLSetEnableCertVerify
- *
- * - kCFStreamSSLLevel (UNAVAILABLE)
- *     You MUST use GCDAsyncSocketSSLProtocolVersionMin & GCDAsyncSocketSSLProtocolVersionMin instead.
- *     Corresponding deprecated method: SSLSetProtocolVersionEnabled
- *
- * 
- * Please refer to Apple's documentation for corresponding SSLFunctions.
- *
  * If you pass in nil or an empty dictionary, the default settings will be used.
  * 
- * IMPORTANT SECURITY NOTE:
  * The default settings will check to make sure the remote party's certificate is signed by a
  * trusted 3rd party certificate agency (e.g. verisign) and that the certificate is not expired.
  * However it will not verify the name on the certificate unless you
@@ -755,119 +651,14 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * the default settings will not detect any problems since the certificate is valid.
  * To properly secure your connection in this particular scenario you
  * should set the kCFStreamSSLPeerName property to "MySecureServer.com".
- * 
- * You can also perform additional validation in socketDidSecure.
-**/
+ * If you do not know the peer name of the remote host in advance (for example, you're not sure
+ * if it will be "domain.com" or "www.domain.com"), then you can use the default settings to validate the
+ * certificate, and then use the X509Certificate class to verify the issuer after the socket has been secured.
+ * The X509Certificate class is part of the CocoaAsyncSocket open source project.
+ **/
 - (void)startTLS:(NSDictionary *)tlsSettings;
 
 #pragma mark Advanced
-
-/**
- * Traditionally sockets are not closed until the conversation is over.
- * However, it is technically possible for the remote enpoint to close its write stream.
- * Our socket would then be notified that there is no more data to be read,
- * but our socket would still be writeable and the remote endpoint could continue to receive our data.
- * 
- * The argument for this confusing functionality stems from the idea that a client could shut down its
- * write stream after sending a request to the server, thus notifying the server there are to be no further requests.
- * In practice, however, this technique did little to help server developers.
- * 
- * To make matters worse, from a TCP perspective there is no way to tell the difference from a read stream close
- * and a full socket close. They both result in the TCP stack receiving a FIN packet. The only way to tell
- * is by continuing to write to the socket. If it was only a read stream close, then writes will continue to work.
- * Otherwise an error will be occur shortly (when the remote end sends us a RST packet).
- * 
- * In addition to the technical challenges and confusion, many high level socket/stream API's provide
- * no support for dealing with the problem. If the read stream is closed, the API immediately declares the
- * socket to be closed, and shuts down the write stream as well. In fact, this is what Apple's CFStream API does.
- * It might sound like poor design at first, but in fact it simplifies development.
- * 
- * The vast majority of the time if the read stream is closed it's because the remote endpoint closed its socket.
- * Thus it actually makes sense to close the socket at this point.
- * And in fact this is what most networking developers want and expect to happen.
- * However, if you are writing a server that interacts with a plethora of clients,
- * you might encounter a client that uses the discouraged technique of shutting down its write stream.
- * If this is the case, you can set this property to NO,
- * and make use of the socketDidCloseReadStream delegate method.
- * 
- * The default value is YES.
-**/
-@property (atomic, assign, readwrite) BOOL autoDisconnectOnClosedReadStream;
-
-/**
- * GCDAsyncSocket maintains thread safety by using an internal serial dispatch_queue.
- * In most cases, the instance creates this queue itself.
- * However, to allow for maximum flexibility, the internal queue may be passed in the init method.
- * This allows for some advanced options such as controlling socket priority via target queues.
- * However, when one begins to use target queues like this, they open the door to some specific deadlock issues.
- * 
- * For example, imagine there are 2 queues:
- * dispatch_queue_t socketQueue;
- * dispatch_queue_t socketTargetQueue;
- * 
- * If you do this (pseudo-code):
- * socketQueue.targetQueue = socketTargetQueue;
- * 
- * Then all socketQueue operations will actually get run on the given socketTargetQueue.
- * This is fine and works great in most situations.
- * But if you run code directly from within the socketTargetQueue that accesses the socket,
- * you could potentially get deadlock. Imagine the following code:
- * 
- * - (BOOL)socketHasSomething
- * {
- *     __block BOOL result = NO;
- *     dispatch_block_t block = ^{
- *         result = [self someInternalMethodToBeRunOnlyOnSocketQueue];
- *     }
- *     if (is_executing_on_queue(socketQueue))
- *         block();
- *     else
- *         dispatch_sync(socketQueue, block);
- *     
- *     return result;
- * }
- * 
- * What happens if you call this method from the socketTargetQueue? The result is deadlock.
- * This is because the GCD API offers no mechanism to discover a queue's targetQueue.
- * Thus we have no idea if our socketQueue is configured with a targetQueue.
- * If we had this information, we could easily avoid deadlock.
- * But, since these API's are missing or unfeasible, you'll have to explicitly set it.
- * 
- * IF you pass a socketQueue via the init method,
- * AND you've configured the passed socketQueue with a targetQueue,
- * THEN you should pass the end queue in the target hierarchy.
- * 
- * For example, consider the following queue hierarchy:
- * socketQueue -> ipQueue -> moduleQueue
- *
- * This example demonstrates priority shaping within some server.
- * All incoming client connections from the same IP address are executed on the same target queue.
- * And all connections for a particular module are executed on the same target queue.
- * Thus, the priority of all networking for the entire module can be changed on the fly.
- * Additionally, networking traffic from a single IP cannot monopolize the module.
- * 
- * Here's how you would accomplish something like that:
- * - (dispatch_queue_t)newSocketQueueForConnectionFromAddress:(NSData *)address onSocket:(GCDAsyncSocket *)sock
- * {
- *     dispatch_queue_t socketQueue = dispatch_queue_create("", NULL);
- *     dispatch_queue_t ipQueue = [self ipQueueForAddress:address];
- *     
- *     dispatch_set_target_queue(socketQueue, ipQueue);
- *     dispatch_set_target_queue(iqQueue, moduleQueue);
- *     
- *     return socketQueue;
- * }
- * - (void)socket:(GCDAsyncSocket *)sock didAcceptNewSocket:(GCDAsyncSocket *)newSocket
- * {
- *     [clientConnections addObject:newSocket];
- *     [newSocket markSocketQueueTargetQueue:moduleQueue];
- * }
- * 
- * Note: This workaround is ONLY needed if you intend to execute code directly on the ipQueue or moduleQueue.
- * This is often NOT the case, as such queues are used solely for execution shaping.
-**/
-- (void)markSocketQueueTargetQueue:(dispatch_queue_t)socketQueuesPreConfiguredTargetQueue;
-- (void)unmarkSocketQueueTargetQueue:(dispatch_queue_t)socketQueuesPreviouslyConfiguredTargetQueue;
 
 /**
  * It's not thread-safe to access certain variables from outside the socket's internal queue.
@@ -962,7 +753,7 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
 **/
 - (BOOL)enableBackgroundingOnSocket;
 
-#endif
+#else
 
 /**
  * This method is only available from within the context of a performBlock: invocation.
@@ -972,34 +763,16 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
 **/
 - (SSLContextRef)sslContext;
 
-#pragma mark Utilities
+#endif
 
-/**
- * The address lookup utility used by the class.
- * This method is synchronous, so it's recommended you use it on a background thread/queue.
- * 
- * The special strings "localhost" and "loopback" return the loopback address for IPv4 and IPv6.
- * 
- * @returns
- *   A mutable array with all IPv4 and IPv6 addresses returned by getaddrinfo.
- *   The addresses are specifically for TCP connections.
- *   You can filter the addresses, if needed, using the other utility methods provided by the class.
-**/
-+ (NSMutableArray *)lookupHost:(NSString *)host port:(uint16_t)port error:(NSError **)errPtr;
+#pragma mark Utilities
 
 /**
  * Extracting host and port information from raw address data.
 **/
-
 + (NSString *)hostFromAddress:(NSData *)address;
 + (uint16_t)portFromAddress:(NSData *)address;
-
-+ (BOOL)isIPv4Address:(NSData *)address;
-+ (BOOL)isIPv6Address:(NSData *)address;
-
 + (BOOL)getHost:(NSString **)hostPtr port:(uint16_t *)portPtr fromAddress:(NSData *)address;
-
-+ (BOOL)getHost:(NSString **)hostPtr port:(uint16_t *)portPtr family:(sa_family_t *)afPtr fromAddress:(NSData *)address;
 
 /**
  * A few common line separators, for use with the readDataToData:... methods.
@@ -1122,22 +895,7 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * Called when a socket disconnects with or without error.
  * 
  * If you call the disconnect method, and the socket wasn't already disconnected,
- * then an invocation of this delegate method will be enqueued on the delegateQueue
- * before the disconnect method returns.
- * 
- * Note: If the GCDAsyncSocket instance is deallocated while it is still connected,
- * and the delegate is not also deallocated, then this method will be invoked,
- * but the sock parameter will be nil. (It must necessarily be nil since it is no longer available.)
- * This is a generally rare, but is possible if one writes code like this:
- * 
- * asyncSocket = nil; // I'm implicitly disconnecting the socket
- * 
- * In this case it may preferrable to nil the delegate beforehand, like this:
- * 
- * asyncSocket.delegate = nil; // Don't invoke my delegate method
- * asyncSocket = nil; // I'm implicitly disconnecting the socket
- * 
- * Of course, this depends on how your state machine is configured.
+ * this delegate method will be called before the disconnect method returns.
 **/
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err;
 
@@ -1149,25 +907,5 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * and the socketDidDisconnect:withError: delegate method will be called with the specific SSL error code.
 **/
 - (void)socketDidSecure:(GCDAsyncSocket *)sock;
-
-/**
- * Allows a socket delegate to hook into the TLS handshake and manually validate the peer it's connecting to.
- *
- * This is only called if startTLS is invoked with options that include:
- * - GCDAsyncSocketManuallyEvaluateTrust == YES
- *
- * Typically the delegate will use SecTrustEvaluate (and related functions) to properly validate the peer.
- * 
- * Note from Apple's documentation:
- *   Because [SecTrustEvaluate] might look on the network for certificates in the certificate chain,
- *   [it] might block while attempting network access. You should never call it from your main thread;
- *   call it only from within a function running on a dispatch queue or on a separate thread.
- * 
- * Thus this method uses a completionHandler block rather than a normal return value.
- * The completionHandler block is thread-safe, and may be invoked from a background queue/thread.
- * It is safe to invoke the completionHandler block even if the socket has been closed.
-**/
-- (void)socket:(GCDAsyncSocket *)sock didReceiveTrust:(SecTrustRef)trust
-                                    completionHandler:(void (^)(BOOL shouldTrustPeer))completionHandler;
 
 @end
