@@ -24,7 +24,7 @@
 
 #Copyright nil, 2012
 #A Halo Master Server lobby alternative to gamespy, which will require its own client implementation
-#Port 27900 and 29910 on UDP and 29920 on TCP will both need to be open on the server running this
+#Port 27900 and 29910 on UDP and 29920 on TCP will all need to be open on the server running this
 
 require 'socket'
 
