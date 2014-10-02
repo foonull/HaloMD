@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		7706FC1114DBB28C0023DBA4 /* Data in Copy Halo Data */ = {isa = PBXBuildFile; fileRef = 7706FC0E14DBB26C0023DBA4 /* Data */; };
-		7709F96B1846C256005E58F5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7709F96A1846C256005E58F5 /* Cocoa.framework */; };
 		770BEEB2154DB7900052193F /* shield.icns in Resources */ = {isa = PBXBuildFile; fileRef = 770BEEB1154DB7900052193F /* shield.icns */; };
 		770C153D1741CC37001380A8 /* game_icon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 770C153C1741CC37001380A8 /* game_icon.pdf */; };
 		770C15411742E1FD001380A8 /* in_chat_icon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 770C15401742E1FC001380A8 /* in_chat_icon.pdf */; };
@@ -31,8 +30,6 @@
 		775B52A414D331C900B874E3 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 775B52A214D331C900B874E3 /* MainMenu.xib */; };
 		775B52AD14D3326800B874E3 /* com.null.halominidemo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 775B52AC14D3326800B874E3 /* com.null.halominidemo.plist */; };
 		775B52B414D332B800B874E3 /* MDServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 775B52B314D332B800B874E3 /* MDServer.m */; };
-		775E60EC1944DA48005AC209 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 775E60EB1944DA48005AC209 /* libxml2.dylib */; };
-		775E60EE1944DA56005AC209 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 775E60ED1944DA56005AC209 /* libresolv.dylib */; };
 		775E61ED1944DA98005AC209 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 775E61771944DA98005AC209 /* DDAbstractDatabaseLogger.m */; };
 		775E61EE1944DA98005AC209 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 775E61781944DA98005AC209 /* DDASLLogger.m */; };
 		775E61EF1944DA98005AC209 /* DDContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 775E61791944DA98005AC209 /* DDContextFilterLogFormatter.m */; };
@@ -213,6 +210,8 @@
 		77FD5275187F5FF800E2A604 /* MapDownloader.mdplugin in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 77FD523E187F5BF800E2A604 /* MapDownloader.mdplugin */; };
 		77FFC0F91863B75800122357 /* MDGameFavoritesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FFC0F71863B75800122357 /* MDGameFavoritesWindowController.m */; };
 		77FFC0FA1863B75800122357 /* MDGameFavoritesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77FFC0F81863B75800122357 /* MDGameFavoritesWindowController.xib */; };
+		DA3FB80219DD06B9004167A9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA3FB80119DD06B9004167A9 /* Cocoa.framework */; };
+		DA3FB80419DD06C6004167A9 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DA3FB80319DD06C6004167A9 /* libxml2.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -288,7 +287,6 @@
 
 /* Begin PBXFileReference section */
 		7706FC0E14DBB26C0023DBA4 /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Data; sourceTree = "<group>"; };
-		7709F96A1846C256005E58F5 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		770BEEB1154DB7900052193F /* shield.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = shield.icns; sourceTree = "<group>"; };
 		770C153C1741CC37001380A8 /* game_icon.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = game_icon.pdf; sourceTree = "<group>"; };
 		770C15401742E1FC001380A8 /* in_chat_icon.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = in_chat_icon.pdf; sourceTree = "<group>"; };
@@ -324,8 +322,6 @@
 		775B52AC14D3326800B874E3 /* com.null.halominidemo.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = com.null.halominidemo.plist; sourceTree = "<group>"; };
 		775B52B214D332B800B874E3 /* MDServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDServer.h; sourceTree = "<group>"; };
 		775B52B314D332B800B874E3 /* MDServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDServer.m; sourceTree = "<group>"; };
-		775E60EB1944DA48005AC209 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib/libxml2.dylib; sourceTree = DEVELOPER_DIR; };
-		775E60ED1944DA56005AC209 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/usr/lib/libresolv.dylib; sourceTree = DEVELOPER_DIR; };
 		775E60EF1944DA8C005AC209 /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDAbstractDatabaseLogger.h; path = "vendor/xmpp-framework/Vendor/CocoaLumberjack/DDAbstractDatabaseLogger.h"; sourceTree = SOURCE_ROOT; };
 		775E60F01944DA8C005AC209 /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDASLLogger.h; path = "vendor/xmpp-framework/Vendor/CocoaLumberjack/DDASLLogger.h"; sourceTree = SOURCE_ROOT; };
 		775E60F11944DA8C005AC209 /* DDContextFilterLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDContextFilterLogFormatter.h; path = "vendor/xmpp-framework/Vendor/CocoaLumberjack/Extensions/DDContextFilterLogFormatter.h"; sourceTree = SOURCE_ROOT; };
@@ -587,7 +583,6 @@
 		775E62671944DAEA005AC209 /* NSNumber+XMPP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSNumber+XMPP.m"; path = "vendor/xmpp-framework/Categories/NSNumber+XMPP.m"; sourceTree = SOURCE_ROOT; };
 		775E62681944DAEA005AC209 /* NSXMLElement+XMPP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSXMLElement+XMPP.h"; path = "vendor/xmpp-framework/Categories/NSXMLElement+XMPP.h"; sourceTree = SOURCE_ROOT; };
 		775E62691944DAEA005AC209 /* NSXMLElement+XMPP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSXMLElement+XMPP.m"; path = "vendor/xmpp-framework/Categories/NSXMLElement+XMPP.m"; sourceTree = SOURCE_ROOT; };
-		775E626D1944E364005AC209 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		775E626F1944E421005AC209 /* libidn.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libidn.a; path = vendor/libidn.a; sourceTree = SOURCE_ROOT; };
 		775E62711944E44C005AC209 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		775E62731944E49A005AC209 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
@@ -623,7 +618,6 @@
 		77BC67A21840901E00F82849 /* ChatTextRedirect-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ChatTextRedirect-Prefix.pch"; sourceTree = "<group>"; };
 		77CF348515DA33FB005ECB2F /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = ../../../../../System/Library/Frameworks/CoreServices.framework; sourceTree = "<group>"; };
 		77D44A5A164A076100510501 /* lock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lock.png; sourceTree = "<group>"; };
-		77DD81F214EDFDE200EBA4CE /* Ruby.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ruby.framework; path = ../../../../../../System/Library/Frameworks/Ruby.framework; sourceTree = "<group>"; };
 		77E52D1C16D89D970015246C /* MDChatWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDChatWindowController.h; sourceTree = "<group>"; };
 		77E52D1D16D89D970015246C /* MDChatWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDChatWindowController.m; sourceTree = "<group>"; };
 		77E52D1E16D89D970015246C /* MDChatWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MDChatWindowController.xib; sourceTree = "<group>"; };
@@ -671,6 +665,8 @@
 		77FFC0F61863B75800122357 /* MDGameFavoritesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDGameFavoritesWindowController.h; sourceTree = "<group>"; };
 		77FFC0F71863B75800122357 /* MDGameFavoritesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDGameFavoritesWindowController.m; sourceTree = "<group>"; };
 		77FFC0F81863B75800122357 /* MDGameFavoritesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MDGameFavoritesWindowController.xib; sourceTree = "<group>"; };
+		DA3FB80119DD06B9004167A9 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		DA3FB80319DD06C6004167A9 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -678,12 +674,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA3FB80419DD06C6004167A9 /* libxml2.dylib in Frameworks */,
+				DA3FB80219DD06B9004167A9 /* Cocoa.framework in Frameworks */,
 				775E62761944E5E5005AC209 /* CoreLocation.framework in Frameworks */,
 				775E62741944E49A005AC209 /* SystemConfiguration.framework in Frameworks */,
 				775E62721944E44C005AC209 /* Security.framework in Frameworks */,
-				775E60EE1944DA56005AC209 /* libresolv.dylib in Frameworks */,
-				775E60EC1944DA48005AC209 /* libxml2.dylib in Frameworks */,
-				7709F96B1846C256005E58F5 /* Cocoa.framework in Frameworks */,
 				773E8ADE1820C7CE00D1A71A /* AppKit.framework in Frameworks */,
 				773E8ADB1820C7C000D1A71A /* Foundation.framework in Frameworks */,
 				77CF348615DA33FB005ECB2F /* CoreServices.framework in Frameworks */,
@@ -770,15 +765,13 @@
 		775B528C14D331C800B874E3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DA3FB80319DD06C6004167A9 /* libxml2.dylib */,
+				DA3FB80119DD06B9004167A9 /* Cocoa.framework */,
 				775E62751944E5E4005AC209 /* CoreLocation.framework */,
 				775E62731944E49A005AC209 /* SystemConfiguration.framework */,
 				775E62711944E44C005AC209 /* Security.framework */,
-				775E626D1944E364005AC209 /* Security.framework */,
-				775E60ED1944DA56005AC209 /* libresolv.dylib */,
-				775E60EB1944DA48005AC209 /* libxml2.dylib */,
 				77FD5273187F5E0900E2A604 /* libbz2.dylib */,
 				77FD5271187F5DFC00E2A604 /* libz.dylib */,
-				7709F96A1846C256005E58F5 /* Cocoa.framework */,
 				77BC675A184040DF00F82849 /* CoreServices.framework */,
 				77BC6758184040D400F82849 /* Foundation.framework */,
 				774EF69117C721D1005ABB20 /* Sparkle.framework */,
@@ -787,7 +780,6 @@
 				77E7E2941724B16000E18FB9 /* IOKit.framework */,
 				77E52D2516D8A2640015246C /* WebKit.framework */,
 				77CF348515DA33FB005ECB2F /* CoreServices.framework */,
-				77DD81F214EDFDE200EBA4CE /* Ruby.framework */,
 				775B528F14D331C800B874E3 /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -1753,7 +1745,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx10.9;
 			};
@@ -1782,7 +1774,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx10.9;
 			};
 			name = Release;
@@ -2032,10 +2024,7 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_DIR)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MapDownloader/MapDownloader-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2065,10 +2054,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_NS_ASSERTIONS = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_DIR)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MapDownloader/MapDownloader-Prefix.pch";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
