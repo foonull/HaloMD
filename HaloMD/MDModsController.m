@@ -1716,7 +1716,7 @@ static BOOL gJsonSerializaionExists = NO;
 		[self stopAndStartDownloadModListTimer];
 	}
 	
-	SCEvents *events = [[SCEvents alloc] init];
+	events = [[SCEvents alloc] init];
 	[events setDelegate:self];
 	
 	NSArray *watchingPaths = [NSArray arrayWithObjects:MAPS_DIRECTORY, PLUGINS_DIRECTORY, PLUGINS_DISABLED_DIRECTORY, nil];

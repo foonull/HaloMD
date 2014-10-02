@@ -80,6 +80,8 @@
 	BOOL isInitiated;
 	BOOL isDownloadingModList;
 	BOOL didDownloadModList;
+	
+	SCEvents *events;
 }
 
 @property (nonatomic, retain) NSMutableArray *localModItems;
