@@ -142,7 +142,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 {
 	CFStringRef serialKey = NULL;
 	[self copySerialNumber:&serialKey];
-#warning not sure if this is correct bridging; verify that this works
 	return (__bridge NSString *)serialKey;
 }
 
