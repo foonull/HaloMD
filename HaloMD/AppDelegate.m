@@ -80,7 +80,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	if (self == [AppDelegate class])
 	{
 		expectedVersionsDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-									  @19, @"Contents/MacOS/Halo",
+									  @20, @"Contents/MacOS/Halo",
 									  @3, @"Contents/Resources/HaloAppIcon.icns",
 									  @2, @"Contents/Resources/HaloDataIcon.icns",
 									  @2, @"Contents/Resources/HaloDocIcon.icns",
