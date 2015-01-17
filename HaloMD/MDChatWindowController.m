@@ -43,7 +43,7 @@
 @interface MDChatWindowController ()
 
 @property (nonatomic) MDChatConnection *connection;
-@property (nonatomic) BOOL signedOnBefore;
+@property (nonatomic) BOOL attemptedSignOnBefore;
 @property (nonatomic) NSString *desiredNickname;
 @property (nonatomic) NSString *userIdentifier;
 @property (nonatomic) NSUInteger numberOfAttemptsJoined;
@@ -144,33 +144,33 @@
 
 - (void)signOn
 {
-	NSString *nickname = _desiredNickname;
+	_attemptedSignOnBefore = YES;
 	
-	if (_connection != nil && !_connection.isInRoom)
+	if (!self.window.isVisible)
 	{
 		_connection = nil;
-		_numberOfAttemptsJoined++;
-		nickname = [_desiredNickname stringByAppendingFormat:@"%lu", (unsigned long)(_numberOfAttemptsJoined + 1)];
+		return;
 	}
-	else if (_connection.isInRoom)
+	
+	if (_connection.isInRoom)
 	{
 		return;
 	}
 	
-	if (_connection == nil)
+	NSString *nickname = (_numberOfAttemptsJoined == 0) ? _desiredNickname : [_desiredNickname stringByAppendingFormat:@"%lu", _numberOfAttemptsJoined + 1];
+	
+	_connection = [[MDChatConnection alloc] initWithNickname:nickname userIdentifier:_userIdentifier delegate:self];
+	
+	BOOL connected = [_connection joinRoom];
+	if (!connected)
 	{
-		_connection = [[MDChatConnection alloc] initWithNickname:nickname userIdentifier:_userIdentifier delegate:self];
+		_connection = nil;
 	}
 	
-	BOOL success = [_connection joinRoom];
-	if (success && !_signedOnBefore)
+	if (_numberOfAttemptsJoined < 5)
 	{
-		_signedOnBefore = YES;
-		
-		if (_numberOfAttemptsJoined < 5)
-		{
-			[self performSelector:@selector(signOn) withObject:nil afterDelay:10.0];
-		}
+		[self performSelector:@selector(signOn) withObject:nil afterDelay:10.0];
+		_numberOfAttemptsJoined++;
 	}
 }
 
@@ -184,6 +184,9 @@
 	if (!willTerminate)
 	{
 		[_connection leaveRoom];
+		_connection = nil; // disconnect
+		[roster removeAllObjects];
+		[rosterTableView reloadData];
 		_numberOfAttemptsJoined = 0;
 	}
 }
@@ -599,7 +602,7 @@
 {
 	[super showWindow:sender];
 	
-	if (_signedOnBefore)
+	if (_attemptedSignOnBefore)
 	{
 		[self signOn];
 	}

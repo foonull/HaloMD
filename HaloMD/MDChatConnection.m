@@ -62,6 +62,11 @@
 	return self;
 }
 
+- (void)dealloc
+{
+	[_stream disconnect];
+}
+
 - (NSString *)dateFormat
 {
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] initWithDateFormat:@"%I:%M:%S" allowNaturalLanguage:NO];
@@ -94,10 +99,8 @@
 			return NO;
 		}
 	}
-	else
-	{
-		[_room joinRoomUsingNickname:_nickname history:nil];
-	}
+	
+	[_room joinRoomUsingNickname:_nickname history:nil];
 	
 	return YES;
 }
@@ -123,7 +126,8 @@
 - (void)xmppStreamDidConnect:(XMPPStream *)sender
 {
 	NSError *error = nil;
-	BOOL operationInProgress = [_stream authenticateAnonymously:&error];
+	// -[XMPPStream authenticateAnonymously:] which uses SASL ANONYMOUS authentication may use a randomized JID from the server, which is not desirable
+	BOOL operationInProgress = [_stream authenticate:[[XMPPDigestMD5Authentication alloc] initWithStream:_stream password:@"password"] error:&error];
 	if (!operationInProgress)
 	{
 		NSLog(@"We failed to authenticate..: %@", error);
@@ -134,6 +138,7 @@
 - (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error
 {
 	NSLog(@"Error: Disconnected");
+	_stream = nil;
 }
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
@@ -237,13 +242,14 @@
 {
 	XMPPPresence *presence = [XMPPPresence presence];
 	
-	NSXMLElement *xmlStatus = [NSXMLElement elementWithName:@"status" stringValue:status];
-	NSXMLElement *xmlTo = [NSXMLElement elementWithName:@"to" stringValue:[[XMPPJID jidWithUser:XMPP_ROOM_NAME domain:XMPP_ROOM_HOST resource:_nickname] full]];
-	NSXMLElement *xmlFrom = [NSXMLElement elementWithName:@"from" stringValue:_stream.myJID.full];
+	[presence addAttributeWithName:@"from" stringValue:_stream.myJID.full];
+	[presence addAttributeWithName:@"to" stringValue:[[XMPPJID jidWithUser:XMPP_ROOM_NAME domain:XMPP_ROOM_HOST resource:_nickname] full]];
+	[presence addAttributeWithName:@"id" stringValue:[_stream generateUUID]];
 	
-	[presence addChild:xmlStatus];
-	[presence addChild:xmlTo];
-	[presence addChild:xmlFrom];
+	[presence addChild:[NSXMLElement elementWithName:@"status" stringValue:status]];
+	
+	// have to notify ourselves of our own status update
+	[_delegate processMessage:[self prependCurrentDateToMessage:@""] type:@"on_join" nickname:_nickname text:status];
 	
 	[_stream sendElement:presence];
 }
