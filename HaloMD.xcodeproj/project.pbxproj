@@ -296,7 +296,6 @@
 		771CA915156F59BF005A32EF /* MDHyperLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDHyperLink.m; sourceTree = "<group>"; };
 		77297C5619452F9C00B83D9C /* MDHashDigest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDHashDigest.h; sourceTree = "<group>"; };
 		77297C5719452F9C00B83D9C /* MDHashDigest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDHashDigest.m; sourceTree = "<group>"; };
-		77329B8A168D95F3007DCAE2 /* h_master_server.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = h_master_server.rb; sourceTree = "<group>"; };
 		773E8AD91820C7B700D1A71A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		773E8ADC1820C7C500D1A71A /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/AppKit.framework; sourceTree = DEVELOPER_DIR; };
 		774EF67C17C72117005ABB20 /* crc32forge.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = crc32forge.py; path = vendor/crc32forge.py; sourceTree = SOURCE_ROOT; };
@@ -833,7 +832,6 @@
 				77152B1F163B5AEA00F136BF /* MDNetworking.m */,
 				77904A3A151C27070046EA96 /* keygen.h */,
 				77904A37151C26BF0046EA96 /* keygen.c */,
-				77329B8A168D95F3007DCAE2 /* h_master_server.rb */,
 				775B52A214D331C900B874E3 /* MainMenu.xib */,
 				77E52D1E16D89D970015246C /* MDChatWindowController.xib */,
 				77FFC0F81863B75800122357 /* MDGameFavoritesWindowController.xib */,
