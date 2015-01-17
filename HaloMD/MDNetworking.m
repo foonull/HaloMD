@@ -362,7 +362,7 @@ static BOOL sentIPv6Query;
 	if (!socketInitialized && !(socketInitialized = [self createQuerySocket])) return;
 	
 	const char *addressCString = [address UTF8String];
-	char buffer[] = {0xFE, 0xFD, 0x00, 0x77, 0x6A, 0xBF, 0xBF, 0xFF, 0xFF, 0xFF, 0xFF};
+	char buffer[] = "\\query";
 	
 	if ([[address componentsSeparatedByString:@"."] count] == 4) // inet_pton only takes dotted quad address when family is AF_INET
 	{
@@ -420,7 +420,29 @@ static BOOL sentIPv6Query;
 	}
 }
 
-+ (NSArray *)receiveFromQuerySocket:(int)querySocket andGetIPAddress:(NSString **)retrievedIPAddress portNumber:(uint16_t *)retrievedPortNumber
++ (NSString *)gameStringFromData:(NSData *)data
+{
+	NSString *gameString = [[[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding] autorelease];
+	
+	if (gameString == nil)
+	{
+		gameString = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+	}
+	
+	if (gameString == nil)
+	{
+		gameString = [[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding] autorelease];
+	}
+	
+	if (gameString == nil)
+	{
+		gameString = @"";
+	}
+	
+	return gameString;
+}
+
++ (NSDictionary *)receiveFromQuerySocket:(int)querySocket andGetIPAddress:(NSString **)retrievedIPAddress portNumber:(uint16_t *)retrievedPortNumber
 {
 	fd_set readfds;
 	FD_ZERO(&readfds);
@@ -488,28 +510,54 @@ static BOOL sentIPv6Query;
 	
 	*retrievedPortNumber = portValue;
 	
-	NSMutableArray *fields = [NSMutableArray array];
-	ssize_t sizeConsumed = 0;
-	char *bufferPointer = buffer;
-	char *beginStringPointer = bufferPointer;
-	while (sizeConsumed < sizeReceived)
+	NSMutableDictionary *gameInfo = [NSMutableDictionary dictionary];
+	if (sizeReceived > 1)
 	{
-		if (bufferPointer[sizeConsumed] == '\0')
+		// Separate buffer by backslashes.
+		// Note: do not convert entire buffer as a string since if any one component inside would fail, the entire buffer can't be parsed
+		NSMutableArray *fields = [NSMutableArray array];
+		const ssize_t bytesToSkip = 0x1;
+		char *bufferPointer = buffer + bytesToSkip;
+		ssize_t sizeLimit = sizeReceived - bytesToSkip;
+		ssize_t sizeConsumed = 0;
+		char *beginStringPointer = bufferPointer;
+		while (sizeConsumed < sizeLimit)
 		{
-			NSData *fieldData = [NSData dataWithBytes:beginStringPointer length:bufferPointer + sizeConsumed - beginStringPointer + 1];
-			[fields addObject:fieldData];
-			
-			beginStringPointer = bufferPointer + sizeConsumed + 1;
+			if (bufferPointer[sizeConsumed++] == '\\')
+			{
+				NSData *fieldData = [NSData dataWithBytes:beginStringPointer length:bufferPointer + sizeConsumed - beginStringPointer - 1];
+				[fields addObject:fieldData];
+				
+				beginStringPointer = bufferPointer + sizeConsumed;
+			}
 		}
-		sizeConsumed++;
+		
+		// Make into key-value pair dictionary
+		NSString *keyToAdd = nil;
+		for (NSData *dataComponent in fields)
+		{
+			if (keyToAdd == nil)
+			{
+				keyToAdd = [self gameStringFromData:dataComponent];
+			}
+			else
+			{
+				if ([keyToAdd length] > 0)
+				{
+					[gameInfo setObject:[self gameStringFromData:dataComponent] forKey:keyToAdd];
+				}
+				
+				keyToAdd = nil;
+			}
+		}
 	}
 	
-	return fields;
+	return gameInfo;
 }
 
-+ (NSArray *)receiveQueryAndGetIPAddress:(NSString **)retrievedIPAddress portNumber:(uint16_t *)retrievedPortNumber
++ (NSDictionary *)receiveQueryAndGetIPAddress:(NSString **)retrievedIPAddress portNumber:(uint16_t *)retrievedPortNumber
 {
-	NSArray *result = nil;
+	NSDictionary *result = nil;
 	if (ipv4QuerySocket != -1 && sentIPv4Query)
 	{
 		result = [self receiveFromQuerySocket:ipv4QuerySocket andGetIPAddress:retrievedIPAddress portNumber:retrievedPortNumber];

@@ -1646,28 +1646,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	}
 }
 
-- (NSString *)gameStringFromCString:(const char *)cString
-{
-	NSString *gameString = [NSString stringWithCString:cString encoding:NSISOLatin1StringEncoding];
-	
-	if (!gameString)
-	{
-		[NSString stringWithCString:cString encoding:NSUTF8StringEncoding];
-	}
-	
-	if (!gameString)
-	{
-		gameString = [NSString stringWithCString:cString encoding:NSASCIIStringEncoding];
-	}
-	
-	if (!gameString)
-	{
-		gameString = @"";
-	}
-	
-	return gameString;
-}
-
 - (void)resumeQueryTimer
 {
 	if (!queryTimer)
@@ -1692,8 +1670,8 @@ static NSDictionary *expectedVersionsDictionary = nil;
 {
 	NSString *ipAddressRetrieved = nil;
 	uint16_t portValueRetrieved = 0;
-	NSArray *receivedEntries = [MDNetworking receiveQueryAndGetIPAddress:&ipAddressRetrieved portNumber:&portValueRetrieved];
-	if (receivedEntries == nil) return NO;
+	NSDictionary *gameInfo = [MDNetworking receiveQueryAndGetIPAddress:&ipAddressRetrieved portNumber:&portValueRetrieved];
+	if (gameInfo == nil) return NO;
 	
 	MDServer *targetServer = nil;
 	for (MDServer *server in waitingServersArray)
@@ -1707,53 +1685,35 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	
 	if (targetServer == nil) return YES;
 	
-	if ([receivedEntries count] < 29) return YES;
-	
-	const char *serverName = [[receivedEntries objectAtIndex:2] bytes];
-	const char *maxPlayers = [[receivedEntries objectAtIndex:8] bytes];
-	const char *passwordProtected = [[receivedEntries objectAtIndex:10] bytes];
-	const char *mapName = [[receivedEntries objectAtIndex:12] bytes];
-	const char *numberOfPlayers = [[receivedEntries objectAtIndex:20] bytes];
-	const char *variant = [[receivedEntries objectAtIndex:26] bytes];
-	const char *gametype = [[receivedEntries objectAtIndex:22] bytes];
-	const char *fragLimit = [[receivedEntries objectAtIndex:28] bytes];
-	const char *teamPlay = [[receivedEntries objectAtIndex:24] bytes];
-	const char *dedicated = [[receivedEntries objectAtIndex:14] bytes];
-	
 	NSMutableArray *players = [[NSMutableArray alloc] init];
 	
-	int playerDataIndex = 40;
-	int playerIndex;
-	for (playerIndex = 0; playerIndex < atoi(numberOfPlayers); playerIndex++)
+	int numberOfPlayers = [gameInfo[@"numplayers"] intValue];
+	for (int playerIndex = 0; playerIndex < numberOfPlayers; playerIndex++)
 	{
-		if (playerDataIndex+1 >= [receivedEntries count]) break;
+		NSString *playerName = gameInfo[[@"player_" stringByAppendingFormat:@"%d", playerIndex]];
+		if (playerName == nil) break;
 		
-		const char *playerName = [[receivedEntries objectAtIndex:playerDataIndex] bytes];
-		
-		playerDataIndex += 1;
-		
-		const char *playerScore = [[receivedEntries objectAtIndex:playerDataIndex] bytes];
+		NSString *playerScore = gameInfo[[@"score_" stringByAppendingFormat:@"%d", playerIndex]];
+		if (playerScore == nil) break;
 		
 		MDPlayer *player = [[MDPlayer alloc] init];
-		[player setName:[self gameStringFromCString:playerName]];
-		[player setScore:[self gameStringFromCString:playerScore]];
+		[player setName:playerName];
+		[player setScore:playerScore];
 		
 		[players addObject:player];
-		
-		playerDataIndex += 3;
 	}
 	
 	[targetServer setPlayers:players];
 	
-	[targetServer setName:[self gameStringFromCString:serverName]];
-	[targetServer setMap:[[self gameStringFromCString:mapName] lowercaseString]];
-	[targetServer setMaxNumberOfPlayers:atoi(maxPlayers)];
-	[targetServer setPasswordProtected:atoi(passwordProtected)];
-	[targetServer setCurrentNumberOfPlayers:atoi(numberOfPlayers)];
-	[targetServer setGametype:[self gameStringFromCString:gametype]];
+	[targetServer setName:gameInfo[@"hostname"] ?: @"HALO SERVER"];
+	[targetServer setMap:[gameInfo[@"mapname"] ?: @"bloodgulch" lowercaseString]];
+	[targetServer setMaxNumberOfPlayers:[gameInfo[@"maxplayers"] ?: @"16" intValue]];
+	[targetServer setPasswordProtected:[gameInfo[@"password"] ?: @"0" intValue]];
+	[targetServer setCurrentNumberOfPlayers:numberOfPlayers];
+	[targetServer setGametype:gameInfo[@"gametype"] ?: @"CTF"];
 	[targetServer resetConnectionChances];
 	
-	NSString *variantString = [self gameStringFromCString:variant];
+	NSString *variantString = gameInfo[@"gamevariant"] ?: @"";
 	if ([[variantString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] isEqualToString:@""])
 	{
 		[targetServer setVariant:[targetServer gametype]];
@@ -1763,10 +1723,11 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		[targetServer setVariant:variantString];
 	}
 	
-	[targetServer setTeamPlay:[[self gameStringFromCString:teamPlay] isEqualToString:@"0"] ? @"No" : @"Yes"];
-	[targetServer setDedicated:[[self gameStringFromCString:dedicated] isEqualToString:@"0"] ? @"No" : @"Yes"];
+	[targetServer setTeamPlay:[gameInfo[@"teamplay"] isEqualToString:@"0"] ? @"No" : @"Yes"];
+	[targetServer setDedicated:[gameInfo[@"dedicated"] isEqualToString:@"0"] ? @"No" : @"Yes"];
 	
-	NSString *scoreLimit = ([[targetServer gametype] isEqualToString:@"Oddball"] || [[targetServer gametype] isEqualToString:@"King"]) ? [NSString stringWithFormat:@"%s:00", fragLimit] : [NSString stringWithUTF8String:fragLimit];
+	NSString *fragLimit = gameInfo[@"fraglimit"] ?: @"";
+	NSString *scoreLimit = ([gameInfo[@"gametype"] ?: @"" isEqualToString:@"Oddball"] || [[targetServer gametype] ?: @"" isEqualToString:@"King"]) ? [NSString stringWithFormat:@"%@:00", fragLimit] : fragLimit;
 	[targetServer setScoreLimit:scoreLimit];
 	
 	double pingDoubleValue = [[NSDate date] timeIntervalSinceDate:[targetServer lastUpdatedDate]];
