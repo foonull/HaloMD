@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head><script type="text/javascript">var _gaq=_gaq||[];_gaq.push(['_setSiteSpeedSampleRate',100]);</script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title></title>
+<meta name="Generator" content="Cocoa HTML Writer">
+<meta name="CocoaVersion" content="949.35">
+<style type="text/css">p.p1{margin:.0px .0px .0px .0px;font:12.0px Helvetica}</style>
+</head>
+<body>
+Version 1.0b29 (October 11, 2014)
+<ul>
+<li>Added support for OS X 10.10 Yosemite</li>
+<li>Dropped support for Mac OS X 10.5 Leopard and 10.6 Snow Leopard</li>
+<li>Fixed a bug with selecting mods in the Mods menu</li>
+<li>Fixed a bug where having a period in the home folder filename would prevent HaloMD from launching</li>
+<li>Added two commands: <i>sv_maplist_show_outdated</i> (show outdated maps) and <i>sv_maplist_show_all</i> (show all maps); these commands must be entered manually into the console to use them.</li>
+</ul>
+Version 1.0b26 (May 20, 2014)
+<ul>
+<li>All custom maps are now listed in-game for map selection</li>
+<li>Changed 'Mods' menu complying to above change</li>
+<li>Added prevention from installing a mod that is already installed</li>
+<li>Minor improvements and bug fixes</li>
+</ul>
+Version 1.0b23 (Feb 9, 2014)
+<ul>
+<li>Added support for engine based modifications called Extensions</li>
+<li>Added built-in Map Downloader extension; if you join a game that changes to a new map you do not have, the map begins downloading automatically</li>
+<li>Removed the built-in port mapper which fixes freezing/firewall issues for some people. If you find that you can't host anymore, download and enable the port mapper extension from the menu bar.</li>
+<li>Improved support for nicknames in the MD chat room, which can now handle more types of characters</li>
+<li>Improved MD chat room reliability when sleeping/waking from the computer.</li>
+<li>Improved reliability of downloading mods on systems earlier than OS X 10.7</li>
+<li>Chat room window can now be automatically restored at launch (requires OS X 10.7 or later and having "close windows when quitting an application" unchecked in System Preferences)</li>
+<li>Added option to add server favorites in the Game menu</li>
+</ul>
+Version 1.0b18 (Nov 27, 2013)
+<ul>
+<li>Fixed "No games found" bug when fetching games from lobby (bug introduced in b16)</li>
+<li>Fixed bug preventing Halo from playing with some multi-monitor display setups</li>
+<li>Improved Halo's fullscreen mode by allowing you to command+tab or command-h out</li>
+<li>Improved chat carnage by enabling chat text to be seen on any server</li>
+<li>Improved multiplayer map selection UI by omitting out disabled full version maps</li>
+<li>Increased timeout threshold for connecting to the MD chatroom</li>
+<li>Added (still incomplete) support for plug-ins</li>
+</ul>
+Version 1.0b16 (Nov 16, 2013)
+<ul>
+<li>Fixed freezing issues and improved fetching games from lobby</li>
+<li>Disabled auto correct being enabled by default in MD chatroom</li>
+<li>Added private message option in chatroom via /msg (thanks to Samuco)</li>
+</ul>
+Version 1.0b15 (Oct 27, 2013)
+<ul>
+<li>Fixed startup crash for 10.5 users</li>
+</ul>
+Version 1.0b14 (Oct 24, 2013)
+<ul>
+<li>Fixes a crash preventing Halo from running on 10.9 Mavericks on certain systems</li>
+</ul>
+Version 1.0b11 (Jul 23, 2013)
+<ul>
+<li>Fixed potential bug where mod downloads list could be corrupted</li>
+<li>Fixed possible crash vulnerability with fetching lobby list</li>
+<li>Fixed potential freeze/crash when opening the lobby chat</li>
+<li>Improved handling of fetching games from lobby</li>
+<li>Improved handling of downloading large mods</li>
+<li>Internal changes to mod database</li>
+<li>New simple website at <a href="http://halomd.net">http://halomd.net</a> (spread the word!)</li>
+<li>Quick bugfix update</li>
+</ul>
+Version 1.0b10 (May 30, 2013)
+<ul>
+<li>Fixed crash when trying to play the Campaign</li>
+<li>Fixed chat bug with MD not responding to when your nickname is mentioned</li>
+<li>Fixed bug where some maps were shown strangely due to case sensitivity issue</li>
+<li>Internal changes to mod database</li>
+<li>Quick update</li>
+</ul>
+Version 1.0b9 (May 19, 2013)
+<ul>
+<li>Increased chances of hosting a game and having it work by adding a NAT traversal / port mapping technique</li>
+<li>Added a chat icon in the main window at the top-right corner for better visibility</li>
+<li>Added in-game status' in the lobby chatroom that show what game a player is in. Double-clicking on a user joins that game</li>
+<li>Added optional sounds and notifications in the lobby chatroom</li>
+<li>Added linkification to the lobby chatroom for URLs</li>
+<li>Removed older versions of mods in the Mods menu, reducing clutter. These mods are still accessible via sv_map</li>
+<li>Changed default score button from 'F1' to '1'; for existing players, F1 will still work if it's currently mapped</li>
+<li>Improved DNS-lookup and connection reliability, having less vulnerability to hanging</li>
+<li>Fixed bug where lobby indicated a user may be having hosting issues when Halo wasn't even open</li>
+<li>Adding Intel HD Graphics 4000 under list of graphics cards that shouldn't play this game with pixel shaders enabled (because of e.g, invisible rocks)</li>
+<li>Disabled rich-text in the lobby chatroom, capable of causing strange issues</li>
+<li>Added tooltips for descriptions of mods in the Mods menu</li>
+<li>Changed restriction on names allowed in chatroom; only ASCII characters will show up, fixing a possible hang</li>
+<li>When mentioned in lobby chatroom, a badge on the dock pops up when HaloMD is the inactive application</li>
+</ul>
+Version 1.0b8 (April 8, 2013)
+<ul>
+<li>Added a chat room. Navigate to Chat -> Show Chat in the menubar to go to it.</li>
+<li>Downloading mods can now be based on delta-patches, downloading only the bits that have been changed making mod downloads faster and smaller</li>
+<li>sv_name and sv_password should now work, so hosts can change their server name and password via the console (eg: sv_name "New server name!")</li>
+<li>Added notification support (via Growl or Notification Center)</li>
+<li>Improved smoothness of fetching games from the lobby list</li>
+<li>Updated Crossing map, fixing a couple internal issues</li>
+<li>Small downloadable update</li>
+</ul>
+Version 1.0b4 (Jan 20, 2013)
+<ul>
+<li>Even if the lobby master server is down, HaloMD will load a list of known servers.</li>
+<li>Small downloadable update</li>
+</ul>
+Version 1.0b3 (Jan 05, 2013)
+<ul>
+<li>Fixed bug where HaloMD app might freeze if lobby is down.</li>
+<li>Small downloadable update</li>
+</ul>
+Version 1.0b2 (Dec 21, 2012)
+<ul>
+<li>Fixed Mod Database that broke when HDM went down.</li>
+<li>Modified ui map to exclude join internet option.</li>
+<li>Cancel button now works again when downloading a mod from the database.</li>
+<li>From b1, fixed bug with some servers not being listed</li>
+<li>HaloMD is now in beta!</li>
+</ul>
+Version 1.0a27 (Nov 22, 2012)
+<ul>
+<li>Crossing and Barrier now use their own map slots.</li>
+<li>Removed sword in Crossing.</li>
+<li>Removed 'key' icon, and updated 'lock' icon for private servers in the lobby.</li>
+<li>UI strings are now updated more in-game and should make more sense for third-party mods.</li>
+<li>Improved sv_map so that it can load almost any map in your maps folder, whether the map is 'swapped' in or not.</li>
+<li>Added a 'random' map selection</li>
+<li>Relocated HDM's mod database, downloading mods should be more reliable.</li>
+<li>Recently fixed a timeout issue with master server, causing server list retrieval being slow.</li>
+<li>Added domain lookup for hidden server favorites feature.</li>
+<li>Delta updating from a21 to a27 failed, so this may be a fairly large update (unless you have a25 or a26). Go play a game while waiting for the update to complete.</li>
+</ul>
+Version 1.0a21 (Oct 29, 2012)
+<ul>
+<li>Fixed Install Mods menu which broke recently due to a HDM website update.</li>
+<li>Added unobstructive notice for when an installed mod is out-of-date; also introduced halomdinstall:// handler.</li>
+<li>Added extra 'hidden' feature for adding server favorites (see app. support path directory)</li>
+<li>Updated Crossing slightly.</li>
+<li>Removing Shaft as an included mod, this will be placed as a third-party mod now.</li>
+<li>Improved handling of creating HLMD folder.</li>
+<li>Default to random name when picking a player handle.</li>
+<li>Re-implemented fetching server list, should fix a rare-ish crash when the master server is unavailable.</li>
+</ul>
+Version 1.0a20 (Aug 14, 2012)
+<ul>
+<li>Fixed rare startup crash due to a framework not being linked.</li>
+</ul>
+Version 1.0a19
+<ul>
+<li>Fixed bug with modifying and renaming Halo profile's, causing Halo not to complain if a profile already exists.</li>
+<li>Disallow more illegal names when picking a name during the first launch, making Halo not complain or crash.</li>
+<li>Fixed bug on 10.5 (again) that caused downloading 3rd party mod's list to fail.</li>
+<li>Fixed icons causing them not to show up correctly on older OS's.</li>
+<li>Was able to get a build running on PPC 10.5.. If anyone wants it, let me know.</li>
+<li>Another small downloadable update.</li>
+</ul>
+Version 1.0a18
+<ul>
+<li>Fixed crashing bugs for OS X 10.5 (Leopard) users introduced in alpha 16.</li>
+<li>Fixed bug where Crossing showed up as "Infinity" in the lobby.</li>
+<li>Very small update.</li>
+</ul>
+Version 1.0a16 (Aug 05, 2012)
+<ul>
+<li>Added new map Crossing again! The map and energy sword is still a work in progress, but have fun testing it out!</li>
+<li>Made heavy optimizations and improvements to Barrier, making the map easier to learn.</li>
+<li>Added experimental support for 3rd party modding. The game has been hacked to report the mod that is being played. Joining modded games will be easy. A slot is used for "modded" maps.</li>
+<li>Double-clicking on a game will now attempt to join it rather than refresh it (see game menu item to do latter action)</li>
+<li>Removed scoping blur by modifying bitmaps when a player is using pixel shaders.</li>
+<li>HaloMD reports when hosting a game fails, when you are trying to host one (most likely due to firewall/router issues)</li>
+<li>HaloMD removes save games on every launch, allowing one to play the campaign again and again</li>
+<li>Fixed bug on decoding player name and server text from Halo (now using correct Latin1 encoding).</li>
+</ul>
+Version 1.0a14
+<ul>
+<li>Fixed crash on startup that affects users running OS X 10.5</li>
+</ul>
+Version 1.0a13
+<ul>
+<li>Added new map Barrier again! Fixed its issues.</li>
+<li>Implemented sorting games by name, # of players, ping, etc.</li>
+<li>Added Dedicated field to game inspector panel.</li>
+<li>Updated Halo icon and credits.</li>
+</ul>
+Version 1.0a12 (May 07, 2012)
+<ul>
+<li>Shaft (replacing putput) is now around, but removed (for now) Depot, Barrier, Crossing from alpha 11 because they were causing serious issues</li>
+<li>Game passwords are now cached for convenience</li>
+<li>Added menu option in Help menu for revealing Maps folder in Finder</li>
+</ul>
+Version 1.0a11 (May 07, 2012)
+<ul>
+<li>Added 4 new maps: Shaft, Crossing, Barrier, Depot</li>
+<li>Fixed Campaign map, The Silent Cartographer (b30)</li>
+<li>Games whose connection can't be established do not show</li>
+<li>Games using a map that the user doesn't have installed do not show</li>
+<li>Updated HaloMD launcher, game, document, and data icons</li>
+<li>Improved serial key generation</li>
+</ul>
+Version 1.0a9 (Mar 10, 2012)
+<ul>
+<li>Removed "Public" and "Private" in favor for more noticable Lock and key icons</li>
+<li>Added Map information to table</li>
+<li>Fixed bug where game variant showed blank in table (it's really a Halo bug)</li>
+<li>Improved Game Inspector (cmd+I), IP address and port got moved to there.</li>
+<li>Improved ping calculation. Before it was off by an order of magnitude of 100 ping; now it is off by around 10.</li>
+<li>Improved performance by using less CPU resources when idling</li>
+<li>Improved selection preservation when refreshing all servers</li>
+</ul>
+Version 1.0a8 (Mar 04, 2012)
+<ul>
+<li>Fixed issue where HaloMD could fail to parse data from games, causing them not to show up properly in lobby</li>
+<li>Replaced icon with a more bearable one, still temporary</li>
+<li>This should delta update from 1.0a7, hopefully</li>
+</ul>
+Version 1.0a7 (Mar 02, 2012)
+<ul>
+<li>Fixed creation of user profiles so that they now save properly</li>
+<li>Updated Sparkle framework. Delta updates should work the *next* time</li>
+<li>Added temporary icon for testing purposes</li>
+</ul>
+Version 1.0a4 (Feb 26, 2012)
+<ul>
+<li>Added automatic updating, which will hopefully mean future delta updates</li>
+<li>When joining a game, you are now alerted if Halo is already running</li>
+<li>HaloMD now uses its own Documents folder independent of Halo Full</li>
+<li>If HaloMD is being installed for the first time, you are requested for picking a name to play as</li>
+<li>When hovering over a server, a tooltip shows up displaying the players in the game</li>
+<li>Added a game inspector that displays extra information on selected server (command I to show/hide it)</li>
+<li>Added Game menu with several common operations</li>
+<li>Added people to About window</li>
+</ul>
+Version 1.0a3 (Feb 17, 2012)
+<ul>
+<li>Removed gamespy lobby. Minor changes</li>
+</ul>
+Version 1.0a1 (Feb 03, 2012)
+<ul>
+<li>Initial release.</li>
+</ul>
+<script type="text/javascript">//<![CDATA[
+(function(){var d=encodeURIComponent,f=window,g=document,h="documentElement",k="length",l="prototype",m="body",p="&",s="&ci=",t=",",u="?",v="Content-Type",w="Microsoft.XMLHTTP",x="Msxml2.XMLHTTP",y="POST",z="application/x-www-form-urlencoded",A="img",B="input",C="load",D="oh=",E="on",F="pagespeed_url_hash",G="url=";f.pagespeed=f.pagespeed||{};var H=f.pagespeed,I=function(a,b,c){this.c=a;this.e=b;this.d=c;this.b=this.f();this.a={}};I[l].f=function(){return{height:f.innerHeight||g[h].clientHeight||g[m].clientHeight,width:f.innerWidth||g[h].clientWidth||g[m].clientWidth}};I[l].g=function(a){a=a.getBoundingClientRect();return{top:a.top+(void 0!==f.pageYOffset?f.pageYOffset:(g[h]||g[m].parentNode||g[m]).scrollTop),left:a.left+(void 0!==f.pageXOffset?f.pageXOffset:(g[h]||g[m].parentNode||g[m]).scrollLeft)}};I[l].h=function(a){if(0>=a.offsetWidth&&0>=a.offsetHeight)return!1;a=this.g(a);var b=a.top.toString()+t+a.left.toString();if(this.a.hasOwnProperty(b))return!1;this.a[b]=!0;return a.top<=this.b.height&&a.left<=this.b.width};I[l].i=function(a){var b;if(f.XMLHttpRequest)b=new XMLHttpRequest;else if(f.ActiveXObject)try{b=new ActiveXObject(x)}catch(c){try{b=new ActiveXObject(w)}catch(e){}}if(!b)return!1;b.open(y,this.c+(-1==this.c.indexOf(u)?u:p)+G+d(this.e));b.setRequestHeader(v,z);b.send(a);return!0};I[l].k=function(){for(var a=[A,B],b=[],c={},e=0;e<a[k];++e)for(var q=g.getElementsByTagName(a[e]),n=0;n<q[k];++n){var r=q[n].getAttribute(F);r&&(q[n].getBoundingClientRect&&this.h(q[n]))&&!(r in c)&&(b.push(r),c[r]=!0)}if(0!=b[k]){a=D+this.d;a+=s+d(b[0]);for(e=1;e<b[k];++e){c=t+d(b[e]);if(131072<a[k]+c[k])break;a+=c}H.criticalImagesBeaconData=a;this.i(a)}};H.j=function(a,b,c){if(a.addEventListener)a.addEventListener(b,c,!1);else if(a.attachEvent)a.attachEvent(E+b,c);else{var e=a[E+b];a[E+b]=function(){c.call(this);e&&e.call(this)}}};H.l=function(a,b,c){var e=new I(a,b,c);H.j(f,C,function(){f.setTimeout(function(){e.k()},0)})};H.criticalImagesBeaconInit=H.l;})();pagespeed.criticalImagesBeaconInit('/mod_pagespeed_beacon','http://halomd.macgamingmods.com/releasenotes.html','WJio_LqHwu');
+//]]></script><script type="text/javascript">if(window.parent==window){var _gaq=_gaq||[];_gaq.push(['_setAccount','UA-43852706-1']);_gaq.push(['_setDomainName','halomd.macgamingmods.com']);_gaq.push(['_setAllowLinker',true]);_gaq.push(['_trackPageview']);(function(){var ga=document.createElement('script');ga.type='text/javascript';ga.async=true;ga.src='http://www.google-analytics.com/ga.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(ga,s);})();}</script></body>
+</html>
