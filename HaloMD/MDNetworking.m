@@ -523,12 +523,17 @@ static BOOL sentIPv6Query;
 		char *beginStringPointer = bufferPointer;
 		while (sizeConsumed < sizeLimit)
 		{
-			if (bufferPointer[sizeConsumed++] == '\\')
+			char character = bufferPointer[sizeConsumed++];
+			if (character == '\\' || character == '\0' || sizeConsumed == sizeLimit)
 			{
 				NSData *fieldData = [NSData dataWithBytes:beginStringPointer length:bufferPointer + sizeConsumed - beginStringPointer - 1];
 				[fields addObject:fieldData];
 				
 				beginStringPointer = bufferPointer + sizeConsumed;
+			}
+			if (character == '\0')
+			{
+				break;
 			}
 		}
 		
