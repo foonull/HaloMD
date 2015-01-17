@@ -6,12 +6,6 @@ body {
     padding: 0;
 }
 
-#content  {
-    border-bottom: 1px solid #999;
-	border-top: 1px solid #999;
-    background-color: #ddd;
-}
-
 .message {
 	word-wrap:break-word;
 	margin-left: 20px;
