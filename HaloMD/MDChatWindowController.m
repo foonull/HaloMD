@@ -448,6 +448,7 @@
 					{
 						NSLog(@"Error: Failed to release sleep assertion");
 					}
+					_succeededInDelayingSleep = NO;
 				}
 			}
 			else if ([typeString isEqualToString:@"auth_failed"])
