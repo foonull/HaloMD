@@ -44,7 +44,6 @@
 @property (nonatomic) XMPPStream *stream;
 @property (nonatomic) XMPPRoom *room;
 @property (nonatomic) NSUInteger chancesLeftToJoin;
-@property (nonatomic) NSMutableArray *occupantNames;
 
 @end
 
@@ -59,7 +58,6 @@
 		_userIdentifier = [userIdentifier copy];
 		_delegate = delegate;
 		_chancesLeftToJoin = 5;
-		_occupantNames = [NSMutableArray array];
 	}
 	return self;
 }
@@ -172,7 +170,6 @@
 - (void)xmppRoom:(XMPPRoom *)sender occupantDidJoin:(XMPPJID *)occupantJID withPresence:(XMPPPresence *)presence
 {
 	NSString *senderName = occupantJID.resource;
-	[_occupantNames addObject:senderName];
 	
 	[_delegate processMessage:[self prependCurrentDateToMessage:[NSString stringWithFormat:@"<%@> joined", senderName]] type:@"on_join" nickname:senderName text:presence.status];
 }
@@ -181,8 +178,6 @@
 {
 	NSString *senderName = occupantJID.resource;
 	NSString *messageType = ([senderName isEqualToString:_nickname]) ? @"on_self_leave" : @"on_leave";
-	
-	[_occupantNames removeObject:senderName];
 	
 	[_delegate processMessage:[self prependCurrentDateToMessage:[NSString stringWithFormat:@"<%@> left", senderName]] type:messageType nickname:senderName text:presence.status];
 }
@@ -239,13 +234,7 @@
 {
 	if ([message isChatMessageWithBody])
 	{
-		// If the resource doesn't match with any of the nicks in the room (e.g, in case of moderator contacting someone), use the user portion from the JID
 		NSString *sender = message.from.resource;
-		if (![_occupantNames containsObject:sender])
-		{
-			sender = message.from.user;
-		}
-		
 		[_delegate processMessage:[self prependCurrentDateToMessage:[NSString stringWithFormat:@"Private: <%@> %@", sender, message.body]] type:@"on_private_message" nickname:sender text:message.body];
 	}
 }
