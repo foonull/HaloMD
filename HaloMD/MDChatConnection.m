@@ -137,7 +137,7 @@
 
 - (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error
 {
-	NSLog(@"Error: Disconnected");
+	NSLog(@"Error: Disconnected: %@", error);
 	_stream = nil;
 }
 
@@ -153,7 +153,7 @@
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
 {
-	NSLog(@"Error: Failed to authenticate");
+	NSLog(@"Error: Failed to authenticate: %@", error);
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
