@@ -1134,6 +1134,8 @@ static BOOL gJsonSerializaionExists = NO;
 		}
 		else
 		{
+			[self updateOnlineModStates];
+			
 			if ([self pendingPlugins] == nil)
 			{
 				if ([[appDelegate window] isKeyWindow] && [NSApp isActive] && [self joiningServer])
