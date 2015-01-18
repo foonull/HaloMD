@@ -34,6 +34,16 @@ body {
 	border-left: 8px solid #FF5500;
 }
 
+.auth_failed {
+	font-size: 11px;
+	border-left: 8px solid #FF5500;
+}
+
+.connection_disconnected {
+	font-size: 11px;
+	border-left: 8px solid #FF5500;
+}
+
 .muc_joined {
     font-size: 11px;
 	border-left: 8px solid #FF5500;

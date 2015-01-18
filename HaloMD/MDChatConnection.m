@@ -108,6 +108,7 @@
 - (void)xmppStreamConnectDidTimeout:(XMPPStream *)sender
 {
 	NSLog(@"Error: Timed out connecting to server..");
+	[_delegate processMessage:[self prependCurrentDateToMessage:@"Timed out from server..."] type:@"connection_failed_timeout" nickname:nil text:nil];
 }
 
 - (void)leaveRoom
@@ -139,6 +140,7 @@
 {
 	NSLog(@"Error: Disconnected: %@", error);
 	_stream = nil;
+	[_delegate processMessage:[self prependCurrentDateToMessage:@"Disconnected from server..."] type:@"connection_disconnected" nickname:nil text:nil];
 }
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
@@ -154,11 +156,13 @@
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
 {
 	NSLog(@"Error: Failed to authenticate: %@", error);
+	[_delegate processMessage:[self prependCurrentDateToMessage:@"Failed to authenticate to the server..."] type:@"auth_failed" nickname:nil text:nil];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
 {
 	NSLog(@"Received xmpp error: %@", error);
+	[_delegate processMessage:[self prependCurrentDateToMessage:@"Received error from the server..."] type:@"connection_failed" nickname:nil text:nil];
 }
 
 - (void)xmppRoomDidJoin:(XMPPRoom *)sender

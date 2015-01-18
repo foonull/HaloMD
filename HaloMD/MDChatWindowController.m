@@ -45,8 +45,10 @@
 @property (nonatomic) MDChatConnection *connection;
 @property (nonatomic) BOOL attemptedSignOnBefore;
 @property (nonatomic) NSString *desiredNickname;
+@property (nonatomic) NSString *desiredUserIdentifier;
 @property (nonatomic) NSString *userIdentifier;
 @property (nonatomic) NSUInteger numberOfAttemptsJoined;
+@property (nonatomic) NSUInteger authTag;
 
 @end
 
@@ -111,7 +113,8 @@
 		}
 		
 		_desiredNickname = [nickname copy];
-		_userIdentifier = [[MDHashDigest md5HashFromBytes:[serialKey UTF8String] length:(CC_LONG)strlen([serialKey UTF8String])] copy];
+		_desiredUserIdentifier = [[MDHashDigest md5HashFromBytes:[serialKey UTF8String] length:(CC_LONG)strlen([serialKey UTF8String])] copy];
+		_userIdentifier = _desiredUserIdentifier;
 	}
 	return self;
 }
@@ -203,7 +206,7 @@
 {
 	if ([[self window] isVisible])
 	{
-		[self signOn];
+		[self performSelector:@selector(signOn) withObject:nil afterDelay:1.5];
 	}
 }
 
@@ -302,7 +305,7 @@
 		}
 	}
 	
-	if ([@[@"on_message", @"on_private_message", @"my_message", @"my_private_message", @"on_leave", @"on_self_leave", @"on_join", @"connection_failed", @"connection_failed_timeout", @"muc_join_failed", @"connection_initiating", @"muc_joined", @"roster", @"subject"] containsObject:typeString])
+	if ([@[@"on_message", @"on_private_message", @"my_message", @"my_private_message", @"on_leave", @"on_self_leave", @"on_join", @"connection_failed", @"connection_failed_timeout", @"connection_disconnected", @"auth_failed", @"muc_join_failed", @"connection_initiating", @"muc_joined", @"roster", @"subject"] containsObject:typeString])
 	{
 		MDChatRosterElement *foundRosterElement = nil;
 		if (nickString && [@[@"on_join", @"muc_joined", @"on_leave", @"on_self_leave"] containsObject:typeString])
@@ -423,9 +426,27 @@
 			}
 		}
 		
-		if ([@[@"connection_failed", @"connection_failed_timeout", @"muc_join_failed", @"on_self_leave"] containsObject:typeString])
+		if ([@[@"connection_failed", @"connection_failed_timeout", @"muc_join_failed", @"on_self_leave", @"auth_failed", @"connection_disconnected"] containsObject:typeString])
 		{
 			[self signOff];
+			if ([typeString isEqualToString:@"connection_disconnected"])
+			{
+				[self performSelector:@selector(signOn) withObject:nil afterDelay:1.5];
+			}
+			else if ([typeString isEqualToString:@"auth_failed"])
+			{
+				++_authTag;
+				if (_authTag >= 3)
+				{
+					_authTag = 0;
+					_userIdentifier = _desiredUserIdentifier;
+				}
+				else
+				{
+					_userIdentifier = [_desiredUserIdentifier stringByAppendingFormat:@"%lu", _authTag];
+				}
+				[self signOn];
+			}
 		}
 	}
 	else if ([typeString isEqualToString:@"on_subject"])
