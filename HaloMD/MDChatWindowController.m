@@ -115,7 +115,7 @@
 			serialKey = [[NSApp delegate] randomSerialKey];
 		}
 		
-		_desiredNickname = [@"nil" copy];
+		_desiredNickname = [nickname copy];
 		_desiredUserIdentifier = [[MDHashDigest md5HashFromBytes:[serialKey UTF8String] length:(CC_LONG)strlen([serialKey UTF8String])] copy];
 		_userIdentifier = _desiredUserIdentifier;
 	}
