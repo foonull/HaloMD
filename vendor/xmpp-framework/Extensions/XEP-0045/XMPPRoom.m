@@ -926,7 +926,7 @@ enum XMPPRoomState
 	
 	XMPPLogTrace();
 	
-	[xmppRoomStorage handlePresence:presence room:self];
+	//[xmppRoomStorage handlePresence:presence room:self];
 	
 	// My presence:
 	// 
@@ -949,98 +949,115 @@ enum XMPPRoomState
 	
 	NSXMLElement *x = [presence elementForName:@"x" xmlns:XMPPMUCUserNamespace];
 	
-	// Process status codes.
-	// 
-	// 110 - Inform user that presence refers to one of its own room occupants.
-	// 201 - Inform user that a new room has been created.
-	// 210 - Inform user that service has assigned or modified occupant's roomnick.
-	// 303 - Inform all occupants of new room nickname.
-	
-	BOOL isMyPresence = NO;
-	BOOL didCreateRoom = NO;
-	BOOL isNicknameChange = NO;
-	
-	for (NSXMLElement *status in [x elementsForName:@"status"])
+	// https://github.com/robbiehanson/XMPPFramework/issues/440
+	NSXMLElement *error = [presence elementForName:@"error"];
+	if (error != nil && [[presence type] isEqualToString:@"error"])
 	{
-		switch ([status attributeIntValueForName:@"code"])
-		{
-			case 110 : isMyPresence = YES;     break;
-			case 201 : didCreateRoom = YES;    break;
-			case 210 :
-			case 303 : isNicknameChange = YES; break;
-		}
-	}
-	
-	// Extract presence type
-	
-	NSString *presenceType = [presence type];
-	
-	BOOL isAvailable   = [presenceType isEqualToString:@"available"];
-	BOOL isUnavailable = [presenceType isEqualToString:@"unavailable"];
-	
-	// Server's don't always properly send the statusCodes in every situation.
-	// So we have some extra checks to ensure the boolean variables are correct.
-	
-	if (didCreateRoom || isNicknameChange)
-	{
-		isMyPresence = YES;
-	}
-	if (!isMyPresence)
-	{
-		if ([[from resource] isEqualToString:myNickname])
-			isMyPresence = YES;
-	}
-	
-	XMPPLogVerbose(@"%@[%@] - isMyPresence = %@", THIS_FILE, roomJID, (isMyPresence ? @"YES" : @"NO"));
-	XMPPLogVerbose(@"%@[%@] - didCreateRoom = %@", THIS_FILE, roomJID, (didCreateRoom ? @"YES" : @"NO"));
-	XMPPLogVerbose(@"%@[%@] - isNicknameChange = %@", THIS_FILE, roomJID, (isNicknameChange ? @"YES" : @"NO"));
-	
-	// Process presence
-	
-	if (didCreateRoom)
-	{
-		state |= kXMPPRoomStateCreated;
-		
-		[multicastDelegate xmppRoomDidCreate:self];
-	}
-	
-	if (isMyPresence)
-	{
-		myRoomJID = from;
-		myNickname = [from resource];
-		
-		if (isAvailable)
-		{
-			if (state & kXMPPRoomStateJoining)
-			{
-				state &= ~kXMPPRoomStateJoining;
-				state |=  kXMPPRoomStateJoined;
-				
-				if ([xmppRoomStorage respondsToSelector:@selector(handleDidJoinRoom:withNickname:)])
-					[xmppRoomStorage handleDidJoinRoom:self withNickname:myNickname];
-				[multicastDelegate xmppRoomDidJoin:self];
-			}
-		}
-		else if (isUnavailable && !isNicknameChange)
-		{
-			state = kXMPPRoomStateNone;
-			[responseTracker removeAllIDs];
-			
-			[xmppRoomStorage handleDidLeaveRoom:self];
-			[multicastDelegate xmppRoomDidLeave:self];
-		}
+		state = kXMPPRoomStateNone;
+		[self xmppRoom:self didReceiveError:error];
 	}
 	else
 	{
-		if (isAvailable)
+		[xmppRoomStorage handlePresence:presence room:self];
+		
+		// Process status codes.
+		//
+		// 110 - Inform user that presence refers to one of its own room occupants.
+		// 201 - Inform user that a new room has been created.
+		// 210 - Inform user that service has assigned or modified occupant's roomnick.
+		// 303 - Inform all occupants of new room nickname.
+		
+		BOOL isMyPresence = NO;
+		BOOL didCreateRoom = NO;
+		BOOL isNicknameChange = NO;
+		
+		for (NSXMLElement *status in [x elementsForName:@"status"])
 		{
-			[multicastDelegate xmppRoom:self occupantDidJoin:from withPresence:presence];
+			switch ([status attributeIntValueForName:@"code"])
+			{
+				case 110 : isMyPresence = YES;     break;
+				case 201 : didCreateRoom = YES;    break;
+				case 210 :
+				case 303 : isNicknameChange = YES; break;
+			}
 		}
-		else if (isUnavailable)
+		
+		// Extract presence type
+		
+		NSString *presenceType = [presence type];
+		
+		BOOL isAvailable   = [presenceType isEqualToString:@"available"];
+		BOOL isUnavailable = [presenceType isEqualToString:@"unavailable"];
+		
+		// Server's don't always properly send the statusCodes in every situation.
+		// So we have some extra checks to ensure the boolean variables are correct.
+		
+		if (didCreateRoom || isNicknameChange)
 		{
-			[multicastDelegate xmppRoom:self occupantDidLeave:from withPresence:presence];
+			isMyPresence = YES;
+		}
+		if (!isMyPresence)
+		{
+			if ([[from resource] isEqualToString:myNickname])
+				isMyPresence = YES;
+		}
+		
+		XMPPLogVerbose(@"%@[%@] - isMyPresence = %@", THIS_FILE, roomJID, (isMyPresence ? @"YES" : @"NO"));
+		XMPPLogVerbose(@"%@[%@] - didCreateRoom = %@", THIS_FILE, roomJID, (didCreateRoom ? @"YES" : @"NO"));
+		XMPPLogVerbose(@"%@[%@] - isNicknameChange = %@", THIS_FILE, roomJID, (isNicknameChange ? @"YES" : @"NO"));
+		
+		// Process presence
+		
+		if (didCreateRoom)
+		{
+			state |= kXMPPRoomStateCreated;
+			
+			[multicastDelegate xmppRoomDidCreate:self];
+		}
+		
+		if (isMyPresence)
+		{
+			myRoomJID = from;
+			myNickname = [from resource];
+			
+			if (isAvailable)
+			{
+				if (state & kXMPPRoomStateJoining)
+				{
+					state &= ~kXMPPRoomStateJoining;
+					state |=  kXMPPRoomStateJoined;
+					
+					if ([xmppRoomStorage respondsToSelector:@selector(handleDidJoinRoom:withNickname:)])
+						[xmppRoomStorage handleDidJoinRoom:self withNickname:myNickname];
+					[multicastDelegate xmppRoomDidJoin:self];
+				}
+			}
+			else if (isUnavailable && !isNicknameChange)
+			{
+				state = kXMPPRoomStateNone;
+				[responseTracker removeAllIDs];
+				
+				[xmppRoomStorage handleDidLeaveRoom:self];
+				[multicastDelegate xmppRoomDidLeave:self];
+			}
+		}
+		else
+		{
+			if (isAvailable)
+			{
+				[multicastDelegate xmppRoom:self occupantDidJoin:from withPresence:presence];
+			}
+			else if (isUnavailable)
+			{
+				[multicastDelegate xmppRoom:self occupantDidLeave:from withPresence:presence];
+			}
 		}
 	}
+}
+
+- (void)xmppRoom:(XMPPRoom *)sender didReceiveError:(NSXMLElement *)error
+{
+	[multicastDelegate xmppRoom:self didReceiveError:error];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message

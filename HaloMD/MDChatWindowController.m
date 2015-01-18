@@ -48,7 +48,6 @@
 @property (nonatomic) NSString *desiredNickname;
 @property (nonatomic) NSString *desiredUserIdentifier;
 @property (nonatomic) NSString *userIdentifier;
-@property (nonatomic) NSUInteger numberOfAttemptsJoined;
 @property (nonatomic) NSUInteger authTag;
 @property (nonatomic) BOOL sleeping;
 @property (nonatomic) BOOL succeededInDelayingSleep;
@@ -116,7 +115,7 @@
 			serialKey = [[NSApp delegate] randomSerialKey];
 		}
 		
-		_desiredNickname = [nickname copy];
+		_desiredNickname = [@"nil" copy];
 		_desiredUserIdentifier = [[MDHashDigest md5HashFromBytes:[serialKey UTF8String] length:(CC_LONG)strlen([serialKey UTF8String])] copy];
 		_userIdentifier = _desiredUserIdentifier;
 	}
@@ -164,20 +163,12 @@
 		return;
 	}
 	
-	NSString *nickname = (_numberOfAttemptsJoined == 0) ? _desiredNickname : [_desiredNickname stringByAppendingFormat:@"%lu", _numberOfAttemptsJoined + 1];
-	
-	_connection = [[MDChatConnection alloc] initWithNickname:nickname userIdentifier:_userIdentifier delegate:self];
+	_connection = [[MDChatConnection alloc] initWithNickname:_desiredNickname userIdentifier:_userIdentifier delegate:self];
 	
 	BOOL connected = [_connection joinRoom];
 	if (!connected)
 	{
 		[_connection disconnect];
-	}
-	
-	if (_numberOfAttemptsJoined < 5)
-	{
-		[self performSelector:@selector(signOn) withObject:nil afterDelay:10.0];
-		_numberOfAttemptsJoined++;
 	}
 }
 
@@ -194,7 +185,6 @@
 		[_connection disconnect];
 		[roster removeAllObjects];
 		[rosterTableView reloadData];
-		_numberOfAttemptsJoined = 0;
 	}
 }
 

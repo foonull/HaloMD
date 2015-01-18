@@ -44,6 +44,8 @@
 @property (nonatomic) XMPPStream *stream;
 @property (nonatomic) XMPPRoom *room;
 @property (nonatomic) NSUInteger chancesLeftToJoin;
+@property (nonatomic) NSString *desiredNickname;
+@property (nonatomic) NSUInteger nicknameTag;
 
 @end
 
@@ -54,10 +56,12 @@
 	self = [super init];
 	if (self != nil)
 	{
-		_nickname = [nickname copy];
+		_desiredNickname = [nickname copy];
+		_nickname = _desiredNickname;
 		_userIdentifier = [userIdentifier copy];
 		_delegate = delegate;
 		_chancesLeftToJoin = 5;
+		_nicknameTag = 1;
 	}
 	return self;
 }
@@ -166,7 +170,21 @@
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
 {
-	NSLog(@"Received xmpp error: %@", error);
+	NSLog(@"Received xmpp stream error: %@", error);
+}
+
+- (void)xmppRoom:(XMPPStream *)sender didReceiveError:(NSXMLElement *)error
+{
+	NSString *errorType = [error attributeForName:@"type"].objectValue;
+	if ([errorType isKindOfClass:[NSString class]] && [errorType isEqualToString:@"cancel"])
+	{
+		_nickname = [_desiredNickname stringByAppendingFormat:@"%lu", ++_nicknameTag];
+		[self joinRoom];
+	}
+	else
+	{
+		NSLog(@"Error: Encountered unknown room error: %@", error);
+	}
 }
 
 - (void)xmppRoomDidJoin:(XMPPRoom *)sender
