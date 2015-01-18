@@ -47,6 +47,7 @@
 - (BOOL)joinRoom;
 - (void)leaveRoom;
 - (BOOL)isInRoom;
+- (void)disconnect;
 
 - (void)setStatus:(NSString *)status;
 

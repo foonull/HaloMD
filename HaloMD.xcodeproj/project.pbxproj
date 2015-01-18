@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		26707D1C1A6C2250009E7FAD /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26707D1B1A6C2250009E7FAD /* IOKit.framework */; };
 		7706FC1114DBB28C0023DBA4 /* Data in Copy Halo Data */ = {isa = PBXBuildFile; fileRef = 7706FC0E14DBB26C0023DBA4 /* Data */; };
 		770BEEB2154DB7900052193F /* shield.icns in Resources */ = {isa = PBXBuildFile; fileRef = 770BEEB1154DB7900052193F /* shield.icns */; };
 		770C153D1741CC37001380A8 /* game_icon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 770C153C1741CC37001380A8 /* game_icon.pdf */; };
@@ -286,6 +287,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		26707D1B1A6C2250009E7FAD /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		7706FC0E14DBB26C0023DBA4 /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Data; sourceTree = "<group>"; };
 		770BEEB1154DB7900052193F /* shield.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = shield.icns; sourceTree = "<group>"; };
 		770C153C1741CC37001380A8 /* game_icon.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = game_icon.pdf; sourceTree = "<group>"; };
@@ -673,6 +675,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				26707D1C1A6C2250009E7FAD /* IOKit.framework in Frameworks */,
 				DA3FB80419DD06C6004167A9 /* libxml2.dylib in Frameworks */,
 				DA3FB80219DD06B9004167A9 /* Cocoa.framework in Frameworks */,
 				775E62761944E5E5005AC209 /* CoreLocation.framework in Frameworks */,
@@ -764,6 +767,7 @@
 		775B528C14D331C800B874E3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				26707D1B1A6C2250009E7FAD /* IOKit.framework */,
 				DA3FB80319DD06C6004167A9 /* libxml2.dylib */,
 				DA3FB80119DD06B9004167A9 /* Cocoa.framework */,
 				775E62751944E5E4005AC209 /* CoreLocation.framework */,

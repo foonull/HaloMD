@@ -119,6 +119,11 @@
 	}
 }
 
+- (void)disconnect
+{
+	[_stream disconnect];
+}
+
 - (BOOL)isInRoom
 {
 	return _room.isJoined;
@@ -138,9 +143,9 @@
 
 - (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error
 {
-	NSLog(@"Error: Disconnected: %@", error);
-	_stream = nil;
+	//NSLog(@"Error: Disconnected: %@", error);
 	[_delegate processMessage:[self prependCurrentDateToMessage:@"Disconnected from server..."] type:@"connection_disconnected" nickname:nil text:nil];
+	_stream = nil;
 }
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
@@ -156,13 +161,12 @@
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
 {
 	NSLog(@"Error: Failed to authenticate: %@", error);
-	[_delegate processMessage:[self prependCurrentDateToMessage:@"Failed to authenticate to the server..."] type:@"auth_failed" nickname:nil text:nil];
+	[_delegate processMessage:[self prependCurrentDateToMessage:@"Failed to authenticate to the server. Trying again..."] type:@"auth_failed" nickname:nil text:nil];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
 {
 	NSLog(@"Received xmpp error: %@", error);
-	[_delegate processMessage:[self prependCurrentDateToMessage:@"Received error from the server..."] type:@"connection_failed" nickname:nil text:nil];
 }
 
 - (void)xmppRoomDidJoin:(XMPPRoom *)sender

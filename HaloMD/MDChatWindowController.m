@@ -36,6 +36,7 @@
 #import <WebKit/WebKit.h>
 #import <Growl/Growl.h>
 #import <CommonCrypto/CommonDigest.h>
+#import <IOKit/pwr_mgt/IOPMLib.h>
 #import "AppDelegate.h"
 #import "MDServer.h"
 #import "MDHashDigest.h"
@@ -49,6 +50,9 @@
 @property (nonatomic) NSString *userIdentifier;
 @property (nonatomic) NSUInteger numberOfAttemptsJoined;
 @property (nonatomic) NSUInteger authTag;
+@property (nonatomic) BOOL sleeping;
+@property (nonatomic) BOOL succeededInDelayingSleep;
+@property (nonatomic) IOPMAssertionID sleepAssertionID;
 
 @end
 
@@ -151,7 +155,7 @@
 	
 	if (!self.window.isVisible)
 	{
-		_connection = nil;
+		[_connection disconnect];
 		return;
 	}
 	
@@ -167,7 +171,7 @@
 	BOOL connected = [_connection joinRoom];
 	if (!connected)
 	{
-		_connection = nil;
+		[_connection disconnect];
 	}
 	
 	if (_numberOfAttemptsJoined < 5)
@@ -187,7 +191,7 @@
 	if (!willTerminate)
 	{
 		[_connection leaveRoom];
-		_connection = nil; // disconnect
+		[_connection disconnect];
 		[roster removeAllObjects];
 		[rosterTableView reloadData];
 		_numberOfAttemptsJoined = 0;
@@ -196,14 +200,26 @@
 
 - (void)systemWillSleep:(NSNotification *)notification
 {
+	_sleeping = YES;
 	if ([[self window] isVisible])
 	{
-		[self signOff];
+		IOReturn success = IOPMAssertionCreateWithName(kIOPMAssertionTypeNoDisplaySleep, kIOPMAssertionLevelOn, (CFStringRef)@"MD Disconnecting Chat", &_sleepAssertionID);
+		
+		_succeededInDelayingSleep = (success == kIOReturnSuccess);
+		if (_succeededInDelayingSleep)
+		{
+			[self signOff];
+		}
+		else
+		{
+			NSLog(@"Error: Failed to delay sleep");
+		}
 	}
 }
 
 - (void)systemDidWake:(NSNotification *)notification
 {
+	_sleeping = NO;
 	if ([[self window] isVisible])
 	{
 		[self performSelector:@selector(signOn) withObject:nil afterDelay:1.5];
@@ -431,7 +447,18 @@
 			[self signOff];
 			if ([typeString isEqualToString:@"connection_disconnected"])
 			{
-				[self performSelector:@selector(signOn) withObject:nil afterDelay:1.5];
+				_connection = nil;
+				if (!_sleeping)
+				{
+					[self performSelector:@selector(signOn) withObject:nil afterDelay:60.0];
+				}
+				else if (_succeededInDelayingSleep)
+				{
+					if (IOPMAssertionRelease(_sleepAssertionID) != kIOReturnSuccess)
+					{
+						NSLog(@"Error: Failed to release sleep assertion");
+					}
+				}
 			}
 			else if ([typeString isEqualToString:@"auth_failed"])
 			{
