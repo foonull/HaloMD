@@ -176,14 +176,43 @@
 - (void)xmppRoom:(XMPPStream *)sender didReceiveError:(NSXMLElement *)error
 {
 	NSString *errorType = [error attributeForName:@"type"].objectValue;
-	if ([errorType isKindOfClass:[NSString class]] && [errorType isEqualToString:@"cancel"])
+	if ([errorType isKindOfClass:[NSString class]])
 	{
-		_nickname = [_desiredNickname stringByAppendingFormat:@"%lu", ++_nicknameTag];
-		[self joinRoom];
+		if ([errorType isEqualToString:@"cancel"])
+		{
+			_nickname = [_desiredNickname stringByAppendingFormat:@"%lu", ++_nicknameTag];
+			[self joinRoom];
+		}
+		else if ([errorType isEqualToString:@"auth"])
+		{
+			NSString *messageToUser = nil;
+			if ([error elementForName:@"forbidden"] != nil)
+			{
+				NSString *text = [error elementForName:@"text"].objectValue;
+				if (text != nil)
+				{
+					messageToUser = text;
+				}
+				else
+				{
+					messageToUser = @"You are not authorized to join this room.";
+				}
+			}
+			else
+			{
+				messageToUser = @"You are unable to join this room for an unknown reason.";
+			}
+			
+			[_delegate processMessage:[self prependCurrentDateToMessage:messageToUser] type:@"failed_room_auth" nickname:nil text:nil];
+		}
+		else
+		{
+			NSLog(@"Encountered unhandled room error: %@", error);
+		}
 	}
 	else
 	{
-		NSLog(@"Error: Encountered unknown room error: %@", error);
+		NSLog(@"Error: Encountered unknown type of room error: %@", error);
 	}
 }
 
