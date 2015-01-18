@@ -311,7 +311,7 @@
 		}
 	}
 	
-	if ([@[@"on_message", @"on_private_message", @"my_message", @"my_private_message", @"on_leave", @"on_self_leave", @"on_join", @"connection_failed", @"connection_failed_timeout", @"connection_disconnected", @"auth_failed", @"failed_room_auth", @"muc_join_failed", @"connection_initiating", @"muc_joined", @"roster", @"subject"] containsObject:typeString])
+	if ([@[@"on_message", @"on_private_message", @"my_message", @"my_private_message", @"on_leave", @"on_self_leave", @"on_join", @"connection_failed", @"connection_failed_timeout", @"connection_disconnected", @"kicked", @"auth_failed", @"failed_room_auth", @"muc_join_failed", @"connection_initiating", @"muc_joined", @"roster", @"subject"] containsObject:typeString])
 	{
 		MDChatRosterElement *foundRosterElement = nil;
 		if (nickString && [@[@"on_join", @"muc_joined", @"on_leave", @"on_self_leave"] containsObject:typeString])
@@ -432,7 +432,7 @@
 			}
 		}
 		
-		if ([@[@"connection_failed", @"connection_failed_timeout", @"muc_join_failed", @"on_self_leave", @"auth_failed", @"connection_disconnected", @"failed_room_auth"] containsObject:typeString])
+		if ([@[@"connection_failed", @"connection_failed_timeout", @"muc_join_failed", @"on_self_leave", @"auth_failed", @"connection_disconnected", @"failed_room_auth", @"kicked"] containsObject:typeString])
 		{
 			[self signOff];
 			if ([typeString isEqualToString:@"connection_disconnected"])

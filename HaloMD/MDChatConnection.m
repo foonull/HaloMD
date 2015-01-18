@@ -137,7 +137,8 @@
 {
 	NSError *error = nil;
 	// -[XMPPStream authenticateAnonymously:] which uses SASL ANONYMOUS authentication may use a randomized JID from the server, which is not desirable
-	BOOL operationInProgress = [_stream authenticate:[[XMPPDigestMD5Authentication alloc] initWithStream:_stream password:@"password"] error:&error];
+	
+	BOOL operationInProgress = [_stream authenticate:[[XMPPDigestMD5Authentication alloc] initWithStream:_stream password:[@"password" stringByAppendingFormat:@"%u", arc4random()]] error:&error];
 	if (!operationInProgress)
 	{
 		NSLog(@"We failed to authenticate..: %@", error);
@@ -241,6 +242,44 @@
 {
 	NSString *senderName = occupantJID.resource;
 	[_delegate processMessage:[self prependCurrentDateToMessage:@""] type:@"on_join" nickname:senderName text:presence.status];
+}
+
+- (void)xmppStream:(XMPPStream *)stream didReceivePresence:(XMPPPresence *)presence
+{
+	NSString *type = presence.type;
+	XMPPJID *from = presence.from;
+	
+	if ([from isEqualToJID:[XMPPJID jidWithUser:XMPP_ROOM_NAME domain:XMPP_ROOM_HOST resource:_nickname]] && [type isEqualToString:@"unavailable"])
+	{
+		NSXMLElement *x = [presence elementForName:@"x" xmlns:XMPPMUCUserNamespace];
+		NSXMLElement *item = [x elementForName:@"item"];
+		NSString *affiliation = [item attributeForName:@"affiliation"].objectValue;
+		if ([affiliation isKindOfClass:[NSString class]])
+		{
+			NSString *leaveAction = nil;
+			if ([affiliation isEqualToString:@"none"])
+			{
+				leaveAction = @"kicked";
+			}
+			else if ([affiliation isEqualToString:@"outcast"])
+			{
+				leaveAction = @"banned";
+			}
+			else
+			{
+				leaveAction = @"removed";
+			}
+			
+			NSString *reason = [item elementForName:@"reason"].objectValue;
+			NSString *messageToUser = [NSString stringWithFormat:@"You have been %@ from this room.", leaveAction];
+			if (reason.length > 0)
+			{
+				messageToUser = [messageToUser stringByAppendingFormat:@" Reason: %@", reason];
+			}
+			
+			[_delegate processMessage:[self prependCurrentDateToMessage:messageToUser] type:@"kicked" nickname:nil text:nil];
+		}
+	}
 }
 
 - (void)xmppRoom:(XMPPRoom *)sender didReceiveMessage:(XMPPMessage *)message fromOccupant:(XMPPJID *)occupantJID

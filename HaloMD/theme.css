@@ -39,6 +39,11 @@ body {
 	border-left: 8px solid #FF5500;
 }
 
+.kicked {
+	font-size: 11px;
+	border-left: 8px solid #FF5500;
+}
+
 .failed_room_auth {
 	font-size: 11px;
 	border-left: 8px solid #FF5500;
