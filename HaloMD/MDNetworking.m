@@ -382,8 +382,7 @@ static BOOL sentIPv6Query;
 			
 			if (sendto(ipv4QuerySocket, buffer, sizeof buffer, 0, (struct sockaddr *)&socketAddress, socketAddress.sin_len) <= 0)
 			{
-				NSLog(@"Failed to send data to %@", address);
-				perror("sendto failed: ");
+				//perror("sendto failed: ");
 			}
 			else
 			{
@@ -409,8 +408,7 @@ static BOOL sentIPv6Query;
 			
 			if (sendto(ipv6QuerySocket, buffer, sizeof buffer, 0, (struct sockaddr *)&socketAddress, socketAddress.sin6_len) <= 0)
 			{
-				NSLog(@"Failed to send data to %@", address);
-				perror("sendto failed: ");
+				//perror("sendto failed: ");
 			}
 			else
 			{
