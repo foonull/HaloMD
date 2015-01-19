@@ -52,6 +52,7 @@
 @property (nonatomic) BOOL sleeping;
 @property (nonatomic) BOOL succeededInDelayingSleep;
 @property (nonatomic) IOPMAssertionID sleepAssertionID;
+@property (nonatomic) BOOL closingWindow;
 
 @end
 
@@ -151,6 +152,11 @@
 - (void)signOn
 {
 	_attemptedSignOnBefore = YES;
+	
+	if (_closingWindow || _sleeping)
+	{
+		return;
+	}
 	
 	if (!self.window.isVisible)
 	{
@@ -438,11 +444,11 @@
 			if ([typeString isEqualToString:@"connection_disconnected"])
 			{
 				_connection = nil;
-				if (!_sleeping)
+				if (!_sleeping && !_closingWindow)
 				{
 					[self performSelector:@selector(signOn) withObject:nil afterDelay:60.0];
 				}
-				else if (_succeededInDelayingSleep)
+				else if (_sleeping && _succeededInDelayingSleep)
 				{
 					if (IOPMAssertionRelease(_sleepAssertionID) != kIOReturnSuccess)
 					{
@@ -463,7 +469,10 @@
 				{
 					_userIdentifier = [_desiredUserIdentifier stringByAppendingFormat:@"%lu", _authTag];
 				}
-				[self signOn];
+				if (!_closingWindow && !_sleeping)
+				{
+					[self signOn];
+				}
 			}
 		}
 	}
@@ -641,6 +650,8 @@
 {
 	[super showWindow:sender];
 	
+	_closingWindow = NO;
+	
 	if (_attemptedSignOnBefore)
 	{
 		[self signOn];
@@ -651,6 +662,7 @@
 {
 	if ([notification object] == [self window])
 	{
+		_closingWindow = YES;
 		[self signOff];
 	}
 }
