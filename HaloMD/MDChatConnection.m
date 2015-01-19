@@ -133,7 +133,13 @@
 	return _room.isJoined;
 }
 
-- (void)xmppStreamDidConnect:(XMPPStream *)sender
+- (void)reauthenticateWithUserID:(NSString *)newUserID
+{
+	_stream.myJID = [XMPPJID jidWithUser:newUserID domain:XMPP_HOST_NAME resource:XMPP_RESOURCE];
+	[self authenticate];
+}
+
+- (void)authenticate
 {
 	NSError *error = nil;
 	// -[XMPPStream authenticateAnonymously:] which uses SASL ANONYMOUS authentication may use a randomized JID from the server, which is not desirable
@@ -144,6 +150,11 @@
 		NSLog(@"We failed to authenticate..: %@", error);
 		[_delegate processMessage:[self prependCurrentDateToMessage:@"Failed to connect to the server..."] type:@"connection_failed" nickname:nil text:nil];
 	}
+}
+
+- (void)xmppStreamDidConnect:(XMPPStream *)sender
+{
+	[self authenticate];
 }
 
 - (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error
@@ -165,7 +176,6 @@
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
 {
-	NSLog(@"Error: Failed to authenticate: %@", error);
 	[_delegate processMessage:[self prependCurrentDateToMessage:@"Failed to authenticate to the server. Trying again..."] type:@"auth_failed" nickname:nil text:nil];
 }
 

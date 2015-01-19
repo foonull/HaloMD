@@ -49,6 +49,8 @@
 - (BOOL)isInRoom;
 - (void)disconnect;
 
+- (void)reauthenticateWithUserID:(NSString *)newUserID;
+
 - (void)setStatus:(NSString *)status;
 
 @end

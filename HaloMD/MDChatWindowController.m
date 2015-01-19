@@ -440,24 +440,7 @@
 		
 		if ([@[@"connection_failed", @"connection_failed_timeout", @"muc_join_failed", @"on_self_leave", @"auth_failed", @"connection_disconnected", @"failed_room_auth", @"kicked"] containsObject:typeString])
 		{
-			[self signOff];
-			if ([typeString isEqualToString:@"connection_disconnected"])
-			{
-				_connection = nil;
-				if (!_sleeping && !_closingWindow)
-				{
-					[self performSelector:@selector(signOn) withObject:nil afterDelay:60.0];
-				}
-				else if (_sleeping && _succeededInDelayingSleep)
-				{
-					if (IOPMAssertionRelease(_sleepAssertionID) != kIOReturnSuccess)
-					{
-						NSLog(@"Error: Failed to release sleep assertion");
-					}
-					_succeededInDelayingSleep = NO;
-				}
-			}
-			else if ([typeString isEqualToString:@"auth_failed"])
+			if ([typeString isEqualToString:@"auth_failed"])
 			{
 				++_authTag;
 				if (_authTag >= 3)
@@ -467,11 +450,32 @@
 				}
 				else
 				{
-					_userIdentifier = [_desiredUserIdentifier stringByAppendingFormat:@"%lu", _authTag];
+					_userIdentifier = [_desiredUserIdentifier stringByAppendingFormat:@"_%lu", _authTag];
 				}
 				if (!_closingWindow && !_sleeping)
 				{
-					[self signOn];
+					[_connection reauthenticateWithUserID:_userIdentifier];
+				}
+			}
+			else
+			{
+				[self signOff];
+				
+				if ([typeString isEqualToString:@"connection_disconnected"])
+				{
+					_connection = nil;
+					if (!_sleeping && !_closingWindow)
+					{
+						[self performSelector:@selector(signOn) withObject:nil afterDelay:60.0];
+					}
+					else if (_sleeping && _succeededInDelayingSleep)
+					{
+						if (IOPMAssertionRelease(_sleepAssertionID) != kIOReturnSuccess)
+						{
+							NSLog(@"Error: Failed to release sleep assertion");
+						}
+						_succeededInDelayingSleep = NO;
+					}
 				}
 			}
 		}
