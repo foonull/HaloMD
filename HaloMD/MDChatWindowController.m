@@ -202,11 +202,10 @@
 		IOReturn success = IOPMAssertionCreateWithName(kIOPMAssertionTypeNoDisplaySleep, kIOPMAssertionLevelOn, (CFStringRef)@"MD Disconnecting Chat", &_sleepAssertionID);
 		
 		_succeededInDelayingSleep = (success == kIOReturnSuccess);
-		if (_succeededInDelayingSleep)
-		{
-			[self signOff];
-		}
-		else
+		
+		[self signOff];
+		
+		if (!_succeededInDelayingSleep)
 		{
 			NSLog(@"Error: Failed to delay sleep");
 		}
