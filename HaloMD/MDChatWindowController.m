@@ -492,16 +492,13 @@
 				
 				[self signOff];
 				
-				if (isDisconnected)
+				if (isDisconnected && _sleeping && _succeededInDelayingSleep)
 				{
-					if (_sleeping && _succeededInDelayingSleep)
+					if (IOPMAssertionRelease(_sleepAssertionID) != kIOReturnSuccess)
 					{
-						if (IOPMAssertionRelease(_sleepAssertionID) != kIOReturnSuccess)
-						{
-							NSLog(@"Error: Failed to release sleep assertion");
-						}
-						_succeededInDelayingSleep = NO;
+						NSLog(@"Error: Failed to release sleep assertion");
 					}
+					_succeededInDelayingSleep = NO;
 				}
 			}
 		}
