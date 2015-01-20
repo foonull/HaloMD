@@ -292,6 +292,29 @@
 			[_delegate processMessage:[self prependCurrentDateToMessage:messageToUser] type:@"removed" nickname:nil text:nil];
 		}
 	}
+	else
+	{
+		NSXMLElement *x = [presence elementForName:@"x" xmlns:XMPPMUCUserNamespace];
+		NSXMLElement *item = [x elementForName:@"item"];
+		
+		NSString *roleValue = [item attributeForName:@"role"].objectValue;
+		if ([roleValue isKindOfClass:[NSString class]] && [@[@"visitor", @"participant"] containsObject:roleValue])
+		{
+			XMPPJID *from = presence.from;
+			BOOL isItMe = [from isEqualToJID:[XMPPJID jidWithUser:XMPP_ROOM_NAME domain:XMPP_ROOM_HOST resource:_nickname]];
+			
+			NSString *action = [roleValue isEqualToString:@"visitor"] ? @"muted" : @"unmuted";
+			NSString *reason = [item elementForName:@"reason"].objectValue;
+			NSString *messageToUser = [NSString stringWithFormat:@"%@ %@ been %@ from this room.", (isItMe ? @"You" : from.resource), (isItMe ? @"have" : @"has"), action];
+			
+			if (reason.length > 0)
+			{
+				messageToUser = [messageToUser stringByAppendingFormat:@" Reason: %@", reason];
+			}
+			
+			[_delegate processMessage:[self prependCurrentDateToMessage:messageToUser] type:@"voice" nickname:from.resource text:roleValue];
+		}
+	}
 }
 
 - (void)xmppRoomDidLeave:(XMPPRoom *)room

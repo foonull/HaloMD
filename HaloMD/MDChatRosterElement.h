@@ -34,12 +34,9 @@
 #import <Foundation/Foundation.h>
 
 @interface MDChatRosterElement : NSObject
-{
-	NSString *name;
-	NSString *status;
-}
 
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *status;
+@property (nonatomic) BOOL muted;
 
 @end

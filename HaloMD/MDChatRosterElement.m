@@ -35,7 +35,4 @@
 
 @implementation MDChatRosterElement
 
-@synthesize name;
-@synthesize status;
-
 @end
