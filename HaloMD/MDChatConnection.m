@@ -287,18 +287,21 @@
 					leaveAction = @"banned";
 				}
 				
-				XMPPJID *from = presence.from;
-				BOOL isItMe = [from isEqualToJID:[XMPPJID jidWithUser:XMPP_ROOM_NAME domain:XMPP_ROOM_HOST resource:_nickname]];
-				
-				NSString *reason = [item elementForName:@"reason"].objectValue;
-				NSString *messageToUser = [NSString stringWithFormat:@"%@ %@ been %@ from this room.", (isItMe ? @"You" : from.resource), (isItMe ? @"have" : @"has"), leaveAction];
-				
-				if ([reason isKindOfClass:[NSString class]] && reason.length > 0)
+				if (leaveAction != nil)
 				{
-					messageToUser = [messageToUser stringByAppendingFormat:@" Reason: %@", reason];
+					XMPPJID *from = presence.from;
+					BOOL isItMe = [from isEqualToJID:[XMPPJID jidWithUser:XMPP_ROOM_NAME domain:XMPP_ROOM_HOST resource:_nickname]];
+					
+					NSString *reason = [item elementForName:@"reason"].objectValue;
+					NSString *messageToUser = [NSString stringWithFormat:@"%@ %@ been %@ from this room.", (isItMe ? @"You" : from.resource), (isItMe ? @"have" : @"has"), leaveAction];
+					
+					if ([reason isKindOfClass:[NSString class]] && reason.length > 0)
+					{
+						messageToUser = [messageToUser stringByAppendingFormat:@" Reason: %@", reason];
+					}
+					
+					[_delegate processMessage:[self prependCurrentDateToMessage:messageToUser] type:@"removed" nickname:nil text:nil];
 				}
-				
-				[_delegate processMessage:[self prependCurrentDateToMessage:messageToUser] type:@"removed" nickname:nil text:nil];
 			}
 		}
 	}
