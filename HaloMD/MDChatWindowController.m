@@ -215,10 +215,7 @@
 - (void)systemDidWake:(NSNotification *)notification
 {
 	_sleeping = NO;
-	if ([[self window] isVisible])
-	{
-		[self performSelector:@selector(signOn) withObject:nil afterDelay:1.5];
-	}
+	[self signOn];
 }
 
 - (NSString *)currentStatus

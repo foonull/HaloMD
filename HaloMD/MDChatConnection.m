@@ -32,6 +32,7 @@
 #import "XMPPRoomMemoryStorage.h"
 #import "XMPPRoom.h"
 #import "XMPPMessage+XEP0045.h"
+#import "XMPPReconnect.h"
 
 #define XMPP_HOST_NAME @"gekko.macgamingmods.com"
 #define XMPP_ROOM_HOST @"conference.gekko.macgamingmods.com"
@@ -42,6 +43,7 @@
 @interface MDChatConnection ()
 
 @property (nonatomic) XMPPStream *stream;
+@property (nonatomic) XMPPReconnect *reconnect;
 @property (nonatomic) XMPPRoom *room;
 @property (nonatomic) NSUInteger chancesLeftToJoin;
 @property (nonatomic) NSString *desiredNickname;
@@ -94,6 +96,10 @@
 		[_stream addDelegate:self delegateQueue:dispatch_get_main_queue()];
 		_stream.hostName = XMPP_HOST_NAME;
 		_stream.myJID = [XMPPJID jidWithUser:_userIdentifier domain:XMPP_HOST_NAME resource:XMPP_RESOURCE];
+		
+		_reconnect = [[XMPPReconnect alloc] init];
+		[_reconnect activate:_stream];
+		[_reconnect manualStart];
 		
 		NSError *error = nil;
 		BOOL success = [_stream connectWithTimeout:XMPP_CONNECT_TIMEOUT error:&error];
