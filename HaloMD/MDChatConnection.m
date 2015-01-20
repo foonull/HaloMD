@@ -348,14 +348,6 @@
 		NSString *sender = message.from.resource;
 		[_delegate processMessage:[self prependCurrentDateToMessage:[NSString stringWithFormat:@"Private: <%@> %@", sender, message.body]] type:@"on_private_message" nickname:sender text:message.body];
 	}
-	else if ([message isGroupChatMessageWithSubject])
-	{
-		NSString *subject = message.subject;
-		if (subject != nil)
-		{
-			[_delegate processMessage:[@"Topic: " stringByAppendingString:subject] type:@"on_subject" nickname:nil text:nil];
-		}
-	}
 }
 
 - (void)setStatus:(NSString *)status
