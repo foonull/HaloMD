@@ -243,9 +243,8 @@
 - (void)xmppRoom:(XMPPRoom *)sender occupantDidLeave:(XMPPJID *)occupantJID withPresence:(XMPPPresence *)presence
 {
 	NSString *senderName = occupantJID.resource;
-	NSString *messageType = ([senderName isEqualToString:_nickname]) ? @"on_self_leave" : @"on_leave";
 	
-	[_delegate processMessage:[self prependCurrentDateToMessage:[NSString stringWithFormat:@"<%@> left", senderName]] type:messageType nickname:senderName text:presence.status];
+	[_delegate processMessage:[self prependCurrentDateToMessage:[NSString stringWithFormat:@"<%@> left", senderName]] type:@"on_leave" nickname:senderName text:presence.status];
 }
 
 - (void)xmppRoom:(XMPPRoom *)sender occupantDidUpdate:(XMPPJID *)occupantJID withPresence:(XMPPPresence *)presence
@@ -287,8 +286,16 @@
 				messageToUser = [messageToUser stringByAppendingFormat:@" Reason: %@", reason];
 			}
 			
-			[_delegate processMessage:[self prependCurrentDateToMessage:messageToUser] type:@"kicked" nickname:nil text:nil];
+			[_delegate processMessage:[self prependCurrentDateToMessage:messageToUser] type:@"removed" nickname:nil text:nil];
 		}
+	}
+}
+
+- (void)xmppRoomDidLeave:(XMPPRoom *)room
+{
+	if (_stream.isConnected)
+	{
+		[_delegate processMessage:[self prependCurrentDateToMessage:@"You left the room."] type:@"on_self_leave" nickname:nil text:nil];
 	}
 }
 
