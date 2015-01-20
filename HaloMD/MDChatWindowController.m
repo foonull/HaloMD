@@ -459,11 +459,16 @@
 			}
 			else
 			{
-				[self signOff];
-				
-				if ([typeString isEqualToString:@"connection_disconnected"])
+				BOOL isDisconnected = [typeString isEqualToString:@"connection_disconnected"];
+				if (isDisconnected)
 				{
 					_connection = nil;
+				}
+				
+				[self signOff];
+				
+				if (isDisconnected)
+				{
 					if (!_sleeping && !_closingWindow)
 					{
 						[self performSelector:@selector(signOn) withObject:nil afterDelay:60.0];
