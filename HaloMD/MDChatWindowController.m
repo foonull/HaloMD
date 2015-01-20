@@ -494,11 +494,7 @@
 				
 				if (isDisconnected)
 				{
-					if (!_sleeping && !_closingWindow)
-					{
-						[self performSelector:@selector(signOn) withObject:nil afterDelay:60.0];
-					}
-					else if (_sleeping && _succeededInDelayingSleep)
+					if (_sleeping && _succeededInDelayingSleep)
 					{
 						if (IOPMAssertionRelease(_sleepAssertionID) != kIOReturnSuccess)
 						{
