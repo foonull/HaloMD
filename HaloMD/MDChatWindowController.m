@@ -339,6 +339,11 @@
 				
 				[roster addObject:newRosterElement];
 				[rosterTableView reloadData];
+				
+				if ([typeString isEqualToString:@"on_join"] && _connection.subject == nil)
+				{
+					canWriteMessage = NO;
+				}
 			}
 			else
 			{
