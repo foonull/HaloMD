@@ -46,7 +46,6 @@
 	IBOutlet NSSplitView *chatSplitView;
 	IBOutlet NSSplitView *rosterSplitView;
 	IBOutlet NSTableView *rosterTableView;
-	int previousMaxScroll;
 	uint64_t numberOfUnreadMentions;
 	NSMutableArray *roster;
 	NSString *myNick;

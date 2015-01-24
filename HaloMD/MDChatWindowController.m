@@ -61,14 +61,13 @@
 @synthesize myNick;
 
 #define MD_STATUS_PREFIX @"!MD"
+#define AUTO_SCROLL_PIXEL_THRESHOLD 20.0
 
 - (id)init
 {
 	self = [super initWithWindowNibName:NSStringFromClass([self class])];
 	if (self)
 	{
-		previousMaxScroll = -1;
-		
 		roster = [[NSMutableArray alloc] init];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillBecomeActive:) name:NSApplicationWillBecomeActiveNotification object:nil];
@@ -292,6 +291,8 @@
 	DOMDocument *document = [[webView mainFrame] DOMDocument];
 	DOMElement *contentBlock = [document getElementById:@"content"];
 	
+	BOOL shouldScrollToEnd = YES;
+	
 	NSMutableArray *messageDOMComponents = [NSMutableArray array];
 	
 	if (messageString)
@@ -388,6 +389,32 @@
 				{
 					canWriteMessage = NO;
 				}
+			}
+		}
+		
+		NSView *documentView = webView.mainFrame.frameView.documentView;
+		NSScrollView *scrollView = nil;
+		for (id view in webView.mainFrame.frameView.subviews)
+		{
+			if ([view isKindOfClass:[NSScrollView class]])
+			{
+				scrollView = view;
+				break;
+			}
+		}
+		
+		if (scrollView.documentView == documentView)
+		{
+			// https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/NSScrollViewGuide/Articles/Scrolling.html
+			NSPoint newScrollPosition =
+			documentView.isFlipped ?
+			NSMakePoint(0.0, NSMaxY(documentView.frame) - NSHeight(scrollView.contentView.bounds)) :
+			NSMakePoint(0.0, 0.0);
+			
+			NSPoint currentScrollPosition = scrollView.contentView.bounds.origin;
+			if (fabsf(currentScrollPosition.y - newScrollPosition.y) > AUTO_SCROLL_PIXEL_THRESHOLD)
+			{
+				shouldScrollToEnd = NO;
 			}
 		}
 		
@@ -519,15 +546,10 @@
 	
 	[webView display];
 	
-	int scrollMax = [[webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.scrollHeight - document.documentElement.clientHeight"] intValue];
-	int currentScrollPosition = [[webView stringByEvaluatingJavaScriptFromString:@"window.pageYOffset"] intValue];
-	
-	if ((previousMaxScroll < 0 && scrollMax >= 0) || previousMaxScroll - currentScrollPosition < 5 || [typeString isEqualToString:@"on_subject"])
+	if (shouldScrollToEnd)
 	{
 		[webView scrollToEndOfDocument:nil];
 	}
-	
-	previousMaxScroll = scrollMax;
 }
 
 - (void)clearAllMessages
@@ -734,7 +756,6 @@
 {
 	[self adjustTextView];
 	[webView scrollToEndOfDocument:nil];
-	previousMaxScroll = [[webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.scrollHeight - document.documentElement.clientHeight"] intValue];
 }
 
 - (void)splitViewDidResizeSubviews:(NSNotification *)aNotification
