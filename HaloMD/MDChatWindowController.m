@@ -63,6 +63,14 @@
 #define MD_STATUS_PREFIX @"!MD"
 #define AUTO_SCROLL_PIXEL_THRESHOLD 20.0
 
+#define CHAT_TEXT_CHECKING_TYPES @"CHAT_TEXT_CHECKING_TYPES"
+
++ (void)initialize
+{
+	// Use empty strings as our "null" value
+	[[NSUserDefaults standardUserDefaults] registerDefaults:@{ CHAT_TEXT_CHECKING_TYPES : @"" }];
+}
+
 - (id)init
 {
 	self = [super initWithWindowNibName:NSStringFromClass([self class])];
@@ -179,6 +187,8 @@
 
 - (void)cleanup
 {
+	[[NSUserDefaults standardUserDefaults] setObject:@(textView.enabledTextCheckingTypes) forKey:CHAT_TEXT_CHECKING_TYPES];
+	
 	willTerminate = YES;
 }
 
@@ -645,6 +655,12 @@
 	if ([[self window] respondsToSelector:@selector(animationBehavior)]) // easy way to tell if >= 10.7?
 	{
 		[[self window] setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
+	}
+	
+	id chatTextingTypes = [[NSUserDefaults standardUserDefaults] objectForKey:CHAT_TEXT_CHECKING_TYPES];
+	if ([chatTextingTypes isKindOfClass:[NSNumber class]])
+	{
+		textView.enabledTextCheckingTypes = [chatTextingTypes unsignedLongLongValue];
 	}
 	
 	[rosterTableView setDoubleAction:@selector(initiateUserFromRoster:)];
