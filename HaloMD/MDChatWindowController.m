@@ -324,10 +324,10 @@
 		}
 	}
 	
-	if ([@[@"on_message", @"on_private_message", @"my_message", @"my_private_message", @"on_leave", @"on_self_leave", @"on_join", @"connection_failed", @"connection_failed_timeout", @"connection_disconnected", @"removed", @"auth_failed", @"failed_room_auth", @"muc_join_failed", @"connection_initiating", @"muc_joined", @"roster", @"subject", @"voice"] containsObject:typeString])
+	if ([@[@"on_message", @"on_private_message", @"my_message", @"my_private_message", @"on_leave", @"on_self_leave", @"on_join", @"connection_failed", @"connection_failed_timeout", @"connection_disconnected", @"removed", @"auth_failed", @"failed_room_auth", @"muc_join_failed", @"connection_initiating", @"muc_joined", @"roster", @"subject", @"voice", @"muc_nick_change"] containsObject:typeString])
 	{
 		MDChatRosterElement *foundRosterElement = nil;
-		if (nickString != nil && [@[@"on_join", @"muc_joined", @"on_leave", @"on_self_leave", @"voice"] containsObject:typeString])
+		if (nickString != nil && [@[@"on_join", @"muc_joined", @"on_leave", @"on_self_leave", @"voice", @"muc_nick_change"] containsObject:typeString])
 		{
 			for (MDChatRosterElement *rosterElement in roster)
 			{
@@ -369,6 +369,22 @@
 			if (foundRosterElement != nil)
 			{
 				[roster removeObject:foundRosterElement];
+				[rosterTableView reloadData];
+			}
+			else
+			{
+				canWriteMessage = NO;
+			}
+		}
+		else if (nickString != nil && [typeString isEqualToString:@"muc_nick_change"])
+		{
+			if (foundRosterElement != nil)
+			{
+				if ([foundRosterElement.name isEqualToString:myNick])
+				{
+					myNick = [textString copy];
+				}
+				foundRosterElement.name = textString;
 				[rosterTableView reloadData];
 			}
 			else

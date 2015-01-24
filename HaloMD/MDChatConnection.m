@@ -233,6 +233,31 @@
 	}
 }
 
+- (void)xmppRoom:(XMPPRoom *)sender occupantChangedNickname:(XMPPJID *)occupant withPresence:(XMPPPresence *)presence
+{
+	if ([presence.type isEqualToString:@"unavailable"])
+	{
+		NSXMLElement *x = [presence elementForName:@"x" xmlns:XMPPMUCUserNamespace];
+		NSXMLElement *item = [x elementForName:@"item"];
+		id nickname = [item attributeForName:@"nick"].objectValue;
+		if ([nickname isKindOfClass:[NSString class]])
+		{
+			NSString *message = nil;
+			if ([occupant.resource isEqualToString:_nickname])
+			{
+				message = [NSString stringWithFormat:@"You changed your nickname to %@", nickname];
+				_nickname = [nickname copy];
+			}
+			else
+			{
+				message = [NSString stringWithFormat:@"%@ changed their nickname to %@", occupant.resource, nickname];
+			}
+			
+			[_delegate processMessage:[self prependCurrentDateToMessage:message] type:@"muc_nick_change" nickname:occupant.resource text:nickname];
+		}
+	}
+}
+
 - (void)xmppRoomDidJoin:(XMPPRoom *)sender
 {
 	_nickname = [_room.myNickname copy];

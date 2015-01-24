@@ -992,7 +992,7 @@ enum XMPPRoomState
 		// Server's don't always properly send the statusCodes in every situation.
 		// So we have some extra checks to ensure the boolean variables are correct.
 		
-		if (didCreateRoom || isNicknameChange)
+		if (didCreateRoom)
 		{
 			isMyPresence = YES;
 		}
@@ -1015,7 +1015,11 @@ enum XMPPRoomState
 			[multicastDelegate xmppRoomDidCreate:self];
 		}
 		
-		if (isMyPresence)
+		if (isNicknameChange)
+		{
+			[self xmppRoom:self occupantChangedNickname:from withPresence:presence];
+		}
+		else if (isMyPresence)
 		{
 			myRoomJID = from;
 			myNickname = [from resource];
@@ -1057,7 +1061,12 @@ enum XMPPRoomState
 
 - (void)xmppRoom:(XMPPRoom *)sender didReceiveError:(NSXMLElement *)error
 {
-	[multicastDelegate xmppRoom:self didReceiveError:error];
+	[multicastDelegate xmppRoom:sender didReceiveError:error];
+}
+
+- (void)xmppRoom:(XMPPRoom *)sender occupantChangedNickname:(XMPPJID *)occupant withPresence:(XMPPPresence *)presence
+{
+	[multicastDelegate xmppRoom:sender occupantChangedNickname:occupant withPresence:presence];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message
