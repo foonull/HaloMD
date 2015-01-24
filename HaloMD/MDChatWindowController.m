@@ -64,6 +64,7 @@
 #define AUTO_SCROLL_PIXEL_THRESHOLD 20.0
 
 #define CHAT_TEXT_CHECKING_TYPES @"CHAT_TEXT_CHECKING_TYPES"
+#define CHAT_MAX_BACKLOG 300
 
 + (void)initialize
 {
@@ -570,6 +571,8 @@
 		[contentBlock appendChild:newHeader];
 	}
 	
+	[self clearMessages:CHAT_MAX_BACKLOG];
+	
 	[webView display];
 	
 	if (shouldScrollToEnd)
@@ -578,24 +581,15 @@
 	}
 }
 
-- (void)clearAllMessages
+- (void)clearMessages:(unsigned int)maxNumberOfMessagesLeft
 {
 	DOMDocument *document = [[webView mainFrame] DOMDocument];
 	DOMElement *contentBlock = [document getElementById:@"content"];
 	
-	BOOL done = NO;
-	while (!done)
+	DOMNodeList *nodeList = nil;
+	while (maxNumberOfMessagesLeft < (nodeList = contentBlock.childNodes).length)
 	{
-		DOMNodeList *nodeList = [contentBlock childNodes];
-		if ([nodeList length] == 0)
-		{
-			done = YES;
-		}
-		
-		for (unsigned nodeIndex = 0 ; nodeIndex < [nodeList length]; nodeIndex++)
-		{
-			[contentBlock removeChild:[nodeList item:nodeIndex]];
-		}
+		[contentBlock removeChild:[nodeList item:0]];
 	}
 }
 
@@ -630,7 +624,7 @@
 	}
 	else if ([commandType isEqualToString:@"clear"])
 	{
-		[self clearAllMessages];
+		[self clearMessages:0];
 	}
 }
 
