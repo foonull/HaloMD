@@ -1943,7 +1943,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 {
 	[chatWindowController cleanup];
 	[inspectorController cleanup];
-	//[[TCMPortMapper sharedInstance] stopBlocking];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
