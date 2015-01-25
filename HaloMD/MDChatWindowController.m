@@ -419,6 +419,8 @@
 			}
 		}
 		
+		[self clearMessages:CHAT_MAX_BACKLOG];
+		
 		NSView *documentView = webView.mainFrame.frameView.documentView;
 		NSScrollView *scrollView = nil;
 		for (id view in webView.mainFrame.frameView.subviews)
@@ -570,8 +572,6 @@
 		
 		[contentBlock appendChild:newHeader];
 	}
-	
-	[self clearMessages:CHAT_MAX_BACKLOG];
 	
 	[webView display];
 	
