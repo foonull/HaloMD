@@ -38,7 +38,6 @@
 #define XMPP_ROOM_HOST @"conference.gekko.macgamingmods.com"
 #define XMPP_ROOM_NAME @"halomd"
 #define XMPP_RESOURCE @"halomd"
-#define XMPP_CONNECT_TIMEOUT 15 // seconds
 
 @interface MDChatConnection ()
 
@@ -98,16 +97,12 @@
 		_stream.myJID = [XMPPJID jidWithUser:_userIdentifier domain:XMPP_HOST_NAME resource:XMPP_RESOURCE];
 		
 		_reconnect = [[XMPPReconnect alloc] init];
-		[_reconnect activate:_stream];
-		[_reconnect manualStart];
-		
-		NSError *error = nil;
-		BOOL success = [_stream connectWithTimeout:XMPP_CONNECT_TIMEOUT error:&error];
-		if (!success)
+		if (![_reconnect activate:_stream])
 		{
-			NSLog(@"Error signing on: %@", error);
 			return NO;
 		}
+		
+		[_reconnect manualStart];
 	}
 	
 	[_room joinRoomUsingNickname:_nickname history:nil];
