@@ -72,6 +72,8 @@
 #define CHAT_MAX_DEFAULT_BACKLOG_KEY @"CHAT_MAX_DEFAULT_BACKLOG_KEY"
 #define CHAT_MAX_DEFAULT_BACKLOG 300U
 
+#define CHAT_MAX_MESSAGE_LENGTH 500U
+
 + (void)initialize
 {
 	// Use empty strings as our "null" value
@@ -652,6 +654,15 @@
 	}
 }
 
+- (void)textStorageWillProcessEditing:(NSNotification *)notification
+{
+	NSTextStorage *textStorage = textView.textStorage;
+	if (textStorage.length > CHAT_MAX_MESSAGE_LENGTH)
+	{
+		[textStorage deleteCharactersInRange:NSMakeRange(CHAT_MAX_MESSAGE_LENGTH, textStorage.length - CHAT_MAX_MESSAGE_LENGTH)];
+	}
+}
+
 - (void)windowDidLoad
 {
     [super windowDidLoad];
@@ -666,6 +677,8 @@
 	{
 		textView.enabledTextCheckingTypes = [chatTextingTypes unsignedLongLongValue];
 	}
+	
+	textView.textStorage.delegate = self;
 	
 	[rosterTableView setDoubleAction:@selector(initiateUserFromRoster:)];
 	

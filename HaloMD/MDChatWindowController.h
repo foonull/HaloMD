@@ -39,7 +39,7 @@
 
 @class WebView;
 
-@interface MDChatWindowController : NSWindowController <MDChatConnectionDelegate>
+@interface MDChatWindowController : NSWindowController <MDChatConnectionDelegate, NSTextStorageDelegate>
 {
 	IBOutlet WebView *webView;
 	IBOutlet NSTextView *textView;
