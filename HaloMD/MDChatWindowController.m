@@ -812,7 +812,7 @@
 		{
 			// Avoid this notification handler being called recursively
 			_isChangingWebFrame = YES;
-			[_scrollView.documentView scrollPoint:NSMakePoint(0.0, 1000000.0)]; // this works better than [webView scrollToEndOfDocument:nil]
+			[self scrollToBottom];
 			_isChangingWebFrame = NO;
 		}
 		
@@ -876,10 +876,16 @@
 	return splitView == chatSplitView;
 }
 
+- (void)scrollToBottom
+{
+	// this works better than [webView scrollToEndOfDocument:nil]
+	[_scrollView.documentView scrollPoint:NSMakePoint(0.0, 1000000.0)];
+}
+
 - (void)adjustScrollingAndTextView
 {
 	[self adjustTextView];
-	[webView scrollToEndOfDocument:nil];
+	[self scrollToBottom];
 }
 
 - (void)splitViewDidResizeSubviews:(NSNotification *)aNotification
