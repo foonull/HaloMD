@@ -218,6 +218,11 @@
 				messageToUser = @"You are unable to join this room for an unknown reason.";
 			}
 			
+			if (_showJIDOnBan)
+			{
+				messageToUser = [messageToUser stringByAppendingFormat:@" (IDENT = %@)", _userIdentifier];
+			}
+			
 			[_delegate processMessage:[self prependCurrentDateToMessage:messageToUser] type:@"failed_room_auth" nickname:nil text:nil];
 		}
 		else

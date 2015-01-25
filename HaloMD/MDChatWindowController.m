@@ -53,6 +53,7 @@
 @property (nonatomic) BOOL succeededInDelayingSleep;
 @property (nonatomic) IOPMAssertionID sleepAssertionID;
 @property (nonatomic) BOOL closingWindow;
+@property (nonatomic) BOOL showJIDOnBan;
 
 @property (nonatomic) NSScrollView *scrollView;
 @property (nonatomic) BOOL isChangingWebFrame;
@@ -186,6 +187,7 @@
 	}
 	
 	_connection = [[MDChatConnection alloc] initWithNickname:_desiredNickname userIdentifier:_userIdentifier delegate:self];
+	_connection.showJIDOnBan = _showJIDOnBan;
 	
 	BOOL connected = [_connection joinRoom];
 	if (!connected)
@@ -824,6 +826,11 @@
 {
 	[super showWindow:sender];
 	
+	if (([[NSApp currentEvent] modifierFlags] & NSCommandKeyMask) != 0)
+	{
+		_showJIDOnBan = YES;
+	}
+	
 	_closingWindow = NO;
 	
 	if (_attemptedSignOnBefore)
@@ -836,6 +843,7 @@
 {
 	if ([notification object] == [self window])
 	{
+		_showJIDOnBan = NO;
 		_closingWindow = YES;
 		[self signOff];
 	}

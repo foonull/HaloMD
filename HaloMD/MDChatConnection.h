@@ -38,6 +38,7 @@
 @property (nonatomic, readonly) NSString *nickname;
 @property (nonatomic, readonly) NSString *userIdentifier;
 @property (nonatomic, readonly) NSString *subject;
+@property (nonatomic) BOOL showJIDOnBan;
 
 - (id)initWithNickname:(NSString *)nickname userIdentifier:(NSString *)userIdentifier delegate:(id <MDChatConnectionDelegate>)delegate;
 
