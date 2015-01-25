@@ -474,22 +474,12 @@
 		{
 			if (textString)
 			{
-				BOOL foundMention = NO;
-				for (id word in [textString componentsSeparatedByString:@" "])
-				{
-					if ([[word stringByTrimmingCharactersInSet:[NSCharacterSet punctuationCharacterSet]] caseInsensitiveCompare:myNick] == NSOrderedSame)
-					{
-						foundMention = YES;
-						break;
-					}
-				}
-				
-				if (foundMention)
+				if ([typeString isEqualToString:@"on_private_message"])
 				{
 					[NSClassFromString(@"GrowlApplicationBridge")
-					 notifyWithTitle:nickString ? nickString : @""
+					 notifyWithTitle:nickString ?: @""
 					 description:textString
-					 notificationName:@"Mention"
+					 notificationName:@"Private Message"
 					 iconData:nil
 					 priority:0
 					 isSticky:NO
@@ -500,16 +490,45 @@
 						[self setNumberOfUnreadMentions:numberOfUnreadMentions+1];
 					}
 				}
-				else if (![NSApp isActive] && [[NSUserDefaults standardUserDefaults] boolForKey:CHAT_SHOW_MESSAGE_RECEIVE_NOTIFICATION] && ![[NSApp delegate] isHaloOpenAndRunningFullscreen])
+				else
 				{
-					[NSClassFromString(@"GrowlApplicationBridge")
-					 notifyWithTitle:nickString ? nickString : @""
-					 description:textString
-					 notificationName:@"MessageReceived"
-					 iconData:nil
-					 priority:0
-					 isSticky:NO
-					 clickContext:@"MessageNotification"];
+					BOOL foundMention = NO;
+					for (id word in [textString componentsSeparatedByString:@" "])
+					{
+						if ([[word stringByTrimmingCharactersInSet:[NSCharacterSet punctuationCharacterSet]] caseInsensitiveCompare:myNick] == NSOrderedSame)
+						{
+							foundMention = YES;
+							break;
+						}
+					}
+					
+					if (foundMention)
+					{
+						[NSClassFromString(@"GrowlApplicationBridge")
+						 notifyWithTitle:nickString ? nickString : @""
+						 description:textString
+						 notificationName:@"Mention"
+						 iconData:nil
+						 priority:0
+						 isSticky:NO
+						 clickContext:@"MessageNotification"];
+						
+						if (![NSApp isActive])
+						{
+							[self setNumberOfUnreadMentions:numberOfUnreadMentions+1];
+						}
+					}
+					else if (![NSApp isActive] && [[NSUserDefaults standardUserDefaults] boolForKey:CHAT_SHOW_MESSAGE_RECEIVE_NOTIFICATION] && ![[NSApp delegate] isHaloOpenAndRunningFullscreen])
+					{
+						[NSClassFromString(@"GrowlApplicationBridge")
+						 notifyWithTitle:nickString ? nickString : @""
+						 description:textString
+						 notificationName:@"MessageReceived"
+						 iconData:nil
+						 priority:0
+						 isSticky:NO
+						 clickContext:@"MessageNotification"];
+					}
 				}
 				
 				if (![[NSApp delegate] isHaloOpenAndRunningFullscreen] && [[NSUserDefaults standardUserDefaults] boolForKey:CHAT_PLAY_MESSAGE_SOUNDS])
