@@ -54,6 +54,10 @@
 @property (nonatomic) IOPMAssertionID sleepAssertionID;
 @property (nonatomic) BOOL closingWindow;
 
+@property (nonatomic) NSScrollView *scrollView;
+@property (nonatomic) BOOL isChangingWebFrame;
+@property (nonatomic) NSPoint oldScrollPosition;
+
 @end
 
 @implementation MDChatWindowController
@@ -302,8 +306,6 @@
 	DOMDocument *document = [[webView mainFrame] DOMDocument];
 	DOMElement *contentBlock = [document getElementById:@"content"];
 	
-	BOOL shouldScrollToEnd = YES;
-	
 	NSMutableArray *messageDOMComponents = [NSMutableArray array];
 	
 	if (messageString)
@@ -420,32 +422,6 @@
 		}
 		
 		[self clearMessages:CHAT_MAX_BACKLOG];
-		
-		NSView *documentView = webView.mainFrame.frameView.documentView;
-		NSScrollView *scrollView = nil;
-		for (id view in webView.mainFrame.frameView.subviews)
-		{
-			if ([view isKindOfClass:[NSScrollView class]])
-			{
-				scrollView = view;
-				break;
-			}
-		}
-		
-		if (scrollView.documentView == documentView)
-		{
-			// https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/NSScrollViewGuide/Articles/Scrolling.html
-			NSPoint newScrollPosition =
-			documentView.isFlipped ?
-			NSMakePoint(0.0, NSMaxY(documentView.frame) - NSHeight(scrollView.contentView.bounds)) :
-			NSMakePoint(0.0, 0.0);
-			
-			NSPoint currentScrollPosition = scrollView.contentView.bounds.origin;
-			if (fabsf(currentScrollPosition.y - newScrollPosition.y) > AUTO_SCROLL_PIXEL_THRESHOLD)
-			{
-				shouldScrollToEnd = NO;
-			}
-		}
 		
 		if (canWriteMessage)
 		{
@@ -591,13 +567,6 @@
 		
 		[contentBlock appendChild:newHeader];
 	}
-	
-	[webView display];
-	
-	if (shouldScrollToEnd)
-	{
-		[webView scrollToEndOfDocument:nil];
-	}
 }
 
 - (void)clearMessages:(unsigned int)maxNumberOfMessagesLeft
@@ -693,6 +662,20 @@
 	}
 	
 	[rosterTableView setDoubleAction:@selector(initiateUserFromRoster:)];
+	
+	NSScrollView *scrollView = nil;
+	for (id view in webView.mainFrame.frameView.subviews)
+	{
+		if ([view isKindOfClass:[NSScrollView class]])
+		{
+			scrollView = view;
+			break;
+		}
+	}
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(webViewFrameChanged:) name:NSViewFrameDidChangeNotification object:scrollView.documentView];
+	
+	_scrollView = scrollView;
     
 	[webView setDrawsBackground:NO];
     [webView setUIDelegate:self];
@@ -739,6 +722,30 @@
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
 {
 	[self signOn];
+}
+
+- (void)webViewFrameChanged:(NSNotification *)notification
+{
+	if (!_isChangingWebFrame)
+	{
+		// https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/NSScrollViewGuide/Articles/Scrolling.html
+		NSPoint newScrollPosition =
+			[_scrollView.documentView isFlipped] ?
+			NSMakePoint(0.0, NSMaxY([_scrollView.documentView frame]) - NSHeight(_scrollView.contentView.bounds)) :
+			NSMakePoint(0.0, 0.0);
+		
+		NSPoint currentScrollPosition = _scrollView.contentView.bounds.origin;
+		
+		if (fabsf(currentScrollPosition.y - _oldScrollPosition.y) <= AUTO_SCROLL_PIXEL_THRESHOLD)
+		{
+			// Avoid this notification handler being called recursively
+			_isChangingWebFrame = YES;
+			[_scrollView.documentView scrollPoint:NSMakePoint(0.0, 1000000.0)]; // this works better than [webView scrollToEndOfDocument:nil]
+			_isChangingWebFrame = NO;
+		}
+		
+		_oldScrollPosition = newScrollPosition;
+	}
 }
 
 - (IBAction)showWindow:(id)sender
