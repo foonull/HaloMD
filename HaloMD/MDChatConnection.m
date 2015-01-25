@@ -402,7 +402,7 @@
 	
 	[_stream sendElement:xmppMessage];
 	
-	[_delegate processMessage:[self prependCurrentDateToMessage:[NSString stringWithFormat:@"<Private message to %@>: %@", nickname, message]] type:@"my_private_message" nickname:_nickname text:message];
+	[_delegate processMessage:[self prependCurrentDateToMessage:[NSString stringWithFormat:@"Private: <to %@>: %@", nickname, message]] type:@"my_private_message" nickname:_nickname text:message];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message
