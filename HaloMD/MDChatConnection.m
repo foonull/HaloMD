@@ -37,7 +37,7 @@
 #define XMPP_HOST_NAME @"gekko.macgamingmods.com"
 #define XMPP_ROOM_HOST @"conference.gekko.macgamingmods.com"
 #define XMPP_ROOM_NAME @"halomd"
-#define XMPP_RESOURCE @"halomd"
+#define XMPP_RESOURCE @"md"
 
 @interface MDChatConnection ()
 
