@@ -67,13 +67,15 @@
 #define MD_STATUS_PREFIX @"!MD"
 #define AUTO_SCROLL_PIXEL_THRESHOLD 20.0
 
-#define CHAT_TEXT_CHECKING_TYPES @"CHAT_TEXT_CHECKING_TYPES"
-#define CHAT_MAX_BACKLOG 300
+#define CHAT_TEXT_CHECKING_TYPES_KEY @"CHAT_TEXT_CHECKING_TYPES"
+
+#define CHAT_MAX_DEFAULT_BACKLOG_KEY @"CHAT_MAX_DEFAULT_BACKLOG_KEY"
+#define CHAT_MAX_DEFAULT_BACKLOG 300U
 
 + (void)initialize
 {
 	// Use empty strings as our "null" value
-	[[NSUserDefaults standardUserDefaults] registerDefaults:@{ CHAT_TEXT_CHECKING_TYPES : @"" }];
+	[[NSUserDefaults standardUserDefaults] registerDefaults:@{ CHAT_TEXT_CHECKING_TYPES_KEY : @"", CHAT_MAX_DEFAULT_BACKLOG_KEY : @(CHAT_MAX_DEFAULT_BACKLOG)}];
 }
 
 - (id)init
@@ -192,7 +194,7 @@
 
 - (void)cleanup
 {
-	[[NSUserDefaults standardUserDefaults] setObject:@(textView.enabledTextCheckingTypes) forKey:CHAT_TEXT_CHECKING_TYPES];
+	[[NSUserDefaults standardUserDefaults] setObject:@(textView.enabledTextCheckingTypes) forKey:CHAT_TEXT_CHECKING_TYPES_KEY];
 	
 	willTerminate = YES;
 }
@@ -421,7 +423,11 @@
 			}
 		}
 		
-		[self clearMessages:CHAT_MAX_BACKLOG];
+		NSNumber *maxBacklog = [[NSUserDefaults standardUserDefaults] objectForKey:CHAT_MAX_DEFAULT_BACKLOG_KEY];
+		if (maxBacklog != nil)
+		{
+			[self clearMessages:[maxBacklog unsignedIntValue]];
+		}
 		
 		if (canWriteMessage)
 		{
@@ -655,7 +661,7 @@
 		[[self window] setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
 	}
 	
-	id chatTextingTypes = [[NSUserDefaults standardUserDefaults] objectForKey:CHAT_TEXT_CHECKING_TYPES];
+	id chatTextingTypes = [[NSUserDefaults standardUserDefaults] objectForKey:CHAT_TEXT_CHECKING_TYPES_KEY];
 	if ([chatTextingTypes isKindOfClass:[NSNumber class]])
 	{
 		textView.enabledTextCheckingTypes = [chatTextingTypes unsignedLongLongValue];
