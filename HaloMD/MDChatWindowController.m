@@ -373,7 +373,7 @@
 		}
 	}
 	
-	if ([@[@"on_message", @"on_private_message", @"my_message", @"my_private_message", @"on_leave", @"on_self_leave", @"on_join", @"connection_failed", @"connection_failed_timeout", @"connection_disconnected", @"removed", @"auth_failed", @"failed_room_auth", @"muc_join_failed", @"connection_initiating", @"muc_joined", @"roster", @"subject", @"voice", @"muc_nick_change"] containsObject:typeString])
+	if ([@[@"on_message", @"on_private_message", @"my_message", @"my_private_message", @"on_leave", @"on_self_leave", @"on_join", @"connection_disconnected", @"removed", @"auth_failed", @"failed_room_auth", @"muc_join_failed", @"connection_initiating", @"muc_joined", @"roster", @"subject", @"voice", @"muc_nick_change", @"connection_reconnect"] containsObject:typeString])
 	{
 		MDChatRosterElement *foundRosterElement = nil;
 		if (nickString != nil && [@[@"on_join", @"muc_joined", @"on_leave", @"on_self_leave", @"voice", @"muc_nick_change"] containsObject:typeString])
@@ -565,7 +565,7 @@
 			}
 		}
 		
-		if ([@[@"connection_failed", @"connection_failed_timeout", @"muc_join_failed", @"on_self_leave", @"auth_failed", @"connection_disconnected", @"failed_room_auth", @"on_self_leave"] containsObject:typeString])
+		if ([@[@"muc_join_failed", @"on_self_leave", @"auth_failed", @"connection_disconnected", @"failed_room_auth", @"on_self_leave"] containsObject:typeString])
 		{
 			if ([typeString isEqualToString:@"auth_failed"])
 			{
@@ -589,18 +589,29 @@
 				BOOL isDisconnected = [typeString isEqualToString:@"connection_disconnected"];
 				if (isDisconnected)
 				{
-					_connection = nil;
-				}
-				
-				[self signOff];
-				
-				if (isDisconnected && _sleeping && _succeededInDelayingSleep)
-				{
-					if (IOPMAssertionRelease(_sleepAssertionID) != kIOReturnSuccess)
+					if (_closingWindow || _sleeping)
 					{
-						NSLog(@"Error: Failed to release sleep assertion");
+						_connection = nil;
+						[self signOff];
+						
+						if (_sleeping && _succeededInDelayingSleep)
+						{
+							if (IOPMAssertionRelease(_sleepAssertionID) != kIOReturnSuccess)
+							{
+								NSLog(@"Error: Failed to release sleep assertion");
+							}
+							_succeededInDelayingSleep = NO;
+						}
 					}
-					_succeededInDelayingSleep = NO;
+					else
+					{
+						[roster removeAllObjects];
+						[rosterTableView reloadData];
+					}
+				}
+				else
+				{
+					[self signOff];
 				}
 			}
 		}

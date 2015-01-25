@@ -113,7 +113,12 @@
 - (void)xmppStreamConnectDidTimeout:(XMPPStream *)sender
 {
 	NSLog(@"Error: Timed out connecting to server..");
-	[_delegate processMessage:[self prependCurrentDateToMessage:@"Timed out from server..."] type:@"connection_failed_timeout" nickname:nil text:nil];
+}
+
+- (BOOL)xmppReconnect:(XMPPReconnect *)sender shouldAttemptAutoReconnect:(SCNetworkReachabilityFlags)reachabilityFlags
+{
+	[_delegate processMessage:[self prependCurrentDateToMessage:@"Reconnecting to server..."] type:@"connection_reconnect" nickname:nil text:nil];
+	return YES;
 }
 
 - (void)leaveRoom
@@ -148,8 +153,7 @@
 	BOOL operationInProgress = [_stream authenticate:[[XMPPDigestMD5Authentication alloc] initWithStream:_stream password:[@"password" stringByAppendingFormat:@"%u", arc4random()]] error:&error];
 	if (!operationInProgress)
 	{
-		NSLog(@"We failed to authenticate..: %@", error);
-		[_delegate processMessage:[self prependCurrentDateToMessage:@"Failed to connect to the server..."] type:@"connection_failed" nickname:nil text:nil];
+		//NSLog(@"We failed to authenticate..: %@", error);
 	}
 }
 
@@ -162,7 +166,6 @@
 {
 	//NSLog(@"Error: Disconnected: %@", error);
 	[_delegate processMessage:[self prependCurrentDateToMessage:@"Disconnected from server..."] type:@"connection_disconnected" nickname:nil text:nil];
-	_stream = nil;
 }
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
