@@ -372,7 +372,13 @@
 	{
 		NSString *messageType = ([senderName isEqualToString:_nickname]) ? @"my_message" : @"on_message";
 		
-		[_delegate processMessage:[self prependCurrentDateToMessage:[NSString stringWithFormat:@"<%@> %@", senderName, message.body]] type:messageType nickname:senderName text:message.body];
+		NSString *body = message.body;
+		if ([body rangeOfString:@"\n" options:NSLiteralSearch | NSCaseInsensitiveSearch].location != NSNotFound)
+		{
+			body = [@"\n" stringByAppendingString:body];
+		}
+		
+		[_delegate processMessage:[self prependCurrentDateToMessage:[NSString stringWithFormat:@"<%@> %@", senderName, body]] type:messageType nickname:senderName text:body];
 	}
 }
 

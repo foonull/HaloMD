@@ -259,7 +259,44 @@
 	[_connection setStatus:currentStatus != nil ? currentStatus : @""];
 }
 
-- (NSArray *)tokensFromString:(NSString *)string
+- (NSArray *)textAndNewlineTokensFromTextAndURLTokens:(NSArray *)tokens
+{
+	NSMutableArray *newTokens = [NSMutableArray array];
+	BOOL foundNewline = NO;
+	
+	for (NSString *token in tokens)
+	{
+		if ([token hasPrefix:@"http://"] || [token hasPrefix:@"https://"])
+		{
+			[newTokens addObject:token];
+		}
+		else
+		{
+			NSString *iteratingString = token;
+			while (YES)
+			{
+				NSRange newlineRange = [iteratingString rangeOfString:@"\n" options:NSLiteralSearch | NSCaseInsensitiveSearch];
+				if (newlineRange.location == NSNotFound)
+				{
+					[newTokens addObject:iteratingString];
+					break;
+				}
+				
+				NSString *before = [iteratingString substringToIndex:newlineRange.location];
+				if (before.length > 0) [newTokens addObject:before];
+				
+				[newTokens addObject:[iteratingString substringWithRange:newlineRange]];
+				foundNewline = YES;
+				
+				iteratingString = [iteratingString substringFromIndex:newlineRange.location + newlineRange.length];
+			}
+		}
+	}
+	
+	return newTokens;
+}
+
+- (NSArray *)textAndUrlTokensFromString:(NSString *)string
 {
 	NSMutableArray *tokens = [NSMutableArray array];
 	NSString *iteratingString = string;
@@ -314,7 +351,8 @@
 	
 	if (messageString)
 	{
-		NSArray *textTokens = [self tokensFromString:messageString];
+		NSArray *textTokens = [self textAndNewlineTokensFromTextAndURLTokens:[self textAndUrlTokensFromString:messageString]];
+		
 		for (id textToken in textTokens)
 		{
 			if ([textToken hasPrefix:@"http://"] || [textToken hasPrefix:@"https://"])
@@ -323,6 +361,10 @@
 				[anchor setAttribute:@"href" value:textToken];
 				[anchor setTextContent:textToken];
 				[messageDOMComponents addObject:anchor];
+			}
+			else if ([textToken isEqualToString:@"\n"])
+			{
+				[messageDOMComponents addObject:[document createElement:@"br"]];
 			}
 			else
 			{
