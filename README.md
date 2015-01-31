@@ -6,12 +6,10 @@ HaloMD extends the life of Halo and makes mods fun again for the Mac.
 HaloMD is a fairly ambitious project. It notably shows off:
 
 - Querying info from Halo game servers
-- Writing a keygen (although not necessary) by analyzing Halo's code
-- Altering Halo map file and blam data
-- Adding support for adding/updating mods, with delta binary patches
-- Adding support for adding extensions/plug-ins; a way to change the game at run-time
-- Writing a master server replacement by sniffing packets
-- Integrating a XMPP chat-room client
+- Implementing support for adding versioned mods via a database, and updating them with delta binary patches
+- Extending the game with extensions, which is a way of changing the game at run-time
+- Writing a master server replacement from our packet sniffing research
+- Integrating a XMPP chat-room client for folk to get together & play
 
 Most source code files unless noted otherwise are under BSD 2-clause license. Check the source code file in question to verify its license.
 
