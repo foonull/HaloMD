@@ -167,5 +167,5 @@ print_and_execute_command("gzip < \"#{OUTPUT_PATH}/mods.plist\" > \"#{OUTPUT_PAT
 puts "Zipping plugin..."
 plugin_zip_path = File.join(Dir.pwd, OUTPUT_PATH, "#{plugin_name}.zip")
 Dir.chdir(File.dirname(plugin_path)) do
-	print_and_execute_command("zip -r \"#{plugin_zip_path}\" \"#{File.basename(plugin_path)}\"")
+	print_and_execute_command("ditto -c -k --sequesterRsrc --keepParent \"#{File.basename(plugin_path)}\" \"#{plugin_zip_path}\"")
 end

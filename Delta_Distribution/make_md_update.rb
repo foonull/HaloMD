@@ -111,7 +111,7 @@ old_app_paths.each do |path|
 		exit(1)
 	end
 
-	if old_build_and_short_versons[-1][0] <= last_old_app_build
+	if old_build_and_short_versons.count > 1 and old_build_and_short_versons[-1][0] >= last_old_app_build
 		puts "ERROR: Old app paths are not passed in order from newest to oldest!"
 		exit(1)
 	end
@@ -123,8 +123,10 @@ Dir.mkdir md_output_directory
 
 how_to_run_path = "How to Run.rtfd"
 
-print_and_execute_command("cp -r \"#{how_to_run_path}\" \"#{md_output_directory}\"")
-print_and_execute_command("cp -r \"#{halomd_path}\" \"#{md_output_directory}\"")
+halomd_dest_path = Pathname.new(md_output_directory) + "HaloMD.app"
+
+print_and_execute_command("cp -R \"#{how_to_run_path}\" \"#{md_output_directory}\"")
+print_and_execute_command("ditto \"#{halomd_path}\" \"#{halomd_dest_path}\"")
 puts "Creating zip..."
 current_directory =  Dir.pwd
 Dir.chdir(OUTPUT_DIRECTORY)
@@ -132,7 +134,7 @@ Dir.chdir(OUTPUT_DIRECTORY)
 zip_name = "HaloMDnew.zip"
 zip_path = Pathname.new(OUTPUT_DIRECTORY) + zip_name
 
-execute_command("zip -r #{zip_name} HaloMD")
+execute_command("ditto -c -k --sequesterRsrc --keepParent HaloMD \"#{zip_name}\"")
 Dir.chdir(current_directory)
 
 zip_signature = sign_file(zip_path, private_key_path)
