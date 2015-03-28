@@ -1081,7 +1081,11 @@ static BOOL gJsonSerializaionExists = NO;
 				NSString *file = nil;
 				while (file = [directoryEnumerator nextObject])
 				{
-					if ([[file pathExtension] isEqualToString:@"map"] && ![[self mapsToIgnore] containsObject:[[file lastPathComponent] stringByDeletingPathExtension]] && ![[file lastPathComponent] hasPrefix:@"."])
+					if ([file isEqualToString:@"__MACOSX"])
+					{
+						[directoryEnumerator skipDescendants];
+					}
+					else if ([[file pathExtension] isEqualToString:@"map"] && ![[self mapsToIgnore] containsObject:[[file lastPathComponent] stringByDeletingPathExtension]] && ![[file lastPathComponent] hasPrefix:@"."])
 					{
 						if ([self pendingPlugins] == nil && (![[appDelegate window] isKeyWindow] || ![NSApp isActive]))
 						{
@@ -1288,7 +1292,11 @@ static BOOL gJsonSerializaionExists = NO;
 				NSString *file = nil;
 				while (file = [directoryEnumerator nextObject])
 				{
-					if ([[file pathExtension] isEqualToString:@"mdplugin"] && ![[file lastPathComponent] hasPrefix:@"."])
+					if ([file isEqualToString:@"__MACOSX"])
+					{
+						[directoryEnumerator skipDescendants];
+					}
+					else if ([[file pathExtension] isEqualToString:@"mdplugin"] && ![[file lastPathComponent] hasPrefix:@"."])
 					{
 						BOOL preferEnabledState = ([[self currentDownloadingPlugin] globalMode] && [self pendingPlugins] == nil);
 						addedPlugin = [self addPluginAtPath:[unzipDirectory stringByAppendingPathComponent:file] preferringEnabledState:preferEnabledState];
