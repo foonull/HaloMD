@@ -338,7 +338,7 @@ static BOOL gJsonSerializaionExists = NO;
 		{
 			for (NSURL *url in [openPanel URLs])
 			{
-				[self addModAtPath:@([url fileSystemRepresentation])];
+				[self addModAtPath:[url path]];
 			}
 		}
 	}];
