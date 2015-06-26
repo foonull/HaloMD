@@ -80,7 +80,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	if (self == [AppDelegate class])
 	{
 		expectedVersionsDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-									  @20, @"Contents/MacOS/Halo",
+									  @21, @"Contents/MacOS/Halo",
 									  @3, @"Contents/Resources/HaloAppIcon.icns",
 									  @2, @"Contents/Resources/HaloDataIcon.icns",
 									  @2, @"Contents/Resources/HaloDocIcon.icns",
@@ -1219,55 +1219,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 			[preferencesData replaceBytesInRange:NSMakeRange(0xA5, strlen(randomKey)+1)
 									   withBytes:randomKey];
 			
-			// Obtain graphics card information to decide whether to use vertex shaders only or not
-			NSTask *graphicsQueryTask = [[NSTask alloc] init];
-			
-			[graphicsQueryTask setLaunchPath:@"/usr/sbin/system_profiler"];
-			[graphicsQueryTask setArguments:[NSArray arrayWithObjects:@"-xml", @"SPDisplaysDataType", nil]];
-			
-			NSPipe *pipe = [[NSPipe alloc] init];
-			[graphicsQueryTask setStandardOutput:pipe];
-			
-			NSData *graphicsQueryData = nil;
-			
-			@try
-			{
-				[graphicsQueryTask launch];
-				graphicsQueryData = [[pipe fileHandleForReading] readDataToEndOfFile];
-			}
-			@catch (NSException *exception)
-			{
-				NSLog(@"ERROR: Graphics query task: %@: %@", [exception name], [exception reason]);
-			}
-			
-			BOOL shouldOnlyUseVertexShaders = NO;
-			
-			@try
-			{
-				NSArray *properties = [[[NSString alloc] initWithData:graphicsQueryData encoding:NSUTF8StringEncoding] propertyList];
-				NSArray *graphicsCardItems = [[properties objectAtIndex:0] objectForKey:@"_items"];
-				
-				NSString *graphicsCard = [[graphicsCardItems objectAtIndex:0] objectForKey:@"sppci_model"];
-				
-				// Does the user have an integrated graphics card? http://support.apple.com/kb/HT3246
-				if ([graphicsCardItems count] == 1 && ([[NSArray arrayWithObjects:@"GMA 950", @"GMA X3100", @"NVIDIA GeForce 9400M", @"NVIDIA GeForce 320M", nil] containsObject:graphicsCard] || [graphicsCard hasPrefix:@"Intel HD Graphics"]))
-				{
-					shouldOnlyUseVertexShaders = YES;
-				}
-			}
-			@catch (NSException *exception)
-			{
-				NSLog(@"ERROR: Failed to obtain graphics card information: %@: %@", [exception name], [exception reason]);
-			}
-			
-			if (shouldOnlyUseVertexShaders)
-			{
-				char shadersFlag = 1;
-				[preferencesData replaceBytesInRange:NSMakeRange(0x44, 1)
-										   withBytes:&shadersFlag];
-				
-				NSLog(@"Using vertex shaders only to avoid graphical glitches since the graphics card is integrated");
-			}
 			
 			if (![preferencesData writeToFile:[self preferencesPath] atomically:YES])
 			{
