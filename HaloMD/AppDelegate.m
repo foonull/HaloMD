@@ -72,12 +72,6 @@
 
 #define MDChatWindowIdentifier @"MDChatWindowIdentifier"
 
-#define kShaderNone 0
-#define kShaderVertex 1
-#define kShaderPixelVert 2
-#define kShaderAdvancedPixel 3
-#define kLensFlareExtreme 3
-
 static NSDictionary *expectedVersionsDictionary = nil;
 + (void)initialize
 {
@@ -1004,6 +998,13 @@ static NSDictionary *expectedVersionsDictionary = nil;
                                 uint32_t hardwareShaders;
                                 [graphicsData getBytes:&hardwareShaders range:NSMakeRange(0x0, sizeof(uint32_t))];
                                 
+                                enum ShaderSettings {
+                                    kShaderNone = 0,
+                                    kShaderVertex = 1,
+                                    kShaderPixelVert = 2,
+                                    kShaderAdvancedPixel = 3
+                                };
+                                
                                 if (hardwareShaders < kShaderAdvancedPixel) {
                                     
                                     NSLog(@"Updating from 1.0b37 or before - Asking if pixel shaders should be enabled.");
@@ -1032,7 +1033,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
                                             [mutableData replaceBytesInRange:NSMakeRange(0x10, sizeof(uint8_t)) withBytes:&enabled]; // detail objects
                                             
                                             // Set lens flare to extreme
-                                            uint32_t lensFlare = kLensFlareExtreme;
+                                            uint32_t lensFlare = 3;
                                             [mutableData replaceBytesInRange:NSMakeRange(0x8, sizeof(uint32_t)) withBytes:&lensFlare]; // set lens flare
                                             
                                             // Write the new data
