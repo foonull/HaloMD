@@ -72,6 +72,12 @@
 
 #define MDChatWindowIdentifier @"MDChatWindowIdentifier"
 
+#define kShaderNone 0
+#define kShaderVertex 1
+#define kShaderPixelVert 2
+#define kShaderAdvancedPixel 3
+#define kLensFlareExtreme 3
+
 static NSDictionary *expectedVersionsDictionary = nil;
 + (void)initialize
 {
@@ -983,6 +989,66 @@ static NSDictionary *expectedVersionsDictionary = nil;
 			
 			if (![[NSFileManager defaultManager] fileExistsAtPath:libraryFile] || ((!oldVersionNumber || [oldVersionNumber isLessThan:[expectedVersionsDictionary objectForKey:file]]) && ![[NSData dataWithContentsOfFile:libraryFile] isEqualToData:[NSData dataWithContentsOfFile:resourceFile]]))
 			{
+                
+                // Update shader settings for 1.0b37 or before.
+                
+                if([[NSFileManager defaultManager] fileExistsAtPath:libraryFile] && [file isEqualToString:@"Contents/MacOS/Halo"] && [oldVersionNumber isLessThan:@21]) {
+                    
+                    dispatch_sync(dispatch_get_main_queue(), ^(void) {
+                        CFStringRef haloMD = (CFStringRef)HALO_MD_IDENTIFIER;
+                        CFPropertyListRef graphics = CFPreferencesCopyAppValue((CFStringRef)@"Graphics Options", haloMD);
+                        if (graphics && CFGetTypeID(graphics) == CFDataGetTypeID()) {
+                            NSData *graphicsData = (__bridge NSData *)((CFDataRef)graphics);
+                            
+                            if([graphicsData length] == 0x58) {
+                                uint32_t hardwareShaders;
+                                [graphicsData getBytes:&hardwareShaders range:NSMakeRange(0x0, sizeof(uint32_t))];
+                                
+                                if (hardwareShaders < kShaderAdvancedPixel) {
+                                    
+                                    NSLog(@"Updating from 1.0b37 or before - Asking if pixel shaders should be enabled.");
+                                    
+                                    NSAlert *askToEnableShaders = [[NSAlert alloc]init];
+                                    [askToEnableShaders setMessageText:@"Enable Pixel Shaders?"];
+                                    [askToEnableShaders setInformativeText:@"You currently have pixel shaders disabled. Graphical defects with pixel shaders on certain Macs were fixed in an update with HaloMD. Would you like to set hardware shaders to Advanced Pixel Shaders?"];
+                                    [askToEnableShaders addButtonWithTitle:@"Update"];
+                                    [askToEnableShaders addButtonWithTitle:@"Cancel"];
+                                    
+                                    if([askToEnableShaders runModal] == NSAlertFirstButtonReturn) {
+                                        
+                                        NSLog(@"Enabling pixel shaders...");
+                                        
+                                        NSMutableData *mutableData = [[NSMutableData alloc] initWithData:graphicsData];
+                                        
+                                        uint32_t currentPixelShaderSetting;
+                                        [mutableData getBytes:&currentPixelShaderSetting range:NSMakeRange(0x0, sizeof(uint32_t))];
+                                        
+                                        if(currentPixelShaderSetting != kShaderAdvancedPixel) {
+                                            // Enable pixel shaders
+                                            uint32_t pixelShaders = kShaderAdvancedPixel;
+                                            uint8_t enabled = 1;
+                                            [mutableData replaceBytesInRange:NSMakeRange(0x0, sizeof(uint32_t)) withBytes:&pixelShaders]; // pixel shaders
+                                            [mutableData replaceBytesInRange:NSMakeRange(0x54, sizeof(uint8_t)) withBytes:&enabled]; // model reflections
+                                            [mutableData replaceBytesInRange:NSMakeRange(0x10, sizeof(uint8_t)) withBytes:&enabled]; // detail objects
+                                            
+                                            // Set lens flare to extreme
+                                            uint32_t lensFlare = kLensFlareExtreme;
+                                            [mutableData replaceBytesInRange:NSMakeRange(0x8, sizeof(uint32_t)) withBytes:&lensFlare]; // set lens flare
+                                            
+                                            // Write the new data
+                                            CFDataRef resourceData = (__bridge CFDataRef)[NSData dataWithData:mutableData];
+                                            CFPreferencesSetAppValue((CFStringRef)@"Graphics Options", (CFPropertyListRef)resourceData, haloMD);
+                                        }
+                                    }
+                                    else {
+                                        NSLog(@"Cancelled - Not enabling pixel shaders.");
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+                
 				[self performSelectorOnMainThread:@selector(requireUserToTerminateHalo) withObject:nil waitUntilDone:YES];
 				
 				// Trash old library file if it exists, safe and necessary for executable file (so that icon doesn't mess up)
@@ -1226,7 +1292,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 				[self performSelectorOnMainThread:@selector(abortInstallation:) withObject:[NSArray arrayWithObjects:@"Fatal Error", @"HaloMD could not write its preference file.", nil] waitUntilDone:YES];
 			}
 		}
-		
+        
 		if (![[NSFileManager defaultManager] fileExistsAtPath:templateInitPath])
 		{
 			NSString *templateInitString = @"sv_mapcycle_timeout 5";
