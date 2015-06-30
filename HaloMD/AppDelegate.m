@@ -363,6 +363,8 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		[templateInitString appendFormat:@"\n%@", command];
 	}
 	
+	[templateInitString appendString:@"\ncls"];
+	
 	[templateInitString writeToFile:initPath
 						 atomically:YES
 						   encoding:NSUTF8StringEncoding
