@@ -378,9 +378,8 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	
 	@try
 	{
-#ifndef __ppc__
 		[haloTask setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:[[[NSBundle mainBundle] privateFrameworksPath] stringByAppendingPathComponent:@"MDOverrides.dylib"], @"DYLD_INSERT_LIBRARIES", [[NSBundle mainBundle] builtInPlugInsPath], @"MD_BUILTIN_PLUGIN_DIRECTORY", [self resourceGameDataPath], @"MD_STOCK_GAME_DATA_DIRECTORY", nil]];
-#endif
+		
 		[haloTask setLaunchPath:launchPath];
 		[haloTask setArguments:[NSArray array]];
 		[haloTask launch];
@@ -755,14 +754,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 
 - (NSString *)architecture
 {
-	NSString *architecture = nil;
-#ifdef __ppc__
-	architecture = @"ppc";
-#else
-	architecture = @"i386";
-#endif
-	
-	return architecture;
+	return @"i386";
 }
 
 - (NSString *)profileName
@@ -1371,15 +1363,12 @@ static NSDictionary *expectedVersionsDictionary = nil;
 			}
 		}
 		
-#ifndef __ppc__
-		// haven't figured out how checksum works for big endian byte order
 		if (![[NSFileManager defaultManager] fileExistsAtPath:haloMDDocumentsPath])
 		{
 			[self performSelectorOnMainThread:@selector(pickUserName)
 								   withObject:nil
 								waitUntilDone:YES];
 		}
-#endif
 		
 		isInstalled = YES;
 		
