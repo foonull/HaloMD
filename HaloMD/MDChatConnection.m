@@ -69,7 +69,7 @@
 
 - (void)dealloc
 {
-	[_stream disconnect];
+	[self disconnect];
 }
 
 - (NSString *)dateFormat
@@ -123,15 +123,14 @@
 
 - (void)leaveRoom
 {
-	if (self.isInRoom)
-	{
-		[_room leaveRoom];
-	}
+	[_room deactivate]; // this will leave the room
+	[_room removeDelegate:self];
 }
 
 - (void)disconnect
 {
 	[_stream disconnect];
+	[_stream removeDelegate:self];
 }
 
 - (BOOL)isInRoom
