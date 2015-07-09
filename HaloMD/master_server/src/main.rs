@@ -5,8 +5,8 @@
 const DROP_TIME : i64 = 60;
 
 // Blacklist for blocking IPs. Separate with newlines.
-// Blacklisting IPs ignores heartbeat and keepalive packets from an IP address. That means that
-//      servers that are banned will not be immediately removed, but will time out, instead.
+// Blacklisting IPs ignores heartbeat and keepalive packets from an IP address.
+// That means that servers that are banned will not be immediately removed, but will time out, instead.
 const BLACKLIST_FILE : &'static str = "blacklist.txt";
 
 // Read the blacklist every x amount of seconds.
@@ -41,8 +41,7 @@ fn main() {
         println!("Only acceptible argument is IP.");
     }
 
-    // We need to bind on two different ports. If it failed to bind (invalid IP, port is taken),
-    //      then we must make sure this is known.
+    // We need to bind on two different ports. If it failed to bind (invalid IP, port is taken), then we must make sure this is known.
     let halo_socket = match UdpSocket::bind(&(ip.clone() + ":27900") as &str) {
         Err(_) => {
             println!("Error creating a UDP socket at {}:27900.",ip);
@@ -65,8 +64,7 @@ fn main() {
     let servers_mut_tcp = servers_mut_udp.clone();
     let servers_mut_destruction = servers_mut_udp.clone();
 
-    // Destruction thread. This will remove servers that have not broadcasted their presence in a
-    //      while.
+    // Destruction thread. This will remove servers that have not broadcasted their presence in a while.
     thread::spawn(move || {
         loop {
             thread::sleep_ms(10 * 1000);
@@ -90,8 +88,7 @@ fn main() {
     // Blacklist read thread.
     thread::spawn(move || {
         loop {
-            // Placed in a block so blacklist is unlocked before sleeping to prevent threads from
-            //      being locked for too long.
+            // Placed in a block so blacklist is unlocked before sleeping to prevent threads from being locked for too long.
             {
                 let mut blacklist_new : Vec<String> = Vec::new();
 
@@ -141,8 +138,7 @@ fn main() {
                     ips = ips + &(j.to_string()) + "\n";
                 }
 
-                // Some number placed after the requester's IP. If you ask me, the source code was
-                //      abducted by aliens, and this is a tracking number. Regardless, it's needed.
+                // Some number placed after the requester's IP. If you ask me, the source code was abducted by aliens, and this is a tracking number. Regardless, it's needed.
                 ips = ips + &ip + ":49149:3425";
                 let _ = client.write(ips.as_bytes());
             }
@@ -153,9 +149,7 @@ fn main() {
 
     // UDP server is run on the main thread. Servers broadcast their presence here.
 
-    // These are the allowed game versions. HaloMD and Halo PC 1.09 uses 01.00.09.0620, while Halo
-    //      PC servers on 1.10 use 01.00.10.0621 (these are also joinable).
-    //
+    // These are the allowed game versions. HaloMD and Halo PC 1.09 uses 01.00.09.0620, while Halo PC servers on 1.10 use 01.00.10.0621 (these are also joinable).
     let game_versions = [ "01.00.09.0620".to_string(), "01.00.10.0621".to_string() ];
 
     let mut buffer = [0; 2048];

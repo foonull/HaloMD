@@ -1,6 +1,6 @@
 // This isn't the whole packet, just the stuff we care about.
 pub struct HeartbeatPacket {
-    pub localport: u16,     // Actual port. Needed to get the real port in case NAT screws it up.
+    pub localport: u16,     // Can't trust source port due to some routers using a different port than this.
     pub gamename: String,   // Must be "halor"
     pub gamever: String,    // Must be 1.09 or 1.10 in case it's unjoinable.
     pub statechanged: u16   // If it's 2, then the server is shutting down.
@@ -25,8 +25,7 @@ impl HeartbeatPacket {
     pub fn from_buffer(buffer: &[u8], length: usize) -> HeartbeatPacket {
         let mut ret = HeartbeatPacket {localport: 0, gamename: "".to_string(), gamever: "".to_string(), statechanged: 0};
 
-        // Heartbeat packets are more than 5 bytes. The buffer should be bigger than the actual
-        //      length we need.
+        // Heartbeat packets are more than 5 bytes. The buffer should be bigger than the actual length we need.
         if length < 5 || length > buffer.len() || buffer[0] != 3 {
             return ret;
         }
@@ -40,29 +39,27 @@ impl HeartbeatPacket {
                 None => break,
                 Some(val) => val
             };
-            // Strings are separated as key1(0)value1(0)key2(0)value2(0)key3(0)value3(0)...
+            // Strings are separated by 0 bytes.
+            //      Example: key1(0)value1(0)key2(0)value2(0)key3(0)value3(0)...
             if last_string == "" {
                 last_string = value.clone();
             }
             else {
-                // We need this because NAT will often hide the original port if the server is
-                //      behind a router.
+                // We need this because NAT will often hide the original port if the server is behind a router.
                 if last_string == "localport" {
                     ret.localport = match value.parse::<u16>() {
                         Err(_) => 0,
                         Ok(val) => val
                     };
                 }
-                // Statechanged determines whether or not the server is shutting down or just
-                //      updating information with the master server. If it's shutting down (2),
-                //      then we need to remove it from the list immediately.
+                // Statechanged determines whether or not the server is shutting down or just updating information with the master server. If it's shutting down (2), then we need to remove it from the list immediately.
                 else if last_string == "statechanged" {
                     ret.statechanged = match value.parse::<u16>() {
                         Err(_) => 0,
                         Ok(val) => val
                     };
                 }
-                // We need to make sure nobody is using an unjoinable version of Halo.
+                // We need to make sure servers are not using an unjoinable Halo version.
                 else if last_string == "gamever" {
                     ret.gamever = value.clone();
                 }
