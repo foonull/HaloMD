@@ -11,10 +11,3 @@ impl ToString for HaloServer {
         return self.ip.clone() + ":" + &(self.port.to_string());
     }
 }
-
-// Does what it says, pretty much.
-impl Clone for HaloServer {
-    fn clone(&self) -> Self {
-        return HaloServer {ip: self.ip.to_string(), port: self.port, last_alive: self.last_alive};
-    }
-}
