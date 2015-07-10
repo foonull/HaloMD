@@ -87,28 +87,21 @@ fn main() {
         loop {
             // Placed in a block so blacklist is unlocked before sleeping to prevent threads from being locked for too long.
             {
-                let mut blacklist_new : Vec<String> = Vec::new();
+                let mut blacklist_ref = blacklist_update.lock().unwrap();
                 match File::open(BLACKLIST_FILE) {
                     Ok(file) => {
                         let reader = BufReader::new(&file);
-                        for line_possibly in reader.lines() {
-                            match line_possibly {
-                                Err(_) => break,
-                                Ok(line) => {
-                                    blacklist_new.push(line);
-                                }
+                        match reader.lines().collect() {
+                            Err(_) => {
+                                blacklist_ref.clear();
+                            },
+                            Ok(t) => {
+                                *blacklist_ref = t;
                             }
                         }
                     },
                     Err(_) => {}
                 };
-
-                let mut blacklist_ref = blacklist_update.lock().unwrap();
-                blacklist_ref.clear();
-
-                for b in blacklist_new {
-                    blacklist_ref.push(b.clone());
-                }
             }
             thread::sleep_ms(BLACKLIST_UPDATE_TIME * 1000);
         }
