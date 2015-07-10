@@ -168,12 +168,14 @@ fn main() {
 
                 let packet = HeartbeatPacket::from_buffer(&buffer, length);
 
-                if packet.localport != 0 && length > 5 && game_versions.contains(&packet.gamever) {
+                if packet.localport != 0 && length > 1 {
                     let updatetime = time::now().to_timespec().sec;
                     match servers.iter_mut().position(|x| x.ip == client_ip.clone() && x.port == packet.localport) {
                         None => {
-                            let serverness = HaloServer { ip:client_ip.clone(), port: packet.localport, last_alive: updatetime };
-                            (*servers).push(serverness);
+                            if game_versions.contains(&packet.gamever) && &packet.gamever == "halor" {
+                                let serverness = HaloServer { ip:client_ip.clone(), port: packet.localport, last_alive: updatetime };
+                                (*servers).push(serverness);
+                            }
                             continue;
                         }
                         Some(k) => {
