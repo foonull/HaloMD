@@ -157,6 +157,9 @@ fn main() {
             Err(_) => continue,
             Ok((length, source)) => (length,source)
         };
+        if length == 0 {
+            continue;
+        }
         let client_ip = source.to_string().split(":").next().unwrap().to_string();
 
         if buffer[0] == 3 || buffer[0] == 8 {
@@ -172,26 +175,21 @@ fn main() {
 
                 let packet = HeartbeatPacket::from_buffer(&buffer, length);
 
-                if packet.localport != 0  {
-                    let mut found = false;
+                if packet.localport != 0 && length > 5 && game_versions.contains(&packet.gamever) {
                     let updatetime = time::now().to_timespec().sec;
-                    for i in (0.. servers.len()) {
-                        if servers[i].ip == client_ip && servers[i].port == packet.localport {
-                            servers[i].last_alive = updatetime;
-                            found = true;
-                            if packet.statechanged == 2 {
-                                // println!("Dropped {}.", servers[i].to_string());
-                                servers.remove(i);
-                            }
-                            break;
+                    match servers.iter_mut().position(|x| x.ip == client_ip.clone() && x.port == packet.localport) {
+                        None => {
+                            let serverness = HaloServer { ip:client_ip.clone(), port: packet.localport, last_alive: updatetime };
+                            (*servers).push(serverness);
+                            continue;
                         }
-                    }
-
-                    if !found && &packet.gamename == "halor" && game_versions.contains(&packet.gamever) {
-                        let serverness = HaloServer { ip:client_ip, port: packet.localport, last_alive: updatetime };
-                        // println!("Added {}.", serverness.to_string());
-                        (*servers).push(serverness);
-                    }
+                        Some(k) => {
+                            servers[k].last_alive = updatetime;
+                            if packet.statechanged == 2 {
+                                servers.remove(k);
+                            }
+                        }
+                    };
                 }
             }
 
