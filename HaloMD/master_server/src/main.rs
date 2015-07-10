@@ -31,18 +31,21 @@ mod heartbeat_packet;
 use heartbeat_packet::HeartbeatPacket;
 
 fn main() {
-    let mut ip: String = "0.0.0.0".to_string();
     let count = env::args().count();
-    if count == 2 {
-        let k: Vec<_> = env::args().collect();
-        ip = (k[1]).to_string();
+    let ip = if count == 2 {
+        let j : Vec<_> = env::args().collect();
+        j[1].to_string()
     }
-    else if count != 1 {
-        println!("Only acceptible argument is IP.");
+    else if count == 1 {
+        "0.0.0.0".to_string()
     }
+    else {
+        println!("Only one argument is allowed: the IP to bind to.");
+        return;
+    };
 
     // We need to bind on two different ports. If it failed to bind (invalid IP, port is taken), then we must make sure this is known.
-    let halo_socket = match UdpSocket::bind(&(ip.clone() + ":27900") as &str) {
+    let halo_socket = match UdpSocket::bind((&ip as &str,27900)) {
         Err(_) => {
             println!("Error creating a UDP socket at {}:27900.",ip);
             return;
@@ -50,7 +53,7 @@ fn main() {
         Ok(halo_socket) => halo_socket
     };
 
-    let client_socket = match TcpListener::bind(&(ip.clone() + ":29920") as &str) {
+    let client_socket = match TcpListener::bind((&ip as &str,29920)) {
         Err(_) => {
             println!("Error listening to TCP at {}:29920.",ip);
             return;
@@ -91,7 +94,6 @@ fn main() {
             // Placed in a block so blacklist is unlocked before sleeping to prevent threads from being locked for too long.
             {
                 let mut blacklist_new : Vec<String> = Vec::new();
-
                 match File::open(BLACKLIST_FILE) {
                     Ok(file) => {
                         let reader = BufReader::new(&file);
@@ -127,7 +129,10 @@ fn main() {
                     Ok(the_stream) => the_stream
                 };
                 // Unwrap the IP.
-                let ip = client.peer_addr().unwrap().to_string().split(":").next().unwrap().to_string();
+                let ip = match client.peer_addr() {
+                    Err(_) => continue,
+                    Ok(ip) => ip.to_string().split(":").next().unwrap().to_string()
+                };
 
                 let mut ips = String::new();
 
@@ -140,7 +145,7 @@ fn main() {
 
                 // Some number placed after the requester's IP. If you ask me, the source code was abducted by aliens, and this is a tracking number. Regardless, it's needed.
                 ips = ips + &ip + ":49149:3425";
-                let _ = client.write(ips.as_bytes());
+                let _ = client.write_all(ips.as_bytes());
             }
         }
     });
@@ -155,7 +160,7 @@ fn main() {
     let mut buffer = [0; 2048];
     loop {
         let (length, source) = match halo_socket.recv_from(&mut buffer) {
-                Err(_) => return,
+            Err(_) => continue,
             Ok((length, source)) => (length,source)
         };
         let client_ip = source.to_string().split(":").next().unwrap().to_string();
