@@ -7,26 +7,26 @@ pub struct HeartbeatPacket {
 }
 
 // C strings are null terminated, so they end with a 0 byte.
-fn get_string_from_c_string(buffer: &[u8], offset: usize, maxlen: usize) -> Option<String> {
-    if offset < maxlen && buffer.len() >= (maxlen + offset) {
-        let mut bytes : Vec<u8> = Vec::new();
-        for i in (offset..buffer.len()) {
-            if buffer[i] == 0 || i - offset == maxlen {
-                break;
-            }
-            bytes.push(buffer[i]);
+fn get_string_from_c_string(buffer: &[u8]) -> String {
+    let mut bytes : Vec<u8> = Vec::new();
+    for i in buffer {
+        if *i == 0 {
+            break;
         }
-        return Some(String::from_utf8(bytes).unwrap());
+        bytes.push(*i);
     }
-    return None;
+    return match String::from_utf8(bytes) {
+        Err(_) => String::new(),
+        Ok(n) => n
+    }
 }
 
 impl HeartbeatPacket {
-    pub fn from_buffer(buffer: &[u8], length: usize) -> HeartbeatPacket {
+    pub fn from_buffer(buffer: &[u8]) -> HeartbeatPacket {
         let mut ret = HeartbeatPacket {localport: 0, gamename: "".to_string(), gamever: "".to_string(), statechanged: 0};
 
         // Heartbeat packets are more than 5 bytes. The buffer should be bigger than the actual length we need.
-        if length < 5 || length > buffer.len() || buffer[0] != 3 {
+        if buffer.len() < 5 || buffer[0] != 3 {
             return ret;
         }
 
@@ -34,11 +34,12 @@ impl HeartbeatPacket {
         let mut last_string = String::new();
 
         loop {
-            // Loop until we can't get a string anymore.
-            let value = match get_string_from_c_string(buffer,offset,length) {
-                None => break,
-                Some(val) => val
-            };
+            if offset >= buffer.len() {
+                break;
+            }
+
+            let value = get_string_from_c_string(&buffer[offset..buffer.len()]);
+
             // Strings are separated by 0 bytes.
             //      Example: key1(0)value1(0)key2(0)value2(0)key3(0)value3(0)...
             if last_string == "" {

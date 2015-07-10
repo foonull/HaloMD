@@ -123,16 +123,23 @@ fn main() {
 
                 let mut ips = String::new();
 
-                let servers_ref = servers_mut_tcp.lock().unwrap();
-                let servers = (*servers_ref).iter();
+                // Make servers_ref go out of scope to unlock it for other threads, since we don't need it.
+                {
+                    let servers_ref = servers_mut_tcp.lock().unwrap();
+                    let servers = (*servers_ref).iter();
 
-                for j in servers {
-                    ips = ips + &(j.to_string()) + "\n";
+                    for j in servers {
+                        ips = ips + &(j.to_string()) + "\n";
+                    }
                 }
 
                 // Some number placed after the requester's IP. If you ask me, the source code was abducted by aliens, and this is a tracking number. Regardless, it's needed.
                 ips = ips + &ip + ":49149:3425";
-                let _ = client.write_all(ips.as_bytes());
+
+                // We may be here a while. Just in case...
+                thread::spawn( move || {
+                    let _ = client.write_all(ips.as_bytes());
+                });
             }
         }
     });
@@ -148,7 +155,7 @@ fn main() {
     loop {
         let (length, source) = match halo_socket.recv_from(&mut buffer) {
             Err(_) => continue,
-            Ok((length, source)) => (length,source)
+            Ok(x) => x
         };
         if length == 0 {
             continue;
@@ -166,14 +173,14 @@ fn main() {
 
                 let mut servers = servers_mut_udp.lock().unwrap();
 
-                let packet = HeartbeatPacket::from_buffer(&buffer, length);
+                let packet = HeartbeatPacket::from_buffer(&buffer[..length]);
 
                 if packet.localport != 0 && length > 1 {
                     let updatetime = time::now().to_timespec().sec;
-                    match servers.iter_mut().position(|x| x.ip == client_ip.clone() && x.port == packet.localport) {
+                    match servers.iter_mut().position(|x| x.ip == client_ip && x.port == packet.localport) {
                         None => {
                             if game_versions.contains(&packet.gamever) && &packet.gamename == "halor" {
-                                let serverness = HaloServer { ip:client_ip.clone(), port: packet.localport, last_alive: updatetime };
+                                let serverness = HaloServer { ip:client_ip, port: packet.localport, last_alive: updatetime };
                                 (*servers).push(serverness);
                             }
                             continue;
