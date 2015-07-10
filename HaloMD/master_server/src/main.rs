@@ -72,14 +72,8 @@ fn main() {
         loop {
             thread::sleep_ms(10 * 1000);
             let mut servers = servers_mut_destruction.lock().unwrap();
-            let count = servers.len();
             let timenow = time::now().to_timespec().sec;
-            for i in (0..count).rev() {
-                if servers[i].last_alive + DROP_TIME < timenow {
-                    // println!("Timed out {}.", servers[i].to_string());
-                    servers.remove(i);
-                }
-            }
+            servers.retain(|x| x.last_alive + DROP_TIME > timenow);
         }
     });
 
