@@ -172,7 +172,7 @@ fn main() {
                     let updatetime = time::now().to_timespec().sec;
                     match servers.iter_mut().position(|x| x.ip == client_ip.clone() && x.port == packet.localport) {
                         None => {
-                            if game_versions.contains(&packet.gamever) && &packet.gamever == "halor" {
+                            if game_versions.contains(&packet.gamever) && &packet.gamename == "halor" {
                                 let serverness = HaloServer { ip:client_ip.clone(), port: packet.localport, last_alive: updatetime };
                                 (*servers).push(serverness);
                             }
