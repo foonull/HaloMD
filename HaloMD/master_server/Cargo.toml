@@ -1,0 +1,6 @@
+[package]
+name = "master_server"
+version = "1.0.0"
+
+[dependencies]
+time = "0.1"
