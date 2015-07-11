@@ -16,7 +16,12 @@ const BLACKLIST_UPDATE_TIME : u32 = 60;
 const BROADCAST_PORT_UDP : u16 = 27900;
 const SERVER_LIST_PORT_TCP : u16 = 29920;
 
-use std::net::{UdpSocket,TcpListener};
+// Broadcast packet types.
+const KEEPALIVE : u8 = 8;
+const HEARTBEAT : u8 = 3;
+
+use std::net::{UdpSocket,TcpListener,SocketAddr};
+use std::net::SocketAddr::{V4,V6};
 use std::io::{Write,BufReader,BufRead};
 use std::env;
 use std::fs::File;
@@ -30,6 +35,13 @@ use halo_server::HaloServer;
 
 mod heartbeat_packet;
 use heartbeat_packet::HeartbeatPacket;
+
+fn get_ip(addr: SocketAddr) -> String {
+    match addr {
+        V4(ipv4) => ipv4.ip().to_string(),
+        V6(ipv6) => "[".to_string() + &ipv6.ip().to_string() + "]"
+    }
+}
 
 fn main() {
     let count = env::args().count();
@@ -46,17 +58,17 @@ fn main() {
     };
 
     // We need to bind on two different ports. If it failed to bind (invalid IP, port is taken), then we must make sure this is known.
-    let halo_socket = match UdpSocket::bind((&ip as &str,SERVER_LIST_PORT_TCP)) {
+    let halo_socket = match UdpSocket::bind((&ip as &str,BROADCAST_PORT_UDP)) {
         Err(_) => {
-            println!("Error creating a UDP socket at {}:{}.",ip,SERVER_LIST_PORT_TCP);
+            println!("Error creating a UDP socket at {}:{}.",ip,BROADCAST_PORT_UDP);
             return;
         },
         Ok(halo_socket) => halo_socket
     };
 
-    let client_socket = match TcpListener::bind((&ip as &str,BROADCAST_PORT_UDP)) {
+    let client_socket = match TcpListener::bind((&ip as &str,SERVER_LIST_PORT_TCP)) {
         Err(_) => {
-            println!("Error listening to TCP at {}:{}.",ip,BROADCAST_PORT_UDP);
+            println!("Error listening to TCP at {}:{}.",ip,SERVER_LIST_PORT_TCP);
             return;
         },
         Ok(client_socket) => client_socket
@@ -119,7 +131,7 @@ fn main() {
                 // Unwrap the IP.
                 let ip = match client.peer_addr() {
                     Err(_) => continue,
-                    Ok(ip) => ip.to_string().split(":").next().unwrap().to_string()
+                    Ok(ip) => get_ip(ip)
                 };
 
                 let mut ips = String::new();
@@ -161,22 +173,23 @@ fn main() {
         if length == 0 {
             continue;
         }
-        let client_ip = source.to_string().split(":").next().unwrap().to_string();
 
-        if buffer[0] == 3 || buffer[0] == 8 {
+        let client_ip = get_ip(source);
+
+        if buffer[0] == KEEPALIVE || buffer[0] == HEARTBEAT {
             let blacklist_ref = blacklist_udp.lock().unwrap();
             if blacklist_ref.contains(&client_ip) {
                 continue;
             }
 
-            // Heartbeat packet.
-            if buffer[0] == 3 && length > 5 {
+            // Heartbeat packet. These contain null-terminated C strings and are ordered in key1[0]value1[0]key2[0]value2[0]key3[0]value3[0] where [0] is a byte equal to 0x00.
+            if buffer[0] == HEARTBEAT && length > 5 {
 
                 let mut servers = servers_mut_udp.lock().unwrap();
 
                 let packet = HeartbeatPacket::from_buffer(&buffer[5..length]);
 
-                if packet.localport != 0 && length > 1 {
+                if packet.localport != 0 {
                     let updatetime = time::now().to_timespec().sec;
                     match servers.iter_mut().position(|x| x.ip == client_ip && x.port == packet.localport) {
                         None => {
@@ -184,7 +197,6 @@ fn main() {
                                 let serverness = HaloServer { ip:client_ip, port: packet.localport, last_alive: updatetime };
                                 (*servers).push(serverness);
                             }
-                            continue;
                         }
                         Some(k) => {
                             servers[k].last_alive = updatetime;
@@ -196,8 +208,8 @@ fn main() {
                 }
             }
 
-            // Keepalive packet. We need to rely on the origin's port for this, unfortunately.
-            else if buffer[0] == 8 {
+            // Keepalive packet. We need to rely on the origin's port for this, unfortunately. This may mean that the source port is incorrect if the port was changed with NAT.
+            else if buffer[0] == KEEPALIVE {
                 let mut servers_ref = servers_mut_udp.lock().unwrap();
                 let servers = (*servers_ref).iter_mut();
 
