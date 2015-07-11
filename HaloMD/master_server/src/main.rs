@@ -52,7 +52,6 @@ trait IPString {
 
 impl IPString for SocketAddr {
     fn ip_string(&self) -> String {
-        // when self.ip() becomes stable, we won't need to match on the IP version
         match *self {
             V4(ipv4) => ipv4.ip().to_string(),
             V6(ipv6) => "[".to_string() + &ipv6.ip().to_string() + "]"
