@@ -19,4 +19,6 @@ Due to file size restrictions, this repository does not bundle all the data to r
 
 HaloMD may require a recent version of Xcode to build, and OS X 10.7 or later to run.
 
+The master server requires Cargo to build, which is packaged with the Rust compiler. The Rust compiler can be downloaded from the [Rust website](http://www.rust-lang.org).
+
 Visit the [HaloMD website](http://www.halomd.net) for more info.
