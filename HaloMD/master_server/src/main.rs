@@ -23,6 +23,13 @@ const HEARTBEAT : u8 = 3;
 // Game state changes
 const GAMEEXITED : u16 = 2;
 
+// Opcode info
+const OPCODE_INDEX : usize = 0;
+const OPCODE_AND_HANDSHAKE_LENGTH : usize = 5;
+
+// Broadcasted game name
+const HALO_RETAIL : &'static str = "halor";
+
 use std::net::{UdpSocket,TcpListener,SocketAddr};
 use std::net::SocketAddr::{V4,V6};
 use std::io::{Write,BufReader,BufRead};
@@ -173,54 +180,56 @@ fn main() {
             Err(_) => continue,
             Ok(x) => x
         };
-        if length == 0 {
+        if length <= OPCODE_INDEX {
+            continue;
+        }
+
+        if buffer[OPCODE_INDEX] != KEEPALIVE && buffer[OPCODE_INDEX] != HEARTBEAT {
             continue;
         }
 
         let client_ip = get_ip(source);
 
-        if buffer[0] == KEEPALIVE || buffer[0] == HEARTBEAT {
-            let blacklist_ref = blacklist_udp.lock().unwrap();
-            if blacklist_ref.contains(&client_ip) {
-                continue;
-            }
+        let blacklist_ref = blacklist_udp.lock().unwrap();
+        if blacklist_ref.contains(&client_ip) {
+            continue;
+        }
 
-            // Heartbeat packet. These contain null-terminated C strings and are ordered in key1[0]value1[0]key2[0]value2[0]key3[0]value3[0] where [0] is a byte equal to 0x00.
-            if buffer[0] == HEARTBEAT && length > 5 {
+        // Heartbeat packet. These contain null-terminated C strings and are ordered in key1[0]value1[0]key2[0]value2[0]key3[0]value3[0] where [0] is a byte equal to 0x00.
+        if buffer[OPCODE_INDEX] == HEARTBEAT && length > OPCODE_AND_HANDSHAKE_LENGTH {
 
-                let mut servers = servers_mut_udp.lock().unwrap();
+            let mut servers = servers_mut_udp.lock().unwrap();
 
-                let packet = HeartbeatPacket::from_buffer(&buffer[5..length]);
+            let packet = HeartbeatPacket::from_buffer(&buffer[OPCODE_AND_HANDSHAKE_LENGTH..length]);
 
-                if packet.localport != 0 {
-                    let updatetime = time::now().to_timespec().sec;
-                    match servers.iter_mut().position(|x| x.ip == client_ip && x.port == packet.localport) {
-                        None => {
-                            if game_versions.contains(&packet.gamever) && &packet.gamename == "halor" {
-                                let serverness = HaloServer { ip:client_ip, port: packet.localport, last_alive: updatetime };
-                                (*servers).push(serverness);
-                            }
+            if packet.localport != 0 {
+                let updatetime = time::now().to_timespec().sec;
+                match servers.iter_mut().position(|x| x.ip == client_ip && x.port == packet.localport) {
+                    None => {
+                        if game_versions.contains(&packet.gamever) && &packet.gamename == HALO_RETAIL {
+                            let serverness = HaloServer { ip:client_ip, port: packet.localport, last_alive: updatetime };
+                            (*servers).push(serverness);
                         }
-                        Some(k) => {
-                            servers[k].last_alive = updatetime;
-                            if packet.statechanged == GAMEEXITED {
-                                servers.remove(k);
-                            }
-                        }
-                    };
-                }
-            }
-
-            // Keepalive packet. We need to rely on the origin's port for this, unfortunately. This may mean that the source port is incorrect if the port was changed with NAT.
-            else if buffer[0] == KEEPALIVE {
-                let mut servers_ref = servers_mut_udp.lock().unwrap();
-                let servers = (*servers_ref).iter_mut();
-
-                for i in servers {
-                    if i.ip == client_ip && i.port == source.port() {
-                        i.last_alive = time::now().to_timespec().sec;
-                        break;
                     }
+                    Some(k) => {
+                        servers[k].last_alive = updatetime;
+                        if packet.statechanged == GAMEEXITED {
+                            servers.remove(k);
+                        }
+                    }
+                };
+            }
+        }
+
+        // Keepalive packet. We need to rely on the origin's port for this, unfortunately. This may mean that the source port is incorrect if the port was changed with NAT.
+        else if buffer[OPCODE_INDEX] == KEEPALIVE {
+            let mut servers_ref = servers_mut_udp.lock().unwrap();
+            let servers = (*servers_ref).iter_mut();
+
+            for i in servers {
+                if i.ip == client_ip && i.port == source.port() {
+                    i.last_alive = time::now().to_timespec().sec;
+                    break;
                 }
             }
         }
