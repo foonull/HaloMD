@@ -126,8 +126,6 @@ fn main() {
                         collect()
                     ).
                     unwrap_or_else(|_| Vec::new());
-
-                println!("{:?}", *blacklist_ref);
             }
             thread::sleep_ms(BLACKLIST_UPDATE_TIME * 1000);
         }
