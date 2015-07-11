@@ -157,6 +157,7 @@ fn main() {
                 ips.push_str(":49149:3425");
 
                 // We may be here a while. Just in case...
+                // May want to consider some lightweight thread library in the future, or some non-blocking polling mechanism
                 thread::spawn( move || {
                     let _ = client.write_all(ips.as_bytes());
                 });
