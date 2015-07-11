@@ -69,16 +69,16 @@ fn main() {
 
     // We need to bind on two different ports. If it failed to bind (invalid IP, port is taken), then we must make sure this is known.
     let halo_socket = match UdpSocket::bind((&ip as &str,BROADCAST_PORT_UDP)) {
-        Err(_) => {
-            println!("Error creating a UDP socket at {}:{}.",ip,BROADCAST_PORT_UDP);
+        Err(error) => {
+            println!("Error creating a UDP socket at {}:{}. {}.",ip,BROADCAST_PORT_UDP,error);
             return;
         },
         Ok(halo_socket) => halo_socket
     };
 
     let client_socket = match TcpListener::bind((&ip as &str,SERVER_LIST_PORT_TCP)) {
-        Err(_) => {
-            println!("Error listening to TCP at {}:{}.",ip,SERVER_LIST_PORT_TCP);
+        Err(error) => {
+            println!("Error listening to TCP at {}:{}. {}.",ip,SERVER_LIST_PORT_TCP,error);
             return;
         },
         Ok(client_socket) => client_socket
