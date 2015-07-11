@@ -12,10 +12,6 @@ impl HeartbeatPacket {
     pub fn from_buffer(buffer: &[u8]) -> HeartbeatPacket {
         let mut ret = HeartbeatPacket {localport: 0, gamename: String::new(), gamever: String::new(), statechanged: 0};
 
-        if buffer.len() < 5 || buffer[0] != 3 {
-            return ret;
-        }
-        
         let mut line_iterator = buffer.split(|b| *b == 0);
         loop {
             let key = match line_iterator.next() {

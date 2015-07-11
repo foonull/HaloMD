@@ -169,11 +169,11 @@ fn main() {
             }
 
             // Heartbeat packet.
-            if buffer[0] == 3 {
+            if buffer[0] == 3 && length > 5 {
 
                 let mut servers = servers_mut_udp.lock().unwrap();
 
-                let packet = HeartbeatPacket::from_buffer(&buffer[..length]);
+                let packet = HeartbeatPacket::from_buffer(&buffer[5..length]);
 
                 if packet.localport != 0 && length > 1 {
                     let updatetime = time::now().to_timespec().sec;
