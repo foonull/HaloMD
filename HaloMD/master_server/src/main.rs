@@ -46,10 +46,17 @@ use halo_server::HaloServer;
 mod heartbeat_packet;
 use heartbeat_packet::HeartbeatPacket;
 
-fn get_ip(addr: SocketAddr) -> String {
-    match addr {
-        V4(ipv4) => ipv4.ip().to_string(),
-        V6(ipv6) => "[".to_string() + &ipv6.ip().to_string() + "]"
+trait IPString {
+    fn ip_string(&self) -> String;
+}
+
+impl IPString for SocketAddr {
+    fn ip_string(&self) -> String {
+        // when self.ip() becomes stable, we won't need to match on the IP version
+        match *self {
+            V4(ipv4) => ipv4.ip().to_string(),
+            V6(ipv6) => "[".to_string() + &ipv6.ip().to_string() + "]"
+        }
     }
 }
 
@@ -141,7 +148,7 @@ fn main() {
                 // Unwrap the IP.
                 let ip = match client.peer_addr() {
                     Err(_) => continue,
-                    Ok(ip) => get_ip(ip)
+                    Ok(ip) => ip.ip_string()
                 };
 
                 let mut ips = String::new();
@@ -188,7 +195,7 @@ fn main() {
             continue;
         }
 
-        let client_ip = get_ip(source);
+        let client_ip = source.ip_string();
 
         let blacklist_ref = blacklist_udp.lock().unwrap();
         if blacklist_ref.contains(&client_ip) {
