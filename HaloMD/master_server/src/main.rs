@@ -39,7 +39,7 @@ mod halo_server;
 use halo_server::HaloServer;
 
 mod heartbeat_packet;
-use heartbeat_packet::{HeartbeatPacket,GAMEEXITED};
+use heartbeat_packet::{HeartbeatPacket,GAMEEXITED,VALID_GAME_VERSIONS,HALO_RETAIL};
 
 trait IPString {
     fn ip_string(&self) -> String;
@@ -199,7 +199,9 @@ fn main() {
                     let updatetime = SteadyTime::now();
                     match servers.iter_mut().position(|x| x.ip == client_ip && x.port == packet.localport) {
                         None => {
-                            (*servers).push(HaloServer { ip:client_ip, port: packet.localport, last_alive: updatetime });
+                            if packet.gamename == HALO_RETAIL && VALID_GAME_VERSIONS.contains(&&*packet.gamever) {
+                                (*servers).push(HaloServer { ip:client_ip, port: packet.localport, last_alive: updatetime });
+                            }
                         }
                         Some(k) => {
                             servers[k].last_alive = updatetime;
