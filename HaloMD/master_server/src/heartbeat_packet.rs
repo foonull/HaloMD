@@ -56,7 +56,7 @@ impl HeartbeatPacket {
             }
         }
         
-        if ret.localport == INVALID_LOCAL_PORT || ret.gamename != HALO_RETAIL || !VALID_GAME_VERSIONS.contains(&&*ret.gamename) {
+        if ret.localport == INVALID_LOCAL_PORT || ret.gamename != HALO_RETAIL || !VALID_GAME_VERSIONS.contains(&&*ret.gamever) {
             None
         }
         else {
