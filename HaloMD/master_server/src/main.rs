@@ -43,6 +43,7 @@ use std::thread;
 use std::sync::{Arc, Mutex};
 
 extern crate time;
+use time::{SteadyTime,Duration};
 
 mod halo_server;
 use halo_server::HaloServer;
@@ -105,8 +106,8 @@ fn main() {
         loop {
             thread::sleep_ms(10 * 1000);
             let mut servers = servers_mut_destruction.lock().unwrap();
-            let timenow = time::now().to_timespec().sec;
-            servers.retain(|x| x.last_alive + DROP_TIME > timenow);
+            let timenow = SteadyTime::now();
+            servers.retain(|x| x.last_alive + Duration::seconds(DROP_TIME) > timenow);
         }
     });
 
@@ -207,7 +208,7 @@ fn main() {
             match HeartbeatPacket::from_buffer(&buffer[OPCODE_AND_HANDSHAKE_LENGTH..length]) {
                 None => {},
                 Some(packet) => {
-                    let updatetime = time::now().to_timespec().sec;
+                    let updatetime = SteadyTime::now();
                     match servers.iter_mut().position(|x| x.ip == client_ip && x.port == packet.localport) {
                         None => {
                             if game_versions.contains(&&*packet.gamever) && packet.gamename == HALO_RETAIL {
@@ -233,7 +234,7 @@ fn main() {
 
             for i in servers {
                 if i.ip == client_ip && i.port == source.port() {
-                    i.last_alive = time::now().to_timespec().sec;
+                    i.last_alive = SteadyTime::now();
                     break;
                 }
             }

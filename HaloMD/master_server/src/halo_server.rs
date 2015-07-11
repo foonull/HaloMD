@@ -1,8 +1,10 @@
+use time::SteadyTime;
+
 // Halo server is just an IP, port, and the time it last sent a packet.
 pub struct HaloServer {
     pub ip: String,
     pub port: u16,
-    pub last_alive: i64
+    pub last_alive: SteadyTime
 }
 
 // This converts it to ip:port.
