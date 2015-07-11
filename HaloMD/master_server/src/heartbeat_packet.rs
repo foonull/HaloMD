@@ -1,22 +1,20 @@
 use std::str;
 
-// Broadcast packet types.
-pub const KEEPALIVE : u8 = 8;
-pub const HEARTBEAT : u8 = 3;
-
 // Game state changes
 pub const GAMEEXITED : u16 = 2;
 
-// Opcode info
-pub const OPCODE_INDEX : usize = 0;
-pub const OPCODE_AND_HANDSHAKE_LENGTH : usize = 5;
-
 // Broadcasted game name
-pub const HALO_RETAIL : &'static str = "halor";
+const HALO_RETAIL : &'static str = "halor";
+
+// Invalid local port of the server
+const INVALID_LOCAL_PORT : u16 = 0;
 
 // Halo game versions
-pub const HALO_VERSION_1_09 : &'static str = "01.00.09.0620";
-pub const HALO_VERSION_1_10 : &'static str = "01.00.10.0621";
+const HALO_VERSION_1_09 : &'static str = "01.00.09.0620";
+const HALO_VERSION_1_10 : &'static str = "01.00.10.0621";
+
+// HaloMD uses 1.09, but Halo PC 1.10 is interoperable
+const VALID_GAME_VERSIONS: [&'static str; 2] = [ HALO_VERSION_1_09, HALO_VERSION_1_10 ];
 
 // This isn't the whole packet, just the stuff we care about.
 pub struct HeartbeatPacket {
@@ -58,7 +56,7 @@ impl HeartbeatPacket {
             }
         }
         
-        if ret.localport == 0 {
+        if ret.localport == INVALID_LOCAL_PORT || ret.gamename != HALO_RETAIL || !VALID_GAME_VERSIONS.contains(&&*ret.gamename) {
             None
         }
         else {

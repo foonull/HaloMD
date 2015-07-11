@@ -16,6 +16,14 @@ const BLACKLIST_UPDATE_TIME : u32 = 60;
 const BROADCAST_PORT_UDP : u16 = 27900;
 const SERVER_LIST_PORT_TCP : u16 = 29920;
 
+// Opcode info from game packets
+const OPCODE_INDEX : usize = 0;
+const OPCODE_AND_HANDSHAKE_LENGTH : usize = 5;
+
+// Broadcast packet type opcodes.
+const KEEPALIVE : u8 = 8;
+const HEARTBEAT : u8 = 3;
+
 use std::net::{UdpSocket,TcpListener,SocketAddr};
 use std::net::SocketAddr::{V4,V6};
 use std::io::{Write,BufReader,BufRead};
@@ -31,7 +39,7 @@ mod halo_server;
 use halo_server::HaloServer;
 
 mod heartbeat_packet;
-use heartbeat_packet::{HeartbeatPacket,KEEPALIVE,HEARTBEAT,GAMEEXITED,OPCODE_INDEX,OPCODE_AND_HANDSHAKE_LENGTH,HALO_RETAIL,HALO_VERSION_1_09,HALO_VERSION_1_10};
+use heartbeat_packet::{HeartbeatPacket,GAMEEXITED};
 
 trait IPString {
     fn ip_string(&self) -> String;
@@ -158,9 +166,6 @@ fn main() {
 
     // UDP server is run on the main thread. Servers broadcast their presence here.
 
-    // These are the allowed game versions. HaloMD uses 1.09, but Halo PC 1.10 is interoperable
-    let game_versions = [ HALO_VERSION_1_09, HALO_VERSION_1_10 ];
-
     let mut buffer = [0; 2048];
     loop {
         let (length, source) = match halo_socket.recv_from(&mut buffer) {
@@ -193,10 +198,7 @@ fn main() {
                     let updatetime = SteadyTime::now();
                     match servers.iter_mut().position(|x| x.ip == client_ip && x.port == packet.localport) {
                         None => {
-                            if game_versions.contains(&&*packet.gamever) && packet.gamename == HALO_RETAIL {
-                                let serverness = HaloServer { ip:client_ip, port: packet.localport, last_alive: updatetime };
-                                (*servers).push(serverness);
-                            }
+                            (*servers).push(HaloServer { ip:client_ip, port: packet.localport, last_alive: updatetime });
                         }
                         Some(k) => {
                             servers[k].last_alive = updatetime;
