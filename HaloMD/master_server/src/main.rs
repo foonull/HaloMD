@@ -20,6 +20,9 @@ const SERVER_LIST_PORT_TCP : u16 = 29920;
 const KEEPALIVE : u8 = 8;
 const HEARTBEAT : u8 = 3;
 
+// Game state changes
+const GAMEEXITED : u16 = 2;
+
 use std::net::{UdpSocket,TcpListener,SocketAddr};
 use std::net::SocketAddr::{V4,V6};
 use std::io::{Write,BufReader,BufRead};
@@ -200,7 +203,7 @@ fn main() {
                         }
                         Some(k) => {
                             servers[k].last_alive = updatetime;
-                            if packet.statechanged == 2 {
+                            if packet.statechanged == GAMEEXITED {
                                 servers.remove(k);
                             }
                         }
