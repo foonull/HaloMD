@@ -209,25 +209,26 @@ fn main() {
 
             let mut servers = servers_mut_udp.lock().unwrap();
 
-            let packet = HeartbeatPacket::from_buffer(&buffer[OPCODE_AND_HANDSHAKE_LENGTH..length]);
-
-            if packet.localport != 0 {
-                let updatetime = time::now().to_timespec().sec;
-                match servers.iter_mut().position(|x| x.ip == client_ip && x.port == packet.localport) {
-                    None => {
-                        if game_versions.contains(&packet.gamever) && &packet.gamename == HALO_RETAIL {
-                            let serverness = HaloServer { ip:client_ip, port: packet.localport, last_alive: updatetime };
-                            (*servers).push(serverness);
+            match HeartbeatPacket::from_buffer(&buffer[OPCODE_AND_HANDSHAKE_LENGTH..length]) {
+                None => {},
+                Some(packet) => {
+                    let updatetime = time::now().to_timespec().sec;
+                    match servers.iter_mut().position(|x| x.ip == client_ip && x.port == packet.localport) {
+                        None => {
+                            if game_versions.contains(&packet.gamever) && &packet.gamename == HALO_RETAIL {
+                                let serverness = HaloServer { ip:client_ip, port: packet.localport, last_alive: updatetime };
+                                (*servers).push(serverness);
+                            }
                         }
-                    }
-                    Some(k) => {
-                        servers[k].last_alive = updatetime;
-                        if packet.statechanged == GAMEEXITED {
-                            servers.remove(k);
+                        Some(k) => {
+                            servers[k].last_alive = updatetime;
+                            if packet.statechanged == GAMEEXITED {
+                                servers.remove(k);
+                            }
                         }
-                    }
-                };
-            }
+                    };
+                }
+            };
         }
 
         // Keepalive packet. We need to rely on the origin's port for this, unfortunately. This may mean that the source port is incorrect if the port was changed with NAT.

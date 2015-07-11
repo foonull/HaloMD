@@ -9,7 +9,7 @@ pub struct HeartbeatPacket {
 }
 
 impl HeartbeatPacket {
-    pub fn from_buffer(buffer: &[u8]) -> HeartbeatPacket {
+    pub fn from_buffer(buffer: &[u8]) -> Option<HeartbeatPacket> {
         let mut ret = HeartbeatPacket {localport: 0, gamename: String::new(), gamever: String::new(), statechanged: 0};
 
         let mut line_iterator = buffer.split(|b| *b == 0);
@@ -39,6 +39,12 @@ impl HeartbeatPacket {
                 _ => {}
             }
         }
-        return ret;
+        
+        if ret.localport == 0 {
+            None
+        }
+        else {
+            Some(ret)
+        }
     }
 }
