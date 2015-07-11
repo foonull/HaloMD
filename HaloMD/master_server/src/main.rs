@@ -191,11 +191,7 @@ fn main() {
         let client_ip = source.ip_string();
 
         let blacklist_ref = blacklist_udp.lock().unwrap();
-        let in_blacklist = match *blacklist_ref {
-            Some(ref blacklist) => blacklist.contains(&client_ip),
-            None => false
-        };
-        if in_blacklist {
+        if (*blacklist_ref).as_ref().map(|blacklist| blacklist.contains(&client_ip)).unwrap_or(false) {
             continue;
         }
 
