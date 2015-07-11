@@ -4,7 +4,7 @@
 // If the server does not respond in at least this many seconds, it will be dropped from the list.
 const DROP_TIME : i64 = 60;
 
-// Blacklist for blocking IPs. Separate with newlines.
+// Blacklist for blocking IPs. Separate with newlines. Any line that starts with a # is ignored.
 // Blacklisting IPs ignores heartbeat and keepalive packets from an IP address.
 // That means that servers that are banned will not be immediately removed, but will time out, instead.
 const BLACKLIST_FILE : &'static str = "blacklist.txt";
@@ -117,15 +117,18 @@ fn main() {
             // Placed in a block so blacklist is unlocked before sleeping to prevent threads from being locked for too long.
             {
                 let mut blacklist_ref = blacklist_update.lock().unwrap();
+                blacklist_ref.clear();
                 match File::open(BLACKLIST_FILE) {
                     Ok(file) => {
                         let reader = BufReader::new(&file);
                         match reader.lines().collect() {
-                            Err(_) => {
-                                blacklist_ref.clear();
-                            },
+                            Err(_) => {},
                             Ok(t) => {
-                                *blacklist_ref = t;
+                                let lines : Vec<String> = t;
+                                for line in lines.iter().filter(|x| x.starts_with("#") == false) {
+                                    println!("Added {} to blacklist.", line);
+                                    blacklist_ref.push(line.clone());
+                                }
                             }
                         }
                     },
@@ -174,8 +177,6 @@ fn main() {
             }
         }
     });
-
-
 
     // UDP server is run on the main thread. Servers broadcast their presence here.
 
