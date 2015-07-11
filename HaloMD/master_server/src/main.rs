@@ -113,26 +113,21 @@ fn main() {
 
     // Blacklist read thread.
     thread::spawn(move || {
+        let valid_line = |x: &str| -> bool { x.trim().len() > 0 && !x.starts_with("#") };
         loop {
             // Placed in a block so blacklist is unlocked before sleeping to prevent threads from being locked for too long.
             {
                 let mut blacklist_ref = blacklist_update.lock().unwrap();
-                blacklist_ref.clear();
-                match File::open(BLACKLIST_FILE) {
-                    Ok(file) => {
-                        let reader = BufReader::new(&file);
-                        match reader.lines().collect() {
-                            Err(_) => {},
-                            Ok(t) => {
-                                let lines : Vec<String> = t;
-                                for line in lines.iter().filter(|x| !x.starts_with("#")) {
-                                    blacklist_ref.push(line.clone());
-                                }
-                            }
-                        }
-                    },
-                    Err(_) => {}
-                };
+                *blacklist_ref =
+                    File::open(BLACKLIST_FILE).
+                    map(|file|
+                        BufReader::new(&file).lines().
+                        filter_map(|line| line.ok().and_then(|x| if valid_line(&x) { Some(x) } else { None })).
+                        collect()
+                    ).
+                    unwrap_or_else(|_| Vec::new());
+
+                println!("{:?}", *blacklist_ref);
             }
             thread::sleep_ms(BLACKLIST_UPDATE_TIME * 1000);
         }
