@@ -125,7 +125,7 @@ fn main() {
                             Err(_) => {},
                             Ok(t) => {
                                 let lines : Vec<String> = t;
-                                for line in lines.iter().filter(|x| x.starts_with("#") == false) {
+                                for line in lines.iter().filter(|x| !x.starts_with("#")) {
                                     println!("Added {} to blacklist.", line);
                                     blacklist_ref.push(line.clone());
                                 }
