@@ -107,7 +107,7 @@ fn main() {
     });
 
     // Blacklist mutex. Concurrency needs to be safe, my friend.
-    let blacklist: Vec<String> = Vec::new();
+    let blacklist: Option<Vec<String>> = None;
     let blacklist_update = Arc::new(Mutex::new(blacklist));
     let blacklist_udp = blacklist_update.clone();
 
@@ -124,8 +124,7 @@ fn main() {
                         BufReader::new(&file).lines().
                         filter_map(|line| line.ok().and_then(|x| if valid_line(&x) { Some(x) } else { None })).
                         collect()
-                    ).
-                    unwrap_or_else(|_| Vec::new());
+                    ).ok();
             }
             thread::sleep_ms(BLACKLIST_UPDATE_TIME * 1000);
         }
@@ -192,7 +191,11 @@ fn main() {
         let client_ip = source.ip_string();
 
         let blacklist_ref = blacklist_udp.lock().unwrap();
-        if blacklist_ref.contains(&client_ip) {
+        let in_blacklist = match *blacklist_ref {
+            Some(ref blacklist) => blacklist.contains(&client_ip),
+            None => false
+        };
+        if in_blacklist {
             continue;
         }
 
