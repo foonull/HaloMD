@@ -13,7 +13,8 @@ const BLACKLIST_FILE : &'static str = "blacklist.txt";
 const BLACKLIST_UPDATE_TIME : u32 = 60;
 
 // Note: The master server must have TCP 29920 open and UDP 27900 open.
-
+const BROADCAST_PORT_UDP : u16 = 27900;
+const SERVER_LIST_PORT_TCP : u16 = 29920;
 
 use std::net::{UdpSocket,TcpListener};
 use std::io::{Write,BufReader,BufRead};
@@ -45,17 +46,17 @@ fn main() {
     };
 
     // We need to bind on two different ports. If it failed to bind (invalid IP, port is taken), then we must make sure this is known.
-    let halo_socket = match UdpSocket::bind((&ip as &str,27900)) {
+    let halo_socket = match UdpSocket::bind((&ip as &str,SERVER_LIST_PORT_TCP)) {
         Err(_) => {
-            println!("Error creating a UDP socket at {}:27900.",ip);
+            println!("Error creating a UDP socket at {}:{}.",ip,SERVER_LIST_PORT_TCP);
             return;
         },
         Ok(halo_socket) => halo_socket
     };
 
-    let client_socket = match TcpListener::bind((&ip as &str,29920)) {
+    let client_socket = match TcpListener::bind((&ip as &str,BROADCAST_PORT_UDP)) {
         Err(_) => {
-            println!("Error listening to TCP at {}:29920.",ip);
+            println!("Error listening to TCP at {}:{}.",ip,BROADCAST_PORT_UDP);
             return;
         },
         Ok(client_socket) => client_socket
