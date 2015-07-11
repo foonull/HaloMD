@@ -159,12 +159,14 @@ fn main() {
                     let servers = (*servers_ref).iter();
 
                     for j in servers {
-                        ips = ips + &(j.to_string()) + "\n";
+                        ips.push_str(&(j.to_string()));
+                        ips.push('\n');
                     }
                 }
 
                 // Some number placed after the requester's IP. If you ask me, the source code was abducted by aliens, and this is a tracking number. Regardless, it's needed.
-                ips = ips + &ip + ":49149:3425";
+                ips.push_str(&ip);
+                ips.push_str(":49149:3425");
 
                 // We may be here a while. Just in case...
                 thread::spawn( move || {
