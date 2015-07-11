@@ -1,11 +1,29 @@
 use std::str;
 
+// Broadcast packet types.
+pub const KEEPALIVE : u8 = 8;
+pub const HEARTBEAT : u8 = 3;
+
+// Game state changes
+pub const GAMEEXITED : u16 = 2;
+
+// Opcode info
+pub const OPCODE_INDEX : usize = 0;
+pub const OPCODE_AND_HANDSHAKE_LENGTH : usize = 5;
+
+// Broadcasted game name
+pub const HALO_RETAIL : &'static str = "halor";
+
+// Halo game versions
+pub const HALO_VERSION_1_09 : &'static str = "01.00.09.0620";
+pub const HALO_VERSION_1_10 : &'static str = "01.00.10.0621";
+
 // This isn't the whole packet, just the stuff we care about.
 pub struct HeartbeatPacket {
     pub localport: u16,     // Can't trust source port due to some routers using a different port than this.
-    pub gamename: String,   // Must be "halor"
-    pub gamever: String,    // Must be 1.09 or 1.10 in case it's unjoinable.
-    pub statechanged: u16   // If it's 2, then the server is shutting down.
+    pub gamename: String,   // Must be HALO_RETAIL
+    pub gamever: String,    // Must be HALO_VERSION_1_09 or HALO_VERSION_1_10 in case it's unjoinable.
+    pub statechanged: u16   // If it's GAMEEXITED, then the server is shutting down.
 }
 
 impl HeartbeatPacket {

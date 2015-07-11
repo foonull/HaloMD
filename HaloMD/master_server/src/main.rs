@@ -16,24 +16,6 @@ const BLACKLIST_UPDATE_TIME : u32 = 60;
 const BROADCAST_PORT_UDP : u16 = 27900;
 const SERVER_LIST_PORT_TCP : u16 = 29920;
 
-// Broadcast packet types.
-const KEEPALIVE : u8 = 8;
-const HEARTBEAT : u8 = 3;
-
-// Game state changes
-const GAMEEXITED : u16 = 2;
-
-// Opcode info
-const OPCODE_INDEX : usize = 0;
-const OPCODE_AND_HANDSHAKE_LENGTH : usize = 5;
-
-// Broadcasted game name
-const HALO_RETAIL : &'static str = "halor";
-
-// Halo game versions
-const HALO_VERSION_1_09 : &'static str = "01.00.09.0620";
-const HALO_VERSION_1_10 : &'static str = "01.00.10.0621";
-
 use std::net::{UdpSocket,TcpListener,SocketAddr};
 use std::net::SocketAddr::{V4,V6};
 use std::io::{Write,BufReader,BufRead};
@@ -49,7 +31,7 @@ mod halo_server;
 use halo_server::HaloServer;
 
 mod heartbeat_packet;
-use heartbeat_packet::HeartbeatPacket;
+use heartbeat_packet::{HeartbeatPacket,KEEPALIVE,HEARTBEAT,GAMEEXITED,OPCODE_INDEX,OPCODE_AND_HANDSHAKE_LENGTH,HALO_RETAIL,HALO_VERSION_1_09,HALO_VERSION_1_10};
 
 trait IPString {
     fn ip_string(&self) -> String;
