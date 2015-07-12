@@ -78,7 +78,7 @@ fn main() {
     });
 
     let client_socket = unwrap_result_or_bail!(TcpListener::bind((&ip as &str,SERVER_LIST_PORT_TCP)), {
-        println!("Error listening to TCP at {}:{}.",ip,SERVER_LIST_PORT_TCP);
+        println!("Failed listening to TCP at {}:{}.",ip,SERVER_LIST_PORT_TCP);
         return;
     });
 
