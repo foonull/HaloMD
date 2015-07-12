@@ -197,7 +197,7 @@ fn main() {
                 None => {},
                 Some(packet) => {
                     let updatetime = SteadyTime::now();
-                    match servers.iter_mut().position(|x| x.ip == client_ip && x.port == packet.localport) {
+                    match servers.iter_mut().position(|x| *x == (&client_ip, packet.localport)) {
                         None => {
                             if packet.gamename == HALO_RETAIL && VALID_GAME_VERSIONS.contains(&&*packet.gamever) {
                                 (*servers).push(HaloServer { ip:client_ip, port: packet.localport, last_alive: updatetime });
@@ -220,7 +220,7 @@ fn main() {
             let servers = (*servers_ref).iter_mut();
 
             for i in servers {
-                if i.ip == client_ip && i.port == source.port() {
+                if *i == (&client_ip, source.port()) {
                     i.last_alive = SteadyTime::now();
                     break;
                 }
