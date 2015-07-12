@@ -3,6 +3,4 @@
 HaloMD/Data/DoNotTouchOrModify/Maps/
 HaloMD.xcodeproj/project.xcworkspace/xcuserdata/
 HaloMD.xcodeproj/xcuserdata/
-HaloMD/mod_submit/md_submit_output/
-HaloMD/halomd_overrides.dylib
 !.gitignore
