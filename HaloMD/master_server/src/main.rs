@@ -30,6 +30,7 @@ use std::io::{Write,BufReader,BufRead};
 use std::env;
 use std::fs::File;
 use std::thread;
+use std::thread::Builder;
 use std::sync::{Arc, Mutex};
 
 extern crate time;
@@ -92,7 +93,7 @@ fn main() {
     let servers_mut_destruction = servers_mut_udp.clone();
 
     // Destruction thread. This will remove servers that have not broadcasted their presence in a while.
-    thread::spawn(move || {
+    let _ = Builder::new().name("destruction_thread".to_string()).spawn(move || {
         loop {
             thread::sleep_ms(10 * 1000);
             let mut servers = servers_mut_destruction.lock().unwrap();
@@ -107,7 +108,7 @@ fn main() {
     let blacklist_udp = blacklist_update.clone();
 
     // Blacklist read thread.
-    thread::spawn(move || {
+    let _ = Builder::new().name("blacklist_thread".to_string()).spawn(move || {
         let valid_line = |x: &str| -> bool { x.trim().len() > 0 && !x.starts_with("#") };
         loop {
             // Placed in a block so blacklist is unlocked before sleeping to prevent threads from being locked for too long.
@@ -126,7 +127,7 @@ fn main() {
     });
 
     // TCP server thread. This is for the HaloMD application.
-    thread::spawn(move || {
+    let _ = Builder::new().name("halomd_thread".to_string()).spawn(move || {
         loop {
             for stream in client_socket.incoming() {
                 let mut client = match stream {
