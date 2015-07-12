@@ -24,6 +24,10 @@ const OPCODE_AND_HANDSHAKE_LENGTH : usize = 5;
 const KEEPALIVE : u8 = 8;
 const HEARTBEAT : u8 = 3;
 
+const TCP_SERVER_THREAD_NAME : &'static str = "halomd_thread";
+const DESTRUCTION_THREAD_NAME : &'static str = "destruction_thread";
+const BLACKLIST_THREAD_NAME : &'static str = "blacklist_thread";
+
 use std::net::{UdpSocket,TcpListener,SocketAddr};
 use std::net::SocketAddr::{V4,V6};
 use std::io::{Write,BufReader,BufRead};
@@ -89,7 +93,7 @@ fn main() {
     let servers_mut_destruction = servers_mut_udp.clone();
 
     // Destruction thread. This will remove servers that have not broadcasted their presence in a while.
-    let _ = Builder::new().name("destruction_thread".to_owned()).spawn(move || {
+    let _ = Builder::new().name(DESTRUCTION_THREAD_NAME.to_owned()).spawn(move || {
         loop {
             thread::sleep_ms(10 * 1000);
             let mut servers = servers_mut_destruction.lock().unwrap();
@@ -104,7 +108,7 @@ fn main() {
     let blacklist_udp = blacklist_update.clone();
 
     // Blacklist read thread.
-    let _ = Builder::new().name("blacklist_thread".to_owned()).spawn(move || {
+    let _ = Builder::new().name(BLACKLIST_THREAD_NAME.to_owned()).spawn(move || {
         let valid_line = |x: &str| -> bool { x.trim().len() > 0 && !x.starts_with("#") };
         loop {
             // Placed in a block so blacklist is unlocked before sleeping to prevent threads from being locked for too long.
@@ -123,7 +127,7 @@ fn main() {
     });
 
     // TCP server thread. This is for the HaloMD application.
-    let _ = Builder::new().name("halomd_thread".to_owned()).spawn(move || {
+    let _ = Builder::new().name(TCP_SERVER_THREAD_NAME.to_owned()).spawn(move || {
         loop {
             for stream in client_socket.incoming() {
                 let mut client = unwrap_option_or_bail!(stream.ok(), { continue });
