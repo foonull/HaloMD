@@ -36,6 +36,8 @@ use std::sync::{Arc, Mutex};
 extern crate time;
 use time::{SteadyTime,Duration};
 
+mod error_macros;
+
 mod halo_server;
 use halo_server::HaloServer;
 
@@ -70,21 +72,15 @@ fn main() {
     };
 
     // We need to bind on two different ports. If it failed to bind (invalid IP, port is taken), then we must make sure this is known.
-    let halo_socket = match UdpSocket::bind((&ip as &str,BROADCAST_PORT_UDP)) {
-        Err(error) => {
-            println!("Error creating a UDP socket at {}:{}. {}.",ip,BROADCAST_PORT_UDP,error);
-            return;
-        },
-        Ok(halo_socket) => halo_socket
-    };
+    let halo_socket = unwrap_result_or_bail!(UdpSocket::bind((&ip as &str,BROADCAST_PORT_UDP)), {
+        println!("Failed creating a UDP socket at {}:{}.",ip,BROADCAST_PORT_UDP);
+        return;
+    });
 
-    let client_socket = match TcpListener::bind((&ip as &str,SERVER_LIST_PORT_TCP)) {
-        Err(error) => {
-            println!("Error listening to TCP at {}:{}. {}.",ip,SERVER_LIST_PORT_TCP,error);
-            return;
-        },
-        Ok(client_socket) => client_socket
-    };
+    let client_socket = unwrap_result_or_bail!(TcpListener::bind((&ip as &str,SERVER_LIST_PORT_TCP)), {
+        println!("Error listening to TCP at {}:{}.",ip,SERVER_LIST_PORT_TCP);
+        return;
+    });
 
     // Mutex for thread safety.
     let servers_halo: Vec<HaloServer> = Vec::new();
@@ -130,16 +126,8 @@ fn main() {
     let _ = Builder::new().name("halomd_thread".to_string()).spawn(move || {
         loop {
             for stream in client_socket.incoming() {
-                let mut client = match stream {
-                    Err(_) => continue,
-                    Ok(the_stream) => the_stream
-                };
-                // Unwrap the IP.
-                let ip = match client.peer_addr() {
-                    Err(_) => continue,
-                    Ok(ip) => ip.ip_string()
-                };
-
+                let mut client = unwrap_option_or_bail!(stream.ok(), { continue });
+                let ip = unwrap_option_or_bail!(client.peer_addr().ok(), { continue }).ip_string();
                 let mut ips = String::new();
 
                 // Make servers_ref go out of scope to unlock it for other threads, since we don't need it.
@@ -170,10 +158,8 @@ fn main() {
 
     let mut buffer = [0; 2048];
     loop {
-        let (length, source) = match halo_socket.recv_from(&mut buffer) {
-            Err(_) => continue,
-            Ok(x) => x
-        };
+        let (length, source) = unwrap_option_or_bail!(halo_socket.recv_from(&mut buffer).ok(), { continue });
+
         if length <= OPCODE_INDEX {
             continue;
         }

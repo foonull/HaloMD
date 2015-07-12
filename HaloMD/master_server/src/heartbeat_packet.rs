@@ -30,14 +30,8 @@ impl HeartbeatPacket {
 
         let mut line_iterator = buffer.split(|b| *b == 0);
         loop {
-            let key = match line_iterator.next() {
-                None => break,
-                Some(n) => str::from_utf8(n).unwrap_or("")
-            };
-            let value = match line_iterator.next() {
-                None => break,
-                Some(n) => str::from_utf8(n).unwrap_or("")
-            };
+            let key = str::from_utf8(unwrap_option_or_bail!(line_iterator.next(), { break })).unwrap_or("");
+            let value = str::from_utf8(unwrap_option_or_bail!(line_iterator.next(), { break })).unwrap_or("");
 
             match key {
                 "localport" => {
