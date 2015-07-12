@@ -16,8 +16,8 @@ impl ToString for HaloServer {
 
 // Equality against a (ip: &str, port: u16) tuple
 impl<'a> PartialEq<(&'a str, u16)> for HaloServer {
-	fn eq(&self, other: &(&'a str, u16)) -> bool {
-		let (ip, port) = *other;
-		self.ip == ip && self.port == port
-	}
+    fn eq(&self, other: &(&'a str, u16)) -> bool {
+        let (ip, port) = *other;
+        self.ip == ip && self.port == port
+    }
 }
