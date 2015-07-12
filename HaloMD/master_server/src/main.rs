@@ -177,7 +177,6 @@ fn main() {
 
         // Heartbeat packet. These contain null-terminated C strings and are ordered in key1[0]value1[0]key2[0]value2[0]key3[0]value3[0] where [0] is a byte equal to 0x00.
         if buffer[OPCODE_INDEX] == HEARTBEAT && length > OPCODE_AND_HANDSHAKE_LENGTH {
-
             let mut servers = servers_mut_udp.lock().unwrap();
 
             match HeartbeatPacket::from_buffer(&buffer[OPCODE_AND_HANDSHAKE_LENGTH..length]) {
