@@ -41,10 +41,10 @@ impl HeartbeatPacket {
                     ret.statechanged = value.parse::<u16>().unwrap_or(0);
                 },
                 "gamever" => {
-                    ret.gamever = value.to_string()
+                    ret.gamever = value.to_owned()
                 },
                 "gamename" => {
-                    ret.gamename = value.to_string()
+                    ret.gamename = value.to_owned()
                 },
                 _ => {}
             }

@@ -52,7 +52,7 @@ impl IPString for SocketAddr {
     fn ip_string(&self) -> String {
         match *self {
             V4(ipv4) => ipv4.ip().to_string(),
-            V6(ipv6) => "[".to_string() + &ipv6.ip().to_string() + "]"
+            V6(ipv6) => "[".to_owned() + &ipv6.ip().to_string() + "]"
         }
     }
 }
@@ -60,11 +60,11 @@ impl IPString for SocketAddr {
 fn main() {
     let count = env::args().count();
     let ip = if count == 2 {
-        let j : Vec<_> = env::args().collect();
-        j[1].to_string()
+        let args : Vec<_> = env::args().collect();
+        args[1].to_owned()
     }
     else if count == 1 {
-        "0.0.0.0".to_string()
+        "0.0.0.0".to_owned()
     }
     else {
         println!("Only one argument is allowed: the IP to bind to.");
@@ -89,7 +89,7 @@ fn main() {
     let servers_mut_destruction = servers_mut_udp.clone();
 
     // Destruction thread. This will remove servers that have not broadcasted their presence in a while.
-    let _ = Builder::new().name("destruction_thread".to_string()).spawn(move || {
+    let _ = Builder::new().name("destruction_thread".to_owned()).spawn(move || {
         loop {
             thread::sleep_ms(10 * 1000);
             let mut servers = servers_mut_destruction.lock().unwrap();
@@ -104,7 +104,7 @@ fn main() {
     let blacklist_udp = blacklist_update.clone();
 
     // Blacklist read thread.
-    let _ = Builder::new().name("blacklist_thread".to_string()).spawn(move || {
+    let _ = Builder::new().name("blacklist_thread".to_owned()).spawn(move || {
         let valid_line = |x: &str| -> bool { x.trim().len() > 0 && !x.starts_with("#") };
         loop {
             // Placed in a block so blacklist is unlocked before sleeping to prevent threads from being locked for too long.
@@ -123,7 +123,7 @@ fn main() {
     });
 
     // TCP server thread. This is for the HaloMD application.
-    let _ = Builder::new().name("halomd_thread".to_string()).spawn(move || {
+    let _ = Builder::new().name("halomd_thread".to_owned()).spawn(move || {
         loop {
             for stream in client_socket.incoming() {
                 let mut client = unwrap_option_or_bail!(stream.ok(), { continue });
