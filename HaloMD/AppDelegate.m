@@ -69,6 +69,7 @@
 #define HALO_FILE_VERSIONS_KEY @"HALO_FILE_VERSIONS_KEY"
 #define HALO_GAMES_PASSWORD_KEY @"HALO_GAMES_PASSWORD_KEY"
 #define HALO_LOBBY_GAMES_CACHE_KEY @"HALO_LOBBY_GAMES_CACHE_KEY2"
+#define OWNS_HALO_FULL_CAMPAIGN_KEY @"OWNS_HALO_FULL_CAMPAIGN_KEY"
 
 #define MDChatWindowIdentifier @"MDChatWindowIdentifier"
 
@@ -111,6 +112,8 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		
 		[registeredDefaults setObject:@YES forKey:CHAT_PLAY_MESSAGE_SOUNDS];
 		[registeredDefaults setObject:@NO forKey:CHAT_SHOW_MESSAGE_RECEIVE_NOTIFICATION];
+		
+		[registeredDefaults setObject:@NO forKey:OWNS_HALO_FULL_CAMPAIGN_KEY];
 		
 		[[NSUserDefaults standardUserDefaults] registerDefaults:registeredDefaults];
 	}
@@ -380,7 +383,11 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	
 	@try
 	{
-		[haloTask setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:[[[NSBundle mainBundle] privateFrameworksPath] stringByAppendingPathComponent:@"MDOverrides.dylib"], @"DYLD_INSERT_LIBRARIES", [[NSBundle mainBundle] builtInPlugInsPath], @"MD_BUILTIN_PLUGIN_DIRECTORY", [self resourceGameDataPath], @"MD_STOCK_GAME_DATA_DIRECTORY", nil]];
+		// Pass if the player owns FV Campaign maps rather than having the plug-in detect if the map exists
+		// Installing FV Campaign maps is not an easy revertible action
+		BOOL ownsFullCampaign = [[NSUserDefaults standardUserDefaults] boolForKey:OWNS_HALO_FULL_CAMPAIGN_KEY];
+		
+		[haloTask setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:[[[NSBundle mainBundle] privateFrameworksPath] stringByAppendingPathComponent:@"MDOverrides.dylib"], @"DYLD_INSERT_LIBRARIES", [[NSBundle mainBundle] builtInPlugInsPath], @"MD_BUILTIN_PLUGIN_DIRECTORY", [self resourceGameDataPath], @"MD_STOCK_GAME_DATA_DIRECTORY", @(ownsFullCampaign), @"OWNS_FV_CAMPAIGN", nil]];
 		
 		[haloTask setLaunchPath:launchPath];
 		[haloTask setArguments:[NSArray array]];
@@ -1309,7 +1316,18 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		NSString *documentsPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
 		NSString *haloMDDocumentsPath = [documentsPath stringByAppendingPathComponent:@"HLMD"];
 		
-		if ([[NSFileManager defaultManager] fileExistsAtPath:haloMDDocumentsPath])
+		BOOL ownsFullVersionMaps = [[NSUserDefaults standardUserDefaults] boolForKey:OWNS_HALO_FULL_CAMPAIGN_KEY];
+		
+		if (!ownsFullVersionMaps && [[NSFileManager defaultManager] fileExistsAtPath:[[[gameDataPath stringByAppendingPathComponent:@"Maps"] stringByAppendingPathComponent:@"a10"] stringByAppendingPathExtension:@"map"]])
+		{
+			// they have the full version
+			ownsFullVersionMaps = YES;
+			// once we detect they have the full version, there is no going back
+			// we wouldn't want to delete any of the user's data by accident if they moved a map away temporarily
+			[[NSUserDefaults standardUserDefaults] setBool:YES forKey:OWNS_HALO_FULL_CAMPAIGN_KEY];
+		}
+		
+		if (!ownsFullVersionMaps && [[NSFileManager defaultManager] fileExistsAtPath:haloMDDocumentsPath])
 		{
 			// Remove all saved campaign games
 			NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:haloMDDocumentsPath];

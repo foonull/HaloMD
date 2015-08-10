@@ -467,6 +467,15 @@ static void interceptCommand(char *command,char *error_result, char *command_nam
         mprotect((void *)0x155000,0x1000, PROT_READ|PROT_WRITE);
         memset(mapLimitInstructions,0x90,5);
         mprotect((void *)0x155000,0x1000, PROT_READ|PROT_EXEC);
+
+        NSNumber *ownsFVCampaign = [[[NSProcessInfo processInfo] environment] objectForKey:@"OWNS_FV_CAMPAIGN"];
+        if ([ownsFVCampaign boolValue]) {
+            void *firstLevelPath = (void *)0x32D024;
+            mprotect((void *)0x32D000, 0x1000, PROT_READ|PROT_WRITE);
+            char restoredLevelPath[] = "levels\\a10\\a10";
+            memcpy(firstLevelPath, restoredLevelPath, sizeof(restoredLevelPath) - 1);
+            mprotect((void *)0x32D000, 0x1000, PROT_READ|PROT_EXEC);
+        }
     }
     return self;
 }
