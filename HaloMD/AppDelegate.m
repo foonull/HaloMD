@@ -1916,18 +1916,12 @@ static NSDictionary *expectedVersionsDictionary = nil;
 
 - (void)willEnterFullScreen:(NSNotification *)notification
 {
-	if (floor(NSAppKitVersionNumber) < NSAppKitVersionNumber10_10)
-	{
-		[self showChatButtonTheOldWay:NO];
-	}
+	[self showChatButtonTheOldWay:NO];
 }
 
 - (void)didExitFullScreen:(NSNotification *)notification
 {
-	if (floor(NSAppKitVersionNumber) < NSAppKitVersionNumber10_10)
-	{
-		[self showChatButtonTheOldWay:YES];
-	}
+	[self showChatButtonTheOldWay:YES];
 }
 
 - (void)awakeFromNib
@@ -1940,13 +1934,6 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	if ([[self window] respondsToSelector:@selector(animationBehavior)]) // easy way to tell if >= 10.7?
 	{
 		[[self window] setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
-	}
-	
-	if (([[self window] collectionBehavior] & NSWindowCollectionBehaviorFullScreenPrimary) != 0)
-	{
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterFullScreen:) name:NSWindowWillEnterFullScreenNotification object:window];
-		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didExitFullScreen:) name:NSWindowDidExitFullScreenNotification object:window];
 	}
 	
 	if (floor(NSAppKitVersionNumber) >= NSAppKitVersionNumber10_10)
@@ -1962,6 +1949,13 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	}
 	else
 	{
+		if (([[self window] collectionBehavior] & NSWindowCollectionBehaviorFullScreenPrimary) != 0)
+		{
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterFullScreen:) name:NSWindowWillEnterFullScreenNotification object:window];
+			
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didExitFullScreen:) name:NSWindowDidExitFullScreenNotification object:window];
+		}
+		
 		[self showChatButtonTheOldWay:YES];
 	}
 }
