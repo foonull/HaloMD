@@ -810,7 +810,7 @@
 		
 		NSPoint currentScrollPosition = _scrollView.contentView.bounds.origin;
 		
-		if (fabsf(currentScrollPosition.y - _oldScrollPosition.y) <= AUTO_SCROLL_PIXEL_THRESHOLD)
+		if (fabs(currentScrollPosition.y - _oldScrollPosition.y) <= AUTO_SCROLL_PIXEL_THRESHOLD)
 		{
 			// Avoid this notification handler being called recursively
 			_isChangingWebFrame = YES;
