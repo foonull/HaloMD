@@ -1859,11 +1859,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 	}
 }
 
-#ifndef NSAppKitVersionNumber10_9
-#define NSAppKitVersionNumber10_9 1265
-#endif
-
-- (void)showChatButton:(BOOL)shouldShowChatButton
+- (void)showChatButtonTheOldWay:(BOOL)shouldShowChatButton
 {
 	NSView *themeFrame = [[[self window] contentView] superview];
 	
@@ -1920,12 +1916,18 @@ static NSDictionary *expectedVersionsDictionary = nil;
 
 - (void)willEnterFullScreen:(NSNotification *)notification
 {
-	[self showChatButton:NO];
+	if (floor(NSAppKitVersionNumber) < NSAppKitVersionNumber10_10)
+	{
+		[self showChatButtonTheOldWay:NO];
+	}
 }
 
 - (void)didExitFullScreen:(NSNotification *)notification
 {
-	[self showChatButton:YES];
+	if (floor(NSAppKitVersionNumber) < NSAppKitVersionNumber10_10)
+	{
+		[self showChatButtonTheOldWay:YES];
+	}
 }
 
 - (void)awakeFromNib
@@ -1947,7 +1949,21 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didExitFullScreen:) name:NSWindowDidExitFullScreenNotification object:window];
 	}
 	
-	[self showChatButton:YES];
+	if (floor(NSAppKitVersionNumber) >= NSAppKitVersionNumber10_10)
+	{
+		NSImage *icon = [NSImage imageNamed:@"chat_icon.pdf"];
+		[icon setTemplate:YES];
+		[chatButton setImage:icon];
+		
+		NSTitlebarAccessoryViewController *chatButtonViewController = [[NSTitlebarAccessoryViewController alloc] init];
+		chatButtonViewController.layoutAttribute = NSLayoutAttributeRight;
+		chatButtonViewController.view = chatButton;
+		[self.window addTitlebarAccessoryViewController:chatButtonViewController];
+	}
+	else
+	{
+		[self showChatButtonTheOldWay:YES];
+	}
 }
 
 - (void)getUrl:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
