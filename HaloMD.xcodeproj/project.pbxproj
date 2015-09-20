@@ -1285,6 +1285,7 @@
 				7706FC1014DBB2830023DBA4 /* Copy Halo Data */,
 				776E3FAA14FAA9F0001414AB /* Copy Frameworks */,
 				77E6C6CF18414A3600705ED5 /* Copy Plugins */,
+				26B4A3471BAF382200DA16F8 /* Run Copy Maps Script */,
 			);
 			buildRules = (
 			);
@@ -1449,6 +1450,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		26B4A3471BAF382200DA16F8 /* Run Copy Maps Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Copy Maps Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "maps_dest=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Contents/Resources/Data/DoNotTouchOrModify/Maps\"\n\nmaps_source=\"/Applications/${PRODUCT_NAME}.app/Contents/Resources/Data/DoNotTouchOrModify/Maps\"\n\nif [ ! -d \"$maps_dest\" ]; then\n    ditto $maps_source $maps_dest\nfi";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		775B528514D331C800B874E3 /* Sources */ = {
