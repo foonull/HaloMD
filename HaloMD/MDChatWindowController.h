@@ -32,6 +32,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <WebKit/WebKit.h>
 #import "MDChatConnection.h"
 
 #define CHAT_PLAY_MESSAGE_SOUNDS @"CHAT_PLAY_MESSAGE_SOUNDS"
@@ -39,7 +40,7 @@
 
 @class WebView;
 
-@interface MDChatWindowController : NSWindowController <MDChatConnectionDelegate, NSTextStorageDelegate>
+@interface MDChatWindowController : NSWindowController <MDChatConnectionDelegate, NSTextStorageDelegate, WebUIDelegate, WebFrameLoadDelegate>
 {
 	IBOutlet WebView *webView;
 	IBOutlet NSTextView *textView;

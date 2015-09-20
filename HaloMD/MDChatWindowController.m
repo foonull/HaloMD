@@ -33,7 +33,6 @@
 
 #import "MDChatWindowController.h"
 #import "MDChatRosterElement.h"
-#import <WebKit/WebKit.h>
 #import <Growl/Growl.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <IOKit/pwr_mgt/IOPMLib.h>
