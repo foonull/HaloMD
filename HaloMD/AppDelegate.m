@@ -453,23 +453,9 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		return YES;
 	}
 	
-	if (NSClassFromString(@"NSRunningApplication"))
+	if ([[NSRunningApplication runningApplicationsWithBundleIdentifier:HALO_MD_IDENTIFIER] count] > 0)
 	{
-		if ([[NSRunningApplication runningApplicationsWithBundleIdentifier:HALO_MD_IDENTIFIER] count] > 0)
-		{
-			return YES;
-		}
-	}
-	else
-	{
-		NSArray *launchedApplications = [[NSWorkspace sharedWorkspace] launchedApplications];
-		for (NSDictionary *applicationDictionary in launchedApplications)
-		{
-			if ([[applicationDictionary objectForKey:@"NSApplicationBundleIdentifier"] isEqualToString:HALO_MD_IDENTIFIER])
-			{
-				return YES;
-			}
-		}
+		return YES;
 	}
 	
 	return NO;
@@ -484,30 +470,12 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		haloTask = nil;
 	}
 	
-	if (NSClassFromString(@"NSRunningApplication"))
+	for (NSRunningApplication *runningApplication in [NSRunningApplication runningApplicationsWithBundleIdentifier:HALO_MD_IDENTIFIER])
 	{
-		for (NSRunningApplication *runningApplication in [NSRunningApplication runningApplicationsWithBundleIdentifier:HALO_MD_IDENTIFIER])
+		if ([runningApplication processIdentifier] != taskProcessID)
 		{
-			if ([runningApplication processIdentifier] != taskProcessID)
-			{
-				// using forceTerminate instead of terminate as sending terminate while Halo is in the graphics window may cause it to start up rather than terminate, very odd
-				[runningApplication forceTerminate];
-			}
-		}
-	}
-	else
-	{
-		NSArray *launchedApplications = [[NSWorkspace sharedWorkspace] launchedApplications];
-		for (NSDictionary *applicationDictionary in launchedApplications)
-		{
-			if ([[applicationDictionary objectForKey:@"NSApplicationBundleIdentifier"] isEqualToString:HALO_MD_IDENTIFIER])
-			{
-				int applicationProcessID = [[applicationDictionary objectForKey:@"NSApplicationProcessIdentifier"] intValue];
-				if (applicationProcessID != taskProcessID)
-				{
-					kill(applicationProcessID, SIGKILL);
-				}
-			}
+			// using forceTerminate instead of terminate as sending terminate while Halo is in the graphics window may cause it to start up rather than terminate, very odd
+			[runningApplication forceTerminate];
 		}
 	}
 }
