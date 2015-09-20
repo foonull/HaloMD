@@ -36,7 +36,7 @@ end
 
 def sign_file(file_path, private_key_path)
 	temp_path = Pathname.new(OUTPUT_DIRECTORY) + "sig"
-	print_and_execute_command("./sign_update.sh \"#{file_path}\" \"#{private_key_path}\" > \"#{temp_path}\"")
+	print_and_execute_command("./sign_update \"#{file_path}\" \"#{private_key_path}\" > \"#{temp_path}\"")
 	signature = IO.read(temp_path).strip()
 	FileUtils.rm(temp_path)
 	return signature
@@ -45,7 +45,9 @@ end
 def make_old_app_patch(new_app_path, old_app_path, new_build_number, old_build_number, private_key_path)
 	patch_name = "#{old_build_number}-to-#{new_build_number}.delta"
 	patch_path = Pathname.new(OUTPUT_DIRECTORY) + patch_name
-	print_and_execute_command("./BinaryDelta create \"#{old_app_path}\" \"#{new_app_path}\" \"#{patch_path}\"")
+	delta_create_command = "./BinaryDelta create"
+	delta_create_command += " --version=1" if old_build_number <= 1090
+	print_and_execute_command("#{delta_create_command} \"#{old_app_path}\" \"#{new_app_path}\" \"#{patch_path}\"")
 	return [patch_name, sign_file(patch_path, private_key_path), File.stat(patch_path).size]
 end
 
