@@ -1829,7 +1829,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/vendor",
 				);
-				OTHER_LDFLAGS = "-lresolv";
+				OTHER_LDFLAGS = (
+					"-lresolv",
+					"-Wl,-rpath,@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "null.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = x86_64;
@@ -1860,7 +1863,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/vendor",
 				);
-				OTHER_LDFLAGS = "-lresolv";
+				OTHER_LDFLAGS = (
+					"-lresolv",
+					"-Wl,-rpath,@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "null.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = x86_64;
