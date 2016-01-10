@@ -294,6 +294,7 @@ static NSString *const XMPPMUCOwnerNamespace = @"http://jabber.org/protocol/muc#
  * The occupant parameter may be nil if the message came directly from the room, or from a non-occupant.
 **/
 - (void)xmppRoom:(XMPPRoom *)sender didReceiveMessage:(XMPPMessage *)message fromOccupant:(XMPPJID *)occupantJID;
+- (void)xmppRoom:(XMPPRoom *)sender didReceiveSubject:(NSString *)subject;
 
 - (void)xmppRoom:(XMPPRoom *)sender didFetchBanList:(NSArray *)items;
 - (void)xmppRoom:(XMPPRoom *)sender didNotFetchBanList:(XMPPIQ *)iqError;

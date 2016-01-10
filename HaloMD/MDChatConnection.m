@@ -369,24 +369,21 @@
 {
 	NSString *senderName = occupantJID.resource;
 	
-	if ([message isGroupChatMessageWithSubject])
+	NSString *messageType = ([senderName isEqualToString:_nickname]) ? @"my_message" : @"on_message";
+	
+	NSString *body = message.body;
+	if ([body rangeOfString:@"\n" options:NSLiteralSearch | NSCaseInsensitiveSearch].location != NSNotFound)
 	{
-		_subject = [message.subject copy];
-		
-		[_delegate processMessage:[self prependCurrentDateToMessage:[NSString stringWithFormat:@"Topic is: %@", message.subject]] type:@"on_subject" nickname:nil text:message.subject];
+		body = [@"\n" stringByAppendingString:body];
 	}
-	else if ([message isGroupChatMessageWithBody])
-	{
-		NSString *messageType = ([senderName isEqualToString:_nickname]) ? @"my_message" : @"on_message";
-		
-		NSString *body = message.body;
-		if ([body rangeOfString:@"\n" options:NSLiteralSearch | NSCaseInsensitiveSearch].location != NSNotFound)
-		{
-			body = [@"\n" stringByAppendingString:body];
-		}
-		
-		[_delegate processMessage:[self prependCurrentDateToMessage:[NSString stringWithFormat:@"<%@> %@", senderName, body]] type:messageType nickname:senderName text:body];
-	}
+	
+	[_delegate processMessage:[self prependCurrentDateToMessage:[NSString stringWithFormat:@"<%@> %@", senderName, body]] type:messageType nickname:senderName text:body];
+}
+
+- (void)xmppRoom:(XMPPRoom *)sender didReceiveSubject:(NSString *)subject
+{
+	_subject = [subject copy];
+	[_delegate processMessage:[self prependCurrentDateToMessage:[NSString stringWithFormat:@"Topic is: %@", _subject]] type:@"on_subject" nickname:nil text:_subject];
 }
 
 - (BOOL)sendMessage:(NSString *)message
