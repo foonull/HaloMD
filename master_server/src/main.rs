@@ -36,6 +36,7 @@ use std::fs::File;
 use std::thread;
 use std::thread::Builder;
 use std::sync::{Arc, Mutex};
+use std::collections::HashMap;
 
 extern crate time;
 use time::{SteadyTime,Duration};
@@ -104,9 +105,24 @@ fn main() {
     }));
 
     // Blacklist mutex. Concurrency needs to be safe, my friend.
-    let blacklist: Option<Vec<String>> = None;
-    let blacklist_update = Arc::new(Mutex::new(blacklist));
+    let blacklist_update = Arc::new(Mutex::new(None as Option<HashMap<String, Option<Vec<u16>>>>));
     let blacklist_udp = blacklist_update.clone();
+
+    // Takes a line fed from the blacklist file which is in the format:
+    // ip_address \t port1, port2, port3,...
+    // and returns a tuple of the IP and ports
+    // If no ports are specified, then all ports are considered (should act like a wildcard)
+    fn blacklist_info(line: &str) -> (String, Option<Vec<u16>>) {
+        let components: Vec<&str> = line.split("\t").map(|x| x.trim()).collect();
+
+        if components.len() <= 1 {
+            (line.to_owned(), None)
+        }
+        else {
+            let ports: Vec<u16> = components[1].split(",").flat_map(|x| x.trim().parse::<u16>().ok()).collect();
+            (components[0].to_owned(), Some(ports))
+        }
+    }
 
     // Blacklist read thread.
     let _ = Builder::new().name(BLACKLIST_THREAD_NAME.to_owned()).spawn(move || exit_on_panic!({
@@ -119,7 +135,7 @@ fn main() {
                     File::open(BLACKLIST_FILE).
                     map(|file|
                         BufReader::new(&file).lines().
-                        filter_map(|line| line.ok().and_then(|x| if valid_line(&x) { Some(x) } else { None })).
+                        filter_map(|line| line.ok().and_then(|x| if valid_line(&x) { Some(blacklist_info(&x)) } else { None })).
                         collect()
                     ).ok();
             }
@@ -176,7 +192,22 @@ fn main() {
         let client_ip = source.ip_string();
 
         let blacklist_ref = blacklist_udp.lock().unwrap();
-        if (*blacklist_ref).as_ref().map(|blacklist| blacklist.contains(&client_ip)).unwrap_or(false) {
+        let ignore_host = match *blacklist_ref {
+            Some(ref blacklist) => {
+                match (*blacklist).get(&client_ip) {
+                    Some(ports_opt) => {
+                        match *ports_opt {
+                            Some(ref ports) => ports.contains(&source.port()), // ignore if port is blacklisted
+                            None => true // wildcard for all ports
+                        }
+                    },
+                    None => false // no IP was found
+                }
+            },
+            None => false // no blacklist available
+        };
+
+        if ignore_host {
             continue;
         }
 
