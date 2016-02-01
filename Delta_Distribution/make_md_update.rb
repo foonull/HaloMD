@@ -147,7 +147,7 @@ FileUtils.rm_rf(md_output_directory)
 delta_items = []
 old_app_paths.each_with_index do |old_path, index|
 	patch_name, signature, size = make_old_app_patch(halomd_path, old_path, build_and_short_version[0], old_build_and_short_versons[index][0], private_key_path)
-	delta_item = '<enclosure url="http://halomd.macgamingmods.com/' +  patch_name + '" ' +
+	delta_item = '<enclosure url="https://halomd.macgamingmods.com/' +  patch_name + '" ' +
 		'sparkle:version="' + build_and_short_version[0].to_s + '" ' +
 		'sparkle:shortVersionString="' + build_and_short_version[1] + '" ' +
 		'sparkle:deltaFrom="' + old_build_and_short_versons[index][0].to_s + '" ' +

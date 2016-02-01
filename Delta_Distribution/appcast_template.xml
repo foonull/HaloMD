@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"  xmlns:dc="http://purl.org/dc/elements/1.1/">
+<rss version="2.0" xmlns:sparkle="http://sparkle-project.org"  xmlns:dc="http://purl.org/dc/elements/1.1/">
    <channel>
       <title>HaloMD's Changelog</title>
-      <link>http://halomd.macgamingmods.com/halomd_appcast.xml</link>
+      <link>https://halomd.macgamingmods.com/halomd_appcast.xml</link>
       <description>HaloMD Changes</description>
       <language>en</language>
          <item>
@@ -12,7 +12,7 @@
 							http://halomd.macgamingmods.com/releasenotes.html
 						</sparkle:releaseNotesLink>
             <pubDate>$MD_PUB_DATE</pubDate>
-            <enclosure url="http://halomd.macgamingmods.com/HaloMD.zip" sparkle:version="$MD_BUILD" sparkle:shortVersionString="$MD_HUMAN_VERSION" length="$MD_ZIP_LENGTH" type="application/octet-stream" sparkle:dsaSignature="$MD_CODE_SIG" />
+            <enclosure url="https://halomd.macgamingmods.com/HaloMD.zip" sparkle:version="$MD_BUILD" sparkle:shortVersionString="$MD_HUMAN_VERSION" length="$MD_ZIP_LENGTH" type="application/octet-stream" sparkle:dsaSignature="$MD_CODE_SIG" />
             <sparkle:deltas>
               $DELTA_ITEMS
             </sparkle:deltas>
