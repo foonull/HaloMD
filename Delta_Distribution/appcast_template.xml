@@ -9,7 +9,7 @@
             <sparkle:minimumSystemVersion>10.7.0</sparkle:minimumSystemVersion>
             <title>Version $MD_HUMAN_VERSION</title>
 						<sparkle:releaseNotesLink>
-							http://halomd.macgamingmods.com/releasenotes.html
+							https://halomd.macgamingmods.com/releasenotes.html
 						</sparkle:releaseNotesLink>
             <pubDate>$MD_PUB_DATE</pubDate>
             <enclosure url="https://halomd.macgamingmods.com/HaloMD.zip" sparkle:version="$MD_BUILD" sparkle:shortVersionString="$MD_HUMAN_VERSION" length="$MD_ZIP_LENGTH" type="application/octet-stream" sparkle:dsaSignature="$MD_CODE_SIG" />
