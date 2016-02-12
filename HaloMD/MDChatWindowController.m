@@ -749,7 +749,11 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(webViewFrameChanged:) name:NSViewFrameDidChangeNotification object:scrollView.documentView];
 	
 	_scrollView = scrollView;
-    
+	
+	webView.preferences.plugInsEnabled = NO;
+	webView.preferences.javaScriptEnabled = NO;
+	webView.preferences.javaEnabled = NO;
+	
 	[webView setDrawsBackground:NO];
     [webView setUIDelegate:self];
     [webView setFrameLoadDelegate:self];
