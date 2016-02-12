@@ -221,7 +221,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 
 - (IBAction)help:(id)sender
 {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://halomd.net/help"]];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://halomd.net/help"]];
 }
 
 - (NSString *)libraryPath
@@ -1811,7 +1811,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 			if ([[timedOutServer ipAddress] isEqualToString:[self myIPAddress]] && !self.usingServerCache && [self isHaloOpen])
 			{
 				NSMutableAttributedString *attributedStatus = [[NSMutableAttributedString alloc] initWithString:@"You may be having "];
-				[attributedStatus appendAttributedString:[NSAttributedString MDHyperlinkFromString:@"hosting issues." withURL:[NSURL URLWithString:@"http://halomd.net/hosting"]]];
+				[attributedStatus appendAttributedString:[NSAttributedString MDHyperlinkFromString:@"hosting issues." withURL:[NSURL URLWithString:@"https://halomd.net/hosting"]]];
 				[self setStatus:attributedStatus];
 				
 				break;
