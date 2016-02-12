@@ -927,6 +927,7 @@
 	NSRect usedRect = [layoutManager usedRectForTextContainer:textContainer];
 	
 	// Calculate height somehow
+#warning This is definitely broken.. TODO: fix this
 	CGFloat calculatedHeight = usedRect.size.height + 4;
 	[bottomSubview setFrameSize:NSMakeSize(bottomSubview.frame.size.width, calculatedHeight)];
 }
