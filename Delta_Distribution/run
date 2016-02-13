@@ -2,8 +2,8 @@
 
 require 'pathname'
 
-if not File.exist? "BinaryDelta" or not File.directory? "Sparkle.framework"
-	puts "Error: cannot find BinaryDelta or Sparkle.framework"
+if not File.exist? "BinaryDelta"
+	puts "Error: cannot find BinaryDelta"
 	exit(1)
 end
 
