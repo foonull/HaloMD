@@ -750,12 +750,9 @@
 	
 	_scrollView = scrollView;
 	
-	if (NSAppKitVersionNumber >= NSAppKitVersionNumber10_10)
-	{
-		webView.preferences.plugInsEnabled = NO;
-		webView.preferences.javaScriptEnabled = NO;
-		webView.preferences.javaEnabled = NO;
-	}
+	webView.preferences.plugInsEnabled = NO;
+	webView.preferences.javaScriptEnabled = NO;
+	webView.preferences.javaEnabled = NO;
 	
 	[webView setDrawsBackground:NO];
     [webView setUIDelegate:self];
