@@ -443,7 +443,7 @@ static void interceptCommand(char *command,char *error_result, char *command_nam
                         bestMap = mapSearched;
                     }
                 }
-                [newArgs setObject:bestMap atIndexedSubscript:1];
+                [newArgs replaceObjectAtIndex:1 withObject:bestMap];
                 return runCommand((char *)[[newArgs componentsJoinedByString:@" "] UTF8String],error_result,command_name);
             }
         }
