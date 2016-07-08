@@ -42,7 +42,6 @@ extern crate time;
 use time::{SteadyTime,Duration};
 
 mod error_macros;
-mod exit_on_panic;
 
 mod halo_server;
 use halo_server::HaloServer;
@@ -95,14 +94,14 @@ fn main() {
     let servers_mut_destruction = servers_mut_udp.clone();
 
     // Destruction thread. This will remove servers that have not broadcasted their presence in a while.
-    let _ = Builder::new().name(DESTRUCTION_THREAD_NAME.to_owned()).spawn(move || exit_on_panic!({
+    let _ = Builder::new().name(DESTRUCTION_THREAD_NAME.to_owned()).spawn(move || {
         loop {
             thread::sleep_ms(10 * 1000);
             let mut servers = servers_mut_destruction.lock().unwrap();
             let timenow = SteadyTime::now();
             servers.retain(|x| x.last_alive + Duration::seconds(DROP_TIME) > timenow);
         }
-    }));
+    });
 
     // Blacklist mutex. Concurrency needs to be safe, my friend.
     let blacklist_update = Arc::new(Mutex::new(None as Option<HashMap<String, Option<Vec<u16>>>>));
@@ -125,7 +124,7 @@ fn main() {
     }
 
     // Blacklist read thread.
-    let _ = Builder::new().name(BLACKLIST_THREAD_NAME.to_owned()).spawn(move || exit_on_panic!({
+    let _ = Builder::new().name(BLACKLIST_THREAD_NAME.to_owned()).spawn(move || {
         let valid_line = |x: &str| -> bool { x.trim().len() > 0 && !x.starts_with("#") };
         loop {
             // Placed in a block so blacklist is unlocked before sleeping to prevent threads from being locked for too long.
@@ -141,10 +140,10 @@ fn main() {
             }
             thread::sleep_ms(BLACKLIST_UPDATE_TIME * 1000);
         }
-    }));
+    });
 
     // TCP server thread. This is for the HaloMD application.
-    let _ = Builder::new().name(TCP_SERVER_THREAD_NAME.to_owned()).spawn(move || exit_on_panic!({
+    let _ = Builder::new().name(TCP_SERVER_THREAD_NAME.to_owned()).spawn(move || {
         loop {
             for stream in client_socket.incoming() {
                 let mut client = unwrap_option_or_bail!(stream.ok(), { continue });
@@ -173,7 +172,7 @@ fn main() {
                 });
             }
         }
-    }));
+    });
 
     // UDP server is run on the main thread. Servers broadcast their presence here.
 
