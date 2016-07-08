@@ -10,7 +10,7 @@ const DROP_TIME : i64 = 60;
 const BLACKLIST_FILE : &'static str = "blacklist.txt";
 
 // Read the blacklist every x amount of seconds.
-const BLACKLIST_UPDATE_TIME : u32 = 60;
+const BLACKLIST_UPDATE_TIME : u64 = 60;
 
 // Note: The master server must have TCP 29920 open and UDP 27900 open.
 const BROADCAST_PORT_UDP : u16 = 27900;
@@ -37,9 +37,10 @@ use std::thread;
 use std::thread::Builder;
 use std::sync::{Arc, Mutex};
 use std::collections::HashMap;
+use std::time::Duration;
 
 extern crate time;
-use time::{SteadyTime,Duration};
+use time::{SteadyTime,Duration as TimeDuration};
 
 mod error_macros;
 
@@ -96,10 +97,10 @@ fn main() {
     // Destruction thread. This will remove servers that have not broadcasted their presence in a while.
     let _ = Builder::new().name(DESTRUCTION_THREAD_NAME.to_owned()).spawn(move || {
         loop {
-            thread::sleep_ms(10 * 1000);
+            thread::sleep(Duration::from_secs(10));
             let mut servers = servers_mut_destruction.lock().unwrap();
             let timenow = SteadyTime::now();
-            servers.retain(|x| x.last_alive + Duration::seconds(DROP_TIME) > timenow);
+            servers.retain(|x| x.last_alive + TimeDuration::seconds(DROP_TIME) > timenow);
         }
     });
 
@@ -138,7 +139,7 @@ fn main() {
                         collect()
                     ).ok();
             }
-            thread::sleep_ms(BLACKLIST_UPDATE_TIME * 1000);
+            thread::sleep(Duration::from_secs(BLACKLIST_UPDATE_TIME));
         }
     });
 
