@@ -4,3 +4,9 @@ version = "1.0.0"
 
 [dependencies]
 time = "0.1"
+
+[profile.release]
+panic = "abort"
+
+[profile.dev]
+panic = "abort"
