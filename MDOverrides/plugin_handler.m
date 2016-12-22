@@ -26,6 +26,7 @@
 
 #import <Foundation/Foundation.h>
 #import "mach_override.h"
+#import <sys/mman.h>
 #import "MDPlugin.h"
 
 @interface NSObject (MDPluginPrivate)

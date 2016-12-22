@@ -28,6 +28,7 @@
 #import "ZZUnicodeStringTag.h"
 #import "ZZBitmapsTag.h"
 #import "ZZMapData.h"
+#import <sys/mman.h>
 #import "mach_override.h"
 
 #define HALO_INDEX_LOCATION 0x40440000 //same on Halo PC and CE

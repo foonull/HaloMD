@@ -2006,7 +2006,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 {
 	if ([identifier isEqualToString:MDChatWindowIdentifier])
 	{
-		completionHandler([[[NSApp delegate] chatWindowController] window], nil);
+		completionHandler([[(AppDelegate *)[NSApp delegate] chatWindowController] window], nil);
 	}
 }
 

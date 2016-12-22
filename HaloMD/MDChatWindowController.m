@@ -89,13 +89,13 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillBecomeActive:) name:NSApplicationWillBecomeActiveNotification object:nil];
 		
-		[[NSApp delegate] addObserver:self forKeyPath:@"inGameServer" options:NSKeyValueObservingOptionNew context:NULL];
+		[(AppDelegate *)[NSApp delegate] addObserver:self forKeyPath:@"inGameServer" options:NSKeyValueObservingOptionNew context:NULL];
 		
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(systemWillSleep:) name:NSWorkspaceWillSleepNotification object:nil];
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(systemDidWake:) name:NSWorkspaceDidWakeNotification object:nil];
 		
 		NSMutableString *strippedNickname = [NSMutableString string];
-		NSString *profileName = [[NSApp delegate] profileName];
+		NSString *profileName = [(AppDelegate *)[NSApp delegate] profileName];
 		
 		if (![profileName canBeConvertedToEncoding:NSUTF8StringEncoding])
 		{
@@ -122,14 +122,14 @@
 		
 		[nickname replaceOccurrencesOfString:@" " withString:@"_" options:NSLiteralSearch range:NSMakeRange(0, [nickname length])];
 		
-		NSString *serialKey = [[NSApp delegate] machineSerialKey];
+		NSString *serialKey = [(AppDelegate *)[NSApp delegate] machineSerialKey];
 		if (serialKey == nil)
 		{
-			serialKey = [[NSApp delegate] serialKey];
+			serialKey = [(AppDelegate *)[NSApp delegate] serialKey];
 		}
 		if (serialKey == nil)
 		{
-			serialKey = [[NSApp delegate] randomSerialKey];
+			serialKey = [(AppDelegate *)[NSApp delegate] randomSerialKey];
 		}
 		
 		_desiredNickname = [nickname copy];
@@ -239,9 +239,9 @@
 
 - (NSString *)currentStatus
 {
-	MDServer *inGameServer = [[NSApp delegate] inGameServer];
+	MDServer *inGameServer = [(AppDelegate *)[NSApp delegate] inGameServer];
 	
-	if ([[NSApp delegate] isHaloOpen])
+	if ([(AppDelegate *)[NSApp delegate] isHaloOpen])
 	{
 		if (!inGameServer)
 		{
@@ -545,7 +545,7 @@
 							[self setNumberOfUnreadMentions:numberOfUnreadMentions+1];
 						}
 					}
-					else if (![NSApp isActive] && [[NSUserDefaults standardUserDefaults] boolForKey:CHAT_SHOW_MESSAGE_RECEIVE_NOTIFICATION] && ![[NSApp delegate] isHaloOpenAndRunningFullscreen])
+					else if (![NSApp isActive] && [[NSUserDefaults standardUserDefaults] boolForKey:CHAT_SHOW_MESSAGE_RECEIVE_NOTIFICATION] && ![(AppDelegate *)[NSApp delegate] isHaloOpenAndRunningFullscreen])
 					{
 						[NSClassFromString(@"GrowlApplicationBridge")
 						 notifyWithTitle:nickString ? nickString : @""
@@ -558,7 +558,7 @@
 					}
 				}
 				
-				if (![[NSApp delegate] isHaloOpenAndRunningFullscreen] && [[NSUserDefaults standardUserDefaults] boolForKey:CHAT_PLAY_MESSAGE_SOUNDS])
+				if (![(AppDelegate *)[NSApp delegate] isHaloOpenAndRunningFullscreen] && [[NSUserDefaults standardUserDefaults] boolForKey:CHAT_PLAY_MESSAGE_SOUNDS])
 				{
 					NSSound *receiveSound = [[NSSound alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"CRcv" ofType:@"aif"] byReference:YES];
 					[receiveSound play];
@@ -777,11 +777,11 @@
 				// join user's game
 				NSString *ipAddress = [statusComponents objectAtIndex:1];
 				int portNumber = [[statusComponents objectAtIndex:2] intValue];
-				for (id server in [[NSApp delegate] servers])
+				for (id server in [(AppDelegate *)[NSApp delegate] servers])
 				{
 					if ([[server ipAddress] isEqualToString:ipAddress] && [server portNumber] == portNumber)
 					{
-						[[NSApp delegate] joinServer:server];
+						[(AppDelegate *)[NSApp delegate] joinServer:server];
 						break;
 					}
 				}
@@ -1031,7 +1031,7 @@
 					int portNumber = [[statusComponents objectAtIndex:2] intValue];
 					
 					MDServer *foundServer = nil;
-					for (MDServer *server in [[NSApp delegate] servers])
+					for (MDServer *server in [(AppDelegate *)[NSApp delegate] servers])
 					{
 						if ([[server ipAddress] isEqualToString:ipAddress] && [server portNumber] == portNumber)
 						{
