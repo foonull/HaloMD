@@ -29,6 +29,6 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2013 Zero2. All rights reserved.</string>
 	<key>NSPrincipalClass</key>
-	<string>ZZModList</string>
+	<string>ZZMapList</string>
 </dict>
 </plist>

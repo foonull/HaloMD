@@ -189,7 +189,6 @@
 		77E6C6CE1841493200705ED5 /* MDOverrides.dylib in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 77BC674D1840405100F82849 /* MDOverrides.dylib */; };
 		77E6C6D018414A4700705ED5 /* ChatTextRedirect.mdplugin in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 77BC678A184086DC00F82849 /* ChatTextRedirect.mdplugin */; };
 		77E6C7101842B7BE00705ED5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 77E6C70E1842B7BE00705ED5 /* InfoPlist.strings */; };
-		77E6C7171842B86200705ED5 /* ZZModList.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E6C7161842B86200705ED5 /* ZZModList.m */; };
 		77E7E2871720FCB100E18FB9 /* MDModPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E7E2861720FCB000E18FB9 /* MDModPatch.m */; };
 		77E7E28A172463C500E18FB9 /* MDChatRosterElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 77E7E289172463C400E18FB9 /* MDChatRosterElement.m */; };
 		77E7E28F172477E000E18FB9 /* Growl Registration Ticket.growlRegDict in Resources */ = {isa = PBXBuildFile; fileRef = 77E7E28E172477E000E18FB9 /* Growl Registration Ticket.growlRegDict */; };
@@ -213,6 +212,7 @@
 		77FFC0FA1863B75800122357 /* MDGameFavoritesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77FFC0F81863B75800122357 /* MDGameFavoritesWindowController.xib */; };
 		DA3FB80219DD06B9004167A9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA3FB80119DD06B9004167A9 /* Cocoa.framework */; };
 		DA3FB80419DD06C6004167A9 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DA3FB80319DD06C6004167A9 /* libxml2.dylib */; };
+		DA9B74A11D4C1D5100177088 /* ZZMapList.m in Sources */ = {isa = PBXBuildFile; fileRef = DA9B74A01D4C1D5100177088 /* ZZMapList.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -630,8 +630,6 @@
 		77E6C70D1842B7BE00705ED5 /* MapList-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MapList-Info.plist"; sourceTree = "<group>"; };
 		77E6C70F1842B7BE00705ED5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		77E6C7111842B7BE00705ED5 /* MapList-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MapList-Prefix.pch"; sourceTree = "<group>"; };
-		77E6C7151842B86200705ED5 /* ZZModList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZModList.h; sourceTree = "<group>"; };
-		77E6C7161842B86200705ED5 /* ZZModList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZModList.m; sourceTree = "<group>"; };
 		77E7E2851720FCB000E18FB9 /* MDModPatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDModPatch.h; sourceTree = "<group>"; };
 		77E7E2861720FCB000E18FB9 /* MDModPatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDModPatch.m; sourceTree = "<group>"; };
 		77E7E288172463C400E18FB9 /* MDChatRosterElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDChatRosterElement.h; sourceTree = "<group>"; };
@@ -668,6 +666,11 @@
 		77FFC0F81863B75800122357 /* MDGameFavoritesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MDGameFavoritesWindowController.xib; sourceTree = "<group>"; };
 		DA3FB80119DD06B9004167A9 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		DA3FB80319DD06C6004167A9 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		DA9B749D1D4C1D5100177088 /* ZZBitmapsTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZBitmapsTag.h; sourceTree = "<group>"; };
+		DA9B749E1D4C1D5100177088 /* ZZUnicodeStringTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZUnicodeStringTag.h; sourceTree = "<group>"; };
+		DA9B749F1D4C1D5100177088 /* ZZMapList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZMapList.h; sourceTree = "<group>"; };
+		DA9B74A01D4C1D5100177088 /* ZZMapList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZZMapList.m; sourceTree = "<group>"; };
+		DA9B74A21D4C1D8F00177088 /* ZZMapData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZMapData.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1196,8 +1199,11 @@
 		77E6C70B1842B7BE00705ED5 /* MapList */ = {
 			isa = PBXGroup;
 			children = (
-				77E6C7151842B86200705ED5 /* ZZModList.h */,
-				77E6C7161842B86200705ED5 /* ZZModList.m */,
+				DA9B749D1D4C1D5100177088 /* ZZBitmapsTag.h */,
+				DA9B749E1D4C1D5100177088 /* ZZUnicodeStringTag.h */,
+				DA9B74A21D4C1D8F00177088 /* ZZMapData.h */,
+				DA9B749F1D4C1D5100177088 /* ZZMapList.h */,
+				DA9B74A01D4C1D5100177088 /* ZZMapList.m */,
 				77E6C70C1842B7BE00705ED5 /* Supporting Files */,
 			);
 			path = MapList;
@@ -1640,8 +1646,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA9B74A11D4C1D5100177088 /* ZZMapList.m in Sources */,
 				77C595FF1842B97800C81DC0 /* mach_override.c in Sources */,
-				77E6C7171842B86200705ED5 /* ZZModList.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
