@@ -15,7 +15,7 @@ def print_and_execute_command(command)
 	end
 end
 
-MODS_URL = "http://halomd.macgamingmods.com/mods/mods.json.gz"
+MODS_URL = "https://halomd.macgamingmods.com/mods/mods.json.gz"
 
 OUTPUT_PATH = "md_submit_output"
 MOD_JSON_NAME = "mods.json"

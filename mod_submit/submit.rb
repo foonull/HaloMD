@@ -23,7 +23,7 @@ def print_and_execute_command(command)
 	end
 end
 
-MODS_URL = "http://halomd.macgamingmods.com/mods/mods.json.gz"
+MODS_URL = "https://halomd.macgamingmods.com/mods/mods.json.gz"
 
 OUTPUT_PATH = "md_submit_output"
 MOD_JSON_NAME = "mods.json"
@@ -201,7 +201,7 @@ else
 		else
 			puts "Downloading #{patch_identifier}..."
 			zip_path = "#{OUTPUT_PATH}/#{patch_identifier}.zip"
-			print_and_execute_command("curl \"http://halomd.macgamingmods.com/mods/#{patch_identifier}.zip\" -o \"#{zip_path}\"")
+			print_and_execute_command("curl \"https://halomd.macgamingmods.com/mods/#{patch_identifier}.zip\" -o \"#{zip_path}\"")
 			print_and_execute_command("unzip \"#{zip_path}\" -d #{OUTPUT_PATH}")
 			FileUtils.rm(zip_path) if File.exists? zip_path
 			if File.exists? "#{OUTPUT_PATH}/__MACOSX"
