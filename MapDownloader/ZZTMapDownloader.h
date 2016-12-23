@@ -17,6 +17,7 @@
     NSURLDownload *_activeDownload;
     NSDictionary *_modList; //mod list object. We will only get the list once.
     NSString *_mapMd5; //the md5 of our downloading map. it's nil if this isn't known.
+    NSString *_baseModsURL; // the URL to the mods directory containing the files referenced from modList
 }
 
 @property (nonatomic, copy) NSString *mapIdentifier;
@@ -25,6 +26,7 @@
 @property (nonatomic, retain) NSURLDownload *activeDownload;
 @property (nonatomic, retain) NSDictionary *modList;
 @property (nonatomic, copy) NSString *mapMd5;
+@property (nonatomic, copy) NSString *baseModsURL;
 
 typedef enum {
     NONE = 0x0,

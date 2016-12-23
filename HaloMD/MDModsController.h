@@ -35,6 +35,11 @@
 #import "SCEventListenerProtocol.h"
 
 #define MODS_LIST_DOWNLOAD_TIME_KEY @"MODS_LIST_DOWNLOAD_TIME_KEY"
+#define USES_MODS_MIRROR_KEY @"UsesModsMirror"
+
+#define USES_MODS_MIRROR ([[NSUserDefaults standardUserDefaults] boolForKey:USES_MODS_MIRROR_KEY])
+
+#define MODS_BASE_URL (USES_MODS_MIRROR ? @"https://halomdmirror.galaxyverge.com/mods" : @"https://halomd.macgamingmods.com/mods")
 
 #define MAXIMUM_MAP_NAME_LENGTH 31
 

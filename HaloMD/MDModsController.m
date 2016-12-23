@@ -50,15 +50,15 @@
 
 #define MODS_LIST_PATH (gJsonSerializaionExists ? MODS_LIST_PATH_WITH_EXTENSION(@"json") : MODS_LIST_PATH_WITH_EXTENSION(@"plist"))
 
-#define MULTIPLAYER_CODES_URL [NSURL URLWithString:[NSString stringWithFormat:@"https://halomd.macgamingmods.com/mods/mods.%@.gz", gJsonSerializaionExists ? @"json" : @"plist"]]
+#define MULTIPLAYER_CODES_URL [NSURL URLWithString:[NSString stringWithFormat:@"%@/mods.%@.gz", MODS_BASE_URL, gJsonSerializaionExists ? @"json" : @"plist"]]
 
-#define MOD_DOWNLOAD_URL [NSURL URLWithString:[NSString stringWithFormat:@"https://halomd.macgamingmods.com/mods/%@.zip", [self currentDownloadingMapIdentifier]]]
+#define MOD_DOWNLOAD_URL [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@.zip", MODS_BASE_URL, [self currentDownloadingMapIdentifier]]]
 #define MOD_DOWNLOAD_FILE [NSTemporaryDirectory() stringByAppendingPathComponent:@"HaloMD_download_file.zip"]
 
-#define MOD_PATCH_DOWNLOAD_URL [NSURL URLWithString:[NSString stringWithFormat:@"https://halomd.macgamingmods.com/mods/%@", [[self currentDownloadingPatch] path]]]
+#define MOD_PATCH_DOWNLOAD_URL [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", MODS_BASE_URL, [[self currentDownloadingPatch] path]]]
 #define MOD_PATCH_DOWNLOAD_FILE [NSTemporaryDirectory() stringByAppendingPathComponent:@"HaloMD_download_file.mdpatch"]
 
-#define PLUGIN_DOWNLOAD_URL [NSURL URLWithString:[[NSString stringWithFormat:@"https://halomd.macgamingmods.com/mods/plug-ins/%@.zip", [[self currentDownloadingPlugin] name]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]
+#define PLUGIN_DOWNLOAD_URL [NSURL URLWithString:[[NSString stringWithFormat:@"%@/plug-ins/%@.zip", MODS_BASE_URL, [[self currentDownloadingPlugin] name]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]
 #define PLUGIN_DOWNLOAD_FILE [NSTemporaryDirectory() stringByAppendingPathComponent:@"HaloMD_download_plugin.zip"]
 
 #define PLUGINS_DIRECTORY [[appDelegate applicationSupportPath] stringByAppendingPathComponent:@"PlugIns"]

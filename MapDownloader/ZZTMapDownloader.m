@@ -26,6 +26,7 @@
 @synthesize activeDownload = _activeDownload;
 @synthesize modList = _modList;
 @synthesize mapMd5 = _mapMd5;
+@synthesize baseModsURL = _baseModsURL;
 
 static NSString *applicationSupportPath()
 {
@@ -146,7 +147,7 @@ static void *haloMapLoading(char *a, uint32_t b, char *c) {
                             NSString *map_path = pathToMap([[patch objectForKey:@"base_identifier"]stringByAppendingPathExtension:@"map"]);
                             if(map_path != nil) {
                                 if([md5HashFromFilePath(map_path) isEqualToString:[patch objectForKey:@"base_hash"]]) {
-                                    patchURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://halomd.macgamingmods.com/mods/%@",[patch objectForKey:@"path"]]];
+                                    patchURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", self1.baseModsURL, [patch objectForKey:@"path"]]];
                                     self1.patchToMap = [patch objectForKey:@"base_identifier"];
                                     downloadType = DOWNLOADING_PATCH;
                                     break;
@@ -163,7 +164,7 @@ static void *haloMapLoading(char *a, uint32_t b, char *c) {
                 [self1.activeDownload setDestination:MOD_DOWNLOAD_PATCH allowOverwrite:YES];
             }
             else {
-                NSURL *downloadurl = [NSURL URLWithString:[NSString stringWithFormat:@"https://halomd.macgamingmods.com/mods/%s.zip",mapName]];
+                NSURL *downloadurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%s.zip",self1.baseModsURL,mapName]];
                 NSURLRequest *request = [NSURLRequest requestWithURL:downloadurl cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
                 self1.activeDownload = [[NSURLDownload alloc] initWithRequest:request delegate:self1];
                 [self1.activeDownload setDestination:MOD_DOWNLOAD_ARCHIVE allowOverwrite:YES];
@@ -197,6 +198,9 @@ static int widgetChangedOverride(int actionsomething, char *action_label, int al
     if (self != nil)
     {
         self.modList = dictionaryFromPathWithoutExtension([applicationSupportPath() stringByAppendingPathComponent:@"HaloMD_mods_list"]);
+		
+		self.baseModsURL = [[[NSProcessInfo processInfo] environment] objectForKey:@"MD_BASE_MODS_URL"];
+		
         mach_override_ptr((void *)0x1b5bd6, haloMapLoading, (void **)&haloMapLoadOld);
         mach_override_ptr((void *)0x24bf92, widgetChangedOverride, (void **)&widgetChangedOld);
         self1 = self;
@@ -303,7 +307,7 @@ uint32_t currentSize;
             if(bspatch_main(4, (char **)argv) != 0 || (self.mapMd5 != nil && ![md5HashFromFilePath([[MAPS_DIRECTORY stringByAppendingPathComponent:self.mapIdentifier] stringByAppendingPathExtension:@"map"]) isEqualToString:self.mapMd5])) {
                 changeDownloadMessage(@"Patch failed.|nTrying archive. Hold tight!");
                 [[NSFileManager defaultManager] removeItemAtPath:finalLocationOfMap error:nil];
-                NSURL *downloadurl = [NSURL URLWithString:[NSString stringWithFormat:@"https://halomd.macgamingmods.com/mods/%s.zip",[self.mapIdentifier UTF8String]]];
+                NSURL *downloadurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%s.zip",self1.baseModsURL,[self.mapIdentifier UTF8String]]];
                 NSURLRequest *request = [NSURLRequest requestWithURL:downloadurl cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
                 downloadType = DOWNLOADING_ZIP;
                 self.activeDownload = [[NSURLDownload alloc] initWithRequest:request delegate:self1];

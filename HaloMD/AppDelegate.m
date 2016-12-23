@@ -115,6 +115,8 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		
 		[registeredDefaults setObject:@NO forKey:OWNS_HALO_FULL_CAMPAIGN_KEY];
 		
+		[registeredDefaults setObject:@NO forKey:USES_MODS_MIRROR_KEY];
+		
 		[[NSUserDefaults standardUserDefaults] registerDefaults:registeredDefaults];
 	}
 }
@@ -387,7 +389,7 @@ static NSDictionary *expectedVersionsDictionary = nil;
 		// Installing FV Campaign maps is not an easy revertible action
 		BOOL ownsFullCampaign = [[NSUserDefaults standardUserDefaults] boolForKey:OWNS_HALO_FULL_CAMPAIGN_KEY];
 		
-		[haloTask setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:[[[NSBundle mainBundle] privateFrameworksPath] stringByAppendingPathComponent:@"MDOverrides.dylib"], @"DYLD_INSERT_LIBRARIES", [[NSBundle mainBundle] builtInPlugInsPath], @"MD_BUILTIN_PLUGIN_DIRECTORY", [self resourceGameDataPath], @"MD_STOCK_GAME_DATA_DIRECTORY", @(ownsFullCampaign), @"OWNS_FV_CAMPAIGN", nil]];
+		[haloTask setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:[[[NSBundle mainBundle] privateFrameworksPath] stringByAppendingPathComponent:@"MDOverrides.dylib"], @"DYLD_INSERT_LIBRARIES", [[NSBundle mainBundle] builtInPlugInsPath], @"MD_BUILTIN_PLUGIN_DIRECTORY", [self resourceGameDataPath], @"MD_STOCK_GAME_DATA_DIRECTORY", @(ownsFullCampaign), @"OWNS_FV_CAMPAIGN", MODS_BASE_URL, @"MD_BASE_MODS_URL", nil]];
 		
 		[haloTask setLaunchPath:launchPath];
 		[haloTask setArguments:[NSArray array]];
