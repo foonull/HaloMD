@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		26707D1C1A6C2250009E7FAD /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26707D1B1A6C2250009E7FAD /* IOKit.framework */; };
+		26C51A0D1E0D845F000C1738 /* MDPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26C51A0B1E0D845F000C1738 /* MDPreferencesWindowController.m */; };
+		26C51A0E1E0D845F000C1738 /* MDPreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 26C51A0C1E0D845F000C1738 /* MDPreferencesWindowController.xib */; };
 		7706FC1114DBB28C0023DBA4 /* Data in Copy Halo Data */ = {isa = PBXBuildFile; fileRef = 7706FC0E14DBB26C0023DBA4 /* Data */; };
 		770BEEB2154DB7900052193F /* shield.icns in Resources */ = {isa = PBXBuildFile; fileRef = 770BEEB1154DB7900052193F /* shield.icns */; };
 		770C153D1741CC37001380A8 /* game_icon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 770C153C1741CC37001380A8 /* game_icon.pdf */; };
@@ -212,7 +214,7 @@
 		77FFC0FA1863B75800122357 /* MDGameFavoritesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77FFC0F81863B75800122357 /* MDGameFavoritesWindowController.xib */; };
 		DA3FB80219DD06B9004167A9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA3FB80119DD06B9004167A9 /* Cocoa.framework */; };
 		DA3FB80419DD06C6004167A9 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DA3FB80319DD06C6004167A9 /* libxml2.dylib */; };
-		DA9B74A11D4C1D5100177088 /* ZZMapList.m in Sources */ = {isa = PBXBuildFile; fileRef = DA9B74A01D4C1D5100177088 /* ZZMapList.m */; settings = {ASSET_TAGS = (); }; };
+		DA9B74A11D4C1D5100177088 /* ZZMapList.m in Sources */ = {isa = PBXBuildFile; fileRef = DA9B74A01D4C1D5100177088 /* ZZMapList.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -288,6 +290,9 @@
 
 /* Begin PBXFileReference section */
 		26707D1B1A6C2250009E7FAD /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		26C51A0A1E0D845F000C1738 /* MDPreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDPreferencesWindowController.h; sourceTree = "<group>"; };
+		26C51A0B1E0D845F000C1738 /* MDPreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDPreferencesWindowController.m; sourceTree = "<group>"; };
+		26C51A0C1E0D845F000C1738 /* MDPreferencesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MDPreferencesWindowController.xib; sourceTree = "<group>"; };
 		7706FC0E14DBB26C0023DBA4 /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Data; sourceTree = "<group>"; };
 		770BEEB1154DB7900052193F /* shield.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = shield.icns; sourceTree = "<group>"; };
 		770C153C1741CC37001380A8 /* game_icon.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = game_icon.pdf; sourceTree = "<group>"; };
@@ -807,6 +812,8 @@
 				77C596001842C43900C81DC0 /* Dependencies */,
 				775B529F14D331C800B874E3 /* AppDelegate.h */,
 				775B52A014D331C800B874E3 /* AppDelegate.m */,
+				26C51A0A1E0D845F000C1738 /* MDPreferencesWindowController.h */,
+				26C51A0B1E0D845F000C1738 /* MDPreferencesWindowController.m */,
 				77F65ECD150B1E2F00D26C71 /* MDInspectorController.h */,
 				77F65ECE150B1E2F00D26C71 /* MDInspectorController.m */,
 				77FFC0F61863B75800122357 /* MDGameFavoritesWindowController.h */,
@@ -840,6 +847,7 @@
 				77904A3A151C27070046EA96 /* keygen.h */,
 				77904A37151C26BF0046EA96 /* keygen.c */,
 				775B52A214D331C900B874E3 /* MainMenu.xib */,
+				26C51A0C1E0D845F000C1738 /* MDPreferencesWindowController.xib */,
 				77E52D1E16D89D970015246C /* MDChatWindowController.xib */,
 				77FFC0F81863B75800122357 /* MDGameFavoritesWindowController.xib */,
 				775B529414D331C800B874E3 /* Supporting Files */,
@@ -1416,6 +1424,7 @@
 				775B52AD14D3326800B874E3 /* com.null.halominidemo.plist in Resources */,
 				776E3FAD14FAAC01001414AB /* dsa_pub.pem in Resources */,
 				770BEEB2154DB7900052193F /* shield.icns in Resources */,
+				26C51A0E1E0D845F000C1738 /* MDPreferencesWindowController.xib in Resources */,
 				77D44A5B164A076100510501 /* lock.png in Resources */,
 				77E52D2016D89D970015246C /* MDChatWindowController.xib in Resources */,
 				77E52D2216D8A1D60015246C /* theme.css in Resources */,
@@ -1510,6 +1519,7 @@
 				775E625B1944DA99005AC209 /* XMPPvCardTempBase.m in Sources */,
 				775E62501944DA99005AC209 /* XMPPTime.m in Sources */,
 				775E62511944DA99005AC209 /* XMPPTransports.m in Sources */,
+				26C51A0D1E0D845F000C1738 /* MDPreferencesWindowController.m in Sources */,
 				775E62491944DA99005AC209 /* XMPPRosterMemoryStorage.m in Sources */,
 				775E62161944DA98005AC209 /* XMPPGroupCoreDataStorageObject.m in Sources */,
 				775E62011944DA98005AC209 /* NSXMLElement+XEP_0335.m in Sources */,

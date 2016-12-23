@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="MDPreferencesWindowController">
+            <connections>
+                <outlet property="_galaxyVergeModDatabaseRadioButton" destination="i9X-64-0km" id="MlS-kG-ead"/>
+                <outlet property="_mgmModDatabaseRadioButton" destination="TCC-Zj-HlE" id="9Z9-l7-DNg"/>
+                <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="F0z-JX-Cv5" customClass="NSPanel">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="573" y="346" width="306" height="134"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1366" height="745"/>
+            <view key="contentView" wantsLayer="YES" id="se5-gp-TjO">
+                <rect key="frame" x="0.0" y="0.0" width="306" height="134"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TCC-Zj-HlE">
+                        <rect key="frame" x="19" y="97" width="135" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="radio" title="Mac Gaming Mods" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="R0m-ee-I4X">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="changeModDatabaseURL:" target="-2" id="CGf-eq-y5b"/>
+                        </connections>
+                    </button>
+                    <button fixedFrame="YES" tag="1" translatesAutoresizingMaskIntoConstraints="NO" id="i9X-64-0km">
+                        <rect key="frame" x="19" y="75" width="135" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="radio" title="Galaxy Verge" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="rEQ-yV-ot7">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="changeModDatabaseURL:" target="-2" id="uT9-hv-vwQ"/>
+                        </connections>
+                    </button>
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vfu-qc-4VP">
+                        <rect key="frame" x="18" y="20" width="279" height="48"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" title="If you have trouble downloading mods using the official Mac Gaming Mods database, try using the Galaxy Verge mirror." id="6LN-KJ-aH0">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                </subviews>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
+            </connections>
+            <point key="canvasLocation" x="52" y="94"/>
+        </window>
+    </objects>
+</document>

@@ -42,6 +42,7 @@
 #import "DSClickableURLTextField.h"
 #import "MDChatWindowController.h"
 #import "MDGameFavoritesWindowController.h"
+#import "MDPreferencesWindowController.h"
 #import <CoreFoundation/CoreFoundation.h>
 #import <IOKit/IOKitLib.h>
 #import <Growl/Growl.h>
@@ -1980,6 +1981,15 @@ static NSDictionary *expectedVersionsDictionary = nil;
 						   withObject:nil];
 	
 	[inspectorController initiateGameInspector];
+}
+
+- (IBAction)showPreferencesWindow:(id)sender
+{
+	if (_preferencesWindowController == nil)
+	{
+		_preferencesWindowController = [[MDPreferencesWindowController alloc] init];
+	}
+	[_preferencesWindowController showWindow:nil];
 }
 
 - (MDChatWindowController *)chatWindowController
