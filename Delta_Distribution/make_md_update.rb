@@ -51,8 +51,8 @@ def make_old_app_patch(new_app_path, old_app_path, new_build_number, old_build_n
 	return [patch_name, sign_file(patch_path, private_key_path), File.stat(patch_path).size]
 end
 
-if not File.exist? "BinaryDelta" or not File.directory? "Sparkle.framework"
-	puts "Error: cannot find BinaryDelta or Sparkle.framework"
+if not File.exist? "BinaryDelta"
+	puts "Error: cannot find BinaryDelta"
 	exit(1)
 end
 
