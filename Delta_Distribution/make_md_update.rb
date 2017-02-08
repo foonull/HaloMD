@@ -123,7 +123,7 @@ end
 md_output_directory = Pathname.new(OUTPUT_DIRECTORY) + "HaloMD"
 Dir.mkdir md_output_directory
 
-how_to_run_path = "How to Run.rtfd"
+how_to_run_path = "Install.rtfd"
 
 halomd_dest_path = Pathname.new(md_output_directory) + "HaloMD.app"
 
@@ -140,7 +140,10 @@ execute_command("ditto -c -k --sequesterRsrc --keepParent HaloMD \"#{zip_name}\"
 Dir.chdir(current_directory)
 
 #Create the dmg
-print_and_execute_command("./create-dmg #{halomd_path} #{Pathname.new(OUTPUT_DIRECTORY) + 'HaloMD.dmg'}")
+puts "Creating dmg..."
+dmg_name = "HaloMDnew.dmg"
+dmg_path = Pathname.new(OUTPUT_DIRECTORY) + dmg_name
+print_and_execute_command("./create-dmg \"#{halomd_path}\" \"#{dmg_path}\"")
 
 zip_signature = sign_file(zip_path, private_key_path)
 zip_size = File.stat(zip_path).size
@@ -165,4 +168,4 @@ new_contents = appcast_template_contents.gsub("$DELTA_ITEMS", delta_items.join("
 
 IO.write(Pathname.new(OUTPUT_DIRECTORY) + "halomd_appcast.xml", new_contents)
 
-puts "Wrote files to #{OUTPUT_DIRECTORY}. Verify that the app inside the zip opens and works (sometimes os x can be wonky..). These files will be uploaded to the top level directory of the server. Make sure to upload #{zip_name} first, move and rename the old stable version into old_releases/ appropriately, and then rename the uploaded zip to HaloMD.zip. Then update and upload the releasenotes.html with new info, upload the the delta patch file(s). Finally, upload/replace the appcast as the last step."
+puts "Wrote files to #{OUTPUT_DIRECTORY}. Verify that the app inside the dmg & zip opens and works (sometimes macOS can be wonky..). These files will be uploaded to the top level directory of the server. Make sure to upload #{dmg_name} and #{zip_name} first, move and rename the old stable version zip into old_releases/ appropriately, and then rename the uploaded dmg & zip to without the 'new' suffix. Then update and upload the releasenotes.html with new info, upload the the delta patch file(s). Finally, upload/replace the appcast as the last step."
