@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
@@ -24,7 +24,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="306" height="134"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TCC-Zj-HlE">
+                    <button id="TCC-Zj-HlE">
                         <rect key="frame" x="19" y="97" width="135" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="radio" title="Mac Gaming Mods" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="R0m-ee-I4X">
@@ -35,7 +35,7 @@
                             <action selector="changeModDatabaseURL:" target="-2" id="CGf-eq-y5b"/>
                         </connections>
                     </button>
-                    <button fixedFrame="YES" tag="1" translatesAutoresizingMaskIntoConstraints="NO" id="i9X-64-0km">
+                    <button tag="1" id="i9X-64-0km">
                         <rect key="frame" x="19" y="75" width="135" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="radio" title="Galaxy Verge" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="rEQ-yV-ot7">
@@ -46,7 +46,7 @@
                             <action selector="changeModDatabaseURL:" target="-2" id="uT9-hv-vwQ"/>
                         </connections>
                     </button>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vfu-qc-4VP">
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="vfu-qc-4VP">
                         <rect key="frame" x="18" y="20" width="279" height="48"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" title="If you have trouble downloading mods using the official Mac Gaming Mods database, try using the Galaxy Verge mirror." id="6LN-KJ-aH0">
