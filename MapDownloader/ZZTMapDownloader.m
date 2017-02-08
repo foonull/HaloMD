@@ -321,7 +321,7 @@ uint32_t currentSize;
 - (void) rejoinServerAndCleanup {
     @autoreleasepool {
         NSString *ip = [NSString stringWithFormat:@"%u.%u.%u.%u:%u",*(uint8_t*)(0x466054+3),*(uint8_t*)(0x466054+2),*(uint8_t*)(0x466054+1),*(uint8_t*)(0x466054+0),*(uint16_t*)(0x466066)];
-        NSString *password = [[NSString alloc]initWithCharacters:(unichar *)0x466090 length:unistrlen((unichar *)0x466090)];
+		NSString *password = [[[NSString alloc]initWithCharacters:(unichar *)0x466090 length:unistrlen((unichar *)0x466090)] autorelease];
         NSString *connect = [NSString stringWithFormat:@"connect %@ \"%@\"",ip,password];
         //haloprintf(NONE,"%s",[connect UTF8String]);
         runCommand([connect cStringUsingEncoding:NSISOLatin1StringEncoding],"Failed to rejoin server with %s.","connect");
