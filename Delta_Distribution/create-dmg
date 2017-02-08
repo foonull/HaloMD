@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-rm -rf src
-mkdir src
-cp -R $1 src/HaloMD.app
-cp -R Install.rtfd src/
-../vendor/create-dmg/create-dmg --volname "HaloMD" --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon HaloMD.app 200 190 --hide-extension HaloMD.app --hide-extension Install.rtfd --app-drop-link 600 185 $2 src/
-rm -rf src
+rm -rf dmg-temp
+mkdir dmg-temp
+cp -R $1 dmg-temp/HaloMD.app
+cp -R Install.rtfd dmg-temp/
+../vendor/create-dmg/create-dmg --volname "HaloMD" --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon HaloMD.app 200 190 --hide-extension HaloMD.app --hide-extension Install.rtfd --app-drop-link 600 185 $2 dmg-temp/
+rm -rf dmg-temp
