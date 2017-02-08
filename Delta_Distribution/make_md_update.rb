@@ -139,6 +139,9 @@ zip_path = Pathname.new(OUTPUT_DIRECTORY) + zip_name
 execute_command("ditto -c -k --sequesterRsrc --keepParent HaloMD \"#{zip_name}\"")
 Dir.chdir(current_directory)
 
+#Create the dmg
+print_and_execute_command("./create-dmg #{halomd_path} #{Pathname.new(OUTPUT_DIRECTORY) + 'HaloMD.dmg'}")
+
 zip_signature = sign_file(zip_path, private_key_path)
 zip_size = File.stat(zip_path).size
 
