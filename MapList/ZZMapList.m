@@ -513,8 +513,10 @@ static void intercept_command(const char *command,const char *errorResult, const
                 uint32_t build = 0;
                 for(NSUInteger i=0;i<[multiplayer_maps count];i++) {
                     NSString *possible_map = [[multiplayer_maps objectAtIndex:i]stringByDeletingPathExtension];
-                    if([possible_map isEqualToString:map_argument])
+                    if([possible_map isEqualToString:map_argument]) {
+                        build = 0;
                         break;
+                    }
                     uint32_t possible_build = build_number_from_identifier(possible_map);
                     if(possible_build > build) {
                         if([[NSString stringWithFormat:@"%@_%u",map_argument,possible_build] isEqualToString:possible_map]) {
@@ -563,7 +565,7 @@ static void intercept_command(const char *command,const char *errorResult, const
                     if(*(uint8_t *)(0x62fdc) == 0x74 && *(uint32_t *)(buffer + 0x4) != *(uint8_t *)(0x62fdb) && !show_all_maps) return;
                     
                     free_map_list(mp_map_list);
-                    mp_map_list = generate_map_list_from_array([NSArray arrayWithObject:map_argument]);
+                    mp_map_list = generate_map_list_from_array([NSArray arrayWithObject:[map_argument stringByAppendingPathExtension:@"map"]]);
                     *(uint32_t *)(0x3D2D84) = 1;
                     *(MapListEntry **)(0x3691c0) = mp_map_list->list;
                 }
