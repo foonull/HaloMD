@@ -444,8 +444,10 @@ static void reload_map_list(void) {
         }
     }
     
+    size_t multiplayer_maps_count = [multiplayer_maps count];
+    
     // Set MP maps count...
-    *(uint32_t *)(0x3D2D84) = [multiplayer_maps count];
+    *(uint32_t *)(0x3D2D84) = multiplayer_maps_count;
     mp_map_list = generate_map_list_from_array(multiplayer_maps);
     *(MapListEntry **)(0x3691c0) = mp_map_list->list;
     
@@ -468,13 +470,18 @@ static void reload_map_list(void) {
         if(tag_data[i].classA == 1651078253 && strcmp(tag_data[i].nameOffset,TAG_MAP_ICONS) == 0) {
             HaloBitmapTag *tag = (HaloBitmapTag *)(tag_data[i].dataOffset);
             for(uint32_t i=0;i<tag->sequenceCount;i++) {
-                tag->sequence[i].finalIndex = [multiplayer_maps count];
+                tag->sequence[i].finalIndex = multiplayer_maps_count;
             }
             if(mp_icons_bitmaps == NULL) {
                 mp_icons_bitmaps = generate_map_bitmap_from_array(multiplayer_maps, tag_data[i].identity);
             }
-            tag->bitmap = mp_icons_bitmaps;
-            tag->bitmapsCount = [multiplayer_maps count];
+            if(multiplayer_maps_count < 21) {
+                memcpy(tag->bitmap,mp_icons_bitmaps,[multiplayer_maps count] * sizeof(*tag->bitmap));
+            }
+            else {
+                tag->bitmap = mp_icons_bitmaps;
+                tag->bitmapsCount = multiplayer_maps_count;
+            }
         }
     }
 }
