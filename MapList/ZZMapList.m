@@ -31,6 +31,8 @@
 #import <sys/mman.h>
 #import "mach_override.h"
 
+static MapListArray *mp_map_list = NULL;
+
 #define HALO_INDEX_LOCATION 0x40440000 //same on Halo PC and CE
 #define TAG_COUNT_OFFSET 0xC
 #define TAG_MAP_NAMES "ui\\shell\\main_menu\\mp_map_list"
@@ -360,18 +362,18 @@ static NSDictionary *dictionary_from_path_without_extension(NSString *path_witho
 }
 
 /// This function reloads the map list and destroys all created USTR tags. It is called every time a map is loaded.
-static void reload_map_list(void) {
+static void reload_map_list(bool new_map) {
     static UnicodeStringTag *mp_tag_names = NULL;
     static UnicodeStringTag *mp_tag_descriptions = NULL;
     static HaloBitmap *mp_icons_bitmaps = NULL;
-    static MapListArray *mp_map_list = NULL;
     
-    if(mp_icons_bitmaps != NULL && mp_icons_bitmaps->pointer != 0xFFFFFFFF) {
+    if(mp_icons_bitmaps != NULL && mp_icons_bitmaps->pointer != 0xFFFFFFFF && !new_map) {
         halo_printf((void *)0,"The map list will be reloaded when the map is changed.");
         return;
     }
     
-    free(mp_icons_bitmaps);
+    if((void *)mp_icons_bitmaps < (void *)0x40440000 || (void *)mp_icons_bitmaps > (void *)0x41B00000)
+        free(mp_icons_bitmaps);
     mp_icons_bitmaps = NULL;
     
     free_ustr_tag(mp_tag_names);
@@ -475,8 +477,10 @@ static void reload_map_list(void) {
             if(mp_icons_bitmaps == NULL) {
                 mp_icons_bitmaps = generate_map_bitmap_from_array(multiplayer_maps, tag_data[i].identity);
             }
-            if(multiplayer_maps_count < 21) {
+            if(multiplayer_maps_count <= 21) {
                 memcpy(tag->bitmap,mp_icons_bitmaps,[multiplayer_maps count] * sizeof(*tag->bitmap));
+                free(mp_icons_bitmaps);
+                mp_icons_bitmaps = tag->bitmap;
             }
             else {
                 tag->bitmap = mp_icons_bitmaps;
@@ -493,13 +497,13 @@ static void intercept_command(const char *command,const char *errorResult, const
     if ([[[args objectAtIndex:0] lowercaseString] isEqualToString:@"sv_maplist_show_outdated"]) {
         if([args count] == 2) show_outdated_maps = [[args objectAtIndex:1]boolValue];
         halo_printf(NULL,show_outdated_maps ? "true" : "false");
-        reload_map_list();
+        reload_map_list(false);
         return;
     }
     else if ([[[args objectAtIndex:0] lowercaseString] isEqualToString:@"sv_maplist_show_all"]) {
         if([args count] == 2) show_all_maps = [[args objectAtIndex:1]boolValue];
         halo_printf(NULL,show_all_maps ? "true" : "false");
-        reload_map_list();
+        reload_map_list(false);
         return;
     }
     else if ([[[args objectAtIndex:0] lowercaseString] isEqualToString:@"sv_map"]) {
@@ -526,6 +530,44 @@ static void intercept_command(const char *command,const char *errorResult, const
                     return;
                 }
             }
+            else {
+                NSArray *map_list = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:maps_directory() error:nil];
+                if([map_list containsObject:[map_argument stringByAppendingPathExtension:@"map"]]) {
+                    // 2048-byte buffer, which will hold the entire header of the map file.
+                    char buffer[0x800];
+                    
+                    // Get the file data. Yep yep yep!
+                    FILE *file = fopen([[maps_directory() stringByAppendingPathComponent:[map_argument stringByAppendingPathExtension:@"map"]]UTF8String], "r");
+                    if(file == NULL) return;
+                    
+                    // Make sure it's at least 2048 bytes. If not, it's not a valid map file.
+                    fseek(file,0,SEEK_END);
+                    size_t length = ftell(file);
+                    fseek(file,0,SEEK_SET);
+                    
+                    if(length < sizeof(buffer)) {
+                        fclose(file);
+                        return;
+                    }
+                    
+                    fread(buffer, sizeof(buffer), 1, file);
+                    fclose(file);
+                    
+                    // Check "head" and "foot". If they're not equal, then we can ignore this sucker, as it's not a cache file.
+                    if(*(uint32_t *)(buffer) != 1751474532 || *(uint32_t *)(buffer + 0x7FC) != 1718579060) return;
+                    
+                    // Check if the identifier and map name are identical. If not, then it's not valid.
+                    if(strcmp([map_argument UTF8String],buffer + 0x20) != 0) return;
+                    
+                    // Check if it's a Halo PC/MD map. We can ignore this if show_all_maps is set.
+                    if(*(uint8_t *)(0x62fdc) == 0x74 && *(uint32_t *)(buffer + 0x4) != *(uint8_t *)(0x62fdb) && !show_all_maps) return;
+                    
+                    free_map_list(mp_map_list);
+                    mp_map_list = generate_map_list_from_array([NSArray arrayWithObject:map_argument]);
+                    *(uint32_t *)(0x3D2D84) = 1;
+                    *(MapListEntry **)(0x3691c0) = mp_map_list->list;
+                }
+            }
         }
     }
     run_command(command,errorResult,commandName);
@@ -547,7 +589,7 @@ static void intercept_command(const char *command,const char *errorResult, const
 }
 
 - (void)mapDidBegin:(NSString *)mapName {
-    reload_map_list();
+    reload_map_list(true);
 }
 
 - (void)mapDidEnd:(NSString *)mapName {}
